@@ -17,7 +17,10 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
      string RemoveTrainingPlan(string id);
 
-     string AddOccupation(ViewCrudOccupationMandatory view);
+    List<ViewListCourse> ListOccupationGroup(string idoccupation, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListCourse> ListPersonGroup(string idperson, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListCourse> ListCompanyGroup(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    string AddOccupation(ViewCrudOccupationMandatory view);
      string AddPerson(ViewCrudPersonMandatory view);
      string AddCompany(ViewCrudCompanyMandatory view);
      string RemoveOccupation(string idcourse, string idoccupation);
@@ -41,7 +44,5 @@ namespace Manager.Core.Interfaces
 
     #endregion
     
-
-
   }
 }

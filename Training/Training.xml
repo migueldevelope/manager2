@@ -343,13 +343,14 @@
             <param name="view">Objeto Crud</param>
             <returns></returns>
         </member>
-        <member name="M:Training.Controllers.EventController.SetStatusEventHistoricTemp(Manager.Views.Enumns.EnumStatusEventHistoricTemp,System.String,System.String)">
+        <member name="M:Training.Controllers.EventController.SetStatusEventHistoricTemp(Manager.Views.BusinessView.ViewObs,Manager.Views.Enumns.EnumStatusEventHistoricTemp,System.String,System.String)">
             <summary>
             
             </summary>
             <param name="status"></param>
             <param name="id"></param>
             <param name="idcourse"></param>
+            <param name="view"></param>
             <returns></returns>
         </member>
         <member name="M:Training.Controllers.EventController.ListEntity(System.Int32,System.Int32,System.String)">
@@ -468,6 +469,38 @@
             <param name="view"></param>
             <returns></returns>
         </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListCompanyGroup(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcompany"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListOccupationGroup(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idoccupation"></param>
+            <param name="idcompany"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListPersonGroup(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista pessoas
+            </summary>
+            <param name="idperson">Identificador curso</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count">contador</param>
+            <param name="page">pagina</param>
+            <param name="filter">filtro</param>
+            <returns></returns>
+        </member>
         <member name="M:Training.Controllers.MandatoryTrainingController.ListCompany(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             
@@ -484,6 +517,57 @@
             </summary>
             <param name="idcourse"></param>
             <param name="idcompany"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.ListPerson(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista pessoas
+            </summary>
+            <param name="idcourse">Identificador curso</param>
+            <param name="idcompany">Identificador empresa</param>
+            <param name="count">contador</param>
+            <param name="page">pagina</param>
+            <param name="filter">filtro</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveCompany(System.String,System.String)">
+            <summary>
+            remove empresa
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idcompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveOccupation(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idoccupation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.RemovePerson(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcourse"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.GetMandatoryTraining(System.String)">
+            <summary>
+            Busca informações para editar treinamento obrigatório
+            </summary>
+            <param name="idcourse">Identificador do curso</param>
+            <returns></returns>
+        </member>
+        <member name="M:Training.Controllers.MandatoryTrainingController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Lista treinamentos obrigatórios
+            </summary>
             <param name="count"></param>
             <param name="page"></param>
             <param name="filter"></param>
@@ -513,17 +597,6 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
-        <member name="M:Training.Controllers.MandatoryTrainingController.ListPerson(System.String,System.String,System.Int32,System.Int32,System.String)">
-            <summary>
-            Lista pessoas
-            </summary>
-            <param name="idcourse">Identificador curso</param>
-            <param name="idcompany">Identificador empresa</param>
-            <param name="count">contador</param>
-            <param name="page">pagina</param>
-            <param name="filter">filtro</param>
-            <returns></returns>
-        </member>
         <member name="M:Training.Controllers.MandatoryTrainingController.ListTrainingPlanPerson(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             lista treinamento obrigatório 
@@ -532,30 +605,6 @@
             <param name="count">contador</param>
             <param name="page">pagina</param>
             <param name="filter">filtro</param>
-            <returns></returns>
-        </member>
-        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveCompany(System.String,System.String)">
-            <summary>
-            remove empresa
-            </summary>
-            <param name="idcourse"></param>
-            <param name="idcompany"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Training.Controllers.MandatoryTrainingController.RemoveOccupation(System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="idcourse"></param>
-            <param name="idoccupation"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Training.Controllers.MandatoryTrainingController.RemovePerson(System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="idcourse"></param>
-            <param name="idperson"></param>
             <returns></returns>
         </member>
         <member name="M:Training.Controllers.MandatoryTrainingController.RemoveTrainingPlan(System.String)">
@@ -605,22 +654,6 @@
             Busca informações para editar plano de treinamento
             </summary>
             <param name="id">Identificador do plano de treinamento</param>
-            <returns></returns>
-        </member>
-        <member name="M:Training.Controllers.MandatoryTrainingController.GetMandatoryTraining(System.String)">
-            <summary>
-            Busca informações para editar treinamento obrigatório
-            </summary>
-            <param name="idcourse">Identificador do curso</param>
-            <returns></returns>
-        </member>
-        <member name="M:Training.Controllers.MandatoryTrainingController.List(System.Int32,System.Int32,System.String)">
-            <summary>
-            Lista treinamentos obrigatórios
-            </summary>
-            <param name="count"></param>
-            <param name="page"></param>
-            <param name="filter"></param>
             <returns></returns>
         </member>
         <member name="T:Training.Controllers.ValuesController">

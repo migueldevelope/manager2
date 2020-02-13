@@ -337,37 +337,6 @@ namespace Manager.Services.Specific
 
     #region mandatorytraining
 
-    public string NewTrainingPlanInternal(TrainingPlan view)
-    {
-      try
-      {
-
-        if (view.Include == null)
-          view.Include = DateTime.Now;
-
-        serviceTrainingPlan.InsertNewVersion(view).Wait();
-
-        return "add success";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public string UpdateTrainingPlanInternal(TrainingPlan view)
-    {
-      try
-      {
-        serviceTrainingPlan.Update(view, null).Wait();
-        return "update";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public string AddOccupation(ViewCrudOccupationMandatory view)
     {
       try
@@ -538,52 +507,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public void RemovePersonPlan(string idperson, string idcourse)
-    {
-      try
-      {
-        var plan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Course._id == idcourse
-        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.FirstOrDefault();
-        if (plan != null)
-        {
-          plan.Status = EnumStatus.Disabled;
-          serviceTrainingPlan.Update(plan, null).Wait();
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public void RemoveOccupationPlan(string idoccoupation, string idcourse)
-    {
-      try
-      {
-        foreach (var item in servicePerson.GetAllNewVersion(p => p.Occupation._id == idoccoupation).Result.ToList())
-        {
-          RemovePersonPlan(item._id, idcourse);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-    public void RemoveCompanyPlan(string idcompany, string idcourse)
-    {
-      try
-      {
-        foreach (var item in servicePerson.GetAllNewVersion(p => p.Company._id == idcompany).Result.ToList())
-        {
-          RemovePersonPlan(item._id, idcourse);
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
     public string RemoveCompany(string idcourse, string idcompany)
     {
       try
@@ -607,7 +530,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public void RemoveCompanyMandatory(string id)
     {
       try
@@ -621,7 +543,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public void RemoveOccupationMandatory(string id)
     {
       try
@@ -650,6 +571,114 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewCrudMandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var detail = serviceMandatoryTraining.GetAllNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
+        total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
+
+        return detail.Select(p => new ViewCrudMandatoryTraining()
+        {
+          _id = p._id,
+          Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
+          {
+            _id = x._id,
+            Name = x.Person.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Person = x.Person
+          }).ToList(),
+          Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+          Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
+          {
+            _id = x._id,
+            Name = x.Company.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Company = new ViewListCompany()
+            {
+              _id = x.Company._id,
+              Name = x.Company.Name,
+            }
+          }).ToList(),
+          Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
+          {
+            _id = x._id,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Occupation = x.Occupation
+          }).ToList()
+
+        }).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse)
+    {
+      try
+      {
+        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.ToList();
+
+        var model = list.Select(p => new MandatoryTraining()
+        {
+          Occupations = p.Occupations ?? p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
+          Companys = p.Companys ?? p.Companys.OrderBy(x => x.Company).ToList(),
+          Course = p.Course,
+          Persons = p.Persons ?? p.Persons.OrderBy(x => x.Person.Name).ToList(),
+          Status = p.Status,
+          _id = p._id,
+          _idAccount = p._idAccount
+        })
+        .ToList();
+
+        return model.Select(p => new ViewCrudMandatoryTraining()
+        {
+          _id = p._id,
+          Persons = p.Persons?.Select(x => new ViewCrudPersonMandatory()
+          {
+            _id = x._id,
+            Name = x.Person?.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Person = x.Person ?? null
+          }).ToList(),
+          Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
+          Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
+          {
+            _id = x._id,
+            Name = x.Company?.Name,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Company = x.Company == null ? null : new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
+          }).ToList(),
+          Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
+          {
+            _id = x._id,
+            BeginDate = x.BeginDate,
+            TypeMandatoryTraining = x.TypeMandatoryTraining,
+            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
+            Occupation = x.Occupation ?? null
+          }).ToList()
+
+        }).FirstOrDefault();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public List<ViewListOccupation> ListOccupation(string idcourse, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -738,6 +767,172 @@ namespace Manager.Services.Specific
 
         return detail.Skip(skip).Take(count).ToList();
 
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListCourse> ListOccupationGroup(string idoccupation, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var result = new List<ViewListCourse>();
+
+        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        foreach (var item in list)
+        {
+          if (item.Occupations != null)
+            if (item.Occupations.Where(p => p.Occupation._id == idoccupation).Count() > 0)
+              result.Add(new ViewListCourse()
+              {
+                _id = item.Course?._id,
+              });
+        }
+
+        total = result.Count();
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListCourse> ListPersonGroup(string idperson, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var result = new List<ViewListCourse>();
+
+        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        foreach (var item in list)
+        {
+          if (item.Persons != null)
+            if (item.Persons.Where(p => p.Person._id == idperson).Count() > 0)
+              result.Add(new ViewListCourse()
+              {
+                _id = item.Course?._id,
+              });
+        }
+
+        total = result.Count();
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListCourse> ListCompanyGroup(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        int skip = (count * (page - 1));
+        var result = new List<ViewListCourse>();
+
+        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        foreach (var item in list)
+        {
+          if (item.Companys != null)
+            if (item.Companys.Where(p => p.Company._id == idcompany).Count() > 0)
+              result.Add(new ViewListCourse()
+              {
+                _id = item.Course?._id,
+              });
+        }
+
+        total = result.Count();
+        return result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    #endregion
+
+    #region trainingplan
+
+    public string NewTrainingPlanInternal(TrainingPlan view)
+    {
+      try
+      {
+
+        if (view.Include == null)
+          view.Include = DateTime.Now;
+
+        serviceTrainingPlan.InsertNewVersion(view).Wait();
+
+        return "add success";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateTrainingPlanInternal(TrainingPlan view)
+    {
+      try
+      {
+        serviceTrainingPlan.Update(view, null).Wait();
+        return "update";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public void RemovePersonPlan(string idperson, string idcourse)
+    {
+      try
+      {
+        var plan = serviceTrainingPlan.GetAllNewVersion(p => p.Person._id == idperson & p.Course._id == idcourse
+        & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.FirstOrDefault();
+        if (plan != null)
+        {
+          plan.Status = EnumStatus.Disabled;
+          serviceTrainingPlan.Update(plan, null).Wait();
+        }
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public void RemoveOccupationPlan(string idoccoupation, string idcourse)
+    {
+      try
+      {
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.Occupation._id == idoccoupation).Result.ToList())
+        {
+          RemovePersonPlan(item._id, idcourse);
+        }
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public void RemoveCompanyPlan(string idcompany, string idcourse)
+    {
+      try
+      {
+        foreach (var item in servicePerson.GetAllNewVersion(p => p.Company._id == idcompany).Result.ToList())
+        {
+          RemovePersonPlan(item._id, idcourse);
+        }
       }
       catch (Exception e)
       {
@@ -882,7 +1077,7 @@ namespace Manager.Services.Specific
             countRealized = 0;
             countNoRealized = 0;
           }
-            
+
 
           _idPerson = item.Person._id;
           zero = false;
@@ -1063,116 +1258,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
-    public List<ViewCrudMandatoryTraining> List(ref long total, int count = 10, int page = 1, string filter = "")
-    {
-      try
-      {
-        int skip = (count * (page - 1));
-        var detail = serviceMandatoryTraining.GetAllNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Course.Name).Skip(skip).Take(count).ToList();
-        total = serviceMandatoryTraining.CountNewVersion(p => p.Course.Name.ToUpper().Contains(filter.ToUpper())).Result;
-
-        return detail.Select(p => new ViewCrudMandatoryTraining()
-        {
-          _id = p._id,
-          Persons = (p.Persons == null) ? null : p.Persons.Select(x => new ViewCrudPersonMandatory()
-          {
-            _id = x._id,
-            Name = x.Person.Name,
-            BeginDate = x.BeginDate,
-            TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = x.Person
-          }).ToList(),
-          Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
-          Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
-          {
-            _id = x._id,
-            Name = x.Company.Name,
-            BeginDate = x.BeginDate,
-            TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Company = new ViewListCompany()
-            {
-              _id = x.Company._id,
-              Name = x.Company.Name,
-            }
-          }).ToList(),
-          Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
-          {
-            _id = x._id,
-            BeginDate = x.BeginDate,
-            TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = x.Occupation
-          }).ToList()
-
-        }).ToList();
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public ViewCrudMandatoryTraining GetMandatoryTraining(string idcourse)
-    {
-      try
-      {
-        var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == idcourse).Result.ToList();
-
-        var model = list.Select(p => new MandatoryTraining()
-        {
-          Occupations = p.Occupations ?? p.Occupations.OrderBy(x => x.Occupation.Name).ToList(),
-          Companys = p.Companys ?? p.Companys.OrderBy(x => x.Company).ToList(),
-          Course = p.Course,
-          Persons = p.Persons ?? p.Persons.OrderBy(x => x.Person.Name).ToList(),
-          Status = p.Status,
-          _id = p._id,
-          _idAccount = p._idAccount
-        })
-        .ToList();
-
-        return model.Select(p => new ViewCrudMandatoryTraining()
-        {
-          _id = p._id,
-          Persons = p.Persons?.Select(x => new ViewCrudPersonMandatory()
-          {
-            _id = x._id,
-            Name = x.Person?.Name,
-            BeginDate = x.BeginDate,
-            TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Person = x.Person ?? null
-          }).ToList(),
-          Course = new ViewListCourse() { _id = p.Course._id, Name = p.Course.Name },
-          Companys = (p.Companys == null) ? null : p.Companys.Select(x => new ViewCrudCompanyMandatory()
-          {
-            _id = x._id,
-            Name = x.Company?.Name,
-            BeginDate = x.BeginDate,
-            TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Company = x.Company == null ? null : new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name }
-          }).ToList(),
-          Occupations = (p.Occupations == null) ? null : p.Occupations.Select(x => new ViewCrudOccupationMandatory()
-          {
-            _id = x._id,
-            BeginDate = x.BeginDate,
-            TypeMandatoryTraining = x.TypeMandatoryTraining,
-            Course = x.Course == null ? null : new ViewListCourse() { _id = x.Course._id, Name = x.Course.Name },
-            Occupation = x.Occupation ?? null
-          }).ToList()
-
-        }).FirstOrDefault();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
 
     public string NewTrainingPlan(ViewCrudTrainingPlan view)
     {

@@ -26,7 +26,6 @@ namespace Training.Controllers
   {
     private readonly IServiceMandatoryTraining service;
 
-
     #region constructor
     /// <summary>
     /// 
@@ -39,7 +38,6 @@ namespace Training.Controllers
       service.SetUser(contextAccessor);
     }
     #endregion
-
 
     #region mandatorytraining
 
@@ -85,6 +83,66 @@ namespace Training.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idcompany"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listcompanygroup/{idcompany}")]
+    public async Task<List<ViewListCourse>> ListCompanyGroup(string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListCompanyGroup(idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idoccupation"></param>
+    /// <param name="idcompany"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listoccupationgroup/{idoccupation}/{idcompany}")]
+    public async Task<List<ViewListCourse>> ListOccupationGroup(string idoccupation, string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListOccupationGroup(idoccupation, idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// Lista pessoas
+    /// </summary>
+    /// <param name="idperson">Identificador curso</param>
+    /// <param name="idcompany">Identificador empresa</param>
+    /// <param name="count">contador</param>
+    /// <param name="page">pagina</param>
+    /// <param name="filter">filtro</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listpersongroup/{idperson}/{idcompany}")]
+    public async Task<List<ViewListCourse>> ListPersonGroup(string idperson, string idcompany, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListPersonGroup(idperson, idcompany, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idcourse"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>
@@ -122,49 +180,6 @@ namespace Training.Controllers
     }
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="idmanager"></param>
-    /// <param name="type"></param>
-    /// <param name="origin"></param>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("trainingplanlist/{idmanager}/{type}/{origin}")]
-    public async Task<List<ViewListTrainingPlan>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser type, EnumOrigin origin, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListTrainingPlanPersonList(idmanager, type, origin, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() => result);
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="idmanager"></param>
-    /// <param name="type"></param>
-    /// <param name="origin"></param>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("trainingplanlistmanager/{idmanager}/{type}/{origin}")]
-    public async Task<List<ViewListTrainingPlanManager>> ListTrainingPlanPersonManager(string idmanager, EnumTypeUser type, EnumOrigin origin, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListTrainingPlanPersonManager(idmanager, type, origin, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() => result);
-    }
-
-    /// <summary>
     /// Lista pessoas
     /// </summary>
     /// <param name="idcourse">Identificador curso</param>
@@ -180,26 +195,6 @@ namespace Training.Controllers
     {
       long total = 0;
       var result = service.ListPerson(idcourse, idcompany, ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() => result);
-    }
-
-
-    /// <summary>
-    /// lista treinamento obrigatório 
-    /// </summary>
-    /// <param name="idperson">identificaodor pessoa</param>
-    /// <param name="count">contador</param>
-    /// <param name="page">pagina</param>
-    /// <param name="filter">filtro</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("listtrainingplanperson/{idperson}")]
-    public async Task<ViewListTrainingPlan> ListTrainingPlanPerson(string idperson, int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.ListTrainingPlanPerson(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
@@ -244,6 +239,102 @@ namespace Training.Controllers
     public async Task<string> RemovePerson(string idcourse, string idperson)
     {
       return await Task.Run(() => service.RemovePerson(idcourse, idperson));
+    }
+
+    /// <summary>
+    /// Busca informações para editar treinamento obrigatório
+    /// </summary>
+    /// <param name="idcourse">Identificador do curso</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmandatorytraining/{idcourse}")]
+    public async Task<ViewCrudMandatoryTraining> GetMandatoryTraining(string idcourse)
+    {
+      return await Task.Run(() => service.GetMandatoryTraining(idcourse));
+    }
+
+    /// <summary>
+    /// Lista treinamentos obrigatórios
+    /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("list")]
+    public async Task<List<ViewCrudMandatoryTraining>> List(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.List(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    #endregion
+
+    #region trainingplan
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="type"></param>
+    /// <param name="origin"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("trainingplanlist/{idmanager}/{type}/{origin}")]
+    public async Task<List<ViewListTrainingPlan>> ListTrainingPlanPersonList(string idmanager, EnumTypeUser type, EnumOrigin origin, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanPersonList(idmanager, type, origin, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="type"></param>
+    /// <param name="origin"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("trainingplanlistmanager/{idmanager}/{type}/{origin}")]
+    public async Task<List<ViewListTrainingPlanManager>> ListTrainingPlanPersonManager(string idmanager, EnumTypeUser type, EnumOrigin origin, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanPersonManager(idmanager, type, origin, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// lista treinamento obrigatório 
+    /// </summary>
+    /// <param name="idperson">identificaodor pessoa</param>
+    /// <param name="count">contador</param>
+    /// <param name="page">pagina</param>
+    /// <param name="filter">filtro</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listtrainingplanperson/{idperson}")]
+    public async Task<ViewListTrainingPlan> ListTrainingPlanPerson(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanPerson(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>
@@ -336,37 +427,6 @@ namespace Training.Controllers
     public async Task<ViewCrudTrainingPlan> GetTrainingPlan(string id)
     {
       return await Task.Run(() => service.GetTrainingPlan(id));
-    }
-
-    /// <summary>
-    /// Busca informações para editar treinamento obrigatório
-    /// </summary>
-    /// <param name="idcourse">Identificador do curso</param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("getmandatorytraining/{idcourse}")]
-    public async Task<ViewCrudMandatoryTraining> GetMandatoryTraining(string idcourse)
-    {
-      return await Task.Run(() => service.GetMandatoryTraining(idcourse));
-    }
-
-    /// <summary>
-    /// Lista treinamentos obrigatórios
-    /// </summary>
-    /// <param name="count"></param>
-    /// <param name="page"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet]
-    [Route("list")]
-    public async Task<List<ViewCrudMandatoryTraining>> List(int count = 10, int page = 1, string filter = "")
-    {
-      long total = 0;
-      var result = service.List(ref total, count, page, filter);
-      Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() => result);
     }
 
     #endregion
