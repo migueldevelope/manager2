@@ -411,7 +411,8 @@ namespace Manager.Services.Specific
           mandatory.Persons.Add(list.FirstOrDefault());
           serviceMandatoryTraining.Update(mandatory, null).Wait();
         }
-        Task.Run(() => UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining));
+        //Task.Run(() => UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining));
+        UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining);
 
         return "add occupation";
       }
