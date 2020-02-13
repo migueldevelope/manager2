@@ -1611,6 +1611,7 @@ namespace Manager.Services.Specific
           Name = view.Name,
           Workload = view.Workload,
           StatusEventHistoricTemp = EnumStatusEventHistoricTemp.Wait,
+          Observation = view.Observation,
           Person = new ViewListPersonBase() { _id = view._idPerson, Name = view.NamePerson }
         };
         var events = serviceEventHistoricTemp.InsertNewVersion(model).Result;
@@ -1639,6 +1640,7 @@ namespace Manager.Services.Specific
         model.Entity = view.Entity;
         model.Name = view.Name;
         model.Workload = view.Workload;
+        model.Observation = view.Observation;
 
         serviceEventHistoricTemp.Update(model, null).Wait();
         return "update";
@@ -1669,7 +1671,8 @@ namespace Manager.Services.Specific
           Entity = eventhistoric.Entity,
           Event = eventhistoric.Event,
           StatusEventHistoricTemp = eventhistoric.StatusEventHistoricTemp,
-          Attachments = eventhistoric.Attachments
+          Attachments = eventhistoric.Attachments,
+          Observation = eventhistoric.Observation
         };
       }
       catch (Exception e)
@@ -1678,13 +1681,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string SetStatusEventHistoricTemp(EnumStatusEventHistoricTemp status, string id, string idcourse)
+    public string SetStatusEventHistoricTemp(ViewObs view, EnumStatusEventHistoricTemp status, string id, string idcourse)
     {
       try
       {
         var course = serviceCourse.GetNewVersion(p => p._id == idcourse).Result.GetViewList();
         var model = serviceEventHistoricTemp.GetNewVersion(p => p._id == id).Result;
         model.StatusEventHistoricTemp = status;
+        model.Observation = view.Observation;
         if(status == EnumStatusEventHistoricTemp.Approved)
         {
           NewEventHistoric(new EventHistoric()

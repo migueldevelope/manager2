@@ -16,5 +16,6 @@ namespace Manager.Views.BusinessCrud
     public DateTime? End { get; set; }
     public List<ViewCrudAttachmentField> Attachments { get; set; }
     public EnumStatusEventHistoricTemp StatusEventHistoricTemp { get; set; }
+    public string Observation { get; set; }
   }
 }

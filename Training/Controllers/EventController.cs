@@ -44,9 +44,9 @@ namespace Training.Controllers
     [Route("delete/{id}")]
     public async Task<string> Delete(string id)
     {
-      return await Task.Run(() =>service.Remove(id));
+      return await Task.Run(() => service.Remove(id));
     }
-    
+
     /// <summary>
     /// Excluir um participante do evento
     /// </summary>
@@ -58,7 +58,7 @@ namespace Training.Controllers
     [Route("removeparticipant/{idevent}/{idperson}")]
     public async Task<string> RemoveParticipant(string idevent, string idperson)
     {
-      return await Task.Run(() =>service.RemoveParticipant(idevent, idperson));
+      return await Task.Run(() => service.RemoveParticipant(idevent, idperson));
     }
     /// <summary>
     /// Excluir um dia do evento
@@ -73,7 +73,7 @@ namespace Training.Controllers
     [Route("removedays/{idevent}/{idday}")]
     public async Task<string> RemoveDays(string idevent, string begin, string end, string idday)
     {
-      return await Task.Run(() =>service.RemoveDays(idevent, idday));
+      return await Task.Run(() => service.RemoveDays(idevent, idday));
     }
     /// <summary>
     /// Excluir instrutor do evento
@@ -85,7 +85,7 @@ namespace Training.Controllers
     [Route("removeinstructor/{idevent}/{id}")]
     public async Task<string> RemoveInstructor(string idevent, string id)
     {
-      return await Task.Run(() =>service.RemoveInstructor(idevent, id));
+      return await Task.Run(() => service.RemoveInstructor(idevent, id));
     }
     /// <summary>
     /// Marcar a presença do aluno
@@ -100,7 +100,7 @@ namespace Training.Controllers
     [Route("present/{idevent}/{idparticipant}/{idday}/{present}")]
     public async Task<string> Present(string idevent, string idparticipant, string idday, bool present)
     {
-      return await Task.Run(() =>service.Present(idevent, idparticipant, idday, present));
+      return await Task.Run(() => service.Present(idevent, idparticipant, idday, present));
     }
     /// <summary>
     /// Setar a grade de participantes
@@ -114,7 +114,7 @@ namespace Training.Controllers
     [Route("setgrade/{idevent}/{idparticipant}/{grade}")]
     public async Task<string> SetGrade(string idevent, string idparticipant, decimal grade)
     {
-      return await Task.Run(() =>service.SetGrade(idevent, idparticipant, grade));
+      return await Task.Run(() => service.SetGrade(idevent, idparticipant, grade));
     }
     /// <summary>
     /// Reabrir evento
@@ -126,7 +126,7 @@ namespace Training.Controllers
     [Route("reopeningevent/{idevent}")]
     public async Task<string> ReopeningEvent(string idevent)
     {
-      return await Task.Run(() =>service.ReopeningEvent(idevent));
+      return await Task.Run(() => service.ReopeningEvent(idevent));
     }
     /// <summary>
     /// Inclusão de um evento
@@ -137,7 +137,7 @@ namespace Training.Controllers
     [Route("new")]
     public async Task<ViewListEvent> New([FromBody]ViewCrudEvent view)
     {
-      return await Task.Run(() =>service.New(view));
+      return await Task.Run(() => service.New(view));
     }
     /// <summary>
     /// Lista eventos
@@ -153,9 +153,9 @@ namespace Training.Controllers
     public async Task<List<ViewListEventDetail>> List(EnumTypeEvent type, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
-      var result = service.List(type,ref total, count, page, filter);
+      var result = service.List(type, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Lista eventos para inscrição
@@ -168,12 +168,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopensubscription/{idperson}")]
-    public async Task<List<ViewListEventSubscription>> ListEventOpenSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventSubscription>> ListEventOpenSubscription(string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventOpenSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Lista eventos inscritos
@@ -186,12 +186,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventsubscription/{idperson}")]
-    public async Task<List<ViewListEventSubscription>> ListEventSubscription(string idperson,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEventSubscription>> ListEventSubscription(string idperson, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventSubscription(idperson, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
 
     /// <summary>
@@ -223,12 +223,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventopen")]
-    public async Task<List<ViewListEvent>> ListEventOpen( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventOpen(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventOpen(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Lista eventos encerrados
@@ -240,12 +240,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventend")]
-    public async Task<List<ViewListEvent>> ListEventEnd( int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListEvent>> ListEventEnd(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventEnd(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Lista instrutores de um evento
@@ -259,12 +259,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersoninstructor/{idevent}/{idcompany}")]
-    public async Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonResume>> ListPersonInstructor(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonInstructor(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Lista participante do evento
@@ -278,12 +278,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersonparticipants/{idevent}/{idcompany}")]
-    public async Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListPersonResume>> ListPersonParticipants(string idevent, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonParticipants(idevent, idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Busca informações de evento para editar 
@@ -295,7 +295,7 @@ namespace Training.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudEvent> List(string id)
     {
-      return await Task.Run(() =>service.Get(id));
+      return await Task.Run(() => service.Get(id));
     }
     /// <summary>
     /// Atualiza informações de um evento
@@ -307,9 +307,9 @@ namespace Training.Controllers
     [Route("update")]
     public async Task<ViewListEvent> Update([FromBody]ViewCrudEvent view)
     {
-      return await Task.Run(() =>service.Update(view));
+      return await Task.Run(() => service.Update(view));
     }
-   
+
     /// <summary>
     /// Adiciona um participante a um evento
     /// </summary>
@@ -320,7 +320,7 @@ namespace Training.Controllers
     [Route("addparticipant/{idevent}")]
     public async Task<string> AddParticipant([FromBody]ViewCrudParticipant participant, string idevent)
     {
-      return await Task.Run(() =>service.AddParticipant(idevent, participant));
+      return await Task.Run(() => service.AddParticipant(idevent, participant));
     }
     /// <summary>
     /// Adicionar dias a um evento
@@ -332,7 +332,7 @@ namespace Training.Controllers
     [Route("adddays/{idevent}")]
     public async Task<string> AddDays([FromBody]ViewCrudDaysEvent days, string idevent)
     {
-      return await Task.Run(() =>service.AddDays(idevent, days));
+      return await Task.Run(() => service.AddDays(idevent, days));
     }
     /// <summary>
     /// Adiciona um instrutor em um evento
@@ -344,7 +344,7 @@ namespace Training.Controllers
     [Route("addinstructor/{idevent}")]
     public async Task<string> AddDays([FromBody]ViewCrudInstructor view, string idevent)
     {
-      return await Task.Run(() =>service.AddInstructor(idevent, view));
+      return await Task.Run(() => service.AddInstructor(idevent, view));
     }
     /// <summary>
     /// Lista os participante de um evento
@@ -357,12 +357,12 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listparticipants/{idevent}")]
-    public async Task<List<ViewCrudParticipant>> ListParticipants(string idevent,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudParticipant>> ListParticipants(string idevent, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListParticipants(idevent, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     #endregion
 
@@ -600,13 +600,14 @@ namespace Training.Controllers
     /// <param name="status"></param>
     /// <param name="id"></param>
     /// <param name="idcourse"></param>
+    /// <param name="view"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPut]
     [Route("setstatuseventhistorictemp/{status}/{id}/{idcourse}")]
-    public async Task<string> SetStatusEventHistoricTemp(EnumStatusEventHistoricTemp status, string id, string idcourse)
+    public async Task<string> SetStatusEventHistoricTemp([FromBody]ViewObs view, EnumStatusEventHistoricTemp status, string id, string idcourse)
     {
-      return await Task.Run(() => service.SetStatusEventHistoricTemp(status, id, idcourse));
+      return await Task.Run(() => service.SetStatusEventHistoricTemp(view, status, id, idcourse));
     }
 
     #endregion

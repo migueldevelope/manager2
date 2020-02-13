@@ -18,5 +18,6 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public List<ViewCrudAttachmentField> Attachments { get; set; }
     public EnumStatusEventHistoricTemp StatusEventHistoricTemp { get; set; }
+    public string Observation { get; set; }
   }
 }
