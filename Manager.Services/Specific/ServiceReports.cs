@@ -454,26 +454,38 @@ namespace Manager.Services.Specific
       try
       {
         List<EventHistoric> events = null;
+        List<Event> listevent = null;
 
         if ((date == null) & (idperson == ""))
+        {
           events = serviceEventHistoric.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+          listevent = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized).Result;
+        }
         else if ((date == null) & (idperson != ""))
+        {
           events = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
+          listevent = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized).Result;
+        }
         else if ((date != null) & (idperson == ""))
-          events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin
-          && p.End <= date.End).Result;
+        {
+          events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin && p.End <= date.End).Result;
+          listevent = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Begin >= date.Begin && p.End <= date.End).Result;
+        }
         else
-          events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin
-          && p.End <= date.End && p.Person._id == idperson).Result;
+        {
+          events = serviceEventHistoric.GetAllNewVersion(p => p.Begin >= date.Begin && p.End <= date.End && p.Person._id == idperson).Result;
+          listevent = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Begin >= date.Begin && p.End <= date.End).Result;
+        }
+          
 
         var data = new List<ViewListHistoricTraining>();
-        var persons = servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+
         foreach (var item in events)
         {
-          var person = persons.Where(p => p._id == item.Person._id).FirstOrDefault();
           var viewL = new ViewListHistoricTraining()
           {
-            Name = item.Person.Name,
+            Name = person.User.Name,
             Manager = person.Manager.Name,
             Course = item.Course.Name,
             Occupation = person.Occupation?.Name,
@@ -482,10 +494,38 @@ namespace Manager.Services.Specific
             Entity = item.Entity?.Name,
             Schooling = person.User.Schooling?.Name,
             Workload = item.Workload,
-            _id = item.Person._id,
+            _id = person._id,
             Type = EnumTypeHistoricTraining.Realized
           };
           data.Add(viewL);
+        }
+
+        //instructors
+        foreach(var item in listevent)
+        {
+          if(item.Instructors != null)
+          {
+            if(item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
+            {
+              var viewL = new ViewListHistoricTraining()
+              {
+                Name = person.User.Name,
+                Manager = person.Manager.Name,
+                Course = item.Course.Name,
+                Occupation = person.Occupation?.Name,
+                DateBegin = item.Begin,
+                DateEnd = item.End,
+                Entity = item.Entity?.Name,
+                Schooling = person.User.Schooling?.Name,
+                Workload = item.Workload,
+                _id = person._id,
+                Type = EnumTypeHistoricTraining.Realized
+              };
+              data.Add(viewL);
+            }
+
+          }
+
         }
 
         var view = new ViewReport()
