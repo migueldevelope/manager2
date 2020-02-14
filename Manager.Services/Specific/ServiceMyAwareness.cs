@@ -170,10 +170,10 @@ namespace Manager.Services.Specific
             Worker = myawareness.Planning.Worker
           };
 
-          id = myawarenessCopy._id;
           view._id = serviceMyAwareness.InsertNewVersion(myawarenessCopy).Result._id;
           Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
 
+          id = myawarenessCopy._id;
         }
 
         return id;
