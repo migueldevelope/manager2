@@ -71,7 +71,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MyAwareness myawareness = serviceMyAwareness.GetNewVersion(p => p._idPerson == _user._idPerson).Result;
+        MyAwareness myawareness = serviceMyAwareness.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result.LastOrDefault();
         var id = "";
         if (myawareness == null)
         {
