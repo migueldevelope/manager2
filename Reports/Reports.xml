@@ -22,6 +22,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Reports.Controllers.ReportsController.ListPersons(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
         <member name="M:Reports.Controllers.ReportsController.ListOpportunityLine(System.String,System.String)">
             <summary>
             

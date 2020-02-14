@@ -162,40 +162,42 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var data = new ViewMyAwareness();
+        var data = new List<ViewMyAwareness>();
+        var viewMA = new ViewMyAwareness();
         var result = serviceMyAwareness.GetAllNewVersion(p => p._idPerson == idperson).Result.LastOrDefault()?.GetViewCrud();
 
         if (result != null)
         {
-          data._idPerson = result._idPerson;
-          data.NamePerson = result.NamePerson;
-          data.Date = result.Date;
-          data.RealitySelfImage = result.Reality?.SelfImage;
-          data.RealityWorker = result.Reality?.Worker;
-          data.RealityPersonalRelationships = result.Reality?.PersonalRelationships;
-          data.RealityPersonalInterest = result.Reality?.PersonalInterest;
-          data.RealityHealth = result.Reality?.Health;
-          data.RealityPurposeOfLife = result.Reality?.PurposeOfLife;
-          data.ImpedimentSelfImage = result.Impediment?.SelfImage;
-          data.ImpedimentWorker = result.Impediment?.Worker;
-          data.ImpedimentPersonalRelationships = result.Impediment?.PersonalRelationships;
-          data.ImpedimentPersonalInterest = result.Impediment?.PersonalInterest;
-          data.ImpedimentHealth = result.Impediment?.Health;
-          data.ImpedimentPurposeOfLife = result.Impediment?.PurposeOfLife;
-          data.FutureVisionSelfImage = result.FutureVision?.SelfImage;
-          data.FutureVisionWorker = result.FutureVision?.Worker;
-          data.FutureVisionPersonalRelationships = result.FutureVision?.PersonalRelationships;
-          data.FutureVisionPersonalInterest = result.FutureVision?.PersonalInterest;
-          data.FutureVisionHealth = result.FutureVision?.Health;
-          data.FutureVisionPurposeOfLife = result.FutureVision?.PurposeOfLife;
-          data.PlanningSelfImage = result.Planning?.SelfImage;
-          data.PlanningWorker = result.Planning?.Worker;
-          data.PlanningPersonalRelationships = result.Planning?.PersonalRelationships;
-          data.PlanningPersonalInterest = result.Planning?.PersonalInterest;
-          data.PlanningHealth = result.Planning?.Health;
-          data.PlanningPurposeOfLife = result.Planning?.PurposeOfLife;
+          viewMA._idPerson = result._idPerson;
+          viewMA.NamePerson = result.NamePerson;
+          viewMA.Date = result.Date;
+          viewMA.RealitySelfImage = result.Reality?.SelfImage;
+          viewMA.RealityWorker = result.Reality?.Worker;
+          viewMA.RealityPersonalRelationships = result.Reality?.PersonalRelationships;
+          viewMA.RealityPersonalInterest = result.Reality?.PersonalInterest;
+          viewMA.RealityHealth = result.Reality?.Health;
+          viewMA.RealityPurposeOfLife = result.Reality?.PurposeOfLife;
+          viewMA.ImpedimentSelfImage = result.Impediment?.SelfImage;
+          viewMA.ImpedimentWorker = result.Impediment?.Worker;
+          viewMA.ImpedimentPersonalRelationships = result.Impediment?.PersonalRelationships;
+          viewMA.ImpedimentPersonalInterest = result.Impediment?.PersonalInterest;
+          viewMA.ImpedimentHealth = result.Impediment?.Health;
+          viewMA.ImpedimentPurposeOfLife = result.Impediment?.PurposeOfLife;
+          viewMA.FutureVisionSelfImage = result.FutureVision?.SelfImage;
+          viewMA.FutureVisionWorker = result.FutureVision?.Worker;
+          viewMA.FutureVisionPersonalRelationships = result.FutureVision?.PersonalRelationships;
+          viewMA.FutureVisionPersonalInterest = result.FutureVision?.PersonalInterest;
+          viewMA.FutureVisionHealth = result.FutureVision?.Health;
+          viewMA.FutureVisionPurposeOfLife = result.FutureVision?.PurposeOfLife;
+          viewMA.PlanningSelfImage = result.Planning?.SelfImage;
+          viewMA.PlanningWorker = result.Planning?.Worker;
+          viewMA.PlanningPersonalRelationships = result.Planning?.PersonalRelationships;
+          viewMA.PlanningPersonalInterest = result.Planning?.PersonalInterest;
+          viewMA.PlanningHealth = result.Planning?.Health;
+          viewMA.PlanningPurposeOfLife = result.Planning?.PurposeOfLife;
         }
 
+        data.Add(viewMA);
 
         var view = new ViewReport()
         {
