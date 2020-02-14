@@ -72,7 +72,7 @@ namespace Manager.Services.Specific
       try
       {
         MyAwareness myawareness = serviceMyAwareness.GetNewVersion(p => p._idPerson == _user._idPerson).Result;
-
+        var id = "";
         if (myawareness == null)
         {
           myawareness = new MyAwareness()
@@ -121,17 +121,62 @@ namespace Manager.Services.Specific
 
           view._id = serviceMyAwareness.InsertNewVersion(myawareness).Result._id;
           Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
+          id = myawareness._id;
+        }
+        else
+        {
+
+          var myawarenessCopy = new MyAwareness()
+          {
+            _id = view._id,
+            NamePerson = view.NamePerson,
+            _idPerson = view._idPerson,
+            Date = DateTime.Now
+          };
+          myawarenessCopy.FutureVision = new MyAwarenessQuestions()
+          {
+            Health = myawareness.FutureVision.Health,
+            PersonalInterest = myawareness.FutureVision.PersonalInterest,
+            PersonalRelationships = myawareness.FutureVision.PersonalRelationships,
+            PurposeOfLife = myawareness.FutureVision.PurposeOfLife,
+            SelfImage = myawareness.FutureVision.SelfImage,
+            Worker = myawareness.FutureVision.Worker
+          };
+          myawarenessCopy.Impediment = new MyAwarenessQuestions()
+          {
+            Health = myawareness.Impediment.Health,
+            PersonalInterest = myawareness.Impediment.PersonalInterest,
+            PersonalRelationships = myawareness.Impediment.PersonalRelationships,
+            PurposeOfLife = myawareness.Impediment.PurposeOfLife,
+            SelfImage = myawareness.Impediment.SelfImage,
+            Worker = myawareness.Impediment.Worker
+          };
+          myawarenessCopy.Reality = new MyAwarenessQuestions()
+          {
+            Health = myawareness.Reality.Health,
+            PersonalInterest = myawareness.Reality.PersonalInterest,
+            PersonalRelationships = myawareness.Reality.PersonalRelationships,
+            PurposeOfLife = myawareness.Reality.PurposeOfLife,
+            SelfImage = myawareness.Reality.SelfImage,
+            Worker = myawareness.Reality.Worker
+          };
+          myawarenessCopy.Planning = new MyAwarenessQuestions()
+          {
+            Health = myawareness.Planning.Health,
+            PersonalInterest = myawareness.Planning.PersonalInterest,
+            PersonalRelationships = myawareness.Planning.PersonalRelationships,
+            PurposeOfLife = myawareness.Planning.PurposeOfLife,
+            SelfImage = myawareness.Planning.SelfImage,
+            Worker = myawareness.Planning.Worker
+          };
+
+          id = myawarenessCopy._id;
+          view._id = serviceMyAwareness.InsertNewVersion(myawarenessCopy).Result._id;
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start process | {0}", view._id)));
+
         }
 
-        //  serviceMyAwareness.Update(myawareness, null).Wait();
-        //else
-        //{
-        //if (exists == false)
-        //{
-
-        //}
-
-        return myawareness._id;
+        return id;
       }
       catch (Exception e)
       {
