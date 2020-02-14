@@ -49,9 +49,9 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcompany")]
-    public async Task<string> AddCompany([FromBody] ViewCrudCompanyMandatory view)
+    public  string AddCompany([FromBody] ViewCrudCompanyMandatory view)
     {
-      return await Task.Run(() => service.AddCompany(view));
+      return service.AddCompany(view);
     }
 
     /// <summary>
@@ -62,9 +62,9 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccuaption")]
-    public async Task<string> AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
+    public string AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
     {
-      return await Task.Run(() => service.AddOccupation(view));
+      return service.AddOccupation(view);
     }
 
     /// <summary>
@@ -75,9 +75,9 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addperson")]
-    public async Task<string> AddPerson([FromBody]ViewCrudPersonMandatory view)
+    public  string AddPerson([FromBody]ViewCrudPersonMandatory view)
     {
-      return await Task.Run(() => service.AddPerson(view));
+      return service.AddPerson(view);
     }
 
     /// <summary>
