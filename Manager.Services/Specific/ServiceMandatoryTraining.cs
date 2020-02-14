@@ -109,16 +109,7 @@ namespace Manager.Services.Specific
         if (beginDate == null)
           beginDate = DateTime.Now;
 
-        var viewPerson = servicePerson.GetAllNewVersion(p => p._id == person._id).Result.
-          Select(p => new ViewListPerson()
-          {
-            _id = p._id,
-            Company = p.Company,
-            Establishment = p.Establishment,
-            Registration = p.Registration,
-            User = p.User
-
-          }).FirstOrDefault();
+        var viewPerson = person.GetViewList();
 
         NewOnZero(course);
         var listPlans = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == course._id & p.Person._id == viewPerson._id).Result.ToList();
@@ -171,7 +162,7 @@ namespace Manager.Services.Specific
 
         if (listPlans.Where(p => p.Deadline == proxDate).Count() == 0)
         {
-          serviceTrainingPlan.InsertNewVersion(new TrainingPlan()
+          var plannew = serviceTrainingPlan.InsertNewVersion(new TrainingPlan()
           {
             Person = person.GetViewListManager(),
             Course = new ViewListCourse() { _id = course._id, Name = course.Name },
@@ -181,7 +172,7 @@ namespace Manager.Services.Specific
             Origin = (typeMandatoryTraining == EnumTypeMandatoryTraining.Mandatory) ? EnumOrigin.Mandatory : EnumOrigin.Optional,
             StatusTrainingPlan = status,
             Deadline = proxDate.Value.AddMonths(course.Deadline)
-          }).Wait();
+          });
         }
 
       }
@@ -397,14 +388,14 @@ namespace Manager.Services.Specific
         var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == view.Course._id).Result.FirstOrDefault();
         if (mandatory == null)
         {
-          serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
+          var result = serviceMandatoryTraining.InsertNewVersion(new MandatoryTraining()
           {
             Course = course.GetViewList(),
             Occupations = new List<ViewCrudOccupationMandatory>(),
             Status = EnumStatus.Enabled,
             Companys = new List<ViewCrudCompanyMandatory>(),
             Persons = list
-          }).Wait();
+          });
         }
         else
         {
