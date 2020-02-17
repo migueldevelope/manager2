@@ -375,16 +375,15 @@ namespace Manager.Services.Specific
       {
         Course course = serviceCourse.GetNewVersion(p => p._id == view.Course._id).Result;
         Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
-        var list = new List<ViewCrudPersonMandatory>
+        var item = AddPersonMandatory(new PersonMandatory()
         {
-          AddPersonMandatory(new PersonMandatory()
-          {
-            Course = course.GetViewList(),
-            Person = person.GetViewListBase(),
-            BeginDate = view.BeginDate,
-            TypeMandatoryTraining = view.TypeMandatoryTraining
-          })
-        };
+          Course = course.GetViewList(),
+          Person = person.GetViewListBase(),
+          BeginDate = view.BeginDate,
+          TypeMandatoryTraining = view.TypeMandatoryTraining
+        });
+        var list = new List<ViewCrudPersonMandatory>();
+        list.Add(item);
         var mandatory = serviceMandatoryTraining.GetAllNewVersion(p => p.Course._id == view.Course._id).Result.FirstOrDefault();
         if (mandatory == null)
         {
