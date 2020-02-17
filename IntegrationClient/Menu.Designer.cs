@@ -32,9 +32,11 @@
       this.impCol = new System.Windows.Forms.ToolStripMenuItem();
       this.impColCfg = new System.Windows.Forms.ToolStripMenuItem();
       this.impColPrc = new System.Windows.Forms.ToolStripMenuItem();
-      this.impCar = new System.Windows.Forms.ToolStripMenuItem();
-      this.impCarAna = new System.Windows.Forms.ToolStripMenuItem();
-      this.impCarExl = new System.Windows.Forms.ToolStripMenuItem();
+      this.map = new System.Windows.Forms.ToolStripMenuItem();
+      this.mapImpAna = new System.Windows.Forms.ToolStripMenuItem();
+      this.mapImpExl = new System.Windows.Forms.ToolStripMenuItem();
+      this.mapCarDiv0 = new System.Windows.Forms.ToolStripSeparator();
+      this.mapExp = new System.Windows.Forms.ToolStripMenuItem();
       this.perfil = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilTrocar = new System.Windows.Forms.ToolStripMenuItem();
       this.perfilSair = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +56,7 @@
       this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.impCol,
-            this.impCar,
+            this.map,
             this.perfil});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
@@ -74,7 +76,7 @@
       // impColCfg
       // 
       this.impColCfg.Name = "impColCfg";
-      this.impColCfg.Size = new System.Drawing.Size(216, 26);
+      this.impColCfg.Size = new System.Drawing.Size(207, 26);
       this.impColCfg.Text = "&Configuração";
       this.impColCfg.Click += new System.EventHandler(this.ImpColCfg_Click);
       // 
@@ -82,32 +84,46 @@
       // 
       this.impColPrc.Name = "impColPrc";
       this.impColPrc.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-      this.impColPrc.Size = new System.Drawing.Size(216, 26);
+      this.impColPrc.Size = new System.Drawing.Size(207, 26);
       this.impColPrc.Text = "&Importação";
       this.impColPrc.Click += new System.EventHandler(this.ImpColImp_Click);
       // 
-      // impCar
+      // map
       // 
-      this.impCar.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.impCarAna,
-            this.impCarExl});
-      this.impCar.Name = "impCar";
-      this.impCar.Size = new System.Drawing.Size(167, 24);
-      this.impCar.Text = "Importação de &Mapas";
+      this.map.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mapImpAna,
+            this.mapImpExl,
+            this.mapCarDiv0,
+            this.mapExp});
+      this.map.Name = "map";
+      this.map.Size = new System.Drawing.Size(65, 24);
+      this.map.Text = "&Mapas";
       // 
-      // impCarAna
+      // mapImpAna
       // 
-      this.impCarAna.Name = "impCarAna";
-      this.impCarAna.Size = new System.Drawing.Size(132, 26);
-      this.impCarAna.Text = "&Analisa";
-      this.impCarAna.Click += new System.EventHandler(this.ImpCarAna_Click);
+      this.mapImpAna.Name = "mapImpAna";
+      this.mapImpAna.Size = new System.Drawing.Size(235, 26);
+      this.mapImpAna.Text = "Importação do &Analisa";
+      this.mapImpAna.Click += new System.EventHandler(this.MapImpAna_Click);
       // 
-      // impCarExl
+      // mapImpExl
       // 
-      this.impCarExl.Name = "impCarExl";
-      this.impCarExl.Size = new System.Drawing.Size(132, 26);
-      this.impCarExl.Text = "&Excel";
-      this.impCarExl.Click += new System.EventHandler(this.ImpCarExl_Click);
+      this.mapImpExl.Name = "mapImpExl";
+      this.mapImpExl.Size = new System.Drawing.Size(235, 26);
+      this.mapImpExl.Text = "Importação do &Excel";
+      this.mapImpExl.Click += new System.EventHandler(this.MapImpExl_Click);
+      // 
+      // mapCarDiv0
+      // 
+      this.mapCarDiv0.Name = "mapCarDiv0";
+      this.mapCarDiv0.Size = new System.Drawing.Size(232, 6);
+      // 
+      // mapExp
+      // 
+      this.mapExp.Name = "mapExp";
+      this.mapExp.Size = new System.Drawing.Size(235, 26);
+      this.mapExp.Text = "&Exportação da Conta";
+      this.mapExp.Click += new System.EventHandler(this.MapExp_Click);
       // 
       // perfil
       // 
@@ -221,8 +237,10 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripLabel tbarAccount;
     private System.Windows.Forms.ToolStripMenuItem impColPrc;
-    private System.Windows.Forms.ToolStripMenuItem impCar;
-    private System.Windows.Forms.ToolStripMenuItem impCarAna;
-    private System.Windows.Forms.ToolStripMenuItem impCarExl;
+    private System.Windows.Forms.ToolStripMenuItem map;
+    private System.Windows.Forms.ToolStripMenuItem mapImpAna;
+    private System.Windows.Forms.ToolStripMenuItem mapImpExl;
+    private System.Windows.Forms.ToolStripSeparator mapCarDiv0;
+    private System.Windows.Forms.ToolStripMenuItem mapExp;
   }
 }

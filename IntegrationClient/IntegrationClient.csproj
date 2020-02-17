@@ -112,6 +112,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExportarMapas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportarMapas.Designer.cs">
+      <DependentUpon>ExportarMapas.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileModel\Connection.cs" />
     <Compile Include="ImportacaoAnalisaCargosMapas.cs">
       <SubType>Form</SubType>
@@ -162,6 +168,9 @@
     <Compile Include="ModelTools\SkillStatistic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ExportarMapas.resx">
+      <DependentUpon>ExportarMapas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ImportacaoAnalisaCargosMapas.resx">
       <DependentUpon>ImportacaoAnalisaCargosMapas.cs</DependentUpon>
     </EmbeddedResource>

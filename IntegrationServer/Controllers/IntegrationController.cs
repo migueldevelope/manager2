@@ -341,7 +341,29 @@ namespace IntegrationServer.InfraController
     {
       return service.IntegrationProfile(view);
     }
-
+    /// <summary>
+    /// Listar todos os cargos ativos para exportação
+    /// </summary>
+    /// <returns>Objeto atualizado</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("occupations")]
+    public List<ViewListOccupationResume> GetOccupationsExport()
+    {
+      return service.GetOccupationsExport();
+    }
+    /// <summary>
+    /// Retorna o mapa do cargo
+    /// </summary>
+    /// <param name="id">Identificador do mapa</param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("occupations/{id}")]
+    public ViewMapOccupation GetOccupationExport(string id)
+    {
+      return service.GetOccupationExport(id);
+    }
     #endregion
 
   }

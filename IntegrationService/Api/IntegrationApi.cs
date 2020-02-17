@@ -8,13 +8,13 @@ using System.Net.Http;
 
 namespace IntegrationService.Api
 {
-  public class InfraIntegration
+  public class IntegrationApi
   {
     private HttpClient clientSkill;
     private readonly ViewPersonLogin Person;
 
     #region Constructor
-    public InfraIntegration(ViewPersonLogin person)
+    public IntegrationApi(ViewPersonLogin person)
     {
       Person = person;
       string pathUrl = string.Empty;
@@ -95,6 +95,20 @@ namespace IntegrationService.Api
       {
         throw;
       }
+    }
+    public List<ViewListOccupationResume> OccupationExportList()
+    {
+      HttpResponseMessage result = clientSkill.GetAsync("integration/occupations").Result;
+      return result.IsSuccessStatusCode == false
+        ? null
+        : JsonConvert.DeserializeObject<List<ViewListOccupationResume>>(result.Content.ReadAsStringAsync().Result);
+    }
+    public ViewMapOccupation OccupationExportProfile(string id)
+    {
+      HttpResponseMessage result = clientSkill.GetAsync(string.Format("integration/occupations/{0}",id)).Result;
+      return result.IsSuccessStatusCode == false
+        ? null
+        : JsonConvert.DeserializeObject< ViewMapOccupation > (result.Content.ReadAsStringAsync().Result);
     }
     #endregion
 

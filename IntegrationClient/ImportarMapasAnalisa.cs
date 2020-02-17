@@ -52,7 +52,7 @@ namespace IntegrationClient
         occupations = cnn.ExecuteQuery(txtCmd.Text);
         cnn.Close();
       }
-      InfraIntegration infraIntegration = new InfraIntegration(Person);
+      IntegrationApi infraIntegration = new IntegrationApi(Person);
       prb.Maximum = occupations.Rows.Count;
       prb.Minimum = 0;
       prb.Value = 0;
@@ -207,7 +207,7 @@ namespace IntegrationClient
         txtLog.Text = string.Empty;
         btImp.Enabled = false;
         ProcessLevelTwo = null;
-        InfraIntegration process = new InfraIntegration(Person);
+        IntegrationApi process = new IntegrationApi(Person);
 //        ProcessLevelTwo = process.GetProcessByName(txtSubProc.Text);
         FileClass.WriteToBinaryFile(string.Format("{0}_{1}/SubProcess_cmd.txt", Person.NameAccount, Person.IdAccount), JsonConvert.SerializeObject(ProcessLevelTwo), false);
         btImp.Enabled = true;

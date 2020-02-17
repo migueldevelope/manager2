@@ -64,7 +64,7 @@ namespace IntegrationClient
     #endregion
 
     #region Menu Mapas
-    private void ImpCarAna_Click(object sender, EventArgs e)
+    private void MapImpAna_Click(object sender, EventArgs e)
     {
       ImportacaoAnalisaCargosMapas form = new ImportacaoAnalisaCargosMapas
       {
@@ -73,9 +73,18 @@ namespace IntegrationClient
       };
       form.Show();
     }
-    private void ImpCarExl_Click(object sender, EventArgs e)
+    private void MapImpExl_Click(object sender, EventArgs e)
     {
       ImportarMapasExcel form = new ImportarMapasExcel
+      {
+        MdiParent = this,
+        WindowState = FormWindowState.Normal
+      };
+      form.Show();
+    }
+    private void MapExp_Click(object sender, EventArgs e)
+    {
+      ExportarMapas form = new ExportarMapas
       {
         MdiParent = this,
         WindowState = FormWindowState.Normal

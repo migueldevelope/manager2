@@ -68,7 +68,7 @@ namespace IntegrationClient
           File.Delete(Path.Combine(txtPst.Text, "Tabulacao.xlsx"));
           Directory.GetFiles(txtPst.Text, "*.log", SearchOption.AllDirectories).ToList().ForEach(f => File.Delete(f));
         }
-        InfraIntegration infraIntegration = new InfraIntegration(Program.PersonLogin);
+        IntegrationApi infraIntegration = new IntegrationApi(Program.PersonLogin);
         IEnumerable<string> files;
         excelApp = new Excel.Application
         {
@@ -215,7 +215,7 @@ namespace IntegrationClient
     #endregion
 
     #region Excel
-    private void ImportFileExcel(string file, InfraIntegration infraIntegration)
+    private void ImportFileExcel(string file, IntegrationApi infraIntegration)
     {
       string cellName = "C5";
       // Utilizado para identificar a quebra de cargo por área (exemplo Bertolini)

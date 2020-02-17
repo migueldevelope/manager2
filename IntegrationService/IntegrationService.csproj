@@ -72,7 +72,7 @@
     <Compile Include="Api\ApiUnimedNers.cs" />
     <Compile Include="Api\Authentication.cs" />
     <Compile Include="Api\ConfigurationIntegration.cs" />
-    <Compile Include="Api\InfraIntegration.cs" />
+    <Compile Include="Api\IntegrationApi.cs" />
     <Compile Include="Api\PersonIntegration.cs" />
     <Compile Include="Data\ControleColaborador.cs" />
     <Compile Include="Data\ColaboradorImportar.cs" />

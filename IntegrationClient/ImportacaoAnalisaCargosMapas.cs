@@ -104,7 +104,7 @@ namespace IntegrationClient
       {
         companyId = FileClass.ReadFromBinaryFile<string>(string.Format("{0}/Company.txt", pathLogs));
       }
-      InfraIntegration infraService = new InfraIntegration(Program.PersonLogin);
+      IntegrationApi infraService = new IntegrationApi(Program.PersonLogin);
       List<ViewListCompany> companys = infraService.GetCompanyList();
       CboCompany.Items.Clear();
       foreach (var item in companys)
@@ -169,7 +169,7 @@ namespace IntegrationClient
         }
         DeleteFileExists(string.Format("{0}/Skill.log", pathLogs));
         DeleteFileExists(string.Format("{0}/Cargo.log", pathLogs));
-        InfraIntegration infraService = new InfraIntegration(Program.PersonLogin);
+        IntegrationApi infraService = new IntegrationApi(Program.PersonLogin);
         string registro = string.Empty;
         if (!string.IsNullOrEmpty(txtCmdCom.Text))
         {

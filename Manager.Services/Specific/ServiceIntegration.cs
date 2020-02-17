@@ -26,6 +26,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServicePerson personService;
     private readonly ServiceUser userService;
+    private readonly ServiceInfra serviceInfra;
     private readonly ServiceGeneric<Schooling> schoolingService;
     private readonly ServiceGeneric<Company> companyService;
     private readonly ServiceGeneric<Establishment> establishmentService;
@@ -55,6 +56,7 @@ namespace Manager.Services.Specific
       {
         personService = new ServicePerson(context, contextLog, _seviceControlQueue, _pathSignalr);
         userService = new ServiceUser(context, contextLog);
+        serviceInfra = new ServiceInfra(context);
         schoolingService = new ServiceGeneric<Schooling>(context);
         companyService = new ServiceGeneric<Company>(context);
         establishmentService = new ServiceGeneric<Establishment>(context);
@@ -83,6 +85,7 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       personService.SetUser(_user);
       userService.SetUser(_user);
+      serviceInfra.SetUser(_user);
       schoolingService._user = _user;
       companyService._user = _user;
       accountService._user = _user;
@@ -106,6 +109,7 @@ namespace Manager.Services.Specific
       _user = user;
       personService.SetUser(user);
       userService.SetUser(user);
+      serviceInfra.SetUser(user);
       companyService._user = user;
       accountService._user = user;
       occupationService._user = user;
@@ -1653,6 +1657,30 @@ namespace Manager.Services.Specific
         Messages = view.Messages,
         Update = view.Update
       };
+    }
+
+    public List<ViewListOccupationResume> GetOccupationsExport()
+    {
+      try
+      {
+        return occupationService.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.OrderBy(p => p.Name).ThenBy(o => o.Description)
+          .Select(p => p.GetViewListResume()).ToList();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    public ViewMapOccupation GetOccupationExport(string id)
+    {
+      try
+      {
+        return serviceInfra.GetMapOccupation(id);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
     }
     #endregion
 
