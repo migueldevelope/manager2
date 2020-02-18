@@ -768,21 +768,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCourse> ListOccupationGroup(string idoccupation, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCourseMandatory> ListOccupationGroup(string idoccupation, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var result = new List<ViewListCourse>();
+        var result = new List<ViewListCourseMandatory>();
 
         var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
           if (item.Occupations != null)
             if (item.Occupations.Where(p => p.Occupation._id == idoccupation).Count() > 0)
-              result.Add(new ViewListCourse()
+              result.Add(new ViewListCourseMandatory()
               {
                 _id = item.Course?._id,
+                Name = item.Course?.Name,
               });
         }
 
@@ -795,21 +796,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCourse> ListPersonGroup(string idperson, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCourseMandatory> ListPersonGroup(string idperson, string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var result = new List<ViewListCourse>();
+        var result = new List<ViewListCourseMandatory>();
 
         var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
           if (item.Persons != null)
             if (item.Persons.Where(p => p.Person._id == idperson).Count() > 0)
-              result.Add(new ViewListCourse()
+              result.Add(new ViewListCourseMandatory()
               {
                 _id = item.Course?._id,
+                Name = item.Course?.Name
               });
         }
 
@@ -823,21 +825,22 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListCourse> ListCompanyGroup(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListCourseMandatory> ListCompanyGroup(string idcompany, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
         int skip = (count * (page - 1));
-        var result = new List<ViewListCourse>();
+        var result = new List<ViewListCourseMandatory>();
 
         var list = serviceMandatoryTraining.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
           if (item.Companys != null)
             if (item.Companys.Where(p => p.Company._id == idcompany).Count() > 0)
-              result.Add(new ViewListCourse()
+              result.Add(new ViewListCourseMandatory()
               {
                 _id = item.Course?._id,
+                Name = item.Course?.Name
               });
         }
 

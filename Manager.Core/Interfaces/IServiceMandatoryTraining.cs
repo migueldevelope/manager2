@@ -17,9 +17,9 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     string RemoveTrainingPlan(string id);
 
-    List<ViewListCourse> ListOccupationGroup(string idoccupation, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    List<ViewListCourse> ListPersonGroup(string idperson, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
-    List<ViewListCourse> ListCompanyGroup(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListCourseMandatory> ListOccupationGroup(string idoccupation, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListCourseMandatory> ListPersonGroup(string idperson, string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListCourseMandatory> ListCompanyGroup(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<string> AddOccupation(ViewCrudOccupationMandatory view);
     List<string> AddPerson(ViewCrudPersonMandatory view);
     List<string> AddCompany(ViewCrudCompanyMandatory view);
