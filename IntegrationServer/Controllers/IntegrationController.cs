@@ -348,9 +348,9 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("occupations")]
-    public List<ViewListOccupationResume> GetOccupationsExport()
+    public List<ViewListOccupationResume> GetExportOccupation()
     {
-      return service.GetOccupationsExport();
+      return service.GetExportOccupations();
     }
     /// <summary>
     /// Retorna o mapa do cargo
@@ -360,9 +360,20 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("occupations/{id}")]
-    public ViewMapOccupation GetOccupationExport(string id)
+    public ViewMapOccupation GetExportOccupation(string id)
     {
-      return service.GetOccupationExport(id);
+      return service.GetExportOccupation(id);
+    }
+    /// <summary>
+    /// Retorna os grupos ocupacionais por ordem de importância
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportgroups")]
+    public List<ViewListGroup> GetExportGroups()
+    {
+      return service.GetExportGroups();
     }
     #endregion
 

@@ -32,6 +32,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Establishment> establishmentService;
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Occupation> occupationService;
+    private readonly ServiceGeneric<Group> groupService;
     private readonly ServiceGeneric<IntegrationSchooling> integrationSchoolingService;
     private readonly ServiceGeneric<IntegrationCompany> integrationCompanyService;
     private readonly ServiceGeneric<IntegrationEstablishment> integrationEstablishmentService;
@@ -42,7 +43,6 @@ namespace Manager.Services.Specific
     // Integração de Skills, Cargos e Mapas do ANALISA
     private readonly ServiceGeneric<ProcessLevelTwo> processLevelTwoService;
     private readonly ServiceGeneric<Skill> skillService;
-    private readonly ServiceGeneric<Group> groupService;
 
     // Colaborador V2
     private readonly ServiceGeneric<PayrollEmployee> payrollEmployeeService;
@@ -1537,7 +1537,7 @@ namespace Manager.Services.Specific
         return view;
       }
       Occupation occupation = string.IsNullOrEmpty(view.Description)
-        ? occupationService.GetNewVersion(p => p.Name == view.Name && ( p.Description == null || p.Description == string.Empty)).Result
+        ? occupationService.GetNewVersion(p => p.Name == view.Name && (p.Description == null || p.Description == string.Empty)).Result
         : occupationService.GetNewVersion(p => p.Name == view.Name && p.Description == view.Description).Result;
       if (occupation == null)
       {
@@ -1659,7 +1659,7 @@ namespace Manager.Services.Specific
       };
     }
 
-    public List<ViewListOccupationResume> GetOccupationsExport()
+    public List<ViewListOccupationResume> GetExportOccupations()
     {
       try
       {
@@ -1671,11 +1671,24 @@ namespace Manager.Services.Specific
         throw ex;
       }
     }
-    public ViewMapOccupation GetOccupationExport(string id)
+    public ViewMapOccupation GetExportOccupation(string id)
     {
       try
       {
         return serviceInfra.GetMapOccupation(id);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+
+    public List<ViewListGroup> GetExportGroups()
+    {
+      try
+      {
+        return groupService.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.OrderBy(o => o.Line)
+          .Select(x => x.GetViewList()).ToList();
       }
       catch (Exception ex)
       {
