@@ -348,7 +348,7 @@ namespace IntegrationServer.InfraController
     [Authorize]
     [HttpGet]
     [Route("occupations")]
-    public List<ViewListOccupationResume> GetExportOccupation()
+    public List<ViewListOccupation> GetExportOccupation()
     {
       return service.GetExportOccupations();
     }

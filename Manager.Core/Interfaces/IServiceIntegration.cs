@@ -63,7 +63,7 @@ namespace Manager.Core.Interfaces
     List<ViewListProcessLevelTwo> ProcessLevelTwoList(ref long total);
     ViewCrudSkill IntegrationSkill(ViewCrudSkill view);
     ViewIntegrationProfileOccupation IntegrationProfile(ViewIntegrationProfileOccupation view);
-    List<ViewListOccupationResume> GetExportOccupations();
+    List<ViewListOccupation> GetExportOccupations();
     ViewMapOccupation GetExportOccupation(string id);
     List<ViewListGroup> GetExportGroups();
     #endregion

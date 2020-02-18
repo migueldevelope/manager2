@@ -1659,12 +1659,12 @@ namespace Manager.Services.Specific
       };
     }
 
-    public List<ViewListOccupationResume> GetExportOccupations()
+    public List<ViewListOccupation> GetExportOccupations()
     {
       try
       {
         return occupationService.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.OrderBy(p => p.Name).ThenBy(o => o.Description)
-          .Select(p => p.GetViewListResume()).ToList();
+          .Select(p => p.GetViewList()).ToList();
       }
       catch (Exception ex)
       {

@@ -96,19 +96,26 @@ namespace IntegrationService.Api
         throw;
       }
     }
-    public List<ViewListOccupationResume> OccupationExportList()
+    public List<ViewListOccupation> ExportOccupationList()
     {
       HttpResponseMessage result = clientSkill.GetAsync("integration/occupations").Result;
       return result.IsSuccessStatusCode == false
         ? null
-        : JsonConvert.DeserializeObject<List<ViewListOccupationResume>>(result.Content.ReadAsStringAsync().Result);
+        : JsonConvert.DeserializeObject<List<ViewListOccupation>>(result.Content.ReadAsStringAsync().Result);
     }
-    public ViewMapOccupation OccupationExportProfile(string id)
+    public ViewMapOccupation ExportOccupationProfile(string id)
     {
       HttpResponseMessage result = clientSkill.GetAsync(string.Format("integration/occupations/{0}",id)).Result;
       return result.IsSuccessStatusCode == false
         ? null
         : JsonConvert.DeserializeObject< ViewMapOccupation > (result.Content.ReadAsStringAsync().Result);
+    }
+    public List<ViewListGroup> ExportGroups()
+    {
+      HttpResponseMessage result = clientSkill.GetAsync("integration/exportgroups").Result;
+      return result.IsSuccessStatusCode == false
+        ? null
+        : JsonConvert.DeserializeObject<List<ViewListGroup>>(result.Content.ReadAsStringAsync().Result);
     }
     #endregion
 

@@ -32,7 +32,7 @@ namespace IntegrationClient
       try
       {
         IntegrationApi IntegrationApi = new IntegrationApi(Program.PersonLogin);
-        List<ViewListOccupationResume> occupations = IntegrationApi.OccupationExportList();
+        List<ViewListOccupation> occupations = IntegrationApi.ExportOccupationList();
         string pathExport = txtPst.Text;
         if (string.IsNullOrEmpty(pathExport))
         {
@@ -62,19 +62,19 @@ namespace IntegrationClient
         {
           "Técnica", "Comportamental", "Outros"
         };
-        foreach (ViewListOccupationResume occupation in occupations)
+        foreach (ViewListOccupation occupation in occupations)
         {
           prb.Minimum++;
           lblPrb.Text = string.Format("Exportando {0} de {1} mapas", prb.Minimum, occupations.Count);
           Refresh();
-          ViewMapOccupation map = IntegrationApi.OccupationExportProfile(occupation._id);
+          ViewMapOccupation map = IntegrationApi.ExportOccupationProfile(occupation._id);
           excelPst = excelApp.Workbooks.Open(layoutFile);
           excelPln = excelPst.Worksheets["Mapa"];
           excelPln.Activate();
           excelPln.Range["C5"].Value = Program.PersonLogin.NameAccount;
           excelPln.Range["C7"].Value = occupation.Name;
           excelPln.Range["H7"].Value = string.Format("{0}/{1}", map.Group.Sphere.Name, map.Group.Axis.Name);
-          excelPln.Range["C9"].Value = occupation.NameGroup;
+          excelPln.Range["C9"].Value = occupation.Group.Name;
           excelPln.Range["H9"].Value = DateTime.Now;
           // Escopo
           foreach (ViewListScope item in map.ScopeGroup)
