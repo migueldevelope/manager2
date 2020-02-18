@@ -252,6 +252,25 @@
             <param name="view">Cargo para validar</param>
             <returns>Objeto atualizado</returns>
         </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetExportOccupation">
+            <summary>
+            Listar todos os cargos ativos para exportação
+            </summary>
+            <returns>Objeto atualizado</returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetExportOccupation(System.String)">
+            <summary>
+            Retorna o mapa do cargo
+            </summary>
+            <param name="id">Identificador do mapa</param>
+            <returns></returns>
+        </member>
+        <member name="M:IntegrationServer.InfraController.IntegrationController.GetExportGroups">
+            <summary>
+            Retorna os grupos ocupacionais por ordem de importância
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:IntegrationServer.InfraController.PersonController">
             <summary>
             Controlador para integração de funcionários

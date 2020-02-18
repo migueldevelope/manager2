@@ -49,7 +49,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcompany")]
-    public  string AddCompany([FromBody] ViewCrudCompanyMandatory view)
+    public List<string> AddCompany([FromBody] ViewCrudCompanyMandatory view)
     {
       return service.AddCompany(view);
     }
@@ -62,7 +62,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccuaption")]
-    public string AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
+    public List<string> AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
     {
       return service.AddOccupation(view);
     }
@@ -75,7 +75,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addperson")]
-    public  string AddPerson([FromBody]ViewCrudPersonMandatory view)
+    public List<string> AddPerson([FromBody]ViewCrudPersonMandatory view)
     {
       return service.AddPerson(view);
     }
@@ -91,7 +91,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listcompanygroup/{idcompany}")]
-    public async Task<List<ViewListCourse>> ListCompanyGroup(string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCourseMandatory>> ListCompanyGroup(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListCompanyGroup(idcompany, ref total, count, page, filter);
@@ -111,7 +111,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listoccupationgroup/{idoccupation}/{idcompany}")]
-    public async Task<List<ViewListCourse>> ListOccupationGroup(string idoccupation, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCourseMandatory>> ListOccupationGroup(string idoccupation, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListOccupationGroup(idoccupation, idcompany, ref total, count, page, filter);
@@ -131,7 +131,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listpersongroup/{idperson}/{idcompany}")]
-    public async Task<List<ViewListCourse>> ListPersonGroup(string idperson, string idcompany, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListCourseMandatory>> ListPersonGroup(string idperson, string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListPersonGroup(idperson, idcompany, ref total, count, page, filter);
