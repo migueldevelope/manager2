@@ -1,5 +1,6 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
+using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
@@ -8,6 +9,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -398,6 +400,87 @@ namespace Manager.Services.Specific
         //list.Add(view);
         //}
         return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
+
+    #region FluidCareerPlan
+    public string DeletePlan(string idfluidcareer)
+    {
+      try
+      {
+        var item = serviceFluidCareers.GetNewVersion(p => p._id == idfluidcareer).Result;
+        item.Plan = null;
+        serviceFluidCareers.Update(item, null).Wait();
+        return "FluidCareerPlan deleted!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string NewPlan(string idfluidcareer, ViewCrudFluidCareerPlan view)
+    {
+      try
+      {
+        var fluidcareer = serviceFluidCareers.GetNewVersion(p => p._id == idfluidcareer).Result;
+        FluidCareerPlan plan = new FluidCareerPlan()
+        {
+          _id = ObjectId.GenerateNewId().ToString(),
+          Date = view.Date,
+          Observation = view.Observation,
+          StatusFluidCareerPlan = view.StatusFluidCareerPlan,
+          What = view.What,
+          Status = EnumStatus.Enabled,
+          _idAccount = _user._idAccount
+        };
+        fluidcareer.Plan = plan;
+        var i = serviceFluidCareers.Update(fluidcareer, null);
+        return "FluidCareerPlan added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string UpdatePlan(string idfluidcareer, ViewCrudFluidCareerPlan view)
+    {
+      try
+      {
+        var fluidcareers = serviceFluidCareers.GetNewVersion(p => p._id == idfluidcareer).Result;
+        if (fluidcareers.Plan == null)
+          fluidcareers.Plan = new FluidCareerPlan()
+          {
+            _id = ObjectId.GenerateNewId().ToString(),
+            Status = EnumStatus.Enabled,
+            _idAccount = _user._idAccount
+          };
+
+        fluidcareers.Plan.Date = view.Date;
+        fluidcareers.Plan.Observation = view.Observation;
+        fluidcareers.Plan.StatusFluidCareerPlan = view.StatusFluidCareerPlan;
+        fluidcareers.Plan.What = view.What;
+
+
+        serviceFluidCareers.Update(fluidcareers, null).Wait();
+
+        return "FluidCareerPlan altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudFluidCareerPlan GetPlan(string idfluidcareer)
+    {
+      try
+      {
+        return serviceFluidCareers.GetNewVersion(p => p._id == idfluidcareer).Result.Plan?.GetViewCrud();
       }
       catch (Exception e)
       {
