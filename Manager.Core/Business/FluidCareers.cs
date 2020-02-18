@@ -20,7 +20,7 @@ namespace Manager.Core.Business
         _id = _id,
         _idPerson = Person._id,
         FluidCareersView = FluidCareersView,
-        Plan = Plan.GetViewCrud()
+        Plan = Plan?.GetViewCrud()
       };
     }
   }
