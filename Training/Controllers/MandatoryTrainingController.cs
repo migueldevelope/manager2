@@ -49,7 +49,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addcompany")]
-    public  string AddCompany([FromBody] ViewCrudCompanyMandatory view)
+    public List<string> AddCompany([FromBody] ViewCrudCompanyMandatory view)
     {
       return service.AddCompany(view);
     }
@@ -62,7 +62,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addoccuaption")]
-    public string AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
+    public List<string> AddOccuaption([FromBody]ViewCrudOccupationMandatory view)
     {
       return service.AddOccupation(view);
     }
@@ -75,7 +75,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpPost]
     [Route("addperson")]
-    public  string AddPerson([FromBody]ViewCrudPersonMandatory view)
+    public List<string> AddPerson([FromBody]ViewCrudPersonMandatory view)
     {
       return service.AddPerson(view);
     }

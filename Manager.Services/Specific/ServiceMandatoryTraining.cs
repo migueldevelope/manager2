@@ -102,7 +102,7 @@ namespace Manager.Services.Specific
         throw;
       }
     }
-    private void UpdateTrainingPlanPerson(Course course, Person person, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private void UpdateTrainingPlanPerson(ref List<string> messages, Course course, Person person, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -132,13 +132,13 @@ namespace Manager.Services.Specific
 
 
         if ((dateMax != null) & (Prerequeriments(course._id) == true))
-          return;
+          messages.Add("prerequeiments_empty");
 
         if ((dateMax != null) & (course.Periodicity == 0))
-          return;
+          messages.Add("realized");
 
         if (PrerequerimentsInvert(course, person._id) == true)
-          return;
+          messages.Add("prerequeiments_invert_empty");
 
 
         DateTime? proxDate = null;
@@ -251,7 +251,7 @@ namespace Manager.Services.Specific
         }
       }
     }
-    private void UpdateTrainingPlanOccupation(Course course, Occupation occupation, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private void UpdateTrainingPlanOccupation(ref List<string> messages, Course course, Occupation occupation, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -261,7 +261,7 @@ namespace Manager.Services.Specific
         var list = servicePerson.GetAllNewVersion(p => p.Occupation == occupation.GetViewListResume()).Result.ToList();
         foreach (var item in list)
         {
-          UpdateTrainingPlanPerson(course, item, beginDate, typeMandatoryTraining);
+          UpdateTrainingPlanPerson(ref messages, course, item, beginDate, typeMandatoryTraining);
         }
       }
       catch (Exception e)
@@ -269,7 +269,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void UpdateTrainingPlanCompany(Course course, Company company, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
+    private void UpdateTrainingPlanCompany(ref List<string> messages, Course course, Company company, DateTime? beginDate, EnumTypeMandatoryTraining typeMandatoryTraining)
     {
       try
       {
@@ -279,7 +279,7 @@ namespace Manager.Services.Specific
         var list = servicePerson.GetAllNewVersion(p => p.Company._id == company._id).Result.ToList();
         foreach (var item in list)
         {
-          UpdateTrainingPlanPerson(course, item, beginDate, typeMandatoryTraining);
+          UpdateTrainingPlanPerson(ref messages, course, item, beginDate, typeMandatoryTraining);
         }
       }
       catch (Exception e)
@@ -328,7 +328,7 @@ namespace Manager.Services.Specific
 
     #region mandatorytraining
 
-    public string AddOccupation(ViewCrudOccupationMandatory view)
+    public List<string> AddOccupation(ViewCrudOccupationMandatory view)
     {
       try
       {
@@ -361,15 +361,16 @@ namespace Manager.Services.Specific
           mandatory.Occupations.Add(list.FirstOrDefault());
           serviceMandatoryTraining.Update(mandatory, null).Wait();
         }
-        Task.Run(() => UpdateTrainingPlanOccupation(course, occupation, view.BeginDate, view.TypeMandatoryTraining));
-        return "add occupation";
+        var messages = new List<string>();
+        UpdateTrainingPlanOccupation(ref messages,course, occupation, view.BeginDate, view.TypeMandatoryTraining);
+        return messages;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public string AddPerson(ViewCrudPersonMandatory view)
+    public List<string> AddPerson(ViewCrudPersonMandatory view)
     {
       try
       {
@@ -402,16 +403,17 @@ namespace Manager.Services.Specific
           serviceMandatoryTraining.Update(mandatory, null).Wait();
         }
         //Task.Run(() => UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining));
-        UpdateTrainingPlanPerson(course, person, view.BeginDate, view.TypeMandatoryTraining);
+        var messages = new List<string>();
+        UpdateTrainingPlanPerson(ref messages, course, person, view.BeginDate, view.TypeMandatoryTraining);
 
-        return "add occupation";
+        return messages;
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public string AddCompany(ViewCrudCompanyMandatory view)
+    public List<string> AddCompany(ViewCrudCompanyMandatory view)
     {
       try
       {
@@ -444,8 +446,9 @@ namespace Manager.Services.Specific
           mandatory.Companys.Add(list.FirstOrDefault());
           serviceMandatoryTraining.Update(mandatory, null).Wait();
         }
-        UpdateTrainingPlanCompany(course, company, view.BeginDate, view.TypeMandatoryTraining);
-        return "add occupation";
+        var messages = new List<string>();
+        UpdateTrainingPlanCompany(ref messages, course, company, view.BeginDate, view.TypeMandatoryTraining);
+        return messages;
       }
       catch (Exception e)
       {
