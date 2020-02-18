@@ -161,6 +161,8 @@
     <Compile Include="Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModelTools\ExportProcessOccupation.cs" />
+    <Compile Include="ModelTools\ExportOpportunityLine.cs" />
     <Compile Include="ModelTools\OccupationSchoolingStatistic.cs" />
     <Compile Include="ModelTools\OccupationSkillStatistic.cs" />
     <Compile Include="ModelTools\OccupationStatistic.cs" />
@@ -201,7 +203,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Layout\Map.xlsx">
+    <None Include="Layout\Layout_Exportacao_LO.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Layout\Layout_Exportacao_Mapa.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

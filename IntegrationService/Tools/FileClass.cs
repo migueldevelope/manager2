@@ -43,5 +43,14 @@ namespace IntegrationService.Tools
         }
       }
     }
+    public static string LoadLog(string file)
+    {
+      if (!File.Exists(file))
+        return null;
+      using (TextReader stream = new StreamReader(file, true))
+      {
+        return stream.ReadToEnd();
+      }
+    }
   }
 }
