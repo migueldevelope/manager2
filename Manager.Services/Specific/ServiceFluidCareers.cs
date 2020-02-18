@@ -409,7 +409,7 @@ namespace Manager.Services.Specific
 
     #endregion
 
-    #region FluidCareerPlan
+    #region Plan
     public string DeletePlan(string idfluidcareer)
     {
       try
@@ -424,7 +424,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string NewPlan(string idfluidcareer, ViewCrudFluidCareerPlan view)
+    public ViewCrudFluidCareerPlan NewPlan(string idfluidcareer, ViewCrudFluidCareerPlan view)
     {
       try
       {
@@ -441,14 +441,15 @@ namespace Manager.Services.Specific
         };
         fluidcareer.Plan = plan;
         var i = serviceFluidCareers.Update(fluidcareer, null);
-        return "FluidCareerPlan added!";
+
+        return fluidcareer.Plan.GetViewCrud();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public string UpdatePlan(string idfluidcareer, ViewCrudFluidCareerPlan view)
+    public ViewCrudFluidCareerPlan UpdatePlan(string idfluidcareer, ViewCrudFluidCareerPlan view)
     {
       try
       {
@@ -467,9 +468,9 @@ namespace Manager.Services.Specific
         fluidcareers.Plan.What = view.What;
 
 
-        serviceFluidCareers.Update(fluidcareers, null).Wait();
+        var i = serviceFluidCareers.Update(fluidcareers, null);
 
-        return "FluidCareerPlan altered!";
+        return fluidcareers.Plan.GetViewCrud();
       }
       catch (Exception e)
       {

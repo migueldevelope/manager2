@@ -22,8 +22,8 @@ namespace Manager.Core.Interfaces
     ViewFluidCareersPerson GetPerson(string idperson);
     List<ViewListFluidCareers> ListPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     string DeletePlan(string idfluidcareer);
-    string NewPlan(string idfluidcareer, ViewCrudFluidCareerPlan view);
-    string UpdatePlan(string idfluidcareer, ViewCrudFluidCareerPlan view);
+    ViewCrudFluidCareerPlan NewPlan(string idfluidcareer, ViewCrudFluidCareerPlan view);
+    ViewCrudFluidCareerPlan UpdatePlan(string idfluidcareer, ViewCrudFluidCareerPlan view);
     ViewCrudFluidCareerPlan GetPlan(string idfluidcareer);
   }
 }
