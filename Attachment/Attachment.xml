@@ -196,6 +196,13 @@
             <param name="ideventhistoric"></param>
             <returns></returns>
         </member>
+        <member name="M:EdeskIntegration.Controllers.UploadController.PostEventHistoricTemp(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="ideventhistorictemp"></param>
+            <returns></returns>
+        </member>
         <member name="M:EdeskIntegration.Controllers.UploadController.PostPlan(System.String,System.String)">
             <summary>
             

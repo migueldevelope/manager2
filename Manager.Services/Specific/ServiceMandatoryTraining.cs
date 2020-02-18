@@ -784,6 +784,7 @@ namespace Manager.Services.Specific
               {
                 _id = item.Course?._id,
                 Name = item.Course?.Name,
+                TypeMandatoryTraining = item.Occupations.Where(x => x.Occupation._id == idoccupation).FirstOrDefault().TypeMandatoryTraining
               });
         }
 
@@ -811,7 +812,8 @@ namespace Manager.Services.Specific
               result.Add(new ViewListCourseMandatory()
               {
                 _id = item.Course?._id,
-                Name = item.Course?.Name
+                Name = item.Course?.Name,
+                TypeMandatoryTraining = item.Persons.Where(x => x.Person._id == idperson).FirstOrDefault().TypeMandatoryTraining
               });
         }
 
@@ -840,7 +842,8 @@ namespace Manager.Services.Specific
               result.Add(new ViewListCourseMandatory()
               {
                 _id = item.Course?._id,
-                Name = item.Course?.Name
+                Name = item.Course?.Name,
+                TypeMandatoryTraining = item.Companys.Where(x => x.Company._id == idcompany).FirstOrDefault().TypeMandatoryTraining
               });
         }
 
