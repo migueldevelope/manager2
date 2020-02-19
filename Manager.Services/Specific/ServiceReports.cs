@@ -550,49 +550,57 @@ namespace Manager.Services.Specific
 
 
         var data = new List<ViewListHistoricTraining>();
-        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        List<Person> persons = new List<Person>();
 
-        foreach (var item in events)
-        {
-          var viewL = new ViewListHistoricTraining()
-          {
-            Name = person.User.Name,
-            Manager = person.Manager.Name,
-            Course = item.Course.Name,
-            Occupation = person.Occupation?.Name,
-            DateBegin = item.Begin,
-            DateEnd = item.End,
-            Entity = item.Entity?.Name,
-            Schooling = person.User.Schooling?.Name,
-            Workload = item.Workload,
-            _id = person._id,
-            Type = EnumTypeHistoricTraining.Realized
-          };
-          data.Add(viewL);
-        }
+        if (idperson != "")
+          persons = servicePerson.GetAllNewVersion(p => p._id == idperson).Result;
+        else
+          persons = servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
-        //instructors
-        foreach (var item in listevent)
+        foreach (var person in persons)
         {
-          if (item.Instructors != null)
+          foreach (var item in events)
           {
-            if (item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
+            var viewL = new ViewListHistoricTraining()
             {
-              var viewL = new ViewListHistoricTraining()
+              Name = person.User.Name,
+              Manager = person.Manager.Name,
+              Course = item.Course.Name,
+              Occupation = person.Occupation?.Name,
+              DateBegin = item.Begin,
+              DateEnd = item.End,
+              Entity = item.Entity?.Name,
+              Schooling = person.User.Schooling?.Name,
+              Workload = item.Workload,
+              _id = person._id,
+              Type = EnumTypeHistoricTraining.Realized
+            };
+            data.Add(viewL);
+          }
+
+          //instructors
+          foreach (var item in listevent)
+          {
+            if (item.Instructors != null)
+            {
+              if (item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
               {
-                Name = person.User.Name,
-                Manager = person.Manager.Name,
-                Course = item.Course.Name,
-                Occupation = person.Occupation?.Name,
-                DateBegin = item.Begin,
-                DateEnd = item.End,
-                Entity = item.Entity?.Name,
-                Schooling = person.User.Schooling?.Name,
-                Workload = item.Workload,
-                _id = person._id,
-                Type = EnumTypeHistoricTraining.Instructor
-              };
-              data.Add(viewL);
+                var viewL = new ViewListHistoricTraining()
+                {
+                  Name = person.User.Name,
+                  Manager = person.Manager.Name,
+                  Course = item.Course.Name,
+                  Occupation = person.Occupation?.Name,
+                  DateBegin = item.Begin,
+                  DateEnd = item.End,
+                  Entity = item.Entity?.Name,
+                  Schooling = person.User.Schooling?.Name,
+                  Workload = item.Workload,
+                  _id = person._id,
+                  Type = EnumTypeHistoricTraining.Instructor
+                };
+                data.Add(viewL);
+              }
             }
 
           }
