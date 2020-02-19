@@ -295,6 +295,19 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
+          if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
+          // Ajuste de jornada para grupos de cargos da BERTOLINI
+          {
+            if (person.Occupation != null)
+            {
+              if (person.Occupation._idGroup.Equals("5de53b3bea38bc0001636705") ||
+                  person.Occupation._idGroup.Equals("5cb8bed427a5e8f3ef548c7a") ||
+                  person.Occupation._idGroup.Equals("5cb8bee027a5e8f3ef548c7b"))
+              {
+                person.TypeJourney = EnumTypeJourney.OutOfJourney;
+              }
+            }
+          }
           // Afastados aparecem fora de jornada
           if (person.StatusUser == EnumStatusUser.Away)
           {
@@ -344,6 +357,19 @@ namespace Manager.Services.Specific
             if (person.Establishment.Name.StartsWith("Estagiários") || person.Establishment.Name.StartsWith("Multy Pessoal"))
             {
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
+            }
+          }
+          if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
+          // Ajuste de jornada para grupos de cargos da BERTOLINI
+          {
+            if (person.Occupation != null)
+            {
+              if (person.Occupation._idGroup.Equals("5de53b3bea38bc0001636705") ||
+                  person.Occupation._idGroup.Equals("5cb8bed427a5e8f3ef548c7a") ||
+                  person.Occupation._idGroup.Equals("5cb8bee027a5e8f3ef548c7b"))
+              {
+                person.TypeJourney = EnumTypeJourney.OutOfJourney;
+              }
             }
           }
           if (personManager != null)
