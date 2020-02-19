@@ -168,6 +168,58 @@ namespace Manager.Controllers
 
     #endregion
 
+    #region Plan
+
+    /// <summary>
+    /// Cadastrar uma nova empresa
+    /// </summary>
+    /// <param name="view">Objeto de cadastro da empresa</param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("newplan/{idfluidcareer}")]
+    public async Task<IActionResult> PostPlan([FromBody]ViewCrudFluidCareerPlan view, string idfluidcareer)
+    {
+      return await Task.Run(() => Ok(service.NewPlan(idfluidcareer, view)));
+    }
+    /// <summary>
+    /// Retorar a empresa para manutenção
+    /// </summary>
+    /// <param name="id">Identificador da empresa</param>
+    /// <returns>Objeto de manutenção da empresa</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getplan/{idfluidcareer}")]
+    public async Task<ViewCrudFluidCareers> GetPlan(string idfluidcareer)
+    {
+      return await Task.Run(() => service.Get(idfluidcareer));
+    }
+    /// <summary>
+    /// Alterar a empresa
+    /// </summary>
+    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updateplan/{idfluidcareer}")]
+    public async Task<IActionResult> UpdatePlan([FromBody]ViewCrudFluidCareerPlan view, string idfluidcareer)
+    {
+      return await Task.Run(() => Ok(service.UpdatePlan(idfluidcareer, view)));
+    }
+    /// <summary>
+    /// Excluir uma empresa
+    /// </summary>
+    /// <param name="id">Identificação da empresa</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deleteplan/{idfluidcareer}")]
+    public async Task<IActionResult> DeletePlan(string idfluidcareer)
+    {
+      return await Task.Run(() => Ok(service.Delete(idfluidcareer)));
+    }
+
+    #endregion
+
 
   }
 }
