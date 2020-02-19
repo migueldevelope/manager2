@@ -88,7 +88,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string New(ViewCrudFluidCareers view)
+    public ViewCrudFluidCareers New(ViewCrudFluidCareers view)
     {
       try
       {
@@ -100,14 +100,14 @@ namespace Manager.Services.Specific
           Date = DateTime.Now,
           FluidCareersView = view.FluidCareersView
         }).Result;
-        return "FluidCareers added!";
+        return fluidcareers.GetViewCrud();
       }
       catch (Exception e)
       {
         throw e;
       }
     }
-    public string Update(ViewCrudFluidCareers view)
+    public ViewCrudFluidCareers Update(ViewCrudFluidCareers view)
     {
       try
       {
@@ -115,7 +115,7 @@ namespace Manager.Services.Specific
 
         serviceFluidCareers.Update(fluidcareers, null).Wait();
 
-        return "FluidCareers altered!";
+        return fluidcareers.GetViewCrud();
       }
       catch (Exception e)
       {

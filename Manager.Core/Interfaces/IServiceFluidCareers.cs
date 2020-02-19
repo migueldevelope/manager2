@@ -13,8 +13,8 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     string Delete(string id);
-    string New(ViewCrudFluidCareers view);
-    string Update(ViewCrudFluidCareers view);
+    ViewCrudFluidCareers New(ViewCrudFluidCareers view);
+    ViewCrudFluidCareers Update(ViewCrudFluidCareers view);
     ViewCrudFluidCareers Get(string id);
     List<ViewListFluidCareers> List(ref long total, int count = 10, int page = 1, string filter = "");
     ViewFluidCareerPerson Calc(string idperson, List<ViewCrudSkillsCareers> skills, EnumFilterCalcFluidCareers filterCalcFluidCareers);
