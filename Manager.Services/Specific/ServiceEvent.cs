@@ -434,17 +434,17 @@ namespace Manager.Services.Specific
 
         if (type == EnumTypeEvent.All)
         {
-          detail = serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
+          detail = serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
           total = serviceEvent.CountNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
         else if (type == EnumTypeEvent.Open)
         {
-          detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
+          detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
           total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
         else if (type == EnumTypeEvent.End)
         {
-          detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenBy(p => p.Begin).Skip(skip).Take(count).ToList();
+          detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
           total = serviceEvent.CountNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         }
 
