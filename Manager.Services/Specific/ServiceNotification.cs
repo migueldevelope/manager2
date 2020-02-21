@@ -152,6 +152,7 @@ namespace Manager.Services.Specific
             };
             serviceLog.NewLogService(log);
             SendMessageSuccessFactory(sendTest);
+            CheckpointManagerDeadline(sendTest);
             if (parameter != null)
             {
               SendMessageAccount(sendTest);
@@ -168,11 +169,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        //OnboardingAdmission(sendTest);
+        OnboardingAdmission(sendTest);
         OnboardingManagerDeadline(sendTest);
         //CheckpointManagerDeadline(sendTest);
-        //MonitoringManagerDeadline(sendTest);
-        //PlanManagerDeadline(sendTest);
+        MonitoringManagerDeadline(sendTest);
+        PlanManagerDeadline(sendTest);
       }
       catch (Exception)
       {
@@ -223,12 +224,16 @@ namespace Manager.Services.Specific
         foreach (Person item in persons)
         {
           if (serviceCheckpoint.CountNewVersion(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result == 0)
+          {
             listManager.Add(new ManagerWorkNotification()
             {
               Manager = item.Manager,
               Person = item,
               Type = ManagerListType.Defeated
             });
+            StatusCheckpoint(item);
+          }
+        
         }
         // Checkpoint vencendo hoje
         nowLimit = DateTime.Now.AddDays(daysCheckpoint).Date;
@@ -451,6 +456,22 @@ namespace Manager.Services.Specific
         }
       }
       catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    private void StatusCheckpoint(Person person)
+    {
+      try
+      {
+        var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == person._id).Result;
+        checkpoint.StatusCheckpoint = EnumStatusCheckpoint.End;
+        person.TypeJourney = EnumTypeJourney.Monitoring;
+
+        var c = serviceCheckpoint.Update(checkpoint, null);
+        var x = servicePerson.Update(person, null);
+
+      }catch(Exception e)
       {
         throw e;
       }
