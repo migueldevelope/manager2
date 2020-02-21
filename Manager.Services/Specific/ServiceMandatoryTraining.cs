@@ -106,6 +106,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var retroactive = false;
+
         if (beginDate == null)
           beginDate = DateTime.Now;
 
@@ -132,13 +134,28 @@ namespace Manager.Services.Specific
 
 
         if ((dateMax != null) & (Prerequeriments(course._id) == true))
+        {
           messages.Add("prerequeiments_empty");
+          return;
+        }
+
 
         if ((dateMax != null) & (course.Periodicity == 0))
+        {
           messages.Add("realized");
+          if (beginDate < DateTime.Parse(dateMax.Value.ToShortDateString()))
+            retroactive = true;
+          else
+            return;
+        }
+
 
         if (PrerequerimentsInvert(course, person._id) == true)
+        {
           messages.Add("prerequeiments_invert_empty");
+          return;
+        }
+
 
 
         DateTime? proxDate = null;
@@ -148,6 +165,8 @@ namespace Manager.Services.Specific
           proxDate = dateMax.Value.AddMonths(course.Periodicity);
           status = EnumStatusTrainingPlan.Realized;
         }
+        else if(retroactive == true)
+          status = EnumStatusTrainingPlan.Realized;
         else
         {
           DateTime? maxHis = beginDate;
@@ -362,7 +381,7 @@ namespace Manager.Services.Specific
           serviceMandatoryTraining.Update(mandatory, null).Wait();
         }
         var messages = new List<string>();
-        UpdateTrainingPlanOccupation(ref messages,course, occupation, view.BeginDate, view.TypeMandatoryTraining);
+        UpdateTrainingPlanOccupation(ref messages, course, occupation, view.BeginDate, view.TypeMandatoryTraining);
         return messages;
       }
       catch (Exception e)
