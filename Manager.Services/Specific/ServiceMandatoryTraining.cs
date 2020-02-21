@@ -142,11 +142,18 @@ namespace Manager.Services.Specific
 
         if ((dateMax != null) & (course.Periodicity == 0))
         {
-          messages.Add("realized");
+          
           if (beginDate < DateTime.Parse(dateMax.Value.ToShortDateString()))
+          {
+            messages.Add("retroactive");
             retroactive = true;
+          }
           else
+          {
+            messages.Add("realized");
             return;
+          }
+            
         }
 
 
