@@ -679,6 +679,7 @@ namespace Manager.Services.Specific
         };
 
         queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+
       }
       catch (Exception e)
       {
@@ -712,6 +713,8 @@ namespace Manager.Services.Specific
       }
 
     }
+
+
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
     {
       var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
