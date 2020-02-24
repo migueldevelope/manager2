@@ -557,15 +557,16 @@ namespace Manager.Services.Specific
         else
           persons = servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
-        foreach (var person in persons)
+        foreach (var item in events)
         {
-          foreach (var item in events)
+          var person = persons.Where(p => p._id == item.Person._id).FirstOrDefault();
+          if (person != null)
           {
             var viewL = new ViewListHistoricTraining()
             {
-              Name = person.User.Name,
-              Manager = person.Manager.Name,
-              Course = item.Course.Name,
+              Name = person.User?.Name,
+              Manager = person.Manager?.Name,
+              Course = item.Course?.Name,
               Occupation = person.Occupation?.Name,
               DateBegin = item.Begin,
               DateEnd = item.End,
@@ -578,34 +579,76 @@ namespace Manager.Services.Specific
             data.Add(viewL);
           }
 
-          //instructors
+        }
+
+        //instructors
+        if (idperson != "")
+        {
           foreach (var item in listevent)
           {
             if (item.Instructors != null)
             {
               if (item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
               {
-                var viewL = new ViewListHistoricTraining()
+                var person = persons.Where(p => p._id == idperson).FirstOrDefault();
+                if (person != null)
                 {
-                  Name = person.User.Name,
-                  Manager = person.Manager.Name,
-                  Course = item.Course.Name,
-                  Occupation = person.Occupation?.Name,
-                  DateBegin = item.Begin,
-                  DateEnd = item.End,
-                  Entity = item.Entity?.Name,
-                  Schooling = person.User.Schooling?.Name,
-                  Workload = item.Workload,
-                  _id = person._id,
-                  Type = EnumTypeHistoricTraining.Instructor
-                };
-                data.Add(viewL);
+                  var viewL = new ViewListHistoricTraining()
+                  {
+                    Name = person.User?.Name,
+                    Manager = person.Manager?.Name,
+                    Course = item.Course?.Name,
+                    Occupation = person.Occupation?.Name,
+                    DateBegin = item.Begin,
+                    DateEnd = item.End,
+                    Entity = item.Entity?.Name,
+                    Schooling = person.User.Schooling?.Name,
+                    Workload = item.Workload,
+                    _id = person._id,
+                    Type = EnumTypeHistoricTraining.Instructor
+                  };
+                  data.Add(viewL);
+                }
               }
             }
-
           }
-
         }
+        else
+        {
+          foreach (var item in listevent)
+          {
+            if (item.Instructors != null)
+            {
+              foreach (var inst in item.Instructors)
+              {
+                if (inst.Person != null)
+                {
+                  var person = persons.Where(p => p._id == inst.Person._id).FirstOrDefault();
+                  if (person != null)
+                  {
+                    var viewL = new ViewListHistoricTraining()
+                    {
+                      Name = person.User?.Name,
+                      Manager = person.Manager?.Name,
+                      Course = item.Course?.Name,
+                      Occupation = person.Occupation?.Name,
+                      DateBegin = item.Begin,
+                      DateEnd = item.End,
+                      Entity = item.Entity?.Name,
+                      Schooling = person.User.Schooling?.Name,
+                      Workload = item.Workload,
+                      _id = person._id,
+                      Type = EnumTypeHistoricTraining.Instructor
+                    };
+                    data.Add(viewL);
+                  }
+                }
+
+              }
+            }
+          }
+        }
+
 
         var view = new ViewReport()
         {
