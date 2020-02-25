@@ -1615,7 +1615,7 @@ namespace Manager.Services.Specific
           Attachments = view.Attachments,
           Entity = view.Entity,
           Name = view.Name,
-          Workload = view.Workload / 60,
+          Workload = view.Workload * 60,
           StatusEventHistoricTemp = EnumStatusEventHistoricTemp.Wait,
           Observation = view.Observation,
           Person = new ViewListPersonBase() { _id = view._idPerson, Name = view.NamePerson }
