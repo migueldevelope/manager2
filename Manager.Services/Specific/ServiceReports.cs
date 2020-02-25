@@ -588,7 +588,7 @@ namespace Manager.Services.Specific
           {
             if (item.Instructors != null)
             {
-              if (item.Instructors.Where(p => p.Person._id == idperson).Count() > 0)
+              if (item.Instructors.Where(p => p.Person?._id == idperson).Count() > 0)
               {
                 var person = persons.Where(p => p._id == idperson).FirstOrDefault();
                 if (person != null)
