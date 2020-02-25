@@ -1545,7 +1545,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewCrudEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1555,13 +1555,19 @@ namespace Manager.Services.Specific
         var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceEventHistoricTemp.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
-        return detail.Select(p => new ViewListEventHistoricTemp()
+        return detail.Select(p => new ViewCrudEventHistoricTemp()
         {
           _id = p._id,
           Name = p.Name,
           _idPerson = p.Person._id,
           NamePerson = p.Person.Name,
-          StatusEventHistoricTemp = p.StatusEventHistoricTemp
+          StatusEventHistoricTemp = p.StatusEventHistoricTemp,
+          Attachments = p.Attachments,
+          Begin = p.Begin,
+          End = p.End,
+          Entity = p.Entity,
+          Observation = p.Observation,
+          Workload = p.Workload
         }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)

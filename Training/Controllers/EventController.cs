@@ -542,7 +542,7 @@ namespace Training.Controllers
     [Authorize]
     [HttpGet]
     [Route("listeventhistorictemp")]
-    public async Task<List<ViewListEventHistoricTemp>> ListEventHistoricTemp(int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewCrudEventHistoricTemp>> ListEventHistoricTemp(int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListEventHistoricTemp(ref total, count, page, filter);

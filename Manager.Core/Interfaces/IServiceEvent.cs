@@ -66,7 +66,7 @@ namespace Manager.Core.Interfaces
     string NewEventHistoricTemp(ViewCrudEventHistoricTemp view);
     string UpdateEventHistoricTemp(ViewCrudEventHistoricTemp view);
     ViewCrudEventHistoricTemp GetEventHistoricTemp(string id);
-    List<ViewListEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewCrudEventHistoricTemp> ListEventHistoricTempPerson(string id, ref long total, int count = 10, int page = 1, string filter = "");
     void SetAttachmentHistoricTemp(string idevent, string url, string fileName, string idattachmentid);
     string SetStatusEventHistoricTemp(ViewObs view, EnumStatusEventHistoricTemp status, string id, string idcourse);
