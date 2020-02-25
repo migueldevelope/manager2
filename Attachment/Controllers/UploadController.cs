@@ -721,7 +721,7 @@ namespace EdeskIntegration.Controllers
     /// <param name="ideventhistorictemp"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPost("{ideventhistoric}/eventhistorictemp")]
+    [HttpPost("{ideventhistorictemp}/eventhistorictemp")]
     public async Task<ObjectResult> PostEventHistoricTemp(string ideventhistorictemp)
     {
       foreach (var file in HttpContext.Request.Form.Files)
