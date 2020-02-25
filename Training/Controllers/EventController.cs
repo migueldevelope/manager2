@@ -604,8 +604,8 @@ namespace Training.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("setstatuseventhistorictemp/{status}/{id}/{idcourse}")]
-    public async Task<string> SetStatusEventHistoricTemp([FromBody]ViewObs view, EnumStatusEventHistoricTemp status, string id, string idcourse)
+    [Route("setstatuseventhistorictemp/{status}/{id}")]
+    public async Task<string> SetStatusEventHistoricTemp([FromBody]ViewObs view, EnumStatusEventHistoricTemp status, string id, string idcourse = "")
     {
       return await Task.Run(() => service.SetStatusEventHistoricTemp(view, status, id, idcourse));
     }

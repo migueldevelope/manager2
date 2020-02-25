@@ -1685,8 +1685,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var course = serviceCourse.GetNewVersion(p => p._id == idcourse).Result.GetViewList();
+
+        var course = new ViewListCourse();
         var model = serviceEventHistoricTemp.GetNewVersion(p => p._id == id).Result;
+        if(idcourse != "")
+          course = serviceCourse.GetNewVersion(p => p._id == idcourse).Result.GetViewList();
+
         model.StatusEventHistoricTemp = status;
         model.Observation = view.Observation;
         if(status == EnumStatusEventHistoricTemp.Approved)
