@@ -1584,7 +1584,7 @@ namespace Manager.Services.Specific
 
         int skip = (count * (page - 1));
         var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.StatusEventHistoricTemp == EnumStatusEventHistoricTemp.Wait
-        & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
+        & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Person.Name).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceEventHistoricTemp.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
         return detail.Select(p => new ViewCrudEventHistoricTemp()
