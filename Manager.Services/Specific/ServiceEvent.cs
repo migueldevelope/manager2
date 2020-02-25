@@ -1602,7 +1602,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewEventHistoricTemp(ViewCrudEventHistoricTemp view)
+    public ViewCrudEventHistoricTemp NewEventHistoricTemp(ViewCrudEventHistoricTemp view)
     {
       try
       {
@@ -1620,8 +1620,22 @@ namespace Manager.Services.Specific
           Observation = view.Observation,
           Person = new ViewListPersonBase() { _id = view._idPerson, Name = view.NamePerson }
         };
-        var events = serviceEventHistoricTemp.InsertNewVersion(model).Result;
-        return "add success";
+        var eventhistoric = serviceEventHistoricTemp.InsertNewVersion(model).Result;
+        return new ViewCrudEventHistoricTemp()
+        {
+          _id = eventhistoric._id,
+          Begin = eventhistoric.Begin,
+          Name = eventhistoric.Name,
+          End = eventhistoric.End,
+          Workload = eventhistoric.Workload,
+          _idPerson = eventhistoric.Person._id,
+          NamePerson = eventhistoric.Person.Name,
+          Entity = eventhistoric.Entity,
+          Event = eventhistoric.Event,
+          StatusEventHistoricTemp = eventhistoric.StatusEventHistoricTemp,
+          Attachments = eventhistoric.Attachments,
+          Observation = eventhistoric.Observation
+        }; 
       }
       catch (Exception e)
       {

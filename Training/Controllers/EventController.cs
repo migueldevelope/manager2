@@ -508,7 +508,7 @@ namespace Training.Controllers
     /// <returns></returns>
     [HttpPost]
     [Route("neweventhistorictemp")]
-    public async Task<string> NewEventHistoricTempFrontEnd([FromBody]ViewCrudEventHistoricTemp view)
+    public async Task<ViewCrudEventHistoricTemp> NewEventHistoricTempFrontEnd([FromBody]ViewCrudEventHistoricTemp view)
     {
       return await Task.Run(() => service.NewEventHistoricTemp(view));
     }

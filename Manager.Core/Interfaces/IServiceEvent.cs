@@ -63,7 +63,7 @@ namespace Manager.Core.Interfaces
     List<ViewCrudEventHistoric> ListEventHistoricInstructor(string id, ref long total, int count = 10, int page = 1, string filter = "");
 
 
-    string NewEventHistoricTemp(ViewCrudEventHistoricTemp view);
+    ViewCrudEventHistoricTemp NewEventHistoricTemp(ViewCrudEventHistoricTemp view);
     string UpdateEventHistoricTemp(ViewCrudEventHistoricTemp view);
     ViewCrudEventHistoricTemp GetEventHistoricTemp(string id);
     List<ViewCrudEventHistoricTemp> ListEventHistoricTemp(ref long total, int count = 10, int page = 1, string filter = "");
