@@ -1521,8 +1521,8 @@ namespace Manager.Services.Specific
         var listperson = servicePerson.GetAllNewVersion(p => p.User._id == id).Result;
         foreach (var person in listperson)
         {
-          var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.Person._id == person._id & p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
-          total = serviceEventHistoricTemp.CountNewVersion(p => p.Person._id == person._id & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
+          var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.StatusEventHistoricTemp == EnumStatusEventHistoricTemp.Wait && p.Person._id == person._id & p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.End).ThenBy(p => p.Name).Skip(skip).Take(count).ToList();
+          total = serviceEventHistoricTemp.CountNewVersion(p => p.StatusEventHistoricTemp == EnumStatusEventHistoricTemp.Wait && p.Person._id == person._id & p.Name.ToUpper().Contains(filter.ToUpper())).Result;
           return detail.Select(p => new ViewCrudEventHistoricTemp()
           {
             _id = p._id,
