@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Views.Enumns;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,5 +11,7 @@ namespace Manager.Views.BusinessView
     public string Area { get; set; }
     public string Person { get; set; }
     public string Mail { get; set; }
+    public string Document { get; set; }
+    public EnumStatusUser StatusUser { get; set; }
   }
 }

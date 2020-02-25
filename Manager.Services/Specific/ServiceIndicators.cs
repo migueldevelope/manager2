@@ -2861,7 +2861,9 @@ namespace Manager.Services.Specific
           {
             Person = item.User?.Name,
             Company = item.Company?.Name,
-            Mail = item.User?.Mail
+            Mail = item.User?.Mail,
+            Document  = item.User?.Document,
+            StatusUser = item.StatusUser
           };
           if (item.Occupation != null)
           {
