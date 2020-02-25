@@ -1600,7 +1600,7 @@ namespace Manager.Services.Specific
           Entity = p.Entity,
           Observation = p.Observation,
           Workload = p.Workload
-        }).OrderBy(p => p.Name).ToList();
+        }).OrderBy(p => p.NamePerson).ThenBy(p => p.Name).ToList();
       }
       catch (Exception e)
       {
