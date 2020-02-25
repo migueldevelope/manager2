@@ -1583,7 +1583,7 @@ namespace Manager.Services.Specific
 
 
         int skip = (count * (page - 1));
-        var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.StatusEventHistoricTemp == EnumStatusEventHistoricTemp.Wait 
+        var detail = serviceEventHistoricTemp.GetAllNewVersion(p => p.StatusEventHistoricTemp == EnumStatusEventHistoricTemp.Wait
         & p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.Name).Skip(skip).Take(count).ToList();
         total = serviceEventHistoricTemp.CountNewVersion(p => p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
 
@@ -1615,7 +1615,7 @@ namespace Manager.Services.Specific
           Attachments = view.Attachments,
           Entity = view.Entity,
           Name = view.Name,
-          Workload = view.Workload,
+          Workload = view.Workload / 60,
           StatusEventHistoricTemp = EnumStatusEventHistoricTemp.Wait,
           Observation = view.Observation,
           Person = new ViewListPersonBase() { _id = view._idPerson, Name = view.NamePerson }
@@ -1694,12 +1694,12 @@ namespace Manager.Services.Specific
 
         var course = new ViewListCourse();
         var model = serviceEventHistoricTemp.GetNewVersion(p => p._id == id).Result;
-        if(idcourse != "")
+        if (idcourse != "")
           course = serviceCourse.GetNewVersion(p => p._id == idcourse).Result.GetViewList();
 
         model.StatusEventHistoricTemp = status;
         model.Observation = view.Observation;
-        if(status == EnumStatusEventHistoricTemp.Approved)
+        if (status == EnumStatusEventHistoricTemp.Approved)
         {
           NewEventHistoric(new EventHistoric()
           {
@@ -1715,7 +1715,8 @@ namespace Manager.Services.Specific
         }
 
         return "ok";
-      }catch(Exception e)
+      }
+      catch (Exception e)
       {
         throw e;
       }
