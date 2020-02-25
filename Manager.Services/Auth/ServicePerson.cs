@@ -854,7 +854,8 @@ namespace Manager.Services.Auth
           Schooling = view.User.Schooling,
           Sex = view.User.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
-          UserAdmin = false
+          UserAdmin = false,
+          ShowSalary = view.User.ShowSalary
         };
 
         if ((user.Mail != null)&&(user.Mail != string.Empty))
@@ -942,6 +943,7 @@ namespace Manager.Services.Auth
           user.PhotoUrl = view.User.PhotoUrl;
           user.Schooling = view.User.Schooling;
           user.Sex = view.User.Sex;
+          user.ShowSalary = view.User.ShowSalary;
           var xy = serviceUser.Update(user, null);
 
         }

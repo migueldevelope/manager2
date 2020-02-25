@@ -71,6 +71,6 @@ namespace Manager.Core.Interfaces
     void SetAttachmentHistoricTemp(string idevent, string url, string fileName, string idattachmentid);
     string SetStatusEventHistoricTemp(ViewObs view, EnumStatusEventHistoricTemp status, string id, string idcourse);
     string RemoveEventHistoricTemp(string id);
-    List<ViewListEventHistoricTemp> ListEventHistoricTempWait(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewCrudEventHistoricTemp> ListEventHistoricTempWait(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

@@ -45,6 +45,7 @@ namespace Manager.Core.Business
     public string Nickname { get; set; }
     
     public bool UserAdmin { get; set; }
+    public bool ShowSalary { get; set; }
     
     public List<UserTermOfService> UserTermOfServices { get; set; }
     public ViewCrudUser GetViewList()
@@ -55,6 +56,7 @@ namespace Manager.Core.Business
         Document = Document,
         Mail = Mail,
         Name = Name,
+        ShowSalary = ShowSalary,
         Phone = Phone
       };
     }
@@ -68,6 +70,7 @@ namespace Manager.Core.Business
         Name = Name,
         Phone = Phone,
         DateAdm = DateAdm,
+        ShowSalary = ShowSalary,
         DateBirth = DateBirth,
         DocumentCTPF = DocumentCTPF,
         DocumentID = DocumentID,

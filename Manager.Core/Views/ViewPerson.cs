@@ -24,6 +24,7 @@ namespace Manager.Core.Views
     public string MeritocracyProcess { get; set; }
     public string ShowAutoManager { get; set; }
     public string ShowSalaryScaleManager { get; set; }
+    public bool ShowSalary { get; set; }
 
   }
 }

@@ -197,7 +197,8 @@ namespace Manager.Services.Auth
           Schooling = view.Schooling,
           Sex = view.Sex,
           ChangePassword = EnumChangePassword.AccessFirst,
-          UserAdmin = false
+          UserAdmin = false,
+          ShowSalary = view.ShowSalary
         };
 
         if (user.Mail != null)
@@ -239,6 +240,7 @@ namespace Manager.Services.Auth
         user.PhotoUrl = view.PhotoUrl;
         user.Schooling = user.Schooling;
         user.Sex = view.Sex;
+        user.ShowSalary = view.ShowSalary;
         serviceUser.Update(user, null).Wait();
         foreach (var item in servicePerson.GetAllNewVersion(p => p.User._id == view._id).Result.ToList())
         {

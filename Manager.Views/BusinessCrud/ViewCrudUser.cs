@@ -10,6 +10,7 @@ namespace Manager.Views.BusinessCrud
     public string Mail { get; set; }
     public string Phone { get; set; }
     public string Password { get; set; }
+    public bool ShowSalary { get; set; }
     public DateTime? DateBirth { get; set; }
     public DateTime? DateAdm { get; set; }
     public ViewListSchooling Schooling { get; set; }
