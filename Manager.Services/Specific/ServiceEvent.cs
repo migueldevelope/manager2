@@ -1641,7 +1641,7 @@ namespace Manager.Services.Specific
           StatusEventHistoricTemp = eventhistoric.StatusEventHistoricTemp,
           Attachments = eventhistoric.Attachments,
           Observation = eventhistoric.Observation
-        }; 
+        };
       }
       catch (Exception e)
       {
@@ -1719,6 +1719,8 @@ namespace Manager.Services.Specific
 
         model.StatusEventHistoricTemp = status;
         model.Observation = view.Observation;
+        var x = serviceEventHistoricTemp.Update(model, null);
+
         if (status == EnumStatusEventHistoricTemp.Approved)
         {
           NewEventHistoric(new EventHistoric()
