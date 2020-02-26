@@ -12,6 +12,7 @@ namespace Manager.Core.Business
     public ViewListPerson Person { get; set; }
     public DateTime Register { get; set; }
     public EnumTypeHistory TypeHistory { get; set; }
+    public EnumTypeHistoryChange TypeChange { get; set; }
     public string OldKey { get; set; }
     public string OldValue { get; set; }
     public string NewKey { get; set; }

@@ -31,6 +31,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Occupation> serviceOccupation;
     private ServiceGeneric<Parameter> serviceParameter;
     private ServiceGeneric<Person> servicePerson;
+    private ServiceGeneric<PersonHistory> servicePersonHistory;
     private ServiceGeneric<SalaryScale> serviceSalaryScale;
     private ServiceGeneric<Schooling> serviceSchooling;
     private ServiceGeneric<OnBoarding> serviceOnboarding;
@@ -55,6 +56,7 @@ namespace Manager.Services.Auth
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         servicePerson = new ServiceGeneric<Person>(context);
+        servicePersonHistory = new ServiceGeneric<PersonHistory>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSchooling = new ServiceGeneric<Schooling>(context);
         serviceUser = new ServiceGeneric<User>(context);
@@ -79,6 +81,7 @@ namespace Manager.Services.Auth
       serviceOccupation._user = _user;
       serviceParameter._user = _user;
       servicePerson._user = _user;
+      servicePersonHistory._user = _user;
       serviceSalaryScale._user = _user;
       serviceSchooling._user = _user;
       serviceUser._user = _user;
@@ -97,6 +100,7 @@ namespace Manager.Services.Auth
       serviceOccupation._user = user;
       serviceParameter._user = user;
       servicePerson._user = user;
+      servicePersonHistory._user = user;
       serviceSalaryScale._user = user;
       serviceSchooling._user = user;
       serviceUser._user = user;
@@ -907,8 +911,84 @@ namespace Manager.Services.Auth
           SalaryScales = salaryScale,
           Workload = view.Workload
         };
-
         person = servicePerson.InsertNewVersion(person).Result;
+
+        #region Registrar os históricos da pessoa nova
+        TimeSpan admission = DateTime.Now - (DateTime)user.DateAdm;
+        PersonHistory personHistory = new PersonHistory()
+        {
+          Person = person.GetViewList(),
+          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeChange = EnumTypeHistoryChange.Establishment,
+          Register = DateTime.UtcNow,
+          OldKey = string.Empty,
+          OldValue = string.Empty,
+          NewKey = person.Establishment?._id,
+          NewValue = person.Establishment?.Name
+        };
+        personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        personHistory = new PersonHistory()
+        {
+          Person = person.GetViewList(),
+          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeChange = EnumTypeHistoryChange.StatusUser,
+          Register = DateTime.UtcNow,
+          OldKey = string.Empty,
+          OldValue = string.Empty,
+          NewKey = person.StatusUser.ToString(),
+          NewValue = Enum.GetName(typeof(EnumStatusUser), person.StatusUser)
+        };
+        personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        personHistory = new PersonHistory()
+        {
+          Person = person.GetViewList(),
+          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeChange = EnumTypeHistoryChange.Occupation,
+          Register = DateTime.UtcNow,
+          OldKey = string.Empty,
+          OldValue = string.Empty,
+          NewKey = person.Occupation?._id,
+          NewValue = person.Occupation?.Name
+        };
+        personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        personHistory = new PersonHistory()
+        {
+          Person = person.GetViewList(),
+          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeChange = EnumTypeHistoryChange.Salary,
+          Register = DateTime.UtcNow,
+          OldKey = string.Empty,
+          OldValue = string.Empty,
+          NewKey = person.Salary.ToString(),
+          NewValue = person.Salary.ToString()
+        };
+        personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        personHistory = new PersonHistory()
+        {
+          Person = person.GetViewList(),
+          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeChange = EnumTypeHistoryChange.Manager,
+          Register = DateTime.UtcNow,
+          OldKey = string.Empty,
+          OldValue = string.Empty,
+          NewKey = person.Manager?._id,
+          NewValue = person.Manager?.Name
+        };
+        personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        personHistory = new PersonHistory()
+        {
+          Person = person.GetViewList(),
+          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeChange = EnumTypeHistoryChange.Jorney,
+          Register = DateTime.UtcNow,
+          OldKey = string.Empty,
+          OldValue = string.Empty,
+          NewKey = person.TypeJourney.ToString(),
+          NewValue = Enum.GetName(typeof(EnumTypeJourney), person.TypeJourney)
+        };
+        personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        #endregion
+
         return person.GetViewCrud();
       }
       catch (Exception e)
@@ -926,6 +1006,7 @@ namespace Manager.Services.Auth
           throw new Exception("existsdocument");
 
         Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
+        Person personOld = person;
         User user = null;
         if (view.User != null)
         {
@@ -947,7 +1028,6 @@ namespace Manager.Services.Auth
           var xy = serviceUser.Update(user, null);
 
         }
-
 
         BaseFields manager = null;
         if (view.Manager != null)
@@ -998,6 +1078,100 @@ namespace Manager.Services.Auth
 
         if (modifyManager)
           manager = UpdateManager(person, view.Manager._id, person.Manager?._id);
+
+        #region Registrar os históricos da pessoa nova
+        PersonHistory personHistory = null;
+        if (personOld.Establishment?._id != person.Establishment?._id)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Establishment,
+            Register = DateTime.UtcNow,
+            OldKey = personOld.Establishment?._id,
+            OldValue = personOld.Establishment?.Name,
+            NewKey = person.Establishment?._id,
+            NewValue = person.Establishment?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (personOld.StatusUser != person.StatusUser)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.StatusUser,
+            Register = DateTime.UtcNow,
+            OldKey = personOld.StatusUser.ToString(),
+            OldValue = Enum.GetName(typeof(EnumStatusUser), personOld.StatusUser),
+            NewKey = person.StatusUser.ToString(),
+            NewValue = Enum.GetName(typeof(EnumStatusUser), person.StatusUser)
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (personOld.Occupation?._id != person.Occupation?._id)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Occupation,
+            Register = DateTime.UtcNow,
+            OldKey = personOld.Occupation?._id,
+            OldValue = personOld.Occupation?.Name,
+            NewKey = person.Occupation?._id,
+            NewValue = person.Occupation?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (personOld.Salary != person.Salary)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Salary,
+            Register = DateTime.UtcNow,
+            OldKey = personOld.Salary.ToString(),
+            OldValue = personOld.Salary.ToString(),
+            NewKey = person.Salary.ToString(),
+            NewValue = person.Salary.ToString()
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (personOld.Manager?._id != person.Manager?._id)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Manager,
+            Register = DateTime.UtcNow,
+            OldKey = personOld.Manager?._id,
+            OldValue = personOld.Manager?.Name,
+            NewKey = person.Manager?._id,
+            NewValue = person.Manager?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (personOld.TypeJourney != person.TypeJourney)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Jorney,
+            Register = DateTime.UtcNow,
+            OldKey = personOld.TypeJourney.ToString(),
+            OldValue = Enum.GetName(typeof(EnumTypeJourney), personOld.TypeJourney),
+            NewKey = person.TypeJourney.ToString(),
+            NewValue = Enum.GetName(typeof(EnumTypeJourney), person.TypeJourney)
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        #endregion
 
         return "Person altered!";
       }
