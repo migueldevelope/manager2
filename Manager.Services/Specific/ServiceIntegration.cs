@@ -160,7 +160,6 @@ namespace Manager.Services.Specific
             Password = payrollEmployee.Document
           };
           user = userService.New(user);
-          payrollEmployee.Changes.Add("Novo usuário");
         }
         else
         {
@@ -177,7 +176,6 @@ namespace Manager.Services.Specific
           user.Sex = payrollEmployee.Sex;
           user.Nickname = payrollEmployee.Nickname;
           user = userService.Update(user);
-          payrollEmployee.Changes.Add("Usuário alterado");
         }
         payrollEmployee._idUser = user._id;
         payrollEmployee._idSchooling = schooling._id;
@@ -320,27 +318,14 @@ namespace Manager.Services.Specific
           person.StatusUser = payrollEmployee.StatusUser;
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result.GetViewCrud();
           person = personService.New(person);
-          payrollEmployee.Changes.Add("Admissão");
         }
         else
         {
-          if (person.Company != company.GetViewList())
-          {
-            payrollEmployee.Changes.Add("empresa");
-          }
-          if (person.Establishment != establishment.GetViewList())
-          {
-            payrollEmployee.Changes.Add("estabelecimento");
-          }
           person.Company = company.GetViewList();
           person.Establishment = establishment.GetViewList();
           // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
           if (!equalOccupation)
           {
-            if (person.Occupation != occupation.GetViewListResume())
-            {
-              payrollEmployee.Changes.Add("cargo");
-            }
             person.Occupation = occupation.GetViewListResume();
           }
           person.Registration = payrollEmployee.Registration;
@@ -375,10 +360,6 @@ namespace Manager.Services.Specific
           if (personManager != null)
           {
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
-          }
-          if (person.StatusUser != payrollEmployee.StatusUser)
-          {
-            payrollEmployee.Changes.Add("Situação");
           }
           person.StatusUser = payrollEmployee.StatusUser;
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
@@ -1803,8 +1784,7 @@ namespace Manager.Services.Specific
         resultV2 = new ColaboradorV2Retorno
         {
           Situacao = "Ok",
-          Mensagem = new List<string>(),
-          Changes = new List<string>()
+          Mensagem = new List<string>()
         };
         // Validação de campos especiais
         view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
@@ -1900,8 +1880,7 @@ namespace Manager.Services.Specific
           ManagerEstablishment = view.Gestor?.Estabelecimento,
           ManagerEstablishmentName = view.Gestor?.NomeEstabelecimento,
           ManagerRegistration = view.Gestor?.Matricula,
-          Messages = new List<string>(),
-          Changes = new List<string>()
+          Messages = new List<string>()
         };
         // Não tem registros anteriores (VAZIO)
         if (payrollEmployees.Count() == 0)
@@ -2325,7 +2304,6 @@ namespace Manager.Services.Specific
             resultV2.IdContract = payrollEmployee._idContract;
             resultV2.IdPayrollEmployee = payrollEmployee._id;
             resultV2.Mensagem.Add("Colaborador sem alterações");
-            resultV2.Changes = new List<string>();
             return;
           }
         }
@@ -2356,7 +2334,6 @@ namespace Manager.Services.Specific
           resultV2.Situacao = "Ok";
           resultV2.Mensagem.Add("Colaborador atualizado");
         }
-        resultV2.Changes = payrollEmployee.Changes;
       }
       catch (Exception ex)
       {

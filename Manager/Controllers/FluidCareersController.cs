@@ -184,7 +184,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Retorar a empresa para manutenção
     /// </summary>
-    /// <param name="id">Identificador da empresa</param>
+    /// <param name="idfluidcareer">Identificador da empresa</param>
     /// <returns>Objeto de manutenção da empresa</returns>
     [Authorize]
     [HttpGet]
@@ -208,7 +208,7 @@ namespace Manager.Controllers
     /// <summary>
     /// Excluir uma empresa
     /// </summary>
-    /// <param name="id">Identificação da empresa</param>
+    /// <param name="idfluidcareer">Identificação da empresa</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpDelete]

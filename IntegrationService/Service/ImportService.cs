@@ -175,11 +175,10 @@ namespace IntegrationService.Service
             FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
           }
           viewRetorno = personIntegration.PostV2Completo(colaborador);
-          viewRetorno.Changes = viewRetorno.Changes ?? new List<string>();
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
-            FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
-              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join("/", viewRetorno.Mensagem), string.Join("/", viewRetorno.Changes)), EnumTypeLineOpportunityg.Warning);
+            FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join("/", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
             if (!File.Exists(LogFileName.Replace(".log", "_json.log")))
             {
               FileClass.SaveLog(LogFileName.Replace(".log", "_json.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
@@ -190,8 +189,8 @@ namespace IntegrationService.Service
           }
           else
           {
-            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5};{6}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
-              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem), string.Join("/", viewRetorno.Changes)), EnumTypeLineOpportunityg.Information);
+            FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
+              colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
           }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
