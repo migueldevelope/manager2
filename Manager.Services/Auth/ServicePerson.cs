@@ -911,6 +911,19 @@ namespace Manager.Services.Auth
           SalaryScales = salaryScale,
           Workload = view.Workload
         };
+
+        if (person.StatusUser == EnumStatusUser.Disabled)
+        {
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
+        if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
+        {
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
+        if (person.Occupation == null)
+        {
+          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
         person = servicePerson.InsertNewVersion(person).Result;
 
         #region Registrar os históricos da pessoa nova
@@ -1089,6 +1102,14 @@ namespace Manager.Services.Auth
         if (person.Occupation == null)
         {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
+        if (saveOccupation?._id != view.Occupation?._id && (view.DateLastOccupation == null || view.DateLastOccupation < DateTime.UtcNow.AddDays(-15)))
+        {
+          person.DateLastReadjust = DateTime.UtcNow;
+        }
+        if (saveSalary != view.Salary && (view.DateLastReadjust == null || view.DateLastReadjust < DateTime.UtcNow.AddDays(-15)))
+        {
+          person.DateLastReadjust = DateTime.UtcNow;
         }
         var x = servicePerson.Update(person, null);
 
