@@ -1011,7 +1011,16 @@ namespace Manager.Services.Auth
           throw new Exception("existsdocument");
 
         Person person = servicePerson.GetNewVersion(p => p._id == view._id).Result;
-        Person personOld = person;
+
+        #region Variáveis para salvar dados antigos
+        ViewListEstablishment saveEstablishment = person.Establishment;
+        EnumStatusUser saveStatusUser = person.StatusUser;
+        ViewListOccupationResume saveOccupation = person.Occupation;
+        decimal saveSalary = person.Salary;
+        BaseFields saveManager = person.Manager;
+        EnumTypeJourney saveTypeJourney = person.TypeJourney;
+        #endregion
+
         User user = null;
         if (view.User != null)
         {
@@ -1073,12 +1082,14 @@ namespace Manager.Services.Auth
             var i = serviceUser.Update(user, null);
           }
         }
-
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
+        {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
         if (person.Occupation == null)
+        {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
-
+        }
         var x = servicePerson.Update(person, null);
 
         if (modifyManager)
@@ -1086,7 +1097,7 @@ namespace Manager.Services.Auth
 
         #region Registrar os históricos da pessoa nova
         PersonHistory personHistory = null;
-        if (personOld.Establishment?._id != person.Establishment?._id)
+        if (saveEstablishment?._id != person.Establishment?._id)
         {
           personHistory = new PersonHistory()
           {
@@ -1094,14 +1105,14 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Establishment,
             Register = DateTime.UtcNow,
-            OldKey = personOld.Establishment?._id,
-            OldValue = personOld.Establishment?.Name,
+            OldKey = saveEstablishment?._id,
+            OldValue = saveEstablishment?.Name,
             NewKey = person.Establishment?._id,
             NewValue = person.Establishment?.Name
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (personOld.StatusUser != person.StatusUser)
+        if (saveStatusUser != person.StatusUser)
         {
           personHistory = new PersonHistory()
           {
@@ -1109,14 +1120,14 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.StatusUser,
             Register = DateTime.UtcNow,
-            OldKey = personOld.StatusUser.ToString(),
-            OldValue = Enum.GetName(typeof(EnumStatusUser), personOld.StatusUser),
+            OldKey = ((int)saveStatusUser).ToString(),
+            OldValue = saveStatusUser.ToString(),
             NewKey = ((int)person.StatusUser).ToString(),
             NewValue = person.StatusUser.ToString()
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (personOld.Occupation?._id != person.Occupation?._id)
+        if (saveOccupation?._id != person.Occupation?._id)
         {
           personHistory = new PersonHistory()
           {
@@ -1124,14 +1135,14 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Occupation,
             Register = DateTime.UtcNow,
-            OldKey = personOld.Occupation?._id,
-            OldValue = personOld.Occupation?.Name,
+            OldKey = saveOccupation?._id,
+            OldValue = saveOccupation?.Name,
             NewKey = person.Occupation?._id,
             NewValue = person.Occupation?.Name
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (personOld.Salary != person.Salary)
+        if (saveSalary != person.Salary)
         {
           personHistory = new PersonHistory()
           {
@@ -1140,13 +1151,13 @@ namespace Manager.Services.Auth
             TypeChange = EnumTypeHistoryChange.Salary,
             Register = DateTime.UtcNow,
             OldKey = null,
-            OldValue = personOld.Salary.ToString(),
+            OldValue = saveSalary.ToString(),
             NewKey = null,
             NewValue = person.Salary.ToString()
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (personOld.Manager?._id != person.Manager?._id)
+        if (saveManager?._id != person.Manager?._id)
         {
           personHistory = new PersonHistory()
           {
@@ -1154,14 +1165,14 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Manager,
             Register = DateTime.UtcNow,
-            OldKey = personOld.Manager?._id,
-            OldValue = personOld.Manager?.Name,
+            OldKey = saveManager?._id,
+            OldValue = saveManager?.Name,
             NewKey = person.Manager?._id,
             NewValue = person.Manager?.Name
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (personOld.TypeJourney != person.TypeJourney)
+        if (saveTypeJourney != person.TypeJourney)
         {
           personHistory = new PersonHistory()
           {
@@ -1169,8 +1180,8 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Jorney,
             Register = DateTime.UtcNow,
-            OldKey = ((int)personOld.TypeJourney).ToString(),
-            OldValue = personOld.TypeJourney.ToString(),
+            OldKey = ((int)saveTypeJourney).ToString(),
+            OldValue = saveTypeJourney.ToString(),
             NewKey = ((int)person.TypeJourney).ToString(),
             NewValue = person.TypeJourney.ToString()
           };
