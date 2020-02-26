@@ -1105,7 +1105,7 @@ namespace Manager.Services.Auth
         }
         if (saveOccupation?._id != view.Occupation?._id && (view.DateLastOccupation == null || view.DateLastOccupation < DateTime.UtcNow.AddDays(-15)))
         {
-          person.DateLastReadjust = DateTime.UtcNow;
+          person.DateLastOccupation = DateTime.UtcNow;
         }
         if (saveSalary != view.Salary && (view.DateLastReadjust == null || view.DateLastReadjust < DateTime.UtcNow.AddDays(-15)))
         {
