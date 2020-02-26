@@ -174,6 +174,7 @@ namespace Manager.Controllers
     /// Cadastrar uma nova empresa
     /// </summary>
     /// <param name="view">Objeto de cadastro da empresa</param>
+    /// <param name="idfluidcareer">Identificação da carreira fluida</param>
     /// <returns></returns>
     [HttpPost]
     [Route("newplan/{idfluidcareer}")]
@@ -197,6 +198,7 @@ namespace Manager.Controllers
     /// Alterar a empresa
     /// </summary>
     /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <param name="idfluidcareer">Identificação da carreira fluida</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]

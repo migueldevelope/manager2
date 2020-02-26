@@ -79,6 +79,7 @@ namespace Manager.Controllers
     /// <param name="count"></param>
     /// <param name="page"></param>
     /// <param name="filter"></param>
+    /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]

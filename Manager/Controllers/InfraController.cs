@@ -601,6 +601,9 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <param name="idarea"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ManagerMessages</name>
+    </assembly>
+    <members>
+        <member name="T:ManagerMessages.Controllers.OnboardingController">
+            <summary>
+            Controlador para acreditação
+            </summary>
+        </member>
+        <member name="M:ManagerMessages.Controllers.OnboardingController.#ctor(Manager.Core.Interfaces.IServiceNotification,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="_service">Serviço da acreditação</param>
+            <param name="contextAccessor">Token de autenticação</param>
+        </member>
+        <member name="M:ManagerMessages.Controllers.OnboardingController.EmployeeWaiting(System.Byte)">
+            <summary>
+            Embarque iniciado mas aguardando ação do colaborador a mais de 5 dias, lista pendências
+            </summary>
+            <param name="action">Ação que deve ser executada 0-Listagem, 1-Enviar e-mail, 2-Enviar SMS, 3-Enviar Watts</param>
+            <returns></returns>
+        </member>
+        <member name="M:ManagerMessages.Controllers.OnboardingController.ManagerWaiting(System.Byte)">
+            <summary>
+            Embarque iniciado mas aguardando ação do colaborador a mais de 5 dias, lista pendências
+            </summary>
+            <param name="action">Ação que deve ser executada 0-Listagem, 1-Enviar e-mail, 2-Enviar SMS, 3-Enviar Watts</param>
+            <returns></returns>
+        </member>
+        <member name="T:ManagerMessages.Controllers.ValuesController">
+            <summary>
+            Controle para verficação de API ativa
+            </summary>
+        </member>
+        <member name="M:ManagerMessages.Controllers.ValuesController.Get">
+            <summary>
+            Método único para demonstração de API REST ativa
+            </summary>
+            <returns>String com a versão da API REST</returns>
+        </member>
+    </members>
+</doc>
