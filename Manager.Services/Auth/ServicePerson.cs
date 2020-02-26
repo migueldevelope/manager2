@@ -914,15 +914,20 @@ namespace Manager.Services.Auth
         person = servicePerson.InsertNewVersion(person).Result;
 
         #region Registrar os históricos da pessoa nova
-        TimeSpan admission = DateTime.Now - (DateTime)user.DateAdm;
+        EnumTypeHistory typeHistory = EnumTypeHistory.OnboardingPlataform;
+        if (user.DateAdm != null)
+        {
+          TimeSpan admission = DateTime.Now - (DateTime)user.DateAdm;
+          typeHistory = admission.Days <= 90 ? EnumTypeHistory.Admission : EnumTypeHistory.OnboardingPlataform;
+        }
         PersonHistory personHistory = new PersonHistory()
         {
           Person = person.GetViewList(),
-          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeHistory = typeHistory,
           TypeChange = EnumTypeHistoryChange.Establishment,
           Register = DateTime.UtcNow,
-          OldKey = string.Empty,
-          OldValue = string.Empty,
+          OldKey = null,
+          OldValue = null,
           NewKey = person.Establishment?._id,
           NewValue = person.Establishment?.Name
         };
@@ -930,23 +935,23 @@ namespace Manager.Services.Auth
         personHistory = new PersonHistory()
         {
           Person = person.GetViewList(),
-          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeHistory = typeHistory,
           TypeChange = EnumTypeHistoryChange.StatusUser,
           Register = DateTime.UtcNow,
-          OldKey = string.Empty,
-          OldValue = string.Empty,
-          NewKey = person.StatusUser.ToString(),
-          NewValue = Enum.GetName(typeof(EnumStatusUser), person.StatusUser)
+          OldKey = null,
+          OldValue = null,
+          NewKey = ((int)person.StatusUser).ToString(),
+          NewValue = person.StatusUser.ToString()
         };
         personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         personHistory = new PersonHistory()
         {
           Person = person.GetViewList(),
-          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeHistory = typeHistory,
           TypeChange = EnumTypeHistoryChange.Occupation,
           Register = DateTime.UtcNow,
-          OldKey = string.Empty,
-          OldValue = string.Empty,
+          OldKey = null,
+          OldValue = null,
           NewKey = person.Occupation?._id,
           NewValue = person.Occupation?.Name
         };
@@ -954,23 +959,23 @@ namespace Manager.Services.Auth
         personHistory = new PersonHistory()
         {
           Person = person.GetViewList(),
-          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeHistory = typeHistory,
           TypeChange = EnumTypeHistoryChange.Salary,
           Register = DateTime.UtcNow,
-          OldKey = string.Empty,
-          OldValue = string.Empty,
-          NewKey = person.Salary.ToString(),
+          OldKey = null,
+          OldValue = null,
+          NewKey = null,
           NewValue = person.Salary.ToString()
         };
         personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         personHistory = new PersonHistory()
         {
           Person = person.GetViewList(),
-          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeHistory = typeHistory,
           TypeChange = EnumTypeHistoryChange.Manager,
           Register = DateTime.UtcNow,
-          OldKey = string.Empty,
-          OldValue = string.Empty,
+          OldKey = null,
+          OldValue = null,
           NewKey = person.Manager?._id,
           NewValue = person.Manager?.Name
         };
@@ -978,13 +983,13 @@ namespace Manager.Services.Auth
         personHistory = new PersonHistory()
         {
           Person = person.GetViewList(),
-          TypeHistory = admission.Days > 90 ? EnumTypeHistory.OnboardingPlataform : EnumTypeHistory.Admission,
+          TypeHistory = typeHistory,
           TypeChange = EnumTypeHistoryChange.Jorney,
           Register = DateTime.UtcNow,
-          OldKey = string.Empty,
-          OldValue = string.Empty,
-          NewKey = person.TypeJourney.ToString(),
-          NewValue = Enum.GetName(typeof(EnumTypeJourney), person.TypeJourney)
+          OldKey = null,
+          OldValue = null,
+          NewKey = ((int)person.TypeJourney).ToString(),
+          NewValue = person.TypeJourney.ToString()
         };
         personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         #endregion
@@ -1106,8 +1111,8 @@ namespace Manager.Services.Auth
             Register = DateTime.UtcNow,
             OldKey = personOld.StatusUser.ToString(),
             OldValue = Enum.GetName(typeof(EnumStatusUser), personOld.StatusUser),
-            NewKey = person.StatusUser.ToString(),
-            NewValue = Enum.GetName(typeof(EnumStatusUser), person.StatusUser)
+            NewKey = ((int)person.StatusUser).ToString(),
+            NewValue = person.StatusUser.ToString()
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
@@ -1134,9 +1139,9 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Salary,
             Register = DateTime.UtcNow,
-            OldKey = personOld.Salary.ToString(),
+            OldKey = null,
             OldValue = personOld.Salary.ToString(),
-            NewKey = person.Salary.ToString(),
+            NewKey = null,
             NewValue = person.Salary.ToString()
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
@@ -1164,10 +1169,10 @@ namespace Manager.Services.Auth
             TypeHistory = EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Jorney,
             Register = DateTime.UtcNow,
-            OldKey = personOld.TypeJourney.ToString(),
-            OldValue = Enum.GetName(typeof(EnumTypeJourney), personOld.TypeJourney),
-            NewKey = person.TypeJourney.ToString(),
-            NewValue = Enum.GetName(typeof(EnumTypeJourney), person.TypeJourney)
+            OldKey = ((int)personOld.TypeJourney).ToString(),
+            OldValue = personOld.TypeJourney.ToString(),
+            NewKey = ((int)person.TypeJourney).ToString(),
+            NewValue = person.TypeJourney.ToString()
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
