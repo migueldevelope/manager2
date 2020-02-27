@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 5209
 COPY ["Mobile/Mobile.xml", "Manager/"]
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY ["Mobile/Mobile.csproj", "Mobile/"]
 COPY ["Tools/Tools.csproj", "Tools/"]

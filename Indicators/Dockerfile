@@ -1,9 +1,9 @@
-FROM microsoft/aspnetcore:2.0 AS base
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 5206
 COPY ["Indicators/Indicators.xml", "Indicators/"]
 
-FROM microsoft/aspnetcore-build:2.0 AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY ["Indicators/Indicators.csproj", "Indicators/"]
 COPY ["Tools/Tools.csproj","Tools/"]
