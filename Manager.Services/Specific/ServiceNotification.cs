@@ -465,10 +465,12 @@ namespace Manager.Services.Specific
       try
       {
         var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == person._id).Result;
-        checkpoint.StatusCheckpoint = EnumStatusCheckpoint.End;
+        if(checkpoint != null)
+        {
+          checkpoint.StatusCheckpoint = EnumStatusCheckpoint.End;
+          var c = serviceCheckpoint.Update(checkpoint, null);
+        }
         person.TypeJourney = EnumTypeJourney.Monitoring;
-
-        var c = serviceCheckpoint.Update(checkpoint, null);
         var x = servicePerson.Update(person, null);
 
       }catch(Exception e)
