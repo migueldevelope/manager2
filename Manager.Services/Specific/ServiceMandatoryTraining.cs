@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
 
         if ((dateMax != null) & (course.Periodicity == 0))
         {
-          
+
           if (beginDate < DateTime.Parse(dateMax.Value.ToShortDateString()))
           {
             messages.Add("retroactive");
@@ -153,7 +153,7 @@ namespace Manager.Services.Specific
             messages.Add("realized");
             return;
           }
-            
+
         }
 
 
@@ -172,7 +172,7 @@ namespace Manager.Services.Specific
           proxDate = dateMax.Value.AddMonths(course.Periodicity);
           status = EnumStatusTrainingPlan.Realized;
         }
-        else if(retroactive == true)
+        else if (retroactive == true)
           status = EnumStatusTrainingPlan.Realized;
         else
         {
@@ -211,17 +211,18 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var list = serviceEventHistoric.GetAllNewVersion(p => p.Person._id == idperson).Result;
+        var list = serviceCourse.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         List<EventHistoric> result = new List<EventHistoric>();
         foreach (var item in list)
         {
-          var course = serviceCourse.GetNewVersion(p => p._id == item.Course._id).Result;
-          if (course != null)
+          if (item.Equivalents != null)
           {
-            if (course.Equivalents != null)
+            var eq = item.Equivalents.Where(p => p._id == idcourse);
+            foreach (var course in eq)
             {
-              if (course.Equivalents.Where(p => p._id == idcourse).Count() > 0)
-                result.Add(item);
+              var hist = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == item._id && p.Person._id == idperson).Result.LastOrDefault();
+              if (hist != null)
+                result.Add(hist);
             }
           }
 
