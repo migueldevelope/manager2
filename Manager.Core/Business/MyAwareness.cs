@@ -41,7 +41,7 @@ namespace Manager.Core.Business
       {
         _idPerson = _idPerson,
         NamePerson = NamePerson,
-        Date = Date == null ? DateTime.Now : DateTime.Parse(Date.Value.ToString("dd/MM/yyyy")),
+        Date = Date == null ? "" : Date.Value.ToString("dd/MM/yyyy hh:mm"),
         RealitySelfImage = Reality?.SelfImage,
         RealityWorker = Reality?.Worker,
         RealityPersonalRelationships = Reality?.PersonalRelationships,

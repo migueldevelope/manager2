@@ -9,7 +9,7 @@ namespace Manager.Views.BusinessView
   {
     public string _idPerson { get; set; }
     public string NamePerson { get; set; }
-    public DateTime? Date { get; set; }
+    public string Date { get; set; }
 
     public string RealitySelfImage { get; set; }
     public string RealityWorker { get; set; }

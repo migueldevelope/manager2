@@ -170,7 +170,7 @@ namespace Manager.Services.Specific
         {
           viewMA._idPerson = result._idPerson;
           viewMA.NamePerson = result.NamePerson;
-          viewMA.Date = result.Date;
+          viewMA.Date = result.Date == null ? "" : result.Date.Value.ToString("dd/MM/yyyy hh:mm");
           viewMA.RealitySelfImage = result.Reality?.SelfImage;
           viewMA.RealityWorker = result.Reality?.Worker;
           viewMA.RealityPersonalRelationships = result.Reality?.PersonalRelationships;
