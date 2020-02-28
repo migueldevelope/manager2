@@ -41,6 +41,7 @@ namespace Manager.Core.Interfaces
     ViewCrudTrainingPlan GetTrainingPlan(string id);
     List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewCrudTrainingPlan> ListTrainingPlan(string idcompany, string idperson, ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewListTrainingPlanExport> ListTrainingPlanPersonListExport(string idmanager, EnumTypeUser typeUser, EnumOrigin origin, ref long total, int count = 10, int page = 1, string filter = "");
 
     #endregion
 

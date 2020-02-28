@@ -297,6 +297,28 @@ namespace Training.Controllers
       return await Task.Run(() => result);
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="type"></param>
+    /// <param name="origin"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("trainingplanlistexport/{idmanager}/{type}/{origin}")]
+    public async Task<List<ViewListTrainingPlanExport>> ListTrainingPlanPersonListExport(string idmanager, EnumTypeUser type, EnumOrigin origin, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListTrainingPlanPersonListExport(idmanager, type, origin, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// 
     /// </summary>
