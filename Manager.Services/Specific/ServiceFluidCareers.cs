@@ -358,7 +358,6 @@ namespace Manager.Services.Specific
 
 
 
-
         var result = new ViewFluidCareerPerson()
         {
           FluidCareerSphere = view,
