@@ -328,7 +328,10 @@ namespace Manager.Services.Specific
 
               viewOccupation.Activities = occupation.Activities;
               viewOccupation.Scopes = group.Scope;
-
+              viewOccupation.SkillsOccupation = occupation.Skills;
+              viewOccupation.SkillsCompany = company.Skills;
+              viewOccupation.SkillsGroup = group.Skills;
+              viewOccupation.Schollings = occupation.Schooling;
 
 
               if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
