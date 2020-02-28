@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,20 @@ namespace Manager.Controllers
       return await Task.Run(() => result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listversion")]
+    public async Task<List<ViewMyAwareness>> ListVersion()
+    {
+      List<ViewMyAwareness> result = service.ListVersion();
+      return await Task.Run(() => result);
+    }
+
+    
 
     /// <summary>
     /// 

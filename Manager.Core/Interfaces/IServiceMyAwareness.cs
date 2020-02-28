@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
@@ -17,5 +18,6 @@ namespace Manager.Core.Interfaces
     ViewCrudMyAwareness GetNow();
     List<ViewListMyAwareness> ListPerson(string idperson, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListMyAwareness> List(ref long total, int count = 10, int page = 1, string filter = "");
+    List<ViewMyAwareness> ListVersion();
   }
 }

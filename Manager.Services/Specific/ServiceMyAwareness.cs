@@ -7,6 +7,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -288,6 +289,20 @@ namespace Manager.Services.Specific
         p._idPerson == idperson, count, count * (page - 1), "NamePerson").Result
           .Select(x => x.GetViewList()).ToList();
         total = serviceMyAwareness.CountNewVersion(p => p._idPerson == idperson).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewMyAwareness> ListVersion()
+    {
+      try
+      {
+        List<ViewMyAwareness> detail = serviceMyAwareness.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result
+          .Select(x => x.GetViewExport()).ToList();
         return detail;
       }
       catch (Exception e)
