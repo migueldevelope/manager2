@@ -15,5 +15,6 @@ namespace Manager.Views.BusinessView
     public decimal Workload { get; set; }
     public string Instructor { get; set; }
     public string NameParticipant { get; set; }
+    public string Code { get; set; }
   }
 }

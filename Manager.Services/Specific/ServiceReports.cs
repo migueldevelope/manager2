@@ -468,6 +468,7 @@ namespace Manager.Services.Specific
                 NameParticipant = item.Name,
                 Workload = Math.Round(events.Workload / 60, 2),
                 Instructor = instructors,
+                Code = events.Code
               };
               data.Add(viewEvent);
             };
@@ -488,6 +489,7 @@ namespace Manager.Services.Specific
             NameParticipant = eventsHistoric.Person.Name,
             Workload = Math.Round(eventsHistoric.Workload / 60, 2),
             Instructor = "",
+            Code = ""
           };
           data.Add(viewEvent);
         }

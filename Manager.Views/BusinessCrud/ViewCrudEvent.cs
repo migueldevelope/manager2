@@ -25,6 +25,7 @@ namespace Manager.Views.BusinessCrud
     public EnumStatusEvent StatusEvent { get; set; }
     public string Observation { get; set; }
     public byte Evalution { get; set; }
+    public string Code { get; set; }
     public List<ViewCrudAttachmentField> Attachments { get; set; }
     public DateTime? DateEnd { get; set; }
     public EnumModalityESocial Modality { get; set; }

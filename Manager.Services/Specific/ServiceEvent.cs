@@ -338,7 +338,8 @@ namespace Manager.Services.Specific
           Attachments = events.Attachments,
           DateEnd = events.DateEnd,
           Modality = events.Modality,
-          TypeESocial = events.TypeESocial
+          TypeESocial = events.TypeESocial,
+          Code = events.Code
         };
       }
       catch (Exception e)
@@ -673,7 +674,8 @@ namespace Manager.Services.Specific
           Status = EnumStatus.Enabled,
           StatusEvent = view.StatusEvent,
           TypeESocial = view.TypeESocial,
-          Workload = view.Workload
+          Workload = view.Workload,
+          Code = view.Code
         };
 
         serviceEvent.InsertNewVersion(events).Wait();
@@ -877,7 +879,7 @@ namespace Manager.Services.Specific
         events.StatusEvent = view.StatusEvent;
         events.TypeESocial = view.TypeESocial;
         events.Workload = view.Workload;
-
+        events.Code = view.Code;
 
         events.UserEdit = person.GetViewListBase();
         events.Entity = AddEntity(view.Entity.Name);

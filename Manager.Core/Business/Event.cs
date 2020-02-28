@@ -38,5 +38,6 @@ namespace Manager.Core.Business
     public DateTime? DateEnd { get; set; }
     public EnumModalityESocial Modality { get; set; }
     public EnumTypeESocial TypeESocial { get; set; }
+    public string Code { get; set; }
   }
 }
