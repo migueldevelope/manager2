@@ -19,6 +19,7 @@ using Manager.Views.Enumns;
 using Tools.Data;
 using Manager.Views.BusinessCrud;
 using Manager.Core.BusinessModel;
+using Microsoft.AspNetCore.Cors;
 
 namespace EdeskIntegration.Controllers
 {

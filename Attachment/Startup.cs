@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Attachment.Web;
 using Manager.Core.Interfaces;
 using Manager.Data;
 using Manager.Data.Infrastructure;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -98,11 +100,11 @@ namespace Attachment
       services.AddSingleton(_ => serviceEvent);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="services"></param>
     // This method gets called by the runtime. Use this method to add services to the container.
+    /// <summary>
+    /// Configurador de servicos
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -138,9 +140,12 @@ namespace Attachment
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials()
+          .WithExposedHeaders("x-total-count")
       ));
-
       services.AddMvc();
+
+      //services.AddSignalR();
+
       // Configurando o serviço de documentação do Swagger
       services.AddSwaggerGen(c =>
       {
@@ -162,23 +167,41 @@ namespace Attachment
         c.IncludeXmlComments(caminhoXmlDoc);
       });
 
+      //      Configuration.GetConnectionString("10.0.0.16,port: 6379,password=bti9010");
+
+      //services.AddMemoryCache();
+      //services.AddDistributedRedisCache(options =>
+      //{
+      //  options.Configuration =
+      //      Configuration.GetConnectionString("redis://10.0.0.16:6379?password=bti9010");
+
+      //  options.InstanceName = "analisa";
+      //});
+
       RegistreServices(services);
+
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="app"></param>
-    /// <param name="env"></param>
+
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// <summary>
+    /// Configuração de aplicação
+    /// </summary>
+    /// <param name="app">Aplicação</param>
+    /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       if (env.IsDevelopment())
         app.UseDeveloperExceptionPage();
       app.UseAuthentication();
-      //app.UseCors("AllowAll");
-      app.UseCors(option => option.AllowAnyOrigin());
+      app.UseMiddleware<ErrorHandlingMiddleware>();
+      app.UseCors("AllowAll");
       app.UseMvc();
+      //app.UseSignalR(routes =>
+      //{
+      //  routes.MapHub<MessagesHub>("/MessagesHub");
+      //});
+      // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
@@ -186,5 +209,6 @@ namespace Attachment
         c.SwaggerEndpoint("../swagger/v1/swagger.json", "Attachment");
       });
     }
+
   }
 }
