@@ -2,6 +2,6 @@
 {
   public enum EnumTypeHistory : byte
   {
-    Admission = 0, OnboardingPlataform = 1, Change = 2
+    Admission = 0, OnboardingPlataform = 1, Change = 2, Demission = 3
   }
 }

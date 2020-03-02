@@ -549,13 +549,14 @@ namespace Manager.Services.Specific
 
           if (days >= 10)
           {
-            var view = onboardings.Where(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).FirstOrDefault();
-            if (view == null)
+            var view = onboardings.Where(p => p.Person._id == item._id).FirstOrDefault();
+            if (view == null || view?.StatusOnBoarding != EnumStatusOnBoarding.End)
               list.Add(new ViewListPending()
               {
                 Manager = item.Manager,
                 Person = item.Name,
-                Days = days
+                Days = days,
+                StatusOnBoarding = view == null ? EnumStatusOnBoarding.WaitBegin.ToString() : view.StatusOnBoarding.ToString()
               });
           }
         }

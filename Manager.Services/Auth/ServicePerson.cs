@@ -342,103 +342,6 @@ namespace Manager.Services.Auth
       }
     }
 
-    public string AddPersonUser(ViewCrudPersonUser view)
-    {
-      try
-      {
-        var authMaristas = false;
-        var authPUC = false;
-        try
-        {
-          authMaristas = view.User.Mail.Substring(view.User.Mail.IndexOf("@"), view.User.Mail.Length - view.User.Mail.IndexOf("@")) == "@maristas.org.br" ? true : false;
-          authPUC = view.User.Mail.Substring(view.User.Mail.IndexOf("@"), view.User.Mail.Length - view.User.Mail.IndexOf("@")) == "@pucrs.br" ? true : false;
-        }
-        catch (Exception)
-        {
-
-        }
-        var user = new User()
-        {
-          Name = view.User.Name,
-          Nickname = view.User.Nickname,
-          Document = view.User.Document,
-          Mail = view.User.Mail,
-          Phone = view.User.Phone,
-          Password = view.User.Password,
-          DateBirth = view.User.DateBirth,
-          DateAdm = view.User.DateAdm,
-          Schooling = view.User.Schooling,
-          PhotoUrl = view.User.PhotoUrl,
-          PhoneFixed = view.User.PhoneFixed,
-          DocumentID = view.User.DocumentID,
-          DocumentCTPF = view.User.DocumentCTPF,
-          Sex = view.User.Sex,
-          UserAdmin = false
-        };
-
-        BaseFields manager = null;
-        if (view.Person.Manager != null)
-        {
-          manager = servicePerson.GetAllNewVersion(p => p._id == view.Person.Manager._id).Result.
-         Select(p => new BaseFields()
-         {
-           _id = p._id,
-           Name = p.User.Name,
-           Mail = p.User.Mail
-         }).FirstOrDefault();
-        }
-
-        SalaryScalePerson salaryScale = null;
-        if (view.Person.SalaryScales != null)
-          salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.Person.SalaryScales._idSalaryScale).Result
-            .Select(p => new SalaryScalePerson() { _idSalaryScale = p._id, NameSalaryScale = p.Name })
-            .FirstOrDefault();
-
-        var person = new Person()
-        {
-          StatusUser = view.Person.StatusUser,
-          Company = view.Person.Company,
-          Occupation = view.Person.Occupation,
-          Manager = manager,
-          DateLastOccupation = view.Person.DateLastOccupation,
-          Salary = view.Person.Salary,
-          DateLastReadjust = view.Person.DateLastReadjust,
-          DateResignation = view.Person.DateResignation,
-          TypeJourney = view.Person.TypeJourney,
-          Establishment = view.Person.Establishment,
-          HolidayReturn = view.Person.HolidayReturn,
-          MotiveAside = view.Person.MotiveAside,
-          TypeUser = view.Person.TypeUser,
-          Registration = view.Person.Registration,
-          SalaryScales = salaryScale,
-          Workload = view.Person.Workload
-        };
-        if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
-          person.TypeJourney = EnumTypeJourney.OutOfJourney;
-
-        if (person.Occupation == null)
-          person.TypeJourney = EnumTypeJourney.OutOfJourney;
-
-        user.Password = EncryptServices.GetMD5Hash(view.User.Password);
-        user.ChangePassword = EnumChangePassword.AccessFirst;
-        user.Status = EnumStatus.Enabled;
-        person.Status = EnumStatus.Enabled;
-
-        if ((authMaristas) || (authPUC))
-          user.ChangePassword = EnumChangePassword.No;
-
-        person.User = serviceUser.InsertNewVersion(user).Result.GetViewCrud();
-
-        servicePerson.InsertNewVersion(person).Wait();
-
-        return "ok";
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
     public string UpdatePersonUser(ViewCrudPersonUser view)
     {
       try
@@ -449,6 +352,16 @@ namespace Manager.Services.Auth
           throw new Exception("existsdocument");
 
         Person person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
+
+        #region Variáveis para salvar dados antigos
+        ViewListEstablishment saveEstablishment = person.Establishment;
+        EnumStatusUser saveStatusUser = person.StatusUser;
+        ViewListOccupationResume saveOccupation = person.Occupation;
+        decimal saveSalary = person.Salary;
+        BaseFields saveManager = person.Manager;
+        EnumTypeJourney saveTypeJourney = person.TypeJourney;
+        #endregion
+
         User user = serviceUser.GetNewVersion(p => p._id == view.User._id).Result;
 
         user.Name = view.User.Name;
@@ -492,6 +405,8 @@ namespace Manager.Services.Auth
         person.SalaryScales = salaryScale;
         person.Workload = view.Person.Workload;
         person.User = user.GetViewCrud();
+
+        #region Ajustes na manutenção da pessoa
         if (person.StatusUser == EnumStatusUser.Disabled)
         {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
@@ -503,17 +418,123 @@ namespace Manager.Services.Auth
             var i = serviceUser.Update(user, null);
           }
         }
-
         if (person.TypeUser == EnumTypeUser.Administrator || person.TypeUser == EnumTypeUser.Support || person.TypeUser == EnumTypeUser.Anonymous)
+        {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
         if (person.Occupation == null)
+        {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
+        }
+        if (saveOccupation?._id != view.Person.Occupation?._id && (view.Person.DateLastOccupation == null || view.Person.DateLastOccupation < DateTime.UtcNow.AddDays(-15)))
+        {
+          person.DateLastOccupation = DateTime.UtcNow;
+        }
+        if (saveSalary != view.Person.Salary && (view.Person.DateLastReadjust == null || view.Person.DateLastReadjust < DateTime.UtcNow.AddDays(-15)))
+        {
+          person.DateLastReadjust = DateTime.UtcNow;
+        }
+        #endregion
 
         var xi = servicePerson.Update(person, null);
         var ix = serviceUser.Update(user, null);
 
         if (modifyManager)
           manager = UpdateManager(person, view.Person.Manager._id, person.Manager?._id);
+
+        #region Registrar os históricos da pessoa nova
+        PersonHistory personHistory = null;
+        if (saveEstablishment?._id != person.Establishment?._id)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Establishment,
+            Register = DateTime.UtcNow,
+            OldKey = saveEstablishment?._id,
+            OldValue = saveEstablishment?.Name,
+            NewKey = person.Establishment?._id,
+            NewValue = person.Establishment?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (saveStatusUser != person.StatusUser)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.StatusUser,
+            Register = DateTime.UtcNow,
+            OldKey = ((int)saveStatusUser).ToString(),
+            OldValue = saveStatusUser.ToString(),
+            NewKey = ((int)person.StatusUser).ToString(),
+            NewValue = person.StatusUser.ToString()
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (saveOccupation?._id != person.Occupation?._id)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Occupation,
+            Register = DateTime.UtcNow,
+            OldKey = saveOccupation?._id,
+            OldValue = saveOccupation?.Name,
+            NewKey = person.Occupation?._id,
+            NewValue = person.Occupation?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (saveSalary != person.Salary)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Salary,
+            Register = DateTime.UtcNow,
+            OldKey = null,
+            OldValue = saveSalary.ToString(),
+            NewKey = null,
+            NewValue = person.Salary.ToString()
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (saveManager?._id != person.Manager?._id)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Manager,
+            Register = DateTime.UtcNow,
+            OldKey = saveManager?._id,
+            OldValue = saveManager?.Name,
+            NewKey = person.Manager?._id,
+            NewValue = person.Manager?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (saveTypeJourney != person.TypeJourney)
+        {
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Jorney,
+            Register = DateTime.UtcNow,
+            OldKey = ((int)saveTypeJourney).ToString(),
+            OldValue = saveTypeJourney.ToString(),
+            NewKey = ((int)person.TypeJourney).ToString(),
+            NewValue = person.TypeJourney.ToString()
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        #endregion
 
         return "Person altered!";
       }
@@ -1084,6 +1105,8 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
+
+        #region Ajustes na manutenção da pessoa
         if (person.StatusUser == EnumStatusUser.Disabled)
         {
           person.TypeJourney = EnumTypeJourney.OutOfJourney;
@@ -1111,6 +1134,8 @@ namespace Manager.Services.Auth
         {
           person.DateLastReadjust = DateTime.UtcNow;
         }
+        #endregion
+
         var x = servicePerson.Update(person, null);
 
         if (modifyManager)
@@ -1138,7 +1163,7 @@ namespace Manager.Services.Auth
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
-            TypeHistory = EnumTypeHistory.Change,
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.StatusUser,
             Register = DateTime.UtcNow,
             OldKey = ((int)saveStatusUser).ToString(),

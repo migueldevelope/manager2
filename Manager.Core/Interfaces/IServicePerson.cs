@@ -24,7 +24,6 @@ namespace Manager.Core.Interfaces
     List<ViewBaseFields> ListManager(ref long total, string filter, int count, int page);
     List<ViewListCompany> ListCompany(ref long total, string filter, int count, int page);
     List<ViewListPerson> GetPersons(string idcompany, string filter);
-    string AddPersonUser(ViewCrudPersonUser view);
     string UpdatePersonUser(ViewCrudPersonUser view);
     List<ViewListPersonTeam> ListTeam(ref long total, string idPerson, string filter, int count, int page);
     List<ViewListPersonTeam> ListTeam_V2(ref long total, List<ViewListIdIndicators> persons, string filter, int count, int page);
