@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
-using Manager.Core.Views;
 using Manager.Data;
 using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
-using Manager.Views.BusinessList;
-using Manager.Views.Enumns;
 using Manager.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -22,8 +17,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Bson;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using Tools;
 

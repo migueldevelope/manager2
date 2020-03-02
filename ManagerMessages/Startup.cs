@@ -17,16 +17,31 @@ using Tools;
 
 namespace ManagerMessages
 {
+  /// <summary>
+  /// Controle de inicialização da API
+  /// </summary>
   public class Startup
   {
 
+    /// <summary>
+    /// Construtor do controle
+    /// </summary>
+    /// <param name="configuration"></param>
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
     }
+
+    /// <summary>
+    /// Propriedade de configuração
+    /// </summary>
     public IConfiguration Configuration { get; }
     private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
+    /// <summary>
+    /// Registrador de serviços
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void RegistreServices(IServiceCollection services)
     {
       DataContext _context;
@@ -66,7 +81,7 @@ namespace ManagerMessages
       services.AddSingleton(_ => serviceMaturity);
       services.AddSingleton(_ => serviceUser);
       services.AddSingleton(_ => serviceLogMessages);
-      /// Start service
+      // Start service
       serviceNotification.SendMessage();
       services.AddSingleton(_ => serviceNotification);
       services.AddSingleton(_ => serviceConfigurationNotifications);
@@ -87,8 +102,11 @@ namespace ManagerMessages
       services.AddSingleton(_ => serviceMandatoryTraining);
       serviceIndicators.SendMessages(conn.SignalRService);
     }
-
     // This method gets called by the runtime. Use this method to add services to the container.
+    /// <summary>
+    /// Configurador de servicos
+    /// </summary>
+    /// <param name="services">Coleção de serviços</param>
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -132,8 +150,12 @@ namespace ManagerMessages
 
       RegistreServices(services);
     }
-
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// <summary>
+    /// Configuração de aplicação
+    /// </summary>
+    /// <param name="app">Aplicação</param>
+    /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       if (env.IsDevelopment())
