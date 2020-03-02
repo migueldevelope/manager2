@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -133,7 +134,8 @@ namespace Attachment
       });
       services.AddCors(options =>
         options.AddPolicy("AllowAll",
-          builder => builder
+          builder => builder.WithOrigins("http://localhost","https://test.analisa.solutions","https://analisa.solutions")
+          .AllowAnyMethod().AllowAnyHeader()
           .AllowAnyOrigin()
           .AllowAnyMethod()
           .AllowAnyHeader()
@@ -177,6 +179,7 @@ namespace Attachment
         app.UseDeveloperExceptionPage();
       app.UseAuthentication();
       //app.UseCors("AllowAll");
+
       app.UseCors(option => option.AllowAnyOrigin());
       app.UseMvc();
       app.UseSwagger();
