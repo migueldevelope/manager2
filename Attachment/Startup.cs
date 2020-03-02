@@ -131,14 +131,14 @@ namespace Attachment
           }
         };
       });
-      //services.AddCors(options =>
-      //  options.AddPolicy("AllowAll",
-      //    builder => builder
-      //    .AllowAnyOrigin()
-      //    .AllowAnyMethod()
-      //    .AllowAnyHeader()
-      //    .AllowCredentials()
-      //));
+      services.AddCors(options =>
+        options.AddPolicy("AllowAll",
+          builder => builder
+          .AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials()
+      ));
 
       services.AddMvc();
       // Configurando o serviço de documentação do Swagger
@@ -177,7 +177,7 @@ namespace Attachment
         app.UseDeveloperExceptionPage();
       app.UseAuthentication();
       //app.UseCors("AllowAll");
-      //app.UseCors(option => option.AllowAnyOrigin());
+      app.UseCors(option => option.AllowAnyOrigin());
       app.UseMvc();
       app.UseSwagger();
       app.UseSwaggerUI(c =>
