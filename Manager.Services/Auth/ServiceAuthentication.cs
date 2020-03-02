@@ -66,13 +66,16 @@ namespace Manager.Services.Auth
       {
         var person = servicePerson.GetAllFreeNewVersion(p => p._id == idperson && p._idAccount == _idAccount).Result.FirstOrDefault();
         var account = serviceAccount.GetAllFreeNewVersion(p => p._id == person._idAccount).Result.FirstOrDefault();
+        var mail = person.User?.Mail;
+        if (mail == null)
+          mail = "";
 
         // Token
         Claim[] claims = new[]
         {
         new Claim(ClaimTypes.Name, person.User.Name),
         new Claim(ClaimTypes.Hash, person._idAccount),
-        new Claim(ClaimTypes.Email, person.User.Mail),
+        new Claim(ClaimTypes.Email, mail),
         new Claim(ClaimTypes.NameIdentifier, account.Name),
         new Claim(ClaimTypes.UserData, person.User._id),
         new Claim(ClaimTypes.Actor, idperson),
@@ -318,12 +321,16 @@ namespace Manager.Services.Auth
             person.Team = serviceIPerson.GetFilterPersons(idmanagers);
           }
         }
+        var mail = user.Mail;
+        if (mail == null)
+          mail = "";
+
         // Token
         Claim[] claims = new[]
         {
         new Claim(ClaimTypes.Name, person.Name),
         new Claim(ClaimTypes.Hash, person.IdAccount),
-        new Claim(ClaimTypes.Email, user.Mail),
+        new Claim(ClaimTypes.Email,mail ),
         new Claim(ClaimTypes.NameIdentifier, person.NameAccount),
         new Claim(ClaimTypes.UserData, person.IdUser),
         new Claim(ClaimTypes.Actor, person.Contracts.FirstOrDefault().IdPerson)
