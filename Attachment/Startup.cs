@@ -134,7 +134,7 @@ namespace Attachment
       });
       services.AddCors(options =>
         options.AddPolicy("AllowAll",
-          builder => builder.WithOrigins("http://localhost","https://test.analisa.solutions","https://analisa.solutions")
+          builder => builder.WithOrigins("*")
           .AllowAnyMethod().AllowAnyHeader()
           .AllowAnyOrigin()
           .AllowAnyMethod()
