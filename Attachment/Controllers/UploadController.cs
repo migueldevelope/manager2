@@ -26,7 +26,6 @@ namespace EdeskIntegration.Controllers
   /// <summary>
   /// 
   /// </summary>
-  [EnableCors("AllowAll")]
   [Route("upload")]
   public class UploadController : Controller
   {
