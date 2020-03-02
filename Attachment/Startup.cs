@@ -176,7 +176,8 @@ namespace Attachment
       if (env.IsDevelopment())
         app.UseDeveloperExceptionPage();
       app.UseAuthentication();
-      app.UseCors("AllowAll");
+      //app.UseCors("AllowAll");
+      app.UseCors(option => option.AllowAnyOrigin());
       app.UseMvc();
       app.UseSwagger();
       app.UseSwaggerUI(c =>
