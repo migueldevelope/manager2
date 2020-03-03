@@ -1203,7 +1203,7 @@ namespace Manager.Services.Auth
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (saveManager?._id != person.Manager?._id)
+        if (view.Manager != null && saveManager?._id != person.Manager?._id)
         {
           personHistory = new PersonHistory()
           {
