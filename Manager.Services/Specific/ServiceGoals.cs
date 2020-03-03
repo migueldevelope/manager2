@@ -1672,7 +1672,9 @@ namespace Manager.Services.Specific
           Name = viewperiod?.Name
         };
 
-        List<ViewListGoalPersonControl> detail = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager & p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
+        List<ViewListGoalPersonControl> detail = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager 
+        && p.StatusUser != EnumStatusUser.Disabled
+        && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "User.Name").Result
           .Select(p => new ViewListGoalPersonControl()
           {
             _id = null,
@@ -1698,7 +1700,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        total = servicePerson.CountNewVersion(x => x.Manager._id == idmanager).Result;
+        total = servicePerson.CountNewVersion(x => x.Manager._id == idmanager && x.StatusUser != EnumStatusUser.Disabled).Result;
 
         return detail;
       }
