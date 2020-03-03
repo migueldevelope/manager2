@@ -285,8 +285,9 @@ namespace IntegrationService.Service
     private void CleanEmploee()
     {
       try
-      {
-        if (Person.IdAccount.Equals("5b91299a17858f95ffdb79f6")) // Unimed Nordeste Rs
+      { 
+        // Unimed Nordeste Rs
+        if (Person.IdAccount.Equals("5b91299a17858f95ffdb79f6"))
         {
           // Limpeza de matriculas vazias
           int work = ColaboradoresV2.FindIndex(p => p.Colaborador.Matricula == null);
@@ -312,6 +313,30 @@ namespace IntegrationService.Service
             while (work != -1)
             {
               FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!",occupation),
+                ColaboradoresV2[work].Colaborador.Cpf,
+                ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
+                ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
+                ColaboradoresV2[work].Nome), EnumTypeLineOpportunityg.Register);
+              ColaboradoresV2.RemoveAt(work);
+              work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
+            }
+          }
+        }
+        // AEL
+        if (Person.IdAccount.Equals("5d6ebda43501a40001d97db7"))
+        {
+          // Limpeza de Jovens Aprendizes
+          List<string> cleanOccupations = new List<string>
+          {
+            "Aprendiz do Senai"
+          };
+          int work = -1;
+          foreach (string occupation in cleanOccupations)
+          {
+            work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
+            while (work != -1)
+            {
+              FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!", occupation),
                 ColaboradoresV2[work].Colaborador.Cpf,
                 ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
                 ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
@@ -693,6 +718,10 @@ namespace IntegrationService.Service
           {
             collumName = GetStandardExcelColumnName(collumn);
             workData = excelPln.Range[string.Format("{0}{1}", collumName, row)].Value;
+            if ((workData is int) && ((int)workData == -2146826246))
+            {
+              workData = null;
+            } ;
             rowData.Add(workData == null ? string.Empty : workData.ToString().Trim());
           }
           ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
