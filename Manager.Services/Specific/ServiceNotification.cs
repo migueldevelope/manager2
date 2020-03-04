@@ -494,7 +494,8 @@ namespace Manager.Services.Specific
         foreach (Person item in persons)
         {
           if ((serviceMonitoring.CountNewVersion(p => p.Person._id == item._id && p.StatusMonitoring == EnumStatusMonitoring.End && p.DateEndEnd >= nowLimit).Result == 0)
-            &&(serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End && p.DateEndEnd >= nowLimit).Result == 0))
+            &&(serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End && p.DateEndEnd >= nowLimit).Result == 0)
+            && (serviceCheckpoint.CountNewVersion(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End && p.DateEnd >= nowLimit).Result == 0))
             listManager.Add(new ManagerWorkNotification()
             {
               Manager = item.Manager,
