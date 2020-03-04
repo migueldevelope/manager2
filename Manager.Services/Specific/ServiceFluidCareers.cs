@@ -361,7 +361,7 @@ namespace Manager.Services.Specific
         var result = new ViewFluidCareerPerson()
         {
           FluidCareerSphere = view,
-          FluidCareer = fluidcareers.OrderByDescending(p => p.Accuracy).ToList()
+          FluidCareer = fluidcareers.Where(p => p.Accuracy > 0).OrderByDescending(p => p.Accuracy).ToList()
         };
 
         return result;
