@@ -493,7 +493,8 @@ namespace Manager.Services.Specific
         List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.Monitoring && p.Manager != null).Result;
         foreach (Person item in persons)
         {
-          if (serviceMonitoring.CountNewVersion(p => p.Person._id == item._id && p.StatusMonitoring == EnumStatusMonitoring.End && p.DateEndEnd <= nowLimit).Result == 0)
+          if ((serviceMonitoring.CountNewVersion(p => p.Person._id == item._id && p.StatusMonitoring == EnumStatusMonitoring.End && p.DateEndEnd >= nowLimit).Result == 0)
+            &&(serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End && p.DateEndEnd >= nowLimit).Result == 0))
             listManager.Add(new ManagerWorkNotification()
             {
               Manager = item.Manager,
