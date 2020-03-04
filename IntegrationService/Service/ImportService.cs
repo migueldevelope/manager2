@@ -382,14 +382,20 @@ namespace IntegrationService.Service
           fired = true;
           foreach (var item in colaborador.Chaves)
           {
-            if (service.Param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+            switch (service.Param.IntegrationKey)
             {
-              view = ColaboradoresV2.Find(p => p.Colaborador.Chave1() == string.Format("{0};{1};{2};{3}", colaborador.Cpf, item.Split(';')[0], item.Split(';')[1], colaborador.Matricula));
+              case EnumIntegrationKey.CompanyEstablishment:
+                view = ColaboradoresV2.Find(p => p.Colaborador.Chave1() == string.Format("{0};{1};{2};{3}", colaborador.Cpf, item.Split(';')[0], item.Split(';')[1], colaborador.Matricula));
+                break;
+              case EnumIntegrationKey.Company:
+                view = ColaboradoresV2.Find(p => p.Colaborador.Chave2() == string.Format("{0};{1};{2}", colaborador.Cpf, item.Split(';')[0], colaborador.Matricula));
+                break;
+              case EnumIntegrationKey.Document:
+                view = ColaboradoresV2.Find(p => p.Colaborador.Cpf == colaborador.Cpf);
+                break;
+              default:
+                throw new Exception("Tipo de integração de chaves inválida");
             }
-            else
-            {
-              view = ColaboradoresV2.Find(p => p.Colaborador.Chave2() == string.Format("{0};{1};{2}", colaborador.Cpf, item.Split(';')[0], colaborador.Matricula));
-            };
             if (view != null)
             {
               fired = false;

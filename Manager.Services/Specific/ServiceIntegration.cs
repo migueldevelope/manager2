@@ -256,15 +256,21 @@ namespace Manager.Services.Specific
         }
         ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         ViewCrudPerson person;
-        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
+        switch (viewCrudIntegrationParameter.IntegrationKey)
         {
-          person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
-              && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
-        }
-        else
-        {
-          person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
-              && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+          case EnumIntegrationKey.CompanyEstablishment:
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
+                && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Company:
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
+                && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Document:
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document).Result?.GetViewCrud();
+            break;
+          default:
+            throw new Exception("Tipo de integração de chaves inválida");
         }
         if (person == null)
         {
@@ -405,17 +411,22 @@ namespace Manager.Services.Specific
         }
         if (payrollEmployee.Messages.Count() > 0)
           return payrollEmployee;
-
         ViewCrudPerson person;
-        if (integrationKey == EnumIntegrationKey.Company)
+        switch (integrationKey)
         {
-          person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
-              && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
-        }
-        else
-        {
-          person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
-              && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+          case EnumIntegrationKey.CompanyEstablishment:
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
+                && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Company:
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
+                && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Document:
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document).Result?.GetViewCrud();
+            break;
+          default:
+            throw new Exception("Tipo de integração de chaves inválida");
         }
         if (person != null)
         {
@@ -469,15 +480,21 @@ namespace Manager.Services.Specific
           }
           if (resultV2.Mensagem.Count() > 0)
             return;
-          if (integrationKey == EnumIntegrationKey.Company)
+          switch (integrationKey)
           {
-            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
-                && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
-          }
-          else
-          {
-            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
-                && p.Establishment._id == establishment._id && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+            case EnumIntegrationKey.CompanyEstablishment:
+              person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
+                  && p.Establishment._id == establishment._id && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+              break;
+            case EnumIntegrationKey.Company:
+              person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
+                  && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+              break;
+            case EnumIntegrationKey.Document:
+              person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf).Result?.GetViewCrud();
+              break;
+            default:
+              throw new Exception("Tipo de integração de chaves inválida");
           }
         }
         else
@@ -527,15 +544,22 @@ namespace Manager.Services.Specific
         }
         ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         ViewCrudPerson person;
-        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
+
+        switch (viewCrudIntegrationParameter.IntegrationKey)
         {
-          person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
-              && p.Registration == view.Matricula).Result?.GetViewCrud();
-        }
-        else
-        {
-          person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
-              && p.Establishment._id == establishment._id && p.Registration == view.Matricula).Result?.GetViewCrud();
+          case EnumIntegrationKey.CompanyEstablishment:
+            person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
+                && p.Establishment._id == establishment._id && p.Registration == view.Matricula).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Company:
+            person = personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
+                && p.Registration == view.Matricula).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Document:
+            person = personService.GetNewVersion(p => p.User.Document == view.Cpf).Result?.GetViewCrud();
+            break;
+          default:
+            throw new Exception("Tipo de integração de chaves inválida");
         }
         if (person == null)
         {
@@ -1435,10 +1459,20 @@ namespace Manager.Services.Specific
         if (personsDocument.Count() == 0)
           return null;
         Person person = null;
-        if (viewCrudIntegrationParameter.IntegrationKey == EnumIntegrationKey.Company)
-          person = personsDocument.Where(p => p.Company._id == idcompany && p.Registration == registration).FirstOrDefault();
-        else
-          person = personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
+        switch (viewCrudIntegrationParameter.IntegrationKey)
+        {
+          case EnumIntegrationKey.CompanyEstablishment:
+            person = personsDocument.Where(p => p.Company._id == idcompany && p.Establishment._id == idestablishment && p.Registration == registration).FirstOrDefault();
+            break;
+          case EnumIntegrationKey.Company:
+            person = personsDocument.Where(p => p.Company._id == idcompany && p.Registration == registration).FirstOrDefault();
+            break;
+          case EnumIntegrationKey.Document:
+            person = personsDocument.Where(p => p.User.Document == document).FirstOrDefault();
+            break;
+          default:
+            throw new Exception("Tipo de integração de chaves inválida");
+        }
         return person == null
           ? null
           : new ViewCrudPerson()
@@ -1825,13 +1859,19 @@ namespace Manager.Services.Specific
         }
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        if (param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+        switch (param.IntegrationKey)
         {
-          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
-        }
-        else
-        {
-          payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+          case EnumIntegrationKey.CompanyEstablishment:
+            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+            break;
+          case EnumIntegrationKey.Company:
+            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+            break;
+          case EnumIntegrationKey.Document:
+            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Document == view.Colaborador.Cpf && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+            break;
+          default:
+            throw new Exception("Tipo de integração de chaves inválida");
         }
         if (payrollEmployees.Count() == 0 && (acao == EnumActionIntegration.Demission || acao == EnumActionIntegration.Change))
         {
@@ -1928,17 +1968,21 @@ namespace Manager.Services.Specific
           view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
           view.DataDemissao = EmptyDateDefault(view.DataDemissao, DateTime.Now.Date);
           // Atualização da base de dados
-          // Atualização da base de dados
-          if (param.IntegrationKey == EnumIntegrationKey.CompanyEstablishment)
+          switch (param.IntegrationKey)
           {
-            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+            case EnumIntegrationKey.CompanyEstablishment:
+              payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key1 == view.Colaborador.Chave1() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+              break;
+            case EnumIntegrationKey.Company:
+              payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+              break;
+            case EnumIntegrationKey.Document:
+              payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Document == view.Colaborador.Cpf && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
+              break;
+            default:
+              throw new Exception("Tipo de integração de chaves inválida");
           }
-          else
-          {
-            payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p.Key2 == view.Colaborador.Chave2() && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
-          }
-        } else
-        {
+        } else {
           payrollEmployees = payrollEmployeeService.GetAllNewVersion(p => p._idContract == view._id && p.StatusIntegration != EnumStatusIntegration.Reject).Result.OrderByDescending(o => o.DateRegister).ToList();
         }
         if (payrollEmployees.Count == 0)

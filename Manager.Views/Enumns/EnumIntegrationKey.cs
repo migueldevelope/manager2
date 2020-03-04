@@ -2,6 +2,6 @@
 {
   public enum EnumIntegrationKey : byte
   {
-    CompanyEstablishment = 0, Company = 1
+    CompanyEstablishment = 0, Company = 1, Document = 2
   }
 }
