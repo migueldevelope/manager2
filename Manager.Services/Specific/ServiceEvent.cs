@@ -447,7 +447,7 @@ namespace Manager.Services.Specific
                 }
 
                 total = detail.Count();
-                detail = detail.Where(p => !(p.Participants.Count() == 0  && p.Days.Count() == 0 p.StatusEvent == EnumStatusEvent.Realized)).ToList();
+                detail = detail.Where(p => !(p.Participants.Count() == 0  && p.Days.Count() == 0 && p.StatusEvent == EnumStatusEvent.Realized)).ToList();
 
                 return detail.Select(p => new ViewListEventDetail()
                 {
