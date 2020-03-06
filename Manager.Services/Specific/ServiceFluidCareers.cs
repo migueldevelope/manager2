@@ -7,6 +7,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
@@ -88,7 +89,7 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
-        public ViewCrudFluidCareers New(ViewCrudFluidCareers view)
+        public ViewFluidCareersReturn New(ViewCrudFluidCareers view)
         {
             try
             {
@@ -100,7 +101,14 @@ namespace Manager.Services.Specific
                     Date = DateTime.Now,
                     FluidCareersView = view.FluidCareersView
                 }).Result;
-                return fluidcareers.GetViewCrud();
+
+                return new ViewFluidCareersReturn()
+                {
+                    _id = fluidcareers._id,
+                    _idPerson = fluidcareers.Person._id,
+                    ///FluidCareersView = fluidcareers.FluidCareersView,
+                    Plan = fluidcareers.Plan?.GetViewCrud()
+                };
             }
             catch (Exception e)
             {

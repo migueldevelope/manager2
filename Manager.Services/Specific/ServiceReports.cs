@@ -695,9 +695,10 @@ namespace Manager.Services.Specific
 
                 foreach (var item in onBoarding.SkillsCompany)
                 {
-                    foreach(var com in item.Comments)
+                    var result = new ViewReportsOnBoarding();
+                    if (item.Comments.Count() == 0)
                     {
-                        var result = new ViewReportsOnBoarding()
+                        result = new ViewReportsOnBoarding()
                         {
                             Name = onBoarding.Person.Name,
                             Occupation = person.Occupation.Name,
@@ -708,25 +709,52 @@ namespace Manager.Services.Specific
                             DateAdm = onBoarding.Person.DateAdm,
                             TypeJourney = onBoarding.Person.TypeJourney,
                             Schooling = onBoarding.Person.Schooling,
-                            Comments = com.Comments,
+                            Comments = "",
                             Concept = item.Skill.Concept,
                             NameItem = item.Skill.Name,
-                            UserComment = com.UserComment,
+                            UserComment = EnumUserComment.Person,
                             _idItem = item.Skill._id,
                             TypeItem = EnumTypeItem.SkillCompany,
-                            TypeSkill= item.Skill.TypeSkill
+                            TypeSkill = item.Skill.TypeSkill
                         };
 
                         data.Add(result);
                     }
-                    
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsOnBoarding()
+                            {
+                                Name = onBoarding.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = onBoarding.CommentsPerson,
+                                CommentsManager = onBoarding.CommentsManager,
+                                CommentsEnd = onBoarding.CommentsEnd,
+                                Manager = onBoarding.Person.Manager,
+                                DateAdm = onBoarding.Person.DateAdm,
+                                TypeJourney = onBoarding.Person.TypeJourney,
+                                Schooling = onBoarding.Person.Schooling,
+                                Comments = com.Comments,
+                                Concept = item.Skill.Concept,
+                                NameItem = item.Skill.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Skill._id,
+                                TypeItem = EnumTypeItem.SkillCompany,
+                                TypeSkill = item.Skill.TypeSkill
+                            };
+
+                            data.Add(result);
+                        }
+                    }
                 }
 
                 foreach (var item in onBoarding.SkillsGroup)
                 {
-                    foreach (var com in item.Comments)
+                    var result = new ViewReportsOnBoarding();
+                    if (item.Comments.Count() == 0)
                     {
-                        var result = new ViewReportsOnBoarding()
+                        result = new ViewReportsOnBoarding()
                         {
                             Name = onBoarding.Person.Name,
                             Occupation = person.Occupation.Name,
@@ -737,10 +765,10 @@ namespace Manager.Services.Specific
                             DateAdm = onBoarding.Person.DateAdm,
                             TypeJourney = onBoarding.Person.TypeJourney,
                             Schooling = onBoarding.Person.Schooling,
-                            Comments = com.Comments,
+                            Comments = "",
                             Concept = item.Skill.Concept,
                             NameItem = item.Skill.Name,
-                            UserComment = com.UserComment,
+                            UserComment = EnumUserComment.Person,
                             _idItem = item.Skill._id,
                             TypeItem = EnumTypeItem.SkillGroup,
                             TypeSkill = item.Skill.TypeSkill
@@ -748,14 +776,41 @@ namespace Manager.Services.Specific
 
                         data.Add(result);
                     }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsOnBoarding()
+                            {
+                                Name = onBoarding.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = onBoarding.CommentsPerson,
+                                CommentsManager = onBoarding.CommentsManager,
+                                CommentsEnd = onBoarding.CommentsEnd,
+                                Manager = onBoarding.Person.Manager,
+                                DateAdm = onBoarding.Person.DateAdm,
+                                TypeJourney = onBoarding.Person.TypeJourney,
+                                Schooling = onBoarding.Person.Schooling,
+                                Comments = com.Comments,
+                                Concept = item.Skill.Concept,
+                                NameItem = item.Skill.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Skill._id,
+                                TypeItem = EnumTypeItem.SkillGroup,
+                                TypeSkill = item.Skill.TypeSkill
+                            };
 
+                            data.Add(result);
+                        }
+                    }
                 }
 
                 foreach (var item in onBoarding.SkillsOccupation)
                 {
-                    foreach (var com in item.Comments)
+                    var result = new ViewReportsOnBoarding();
+                    if (item.Comments.Count() == 0)
                     {
-                        var result = new ViewReportsOnBoarding()
+                        result = new ViewReportsOnBoarding()
                         {
                             Name = onBoarding.Person.Name,
                             Occupation = person.Occupation.Name,
@@ -766,25 +821,53 @@ namespace Manager.Services.Specific
                             DateAdm = onBoarding.Person.DateAdm,
                             TypeJourney = onBoarding.Person.TypeJourney,
                             Schooling = onBoarding.Person.Schooling,
-                            Comments = com.Comments,
+                            Comments = "",
                             Concept = item.Skill.Concept,
                             NameItem = item.Skill.Name,
-                            UserComment = com.UserComment,
+                            UserComment = EnumUserComment.Person,
                             _idItem = item.Skill._id,
                             TypeItem = EnumTypeItem.SkillOccupation,
                             TypeSkill = item.Skill.TypeSkill
                         };
-
                         data.Add(result);
                     }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsOnBoarding()
+                            {
+                                Name = onBoarding.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = onBoarding.CommentsPerson,
+                                CommentsManager = onBoarding.CommentsManager,
+                                CommentsEnd = onBoarding.CommentsEnd,
+                                Manager = onBoarding.Person.Manager,
+                                DateAdm = onBoarding.Person.DateAdm,
+                                TypeJourney = onBoarding.Person.TypeJourney,
+                                Schooling = onBoarding.Person.Schooling,
+                                Comments = com.Comments,
+                                Concept = item.Skill.Concept,
+                                NameItem = item.Skill.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Skill._id,
+                                TypeItem = EnumTypeItem.SkillOccupation,
+                                TypeSkill = item.Skill.TypeSkill
+                            };
+
+                            data.Add(result);
+                        }
+                    }
+
 
                 }
 
                 foreach (var item in onBoarding.Scopes)
                 {
-                    foreach (var com in item.Comments)
+                    var result = new ViewReportsOnBoarding();
+                    if (item.Comments.Count() == 0)
                     {
-                        var result = new ViewReportsOnBoarding()
+                        result = new ViewReportsOnBoarding()
                         {
                             Name = onBoarding.Person.Name,
                             Occupation = person.Occupation.Name,
@@ -795,9 +878,9 @@ namespace Manager.Services.Specific
                             DateAdm = onBoarding.Person.DateAdm,
                             TypeJourney = onBoarding.Person.TypeJourney,
                             Schooling = onBoarding.Person.Schooling,
-                            Comments = com.Comments,
+                            Comments = "",
                             NameItem = item.Scope.Name,
-                            UserComment = com.UserComment,
+                            UserComment = EnumUserComment.Person,
                             _idItem = item.Scope._id,
                             Order = item.Scope.Order,
                             TypeItem = EnumTypeItem.SkillCompany
@@ -805,14 +888,40 @@ namespace Manager.Services.Specific
 
                         data.Add(result);
                     }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsOnBoarding()
+                            {
+                                Name = onBoarding.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = onBoarding.CommentsPerson,
+                                CommentsManager = onBoarding.CommentsManager,
+                                CommentsEnd = onBoarding.CommentsEnd,
+                                Manager = onBoarding.Person.Manager,
+                                DateAdm = onBoarding.Person.DateAdm,
+                                TypeJourney = onBoarding.Person.TypeJourney,
+                                Schooling = onBoarding.Person.Schooling,
+                                Comments = com.Comments,
+                                NameItem = item.Scope.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Scope._id,
+                                Order = item.Scope.Order,
+                                TypeItem = EnumTypeItem.SkillCompany
+                            };
 
+                            data.Add(result);
+                        }
+                    }
                 }
 
                 foreach (var item in onBoarding.Activities)
                 {
-                    foreach (var com in item.Comments)
+                    var result = new ViewReportsOnBoarding();
+                    if (item.Comments.Count() == 0)
                     {
-                        var result = new ViewReportsOnBoarding()
+                        result = new ViewReportsOnBoarding()
                         {
                             Name = onBoarding.Person.Name,
                             Occupation = person.Occupation.Name,
@@ -823,24 +932,54 @@ namespace Manager.Services.Specific
                             DateAdm = onBoarding.Person.DateAdm,
                             TypeJourney = onBoarding.Person.TypeJourney,
                             Schooling = onBoarding.Person.Schooling,
-                            Comments = com.Comments,
+                            Comments = "",
                             Order = item.Activitie.Order,
                             NameItem = item.Activitie.Name,
-                            UserComment = com.UserComment,
+                            UserComment = EnumUserComment.Person,
                             _idItem = item.Activitie._id,
                             TypeItem = EnumTypeItem.SkillCompany,
                         };
 
                         data.Add(result);
                     }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsOnBoarding()
+                            {
+                                Name = onBoarding.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = onBoarding.CommentsPerson,
+                                CommentsManager = onBoarding.CommentsManager,
+                                CommentsEnd = onBoarding.CommentsEnd,
+                                Manager = onBoarding.Person.Manager,
+                                DateAdm = onBoarding.Person.DateAdm,
+                                TypeJourney = onBoarding.Person.TypeJourney,
+                                Schooling = onBoarding.Person.Schooling,
+                                Comments = com.Comments,
+                                Order = item.Activitie.Order,
+                                NameItem = item.Activitie.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Activitie._id,
+                                TypeItem = EnumTypeItem.SkillCompany,
+                            };
+
+                            data.Add(result);
+                        }
+
+                    }
+
+
 
                 }
 
                 foreach (var item in onBoarding.Schoolings)
                 {
-                    foreach (var com in item.Comments)
+                    var result = new ViewReportsOnBoarding();
+                    if (item.Comments.Count() == 0)
                     {
-                        var result = new ViewReportsOnBoarding()
+                        result = new ViewReportsOnBoarding()
                         {
                             Name = onBoarding.Person.Name,
                             Occupation = person.Occupation.Name,
@@ -851,11 +990,11 @@ namespace Manager.Services.Specific
                             DateAdm = onBoarding.Person.DateAdm,
                             TypeJourney = onBoarding.Person.TypeJourney,
                             Schooling = onBoarding.Person.Schooling,
-                            Comments = com.Comments,
+                            Comments = "",
                             Order = item.Schooling.Order,
                             Complement = item.Schooling.Complement,
                             NameItem = item.Schooling.Name,
-                            UserComment = com.UserComment,
+                            UserComment = EnumUserComment.Person,
                             _idItem = item.Schooling._id,
                             TypeItem = EnumTypeItem.SkillCompany,
                             Type = item.Schooling.Type
@@ -863,14 +1002,44 @@ namespace Manager.Services.Specific
 
                         data.Add(result);
                     }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsOnBoarding()
+                            {
+                                Name = onBoarding.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = onBoarding.CommentsPerson,
+                                CommentsManager = onBoarding.CommentsManager,
+                                CommentsEnd = onBoarding.CommentsEnd,
+                                Manager = onBoarding.Person.Manager,
+                                DateAdm = onBoarding.Person.DateAdm,
+                                TypeJourney = onBoarding.Person.TypeJourney,
+                                Schooling = onBoarding.Person.Schooling,
+                                Comments = com.Comments,
+                                Order = item.Schooling.Order,
+                                Complement = item.Schooling.Complement,
+                                NameItem = item.Schooling.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Schooling._id,
+                                TypeItem = EnumTypeItem.SkillCompany,
+                                Type = item.Schooling.Type
+                            };
+
+                            data.Add(result);
+                        }
+
+
+                    }
 
                 }
 
                 var view = new ViewReport()
                 {
                     Data = data,
-                    Name = "listhistorictraining",
-                    _idReport = NewReport("listhistorictraining"),
+                    Name = "listonboarding",
+                    _idReport = NewReport("listonboarding"),
                     _idAccount = _user._idAccount
                 };
                 SendMessageAsync(view);

@@ -1318,7 +1318,7 @@ namespace Manager.Services.Specific
                     foreach (var item in list)
                     {
                         if (item.Instructors != null)
-                            if (item.Instructors.Where(x => x.Person._id == person).Count() > 0)
+                            if (item.Instructors.Where(x => x.Person?._id == person).Count() > 0)
                                 detail.Add(item);
                     }
 
@@ -1327,8 +1327,8 @@ namespace Manager.Services.Specific
                     {
                         _id = p._id,
                         Name = p.Course.Name,
-                        _idPerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?._id,
-                        NamePerson = p.Instructors.Where(x => x.Person._id == person).FirstOrDefault()?.Name,
+                        _idPerson = p.Instructors?.Where(x => x.Person._id == person).FirstOrDefault()?._id,
+                        NamePerson = p.Instructors?.Where(x => x.Person._id == person).FirstOrDefault()?.Name,
                         Begin = p.Begin,
                         End = p.End,
                         Course = p.Course,
