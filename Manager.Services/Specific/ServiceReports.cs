@@ -883,7 +883,7 @@ namespace Manager.Services.Specific
                             UserComment = EnumUserComment.Person,
                             _idItem = item.Scope._id,
                             Order = item.Scope.Order,
-                            TypeItem = EnumTypeItem.SkillCompany
+                            TypeItem = EnumTypeItem.Scope
                         };
 
                         data.Add(result);
@@ -908,7 +908,7 @@ namespace Manager.Services.Specific
                                 UserComment = com.UserComment,
                                 _idItem = item.Scope._id,
                                 Order = item.Scope.Order,
-                                TypeItem = EnumTypeItem.SkillCompany
+                                TypeItem = EnumTypeItem.Scope
                             };
 
                             data.Add(result);
@@ -937,7 +937,7 @@ namespace Manager.Services.Specific
                             NameItem = item.Activitie.Name,
                             UserComment = EnumUserComment.Person,
                             _idItem = item.Activitie._id,
-                            TypeItem = EnumTypeItem.SkillCompany,
+                            TypeItem = EnumTypeItem.Activitie,
                         };
 
                         data.Add(result);
@@ -962,7 +962,7 @@ namespace Manager.Services.Specific
                                 NameItem = item.Activitie.Name,
                                 UserComment = com.UserComment,
                                 _idItem = item.Activitie._id,
-                                TypeItem = EnumTypeItem.SkillCompany,
+                                TypeItem = EnumTypeItem.Activitie,
                             };
 
                             data.Add(result);
@@ -996,7 +996,7 @@ namespace Manager.Services.Specific
                             NameItem = item.Schooling.Name,
                             UserComment = EnumUserComment.Person,
                             _idItem = item.Schooling._id,
-                            TypeItem = EnumTypeItem.SkillCompany,
+                            TypeItem = EnumTypeItem.Schooling,
                             Type = item.Schooling.Type
                         };
 
@@ -1023,7 +1023,7 @@ namespace Manager.Services.Specific
                                 NameItem = item.Schooling.Name,
                                 UserComment = com.UserComment,
                                 _idItem = item.Schooling._id,
-                                TypeItem = EnumTypeItem.SkillCompany,
+                                TypeItem = EnumTypeItem.Schooling,
                                 Type = item.Schooling.Type
                             };
 
