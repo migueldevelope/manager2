@@ -20,8 +20,8 @@ namespace Manager.Views.BusinessView
     public EnumTypeSkill TypeSkill { get; set; }
     public long Order { get; set; }
     public string Complement { get; set; }
-    public string Type { get; set; }
-    public string TypeItem { get; set; }
+    public EnumTypeSchooling Type { get; set; }
+    public EnumTypeItem TypeItem { get; set; }
     public string NameItem { get; set; }
     public string _idItem { get; set; }
     public string Comments { get; set; }
