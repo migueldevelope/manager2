@@ -446,8 +446,8 @@ namespace Manager.Services.Specific
                     detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
                 }
 
-                total = detail.Count();
                 detail = detail.Where(p => !(p.Participants.Count() == 0  && p.Days.Count() == 0 && p.StatusEvent == EnumStatusEvent.Realized)).ToList().OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
+                total = detail.Count();
 
                 return detail.Select(p => new ViewListEventDetail()
                 {
