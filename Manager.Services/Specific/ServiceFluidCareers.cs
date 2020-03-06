@@ -89,7 +89,7 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
-        public ViewFluidCareersReturn New(ViewCrudFluidCareers view)
+        public ViewCrudFluidCareers New(ViewCrudFluidCareers view)
         {
             try
             {
@@ -102,11 +102,11 @@ namespace Manager.Services.Specific
                     FluidCareersView = view.FluidCareersView
                 }).Result;
 
-                return new ViewFluidCareersReturn()
+                return new ViewCrudFluidCareers()
                 {
                     _id = fluidcareers._id,
                     _idPerson = fluidcareers.Person._id,
-                    ///FluidCareersView = fluidcareers.FluidCareersView,
+                    FluidCareersView = fluidcareers.FluidCareersView,
                     Plan = fluidcareers.Plan?.GetViewCrud()
                 };
             }
