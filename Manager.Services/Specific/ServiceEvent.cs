@@ -435,19 +435,19 @@ namespace Manager.Services.Specific
 
                 if (type == EnumTypeEvent.All)
                 {
-                    detail = serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
+                    detail = serviceEvent.GetAllNewVersion(p => p.Name.ToUpper().Contains(filter.ToUpper())).Result;
                 }
                 else if (type == EnumTypeEvent.Open)
                 {
-                    detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
+                    detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Open && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
                 }
                 else if (type == EnumTypeEvent.End)
                 {
-                    detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result.OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
+                    detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
                 }
 
                 total = detail.Count();
-                detail = detail.Where(p => !(p.Participants.Count() == 0  && p.Days.Count() == 0 && p.StatusEvent == EnumStatusEvent.Realized)).ToList();
+                detail = detail.Where(p => !(p.Participants.Count() == 0  && p.Days.Count() == 0 && p.StatusEvent == EnumStatusEvent.Realized)).ToList().OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
 
                 return detail.Select(p => new ViewListEventDetail()
                 {
