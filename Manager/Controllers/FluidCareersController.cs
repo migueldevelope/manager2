@@ -190,9 +190,22 @@ namespace Manager.Controllers
         [Authorize]
         [HttpGet]
         [Route("getplan/{idfluidcareer}")]
-        public async Task<ViewCrudFluidCareers> GetPlan(string idfluidcareer)
+        public async Task<ViewCrudFluidCareerPlan> GetPlan(string idfluidcareer)
         {
-            return await Task.Run(() => service.Get(idfluidcareer));
+            return await Task.Run(() => service.GetPlan(idfluidcareer));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idperson"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        [Route("getplanperson/{idperson}")]
+        public async Task<List<ViewCrudFluidCareerPlan>> GetPlanPerson(string idperson)
+        {
+            return await Task.Run(() => service.GetPlanPerson(idperson));
         }
 
         /// <summary>

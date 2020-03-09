@@ -504,6 +504,26 @@ namespace Manager.Services.Specific
             }
         }
 
+        public List<ViewCrudFluidCareerPlan> GetPlanPerson(string id)
+        {
+            try
+            {
+                var list = new List<ViewCrudFluidCareerPlan>();
+
+                var plans = serviceFluidCareers.GetAllNewVersion(p => p.Person._id == id).Result;
+                foreach(var item in plans)
+                {
+                    list.Add(item.Plan?.GetViewCrud());
+                }
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public List<ViewListSkill> GetSkillsPlan(string id)
         {
             try
