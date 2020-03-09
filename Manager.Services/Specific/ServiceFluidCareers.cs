@@ -511,7 +511,7 @@ namespace Manager.Services.Specific
                 var list = new List<ViewCrudFluidCareerPlan>();
 
                 var plans = serviceFluidCareers.GetAllNewVersion(p => p.Person._id == id).Result;
-                foreach(var item in plans)
+                foreach (var item in plans)
                 {
                     list.Add(item.Plan?.GetViewCrud());
                 }
@@ -530,17 +530,21 @@ namespace Manager.Services.Specific
             {
                 var list = new List<ViewListSkill>();
                 var view = serviceFluidCareers.GetNewVersion(p => p._id == id).Result;
-                foreach(var item in view.FluidCareersView)
+                foreach (var item in view.FluidCareersView)
                 {
-                    
+
                     var skills = serviceOccupation.GetNewVersion(p => p._id == item._idOccupation).Result?.Skills;
-                    list.Concat(skills.Select(p => new ViewListSkill()
+                    foreach (var sk in skills.Select(p => new ViewListSkill()
                     {
                         _id = p._id,
                         Concept = p.Concept,
                         Name = p.Name,
                         TypeSkill = p.TypeSkill
-                    }).ToList());
+                    }).ToList())
+                    {
+                        if (list.Where(p => p._id == sk._id).Count() == 0)
+                            list.Add(sk);
+                    };
                 }
                 return list;
             }
