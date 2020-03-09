@@ -14,7 +14,8 @@ namespace Manager.Core.Interfaces
         void SetUser(BaseUser user);
         string Delete(string id);
         string New(string idperson, EnumStepOffBoarding step);
-        string Update(ViewCrudOffBoarding view);
+        string Update(ViewCrudOffBoarding view, EnumStepOffBoarding step);
+        string UpdateQuestionsMark(string id, EnumStepOffBoarding step, string idquestion, byte mark);
         ViewCrudOffBoarding Get(string id);
         List<ViewListOffBoarding> List(ref long total, int count = 10, int page = 1, string filter = "");
     }

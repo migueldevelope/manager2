@@ -19,5 +19,6 @@ namespace Manager.Views.BusinessCrud
         [BsonRepresentation(BsonType.ObjectId)]
         public string _idInterviewer { get; set; }
         public string NameInterviewer { get; set; }
+        public EnumStatusFormOffBoarding StatusFormOffBoarding { get; set; }
     }
 }

@@ -4,5 +4,6 @@
     {
         public ViewCrudQuestions Question { get; set; }
         public byte Mark { get; set; }
+        public string Response { get; set; }
     }
 }

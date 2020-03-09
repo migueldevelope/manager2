@@ -121,12 +121,15 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
-        public string Update(ViewCrudOffBoarding view)
+        public string Update(ViewCrudOffBoarding view, EnumStepOffBoarding step)
         {
             try
             {
                 OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == view._id).Result;
-
+                if(step == EnumStepOffBoarding.Step1)
+                {
+                    
+                }
                 serviceOffBoarding.Update(offboarding, null).Wait();
 
                 return "OffBoarding altered!";
@@ -136,6 +139,48 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public string UpdateQuestionsMark(string id, EnumStepOffBoarding step, string idquestion, byte mark)
+        {
+            try
+            {
+                OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == id).Result;
+
+                if(step == EnumStepOffBoarding.Step1)
+                {
+                    foreach(var item in offboarding.Step1.Questions)
+                    {
+                        if (item.Question._id == idquestion)
+                        {
+                            item.Mark = mark;
+                            var i = serviceOffBoarding.Update(offboarding, null);
+                            return "ok";
+                        }
+                            
+                    }
+                }
+                else
+                {
+                    foreach (var item in offboarding.Step2.Questions)
+                    {
+                        if (item.Question._id == idquestion)
+                        {
+                            item.Mark = mark;
+                            var i = serviceOffBoarding.Update(offboarding, null);
+                            return "ok";
+                        }
+
+                    }
+                }
+
+                return "ok";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public ViewCrudOffBoarding Get(string id)
         {
             try
