@@ -635,7 +635,7 @@ namespace Manager.Test.Commons
           Company = company.GetViewList(),
           Order = 2,
           Template = null,
-          TypeQuestion = EnumTypeQuestion.Default,
+          TypeQuestion = EnumTypeQuestion.Rating,
           TypeRotine = EnumTypeRotine.Checkpoint
         };
         questions = service.InsertNewVersion(questions).Result;
@@ -648,7 +648,7 @@ namespace Manager.Test.Commons
           Company = company.GetViewList(),
           Order = 3,
           Template = null,
-          TypeQuestion = EnumTypeQuestion.Default,
+          TypeQuestion = EnumTypeQuestion.Rating,
           TypeRotine = EnumTypeRotine.Checkpoint
         };
         questions = service.InsertNewVersion(questions).Result;
@@ -661,7 +661,7 @@ namespace Manager.Test.Commons
           Company = company.GetViewList(),
           Order = 4,
           Template = null,
-          TypeQuestion = EnumTypeQuestion.Default,
+          TypeQuestion = EnumTypeQuestion.Rating,
           TypeRotine = EnumTypeRotine.Checkpoint
         };
         questions = service.InsertNewVersion(questions).Result;
@@ -713,7 +713,7 @@ namespace Manager.Test.Commons
           Company = company.GetViewList(),
           Order = 4,
           Template = null,
-          TypeQuestion = EnumTypeQuestion.Default,
+          TypeQuestion = EnumTypeQuestion.Rating,
           TypeRotine = EnumTypeRotine.Certification
         };
         questions = service.InsertNewVersion(questions).Result;
@@ -726,7 +726,7 @@ namespace Manager.Test.Commons
           Company = company.GetViewList(),
           Order = 5,
           Template = null,
-          TypeQuestion = EnumTypeQuestion.Default,
+          TypeQuestion = EnumTypeQuestion.Rating,
           TypeRotine = EnumTypeRotine.Certification
         };
         questions = service.InsertNewVersion(questions).Result;

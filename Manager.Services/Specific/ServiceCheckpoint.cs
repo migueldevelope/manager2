@@ -579,7 +579,7 @@ namespace Manager.Services.Specific
             Itens = itens
           });
         }
-        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Default & p.TypeRotine == EnumTypeRotine.Checkpoint).Result)
+        foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Rating & p.TypeRotine == EnumTypeRotine.Checkpoint).Result)
         {
           checkpoint.Questions.Add(new CheckpointQuestions()
           {

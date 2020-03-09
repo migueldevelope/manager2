@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Manager.Views.BusinessCrud
 {
-    public class ViewCrudFormOffBoarding:_ViewCrud
+    public class ViewCrudFormOffBoarding
     {
         public List<ViewCrudOffBoardingQuestions> Questions { get; set; }
         public DateTime? DateOff { get; set; }
@@ -19,8 +19,5 @@ namespace Manager.Views.BusinessCrud
         [BsonRepresentation(BsonType.ObjectId)]
         public string _idInterviewer { get; set; }
         public string NameInterviewer { get; set; }
-        public string WhatIGotRight { get; set; }
-        public string WhatWentWrong { get; set; }
-        public string WhatCouldBeDifferent { get; set; }
     }
 }

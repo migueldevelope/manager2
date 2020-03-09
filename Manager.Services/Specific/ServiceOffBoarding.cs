@@ -7,6 +7,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Manager.Services.Specific
     {
         private readonly ServiceGeneric<OffBoarding> serviceOffBoarding;
         private readonly ServiceGeneric<Person> servicePerson;
+        private readonly ServiceGeneric<Questions> serviceQuestions;
 
         #region Constructor
         public ServiceOffBoarding(DataContext context) : base(context)
@@ -26,6 +28,7 @@ namespace Manager.Services.Specific
             {
                 serviceOffBoarding = new ServiceGeneric<OffBoarding>(context);
                 servicePerson = new ServiceGeneric<Person>(context);
+                serviceQuestions = new ServiceGeneric<Questions>(context);
             }
             catch (Exception e)
             {
@@ -37,12 +40,14 @@ namespace Manager.Services.Specific
             User(contextAccessor);
             serviceOffBoarding._user = _user;
             servicePerson._user = _user;
+            serviceQuestions._user = _user;
         }
         public void SetUser(BaseUser user)
         {
             _user = user;
             serviceOffBoarding._user = user;
             servicePerson._user = user;
+            serviceQuestions._user = _user;
         }
         #endregion
 
@@ -62,17 +67,54 @@ namespace Manager.Services.Specific
             }
         }
 
-        public string New(ViewCrudOffBoarding view)
+        public string New(string idperson, EnumStepOffBoarding step)
         {
             try
             {
-                OffBoarding offboarding = serviceOffBoarding.InsertNewVersion(new OffBoarding()
-                {
-                    _id = view._id,
-                    
-                }).Result;
+                var offboarding = serviceOffBoarding.GetNewVersion(p => p.Person._id == idperson).Result;
 
-                return "OffBoarding added!";
+                if (offboarding == null)
+                {
+                    var person = servicePerson.GetNewVersion(p => p._id == idperson).Result.GetViewListPersonInfo();
+
+                    var view = new OffBoarding()
+                    {
+                        Person = person
+                    };
+                    view.Step1 = LoadMap(view.Step1, EnumStepOffBoarding.Step1);
+                    view.Step2 = LoadMap(view.Step1, EnumStepOffBoarding.Step2);
+                    if (step == EnumStepOffBoarding.Step1)
+                    {
+                        view.DateBeginStep1 = DateTime.Now;
+                    }
+                    else
+                    {
+                        view.DateBeginStep2 = DateTime.Now;
+                    }
+                    offboarding = serviceOffBoarding.InsertNewVersion(view).Result;
+                }
+                else
+                {
+                    if (step == EnumStepOffBoarding.Step1)
+                    {
+                        if (offboarding.DateBeginStep1 == null)
+                        {
+                            offboarding.DateBeginStep1 = DateTime.Now;
+                        }
+                    }
+                    else
+                    {
+                        if (offboarding.DateBeginStep2 == null)
+                        {
+                            offboarding.DateBeginStep2 = DateTime.Now;
+                        }
+                    }
+                    var i = serviceOffBoarding.Update(offboarding, null);
+                }
+
+
+
+                return offboarding._id;
             }
             catch (Exception e)
             {
@@ -84,7 +126,7 @@ namespace Manager.Services.Specific
             try
             {
                 OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == view._id).Result;
-                
+
                 serviceOffBoarding.Update(offboarding, null).Wait();
 
                 return "OffBoarding altered!";
@@ -127,6 +169,63 @@ namespace Manager.Services.Specific
 
         #endregion
 
+        #region private 
+
+        private ViewCrudFormOffBoarding LoadMap(ViewCrudFormOffBoarding offboarding, EnumStepOffBoarding step)
+        {
+            try
+            {
+                offboarding.Questions = new List<ViewCrudOffBoardingQuestions>();
+                var itens = new List<ViewCrudOffBoardingQuestions>();
+
+                foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Rating & p.TypeRotine == EnumTypeRotine.OffBoarding).Result)
+                {
+                    offboarding.Questions.Add(new ViewCrudOffBoardingQuestions()
+                    {
+                        Question =
+                      new ViewCrudQuestions()
+                      {
+                          _id = item._id,
+                          Content = item.Content,
+                          Name = item.Name,
+                          Order = item.Order,
+                          TypeQuestion = item.TypeQuestion,
+                          TypeRotine = item.TypeRotine
+                      },
+                        _id = ObjectId.GenerateNewId().ToString()
+                    });
+                }
+                if (step == EnumStepOffBoarding.Step2)
+                {
+                    foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Text & p.TypeRotine == EnumTypeRotine.OffBoarding).Result)
+                    {
+                        offboarding.Questions.Add(new ViewCrudOffBoardingQuestions()
+                        {
+                            Question =
+                           new ViewCrudQuestions()
+                           {
+                               _id = item._id,
+                               Content = item.Content,
+                               Name = item.Name,
+                               Order = item.Order,
+                               TypeQuestion = item.TypeQuestion,
+                               TypeRotine = item.TypeRotine
+                           },
+                            _id = ObjectId.GenerateNewId().ToString(),
+                        });
+                    }
+                }
+
+
+                return offboarding;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        #endregion
 
     }
 }
