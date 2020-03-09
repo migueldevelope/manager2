@@ -450,6 +450,7 @@ namespace Manager.Services.Specific
                     StatusFluidCareerPlan = view.StatusFluidCareerPlan,
                     What = view.What,
                     Status = EnumStatus.Enabled,
+                    Skills = view.Skills,
                     _idAccount = _user._idAccount
                 };
                 fluidcareer.Plan = plan;
@@ -479,7 +480,7 @@ namespace Manager.Services.Specific
                 fluidcareers.Plan.Observation = view.Observation;
                 fluidcareers.Plan.StatusFluidCareerPlan = view.StatusFluidCareerPlan;
                 fluidcareers.Plan.What = view.What;
-
+                fluidcareers.Plan.Skills = view.Skills;
 
                 var i = serviceFluidCareers.Update(fluidcareers, null);
 
@@ -495,6 +496,25 @@ namespace Manager.Services.Specific
             try
             {
                 return serviceFluidCareers.GetNewVersion(p => p._id == idfluidcareer).Result.Plan?.GetViewCrud();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public List<ViewListSkill> GetSkillsPlan(string idoccupation)
+        {
+            try
+            {
+                var skills = serviceOccupation.GetNewVersion(p => p._id == idoccupation).Result?.Skills;
+                return skills.Select(p => new ViewListSkill()
+                {
+                    _id = p._id,
+                    Concept = p.Concept,
+                    Name = p.Name,
+                    TypeSkill = p.TypeSkill
+                }).ToList();
             }
             catch (Exception e)
             {
