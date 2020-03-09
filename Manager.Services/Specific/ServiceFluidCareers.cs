@@ -334,12 +334,12 @@ namespace Manager.Services.Specific
                             else if (viewOccupation.Accuracy >= decimal.Parse("66.66"))
                                 viewOccupation.Color = EnumOccupationColor.Orange;
 
-                            viewOccupation.Activities = occupation.Activities;
-                            viewOccupation.Scopes = group.Scope;
-                            viewOccupation.SkillsOccupation = occupation.Skills;
-                            viewOccupation.SkillsCompany = company.Skills;
-                            viewOccupation.SkillsGroup = group.Skills;
-                            viewOccupation.Schollings = occupation.Schooling;
+                            //viewOccupation.Activities = occupation.Activities;
+                            //viewOccupation.Scopes = group.Scope;
+                            //viewOccupation.SkillsOccupation = occupation.Skills;
+                            //viewOccupation.SkillsCompany = company.Skills;
+                            //viewOccupation.SkillsGroup = group.Skills;
+                            //viewOccupation.Schollings = occupation.Schooling;
 
 
                             if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
@@ -354,7 +354,8 @@ namespace Manager.Services.Specific
                                     Color = viewOccupation.Color,
                                     Group = viewGroup.Name,
                                     Sphere = viewSphere.Name,
-                                    Order = 0
+                                    Order = 0,
+                                    _idOccupation = viewOccupation._id
                                 });
                             }
 
@@ -503,18 +504,25 @@ namespace Manager.Services.Specific
             }
         }
 
-        public List<ViewListSkill> GetSkillsPlan(string idoccupation)
+        public List<ViewListSkill> GetSkillsPlan(string id)
         {
             try
             {
-                var skills = serviceOccupation.GetNewVersion(p => p._id == idoccupation).Result?.Skills;
-                return skills.Select(p => new ViewListSkill()
+                var list = new List<ViewListSkill>();
+                var view = serviceFluidCareers.GetNewVersion(p => p._id == id).Result;
+                foreach(var item in view.FluidCareersView)
                 {
-                    _id = p._id,
-                    Concept = p.Concept,
-                    Name = p.Name,
-                    TypeSkill = p.TypeSkill
-                }).ToList();
+                    
+                    var skills = serviceOccupation.GetNewVersion(p => p._id == item._idOccupation).Result?.Skills;
+                    list.Concat(skills.Select(p => new ViewListSkill()
+                    {
+                        _id = p._id,
+                        Concept = p.Concept,
+                        Name = p.Name,
+                        TypeSkill = p.TypeSkill
+                    }).ToList());
+                }
+                return list;
             }
             catch (Exception e)
             {

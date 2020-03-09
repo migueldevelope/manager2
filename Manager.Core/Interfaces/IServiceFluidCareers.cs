@@ -26,6 +26,6 @@ namespace Manager.Core.Interfaces
         ViewCrudFluidCareerPlan NewPlan(string idfluidcareer, ViewCrudFluidCareerPlan view);
         ViewCrudFluidCareerPlan UpdatePlan(string idfluidcareer, ViewCrudFluidCareerPlan view);
         ViewCrudFluidCareerPlan GetPlan(string idfluidcareer);
-        List<ViewListSkill> GetSkillsPlan(string idoccupation);
+        List<ViewListSkill> GetSkillsPlan(string id);
     }
 }

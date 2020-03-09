@@ -198,14 +198,14 @@ namespace Manager.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="idoccupation"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        [Route("getskillsplan/{idoccupation}")]
-        public async Task<List<ViewListSkill>> GetSkillsPlan(string idoccupation)
+        [Route("getskillsplan/{id}")]
+        public async Task<List<ViewListSkill>> GetSkillsPlan(string id)
         {
-            return await Task.Run(() => service.GetSkillsPlan(idoccupation));
+            return await Task.Run(() => service.GetSkillsPlan(id));
         }
 
         /// <summary>
