@@ -107,6 +107,22 @@ namespace Manager.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="id"></param>
+        /// <param name="step"></param>
+        /// <param name="idquestion"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut]
+        [Route("updatequestionstext/{id}/{step}/{idquestion}")]
+        public async Task<IActionResult> UpdateQuestionsText([FromBody]ViewResponse response, string id, EnumStepOffBoarding step, string idquestion)
+        {
+            return await Task.Run(() => Ok(service.UpdateQuestionsText(id, step, idquestion, response)));
+        }
+
+        /// <summary>
         /// Excluir uma empresa
         /// </summary>
         /// <param name="id">Identificação da empresa</param>

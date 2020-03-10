@@ -71,7 +71,16 @@ namespace Manager.Services.Specific
         {
             try
             {
-                var offboarding = serviceOffBoarding.GetNewVersion(p => p.Person._id == idperson).Result;
+                OffBoarding offboarding = null;
+                try
+                {
+                    offboarding = serviceOffBoarding.GetNewVersion(p => p.Person._id == idperson).Result;
+                }
+                catch (Exception)
+                {
+                    offboarding = new OffBoarding();
+                }
+
 
                 if (offboarding == null)
                 {
@@ -126,9 +135,9 @@ namespace Manager.Services.Specific
             try
             {
                 OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == view._id).Result;
-                if(step == EnumStepOffBoarding.Step1)
+                if (step == EnumStepOffBoarding.Step1)
                 {
-                    
+
                 }
                 serviceOffBoarding.Update(offboarding, null).Wait();
 
@@ -146,9 +155,9 @@ namespace Manager.Services.Specific
             {
                 OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == id).Result;
 
-                if(step == EnumStepOffBoarding.Step1)
+                if (step == EnumStepOffBoarding.Step1)
                 {
-                    foreach(var item in offboarding.Step1.Questions)
+                    foreach (var item in offboarding.Step1.Questions)
                     {
                         if (item.Question._id == idquestion)
                         {
@@ -156,7 +165,7 @@ namespace Manager.Services.Specific
                             var i = serviceOffBoarding.Update(offboarding, null);
                             return "ok";
                         }
-                            
+
                     }
                 }
                 else
@@ -166,6 +175,47 @@ namespace Manager.Services.Specific
                         if (item.Question._id == idquestion)
                         {
                             item.Mark = mark;
+                            var i = serviceOffBoarding.Update(offboarding, null);
+                            return "ok";
+                        }
+
+                    }
+                }
+
+                return "ok";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public string UpdateQuestionsText(string id, EnumStepOffBoarding step, string idquestion, ViewResponse response)
+        {
+            try
+            {
+                OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == id).Result;
+
+                if (step == EnumStepOffBoarding.Step1)
+                {
+                    foreach (var item in offboarding.Step1.Questions)
+                    {
+                        if (item.Question._id == idquestion)
+                        {
+                            item.Response = response.Response;
+                            var i = serviceOffBoarding.Update(offboarding, null);
+                            return "ok";
+                        }
+
+                    }
+                }
+                else
+                {
+                    foreach (var item in offboarding.Step2.Questions)
+                    {
+                        if (item.Question._id == idquestion)
+                        {
+                            item.Response = response.Response;
                             var i = serviceOffBoarding.Update(offboarding, null);
                             return "ok";
                         }
