@@ -513,7 +513,8 @@ namespace Manager.Services.Specific
                 var plans = serviceFluidCareers.GetAllNewVersion(p => p.Person._id == id).Result;
                 foreach (var item in plans)
                 {
-                    list.Add(item.Plan?.GetViewCrud());
+                    if (item.Plan != null)
+                        list.Add(item.Plan?.GetViewCrud());
                 }
 
                 return list;
