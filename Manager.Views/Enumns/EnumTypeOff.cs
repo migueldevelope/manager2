@@ -1,7 +1,7 @@
 ﻿namespace Manager.Views.Enumns
 {
-    public enum EnumTypeOff: byte
+    public enum EnumTypeOff : byte
     {
-        Request = 0, Resignation = 1
+        No = 0, Request = 1, Resignation = 2
     }
 }

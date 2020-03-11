@@ -3,8 +3,8 @@
     public enum EnumReasonOff : byte
     {
 
-        FrameReduction = 0, FoulsDelays = 1, Perspective = 2, EndContract = 3, 
-        Demotivation = 4, Performance = 5, SelfEmployed = 6, Behavior = 7,
-        Technique = 8, Salary = 9, Local = 10, Others = 11
+        No = 0, FrameReduction = 1, FoulsDelays = 2, Perspective = 3, EndContract = 4, 
+        Demotivation = 5, Performance = 6, SelfEmployed = 7, Behavior = 8,
+        Technique = 9, Salary = 10, Local = 11, Others = 12
     }
 }
