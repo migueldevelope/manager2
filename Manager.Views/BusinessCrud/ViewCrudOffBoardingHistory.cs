@@ -7,7 +7,7 @@ namespace Manager.Views.BusinessCrud
         public int OccupationTime { get; set; }
         public string CurrentSchooling { get; set; }
         public string OccupationSchooling { get; set; }
-        public byte ActivitieExcellence { get; set; }
+        public decimal ActivitieExcellence { get; set; }
         public long QtdMonitoring { get; set; }
         public long QtdPraise { get; set; }
         public long QtdPlan { get; set; }

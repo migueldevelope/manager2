@@ -22,6 +22,7 @@ namespace Manager.Services.Specific
         private readonly ServiceGeneric<Occupation> serviceOccupation;
         private readonly ServiceGeneric<Questions> serviceQuestions;
         private readonly ServiceGeneric<Maturity> serviceMaturity;
+        private readonly ServiceGeneric<Meritocracy> serviceMeritocracy;
 
         #region Constructor
         public ServiceOffBoarding(DataContext context) : base(context)
@@ -33,6 +34,7 @@ namespace Manager.Services.Specific
                 serviceOccupation = new ServiceGeneric<Occupation>(context);
                 serviceQuestions = new ServiceGeneric<Questions>(context);
                 serviceMaturity = new ServiceGeneric<Maturity>(context);
+                serviceMeritocracy = new ServiceGeneric<Meritocracy>(context);
             }
             catch (Exception e)
             {
@@ -47,6 +49,7 @@ namespace Manager.Services.Specific
             serviceQuestions._user = _user;
             serviceOccupation._user = _user;
             serviceMaturity._user = _user;
+            serviceMeritocracy._user = _user;
         }
         public void SetUser(BaseUser user)
         {
@@ -56,6 +59,7 @@ namespace Manager.Services.Specific
             serviceQuestions._user = _user;
             serviceOccupation._user = _user;
             serviceMaturity._user = _user;
+            serviceMeritocracy._user = _user;
         }
         #endregion
 
@@ -132,6 +136,11 @@ namespace Manager.Services.Specific
                         view.History.QtdPlan = maturity.CountPlan;
                         view.History.QtdCertification = maturity.CountCertification;
                         view.History.QtdRecommendation = maturity.CountRecommendation;
+                    }
+                    var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == person._id).Result.LastOrDefault();
+                    if (meritocracy != null)
+                    {
+                        view.History.ActivitieExcellence = meritocracy.ActivitiesExcellence;
                     }
 
                     offboarding = serviceOffBoarding.InsertNewVersion(view).Result;
