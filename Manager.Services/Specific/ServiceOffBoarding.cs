@@ -90,8 +90,10 @@ namespace Manager.Services.Specific
                     {
                         Person = person
                     };
+                    view.Step1 = new ViewCrudFormOffBoarding();
+                    view.Step2 = new ViewCrudFormOffBoarding();
                     view.Step1 = LoadMap(view.Step1, EnumStepOffBoarding.Step1);
-                    view.Step2 = LoadMap(view.Step1, EnumStepOffBoarding.Step2);
+                    view.Step2 = LoadMap(view.Step2, EnumStepOffBoarding.Step2);
                     if (step == EnumStepOffBoarding.Step1)
                     {
                         view.DateBeginStep1 = DateTime.Now;
