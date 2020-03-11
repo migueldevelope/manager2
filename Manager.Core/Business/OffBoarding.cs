@@ -7,9 +7,10 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-    public class OffBoarding: BaseEntity
+    public class OffBoarding : BaseEntity
     {
         public ViewListPersonInfo Person { get; set; }
+        public ViewCrudOffBoardingHistory History {get;set;}
         public DateTime? DateBeginStep1 { get; set; }
         public DateTime? DateBeginStep2 { get; set; }
         public DateTime? DateEndStep1 { get; set; }

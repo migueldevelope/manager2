@@ -19,7 +19,9 @@ namespace Manager.Services.Specific
     {
         private readonly ServiceGeneric<OffBoarding> serviceOffBoarding;
         private readonly ServiceGeneric<Person> servicePerson;
+        private readonly ServiceGeneric<Occupation> serviceOccupation;
         private readonly ServiceGeneric<Questions> serviceQuestions;
+        private readonly ServiceGeneric<Maturity> serviceMaturity;
 
         #region Constructor
         public ServiceOffBoarding(DataContext context) : base(context)
@@ -28,7 +30,9 @@ namespace Manager.Services.Specific
             {
                 serviceOffBoarding = new ServiceGeneric<OffBoarding>(context);
                 servicePerson = new ServiceGeneric<Person>(context);
+                serviceOccupation = new ServiceGeneric<Occupation>(context);
                 serviceQuestions = new ServiceGeneric<Questions>(context);
+                serviceMaturity = new ServiceGeneric<Maturity>(context);
             }
             catch (Exception e)
             {
@@ -41,6 +45,8 @@ namespace Manager.Services.Specific
             serviceOffBoarding._user = _user;
             servicePerson._user = _user;
             serviceQuestions._user = _user;
+            serviceOccupation._user = _user;
+            serviceMaturity._user = _user;
         }
         public void SetUser(BaseUser user)
         {
@@ -48,6 +54,8 @@ namespace Manager.Services.Specific
             serviceOffBoarding._user = user;
             servicePerson._user = user;
             serviceQuestions._user = _user;
+            serviceOccupation._user = _user;
+            serviceMaturity._user = _user;
         }
         #endregion
 
@@ -81,19 +89,32 @@ namespace Manager.Services.Specific
                     offboarding = new OffBoarding();
                 }
 
-
                 if (offboarding == null)
                 {
-                    var person = servicePerson.GetNewVersion(p => p._id == idperson).Result.GetViewListPersonInfo();
+                    var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+                    var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
 
                     var view = new OffBoarding()
                     {
-                        Person = person
+                        Person = person.GetViewListPersonInfo()
                     };
                     view.Step1 = new ViewCrudFormOffBoarding();
                     view.Step2 = new ViewCrudFormOffBoarding();
                     view.Step1 = LoadMap(view.Step1, EnumStepOffBoarding.Step1);
                     view.Step2 = LoadMap(view.Step2, EnumStepOffBoarding.Step2);
+
+
+                    view.History = new ViewCrudOffBoardingHistory()
+                    {
+                        CurrentSchooling = person.User.Schooling?.Name,
+                        OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
+                    };
+                    if (person.DateLastOccupation != null)
+                        view.History.OccupationTime = ((12 * (DateTime.Now.Year - person.DateLastOccupation.Value.Year)) + (DateTime.Now.Month - person.DateLastOccupation.Value.Month));
+
+                    if (person.User.DateAdm != null)
+                        view.History.CompanyTime = ((12 * (DateTime.Now.Year - person.User.DateAdm.Value.Year)) + (DateTime.Now.Month - person.User.DateAdm.Value.Month));
+
                     if (step == EnumStepOffBoarding.Step1)
                     {
                         view.DateBeginStep1 = DateTime.Now;
@@ -102,6 +123,17 @@ namespace Manager.Services.Specific
                     {
                         view.DateBeginStep2 = DateTime.Now;
                     }
+
+                    var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == person._id).Result.FirstOrDefault();
+                    if (maturity != null)
+                    {
+                        view.History.QtdMonitoring = maturity.CountMonitoring;
+                        view.History.QtdPraise = maturity.CountPraise;
+                        view.History.QtdPlan = maturity.CountPlan;
+                        view.History.QtdCertification = maturity.CountCertification;
+                        view.History.QtdRecommendation = maturity.CountRecommendation;
+                    }
+
                     offboarding = serviceOffBoarding.InsertNewVersion(view).Result;
                 }
                 else
