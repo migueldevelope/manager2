@@ -1,4 +1,6 @@
 ﻿using Manager.Views.BusinessList;
+using System.Collections.Generic;
+
 namespace Manager.Views.BusinessCrud
 {
     public class ViewCrudOffBoardingHistory
@@ -8,6 +10,7 @@ namespace Manager.Views.BusinessCrud
         public string CurrentSchooling { get; set; }
         public string OccupationSchooling { get; set; }
         public decimal ActivitieExcellence { get; set; }
+        public List<ViewCrudMeritocracyActivities> Activities { get; set; }
         public long QtdMonitoring { get; set; }
         public long QtdPraise { get; set; }
         public long QtdPlan { get; set; }

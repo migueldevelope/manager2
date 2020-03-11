@@ -141,6 +141,7 @@ namespace Manager.Services.Specific
                     if (meritocracy != null)
                     {
                         view.History.ActivitieExcellence = meritocracy.ActivitiesExcellence;
+                        view.History.Activities = meritocracy.MeritocracyActivities?.Select(p => p.GetViewCrud()).ToList();
                     }
 
                     offboarding = serviceOffBoarding.InsertNewVersion(view).Result;
