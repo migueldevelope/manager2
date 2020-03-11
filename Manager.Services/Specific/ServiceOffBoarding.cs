@@ -137,7 +137,7 @@ namespace Manager.Services.Specific
                         view.History.QtdCertification = maturity.CountCertification;
                         view.History.QtdRecommendation = maturity.CountRecommendation;
                     }
-                    var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == person._id).Result.LastOrDefault();
+                    var meritocracy = serviceMeritocracy.GetAllNewVersion(p => p.Person._id == person._id && p.StatusMeritocracy == EnumStatusMeritocracy.End).Result.LastOrDefault();
                     if (meritocracy != null)
                     {
                         view.History.ActivitieExcellence = meritocracy.ActivitiesExcellence;
