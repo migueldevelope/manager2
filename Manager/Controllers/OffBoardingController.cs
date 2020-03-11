@@ -50,7 +50,7 @@ namespace Manager.Controllers
             Response.Headers.Add("x-total-count", total.ToString());
             return await Task.Run(() => result);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -75,7 +75,7 @@ namespace Manager.Controllers
         {
             return await Task.Run(() => service.Get(id));
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -120,6 +120,21 @@ namespace Manager.Controllers
         public async Task<IActionResult> UpdateQuestionsText([FromBody]ViewResponse response, string id, EnumStepOffBoarding step, string idquestion)
         {
             return await Task.Run(() => Ok(service.UpdateQuestionsText(id, step, idquestion, response)));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="idoffboarding"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut]
+        [Route("updateform/{idoffboarding}/{step}")]
+        public async Task<IActionResult> UpdateForm([FromBody]ViewCrudFormOffBoarding view, string idoffboarding, EnumStepOffBoarding step)
+        {
+            return await Task.Run(() => Ok(service.UpdateForm(idoffboarding, step, view)));
         }
 
         /// <summary>
