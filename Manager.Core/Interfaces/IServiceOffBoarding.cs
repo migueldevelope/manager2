@@ -19,5 +19,6 @@ namespace Manager.Core.Interfaces
         string UpdateQuestionsText(string id, EnumStepOffBoarding step, string idquestion, ViewResponse response);
         ViewCrudOffBoarding Get(string id);
         List<ViewListOffBoarding> List(ref long total, int count = 10, int page = 1, string filter = "");
+        string UpdateForm(string idoffboadring, EnumStepOffBoarding step, ViewCrudFormOffBoarding view);
     }
 }

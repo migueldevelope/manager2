@@ -231,6 +231,36 @@ namespace Manager.Services.Specific
             }
         }
 
+        public string UpdateForm(string idoffboadring, EnumStepOffBoarding step, ViewCrudFormOffBoarding view)
+        {
+            try
+            {
+                var offboarding = serviceOffBoarding.GetNewVersion(p => p._id == idoffboadring).Result;
+
+                if (step == EnumStepOffBoarding.Step1)
+                {
+                    if (view.StatusFormOffBoarding == EnumStatusFormOffBoarding.End)
+                        offboarding.DateEndStep1 = DateTime.Now;
+
+                    offboarding.Step1 = view;
+                }
+                else
+                {
+                    if (view.StatusFormOffBoarding == EnumStatusFormOffBoarding.End)
+                        offboarding.DateEndStep2 = DateTime.Now;
+
+                    offboarding.Step2 = view;
+                }
+                serviceOffBoarding.Update(offboarding, null).Wait();
+
+                return "OffBoarding altered!";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public ViewCrudOffBoarding Get(string id)
         {
             try
