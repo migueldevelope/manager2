@@ -29,7 +29,8 @@ namespace Manager.Core.Business
                 DateEndStep1 = DateEndStep1,
                 DateEndStep2 = DateEndStep2,
                 DateBeginStep1 = DateBeginStep1,
-                DateBeginStep2 = DateBeginStep2
+                DateBeginStep2 = DateBeginStep2,
+                History = History
             };
         }
 

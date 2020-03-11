@@ -8,6 +8,7 @@ namespace Manager.Views.BusinessCrud
     public class ViewCrudOffBoarding:_ViewCrud
     {
         public ViewListPersonInfo Person { get; set; }
+        public ViewCrudOffBoardingHistory History { get; set; }
         public DateTime? DateBeginStep1 { get; set; }
         public DateTime? DateBeginStep2 { get; set; }
         public DateTime? DateEndStep1 { get; set; }
