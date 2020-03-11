@@ -336,6 +336,38 @@ namespace Manager.Services.Specific
             }
         }
 
+        public List<ViewListOffBoardingManager> ListOffBoardingManager(string idmanager, ref long total, int count = 10, int page = 1, string filter = "")
+        {
+            try
+            {
+                var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.TypeJourney == EnumTypeJourney.OffBoarding).Result;
+                var detail = new List<ViewListOffBoardingManager>();
+                foreach (var item in list)
+                {
+                    var offboarding = serviceOffBoarding.GetNewVersion(p => p.Person._id == item._id).Result;
+                    var view = new ViewListOffBoardingManager()
+                    {
+                        Name = item.User?.Name,
+                        OccupationName = item.Occupation?.Name,
+                        _idPerson = item._id,
+                        Photo = item.User?.PhotoUrl
+                    };
+                    if (offboarding != null)
+                    {
+                        view._id = offboarding._id;
+                        view.StatusOffBoarding = offboarding.Step2.StatusFormOffBoarding;
+                    }
+                    detail.Add(view);
+                }
+                total = detail.Count();
+                return detail;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         #endregion
 
         #region private 
