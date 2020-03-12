@@ -125,5 +125,19 @@ namespace Reports.Controllers
         {
             return await Task.Run(() => service.ListOnBoarding(id));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        [Route("listoffboarding/{id}")]
+        public async Task<string> ListOffBoarding(string id)
+        {
+            return await Task.Run(() => service.ListOffBoarding(id));
+        }
+
     }
 }

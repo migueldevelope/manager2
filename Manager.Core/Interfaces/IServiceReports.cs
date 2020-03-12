@@ -20,5 +20,6 @@ namespace Manager.Core.Interfaces
         string ListHistoricTraining(ViewFilterDate date, string idperson);
         string ListMyAwareness(string idperson);
         string ListOnBoarding(string id);
+        string ListOffBoarding(string id);
     }
 }
