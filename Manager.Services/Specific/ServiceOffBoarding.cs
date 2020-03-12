@@ -346,7 +346,7 @@ namespace Manager.Services.Specific
             }
         }
 
-        public List<ViewListOffBoardingManager> ListOffBoardingManager(string idmanager, ref long total, int count = 10, int page = 1, string filter = "")
+        public List<ViewListOffBoardingManager> ListOffBoardingManager(string idmanager, EnumStatusFormOffBoarding status, ref long total, int count = 10, int page = 1, string filter = "")
         {
             try
             {
@@ -370,6 +370,8 @@ namespace Manager.Services.Specific
                     }
                     detail.Add(view);
                 }
+                detail = detail.Where(p => p.StatusOffBoarding == status).ToList();
+
                 total = detail.Count();
                 return detail;
             }

@@ -56,17 +56,18 @@ namespace Manager.Controllers
         /// 
         /// </summary>
         /// <param name="idmanager"></param>
+        /// <param name="status"></param>
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
         [Authorize]
         [HttpGet]
-        [Route("listoffboardingmanager/{idmanager}")]
-        public async Task<List<ViewListOffBoardingManager>> ListOffBoardingManager(string idmanager, int count = 10, int page = 1, string filter = "")
+        [Route("listoffboardingmanager/{idmanager}/{status}")]
+        public async Task<List<ViewListOffBoardingManager>> ListOffBoardingManager(string idmanager, EnumStatusFormOffBoarding status, int count = 10, int page = 1, string filter = "")
         {
             long total = 0;
-            var result = service.ListOffBoardingManager(idmanager, ref total, count, page, filter);
+            var result = service.ListOffBoardingManager(idmanager, status, ref total, count, page, filter);
             Response.Headers.Add("x-total-count", total.ToString());
             return await Task.Run(() => result);
         }
