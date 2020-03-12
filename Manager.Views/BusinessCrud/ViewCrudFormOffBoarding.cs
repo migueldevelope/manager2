@@ -10,6 +10,7 @@ namespace Manager.Views.BusinessCrud
     public class ViewCrudFormOffBoarding
     {
         public List<ViewCrudOffBoardingQuestions> Questions { get; set; }
+        public List<ViewCrudOffBoardingQuestions> QuestionsManager { get; set; }
         public DateTime? DateOff { get; set; }
         public EnumTypeOff TypeOff { get; set; }
         public EnumReasonOff Reason { get; set; }

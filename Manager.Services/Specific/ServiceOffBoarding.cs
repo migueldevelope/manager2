@@ -386,7 +386,11 @@ namespace Manager.Services.Specific
             try
             {
                 offboarding.Questions = new List<ViewCrudOffBoardingQuestions>();
-                var itens = new List<ViewCrudOffBoardingQuestions>();
+                offboarding.QuestionsManager = new List<ViewCrudOffBoardingQuestions>();
+
+                //var itens = new List<ViewCrudOffBoardingQuestions>();
+                //var itensManager = new List<ViewCrudOffBoardingQuestions>();
+
 
                 foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Rating & p.TypeRotine == EnumTypeRotine.OffBoarding).Result)
                 {
@@ -409,7 +413,7 @@ namespace Manager.Services.Specific
                 {
                     foreach (var item in serviceQuestions.GetAllNewVersion(p => p.TypeQuestion == EnumTypeQuestion.Text & p.TypeRotine == EnumTypeRotine.OffBoarding).Result)
                     {
-                        offboarding.Questions.Add(new ViewCrudOffBoardingQuestions()
+                        offboarding.QuestionsManager.Add(new ViewCrudOffBoardingQuestions()
                         {
                             Question =
                            new ViewCrudQuestions()
