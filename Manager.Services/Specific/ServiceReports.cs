@@ -1098,6 +1098,7 @@ namespace Manager.Services.Specific
                         OccupationTime = offboarding.History.OccupationTime,
                         ActivitieExcellence = offboarding.History.ActivitieExcellence,
                         Question = item.Question.Name,
+                        ContentQuestion = item.Question.Content,
                         Response = item.Mark,
                         Schooling = offboarding.Person.Schooling
                     };

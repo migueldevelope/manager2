@@ -11,6 +11,7 @@ namespace Manager.Views.BusinessView
         public DateTime? DateAdm { get; set; }
         public string CompanyName { get; set; }
         public string Question { get; set; }
+        public string ContentQuestion { get; set; }
         public byte Response { get; set; }
         public int CompanyTime { get; set; }
         public int OccupationTime { get; set; }
