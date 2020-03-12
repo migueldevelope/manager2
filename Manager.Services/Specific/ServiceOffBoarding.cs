@@ -102,8 +102,16 @@ namespace Manager.Services.Specific
                     {
                         Person = person.GetViewListPersonInfo()
                     };
-                    view.Step1 = new ViewCrudFormOffBoarding();
-                    view.Step2 = new ViewCrudFormOffBoarding();
+                    view.Step1 = new ViewCrudFormOffBoarding()
+                    {
+                        DateOff = person.DateResignation
+                    };
+                    view.Step2 = new ViewCrudFormOffBoarding()
+                    {
+                        DateOff = person.DateResignation,
+                        _idInterviewer = person.Manager?._id,
+                        NameInterviewer = person.Manager?.Name
+                    };
                     view.Step1 = LoadMap(view.Step1, EnumStepOffBoarding.Step1);
                     view.Step2 = LoadMap(view.Step2, EnumStepOffBoarding.Step2);
 
@@ -340,7 +348,8 @@ namespace Manager.Services.Specific
         {
             try
             {
-                var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.TypeJourney == EnumTypeJourney.OffBoarding).Result;
+                //var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.TypeJourney == EnumTypeJourney.OffBoarding).Result;
+                var list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.StatusUser == EnumStatusUser.Disabled).Result;
                 var detail = new List<ViewListOffBoardingManager>();
                 foreach (var item in list)
                 {
