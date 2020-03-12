@@ -334,12 +334,12 @@ namespace Manager.Services.Specific
                             else if (viewOccupation.Accuracy >= decimal.Parse("66.66"))
                                 viewOccupation.Color = EnumOccupationColor.Orange;
 
-                            //viewOccupation.Activities = occupation.Activities;
-                            //viewOccupation.Scopes = group.Scope;
-                            //viewOccupation.SkillsOccupation = occupation.Skills;
-                            //viewOccupation.SkillsCompany = company.Skills;
-                            //viewOccupation.SkillsGroup = group.Skills;
-                            //viewOccupation.Schollings = occupation.Schooling;
+                            viewOccupation.Activities = occupation.Activities;
+                            viewOccupation.Scopes = group.Scope;
+                            viewOccupation.SkillsOccupation = occupation.Skills;
+                            viewOccupation.SkillsCompany = company.Skills;
+                            viewOccupation.SkillsGroup = group.Skills;
+                            viewOccupation.Schollings = occupation.Schooling;
 
 
                             if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)
