@@ -10,6 +10,7 @@ namespace Manager.Core.Business
     public class OffBoarding : BaseEntity
     {
         public ViewListPersonInfo Person { get; set; }
+        public string CompanyName { get; set; }
         public ViewCrudOffBoardingHistory History {get;set;}
         public DateTime? DateBeginStep1 { get; set; }
         public DateTime? DateBeginStep2 { get; set; }
@@ -30,7 +31,8 @@ namespace Manager.Core.Business
                 DateEndStep2 = DateEndStep2,
                 DateBeginStep1 = DateBeginStep1,
                 DateBeginStep2 = DateBeginStep2,
-                History = History
+                History = History,
+                CompanyName = CompanyName
             };
         }
 

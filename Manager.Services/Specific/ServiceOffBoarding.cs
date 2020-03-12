@@ -97,11 +97,13 @@ namespace Manager.Services.Specific
                 {
                     var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
                     var occupation = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault();
-
+                    
                     var view = new OffBoarding()
                     {
                         Person = person.GetViewListPersonInfo()
                     };
+                    view.CompanyName = person.Company.Name;
+
                     view.Step1 = new ViewCrudFormOffBoarding()
                     {
                         DateOff = person.DateResignation
@@ -250,7 +252,7 @@ namespace Manager.Services.Specific
 
                 if (step == EnumStepOffBoarding.Step1)
                 {
-                    foreach (var item in offboarding.Step1.Questions)
+                    foreach (var item in offboarding.Step1.QuestionsManager)
                     {
                         if (item.Question._id == idquestion)
                         {
@@ -263,7 +265,7 @@ namespace Manager.Services.Specific
                 }
                 else
                 {
-                    foreach (var item in offboarding.Step2.Questions)
+                    foreach (var item in offboarding.Step2.QuestionsManager)
                     {
                         if (item.Question._id == idquestion)
                         {
