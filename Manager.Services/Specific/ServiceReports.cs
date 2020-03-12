@@ -31,6 +31,7 @@ namespace Manager.Services.Specific
     {
         private readonly ServiceGeneric<Monitoring> serviceMonitoring;
         private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
+        private readonly ServiceGeneric<OffBoarding> serviceOffBoarding;
         private readonly ServiceGeneric<Occupation> serviceOccupation;
         private readonly ServiceGeneric<Area> serviceArea;
         private readonly ServiceGeneric<Checkpoint> serviceCheckpoint;
@@ -66,6 +67,7 @@ namespace Manager.Services.Specific
             {
                 serviceMonitoring = new ServiceGeneric<Monitoring>(context);
                 serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
+                serviceOffBoarding = new ServiceGeneric<OffBoarding>(context);
                 servicePerson = new ServiceGeneric<Person>(context);
                 servicePlan = new ServiceGeneric<Plan>(context);
                 serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
@@ -103,6 +105,7 @@ namespace Manager.Services.Specific
             User(contextAccessor);
             servicePerson._user = _user;
             serviceOnboarding._user = _user;
+            serviceOffBoarding._user = _user;
             serviceMonitoring._user = _user;
             servicePlan._user = _user;
             serviceLog._user = _user;
@@ -131,6 +134,7 @@ namespace Manager.Services.Specific
             _user = baseUser;
             servicePerson._user = _user;
             serviceOnboarding._user = _user;
+            serviceOffBoarding._user = _user;
             serviceMonitoring._user = _user;
             servicePlan._user = _user;
             serviceLog._user = _user;
@@ -1040,6 +1044,81 @@ namespace Manager.Services.Specific
                     Data = data,
                     Name = "listonboarding",
                     _idReport = NewReport("listonboarding"),
+                    _idAccount = _user._idAccount
+                };
+                SendMessageAsync(view);
+                var report = new ViewCrudReport();
+
+                while (report.StatusReport == EnumStatusReport.Open)
+                {
+                    var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+                    report.StatusReport = rest.StatusReport;
+                    report.Link = rest.Link;
+                    //Thread.Sleep(1000);
+                }
+
+                return report.Link;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public string ListOffBoarding(string id)
+        {
+            try
+            {
+                OffBoarding offboarding = serviceOffBoarding.GetNewVersion(p => p._id == id).Result;
+                Person person = servicePerson.GetNewVersion(p => p._id == offboarding.Person._id).Result;
+
+                if (offboarding == null)
+                    return null;
+
+
+                var data = new List<ViewReportOffBoarding>();
+
+                foreach (var item in offboarding.Step1.Questions)
+                {
+                    var viewO = new ViewReportOffBoarding()
+                    {
+                        PersonName = offboarding.Person.Name,
+                        Manager = offboarding.Person.Manager,
+                        Occupation = offboarding.Person.Occupation,
+                        DateAdm = offboarding.Person.DateAdm,
+                        CompanyName = offboarding.CompanyName,
+                        QtdCertification = offboarding.History.QtdCertification,
+                        QtdMonitoring = offboarding.History.QtdMonitoring,
+                        QtdPlan = offboarding.History.QtdPlan,
+                        QtdPraise = offboarding.History.QtdPraise,
+                        QtdRecommendation = offboarding.History.QtdRecommendation,
+                        OccupationSchooling = offboarding.History.OccupationSchooling,
+                        CurrentSchooling = offboarding.History.CurrentSchooling,
+                        CompanyTime = offboarding.History.CompanyTime,
+                        OccupationTime = offboarding.History.OccupationTime,
+                        ActivitieExcellence = offboarding.History.ActivitieExcellence,
+                        Question = item.Question.Name,
+                        Response = item.Mark,
+                        Schooling = offboarding.Person.Schooling
+                    };
+                    if (offboarding.History.Activities.Count() > 0)
+                    {
+                        foreach(var act in offboarding.History.Activities)
+                        {
+                            viewO.Activitie = act.Activities.Name;
+                            viewO.MarkActivitie = act.Mark;
+                            data.Add(viewO);
+                        }
+                    }
+                    else
+                        data.Add(viewO);
+                }
+
+                var view = new ViewReport()
+                {
+                    Data = data,
+                    Name = "listoffboarding",
+                    _idReport = NewReport("listoffboarding"),
                     _idAccount = _user._idAccount
                 };
                 SendMessageAsync(view);

@@ -121,7 +121,8 @@ namespace Manager.Services.Specific
                     view.History = new ViewCrudOffBoardingHistory()
                     {
                         CurrentSchooling = person.User.Schooling?.Name,
-                        OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name
+                        OccupationSchooling = occupation?.Schooling.FirstOrDefault()?.Name,
+                        Activities = new List<ViewCrudMeritocracyActivities>()
                     };
                     if (person.DateLastOccupation != null)
                         view.History.OccupationTime = ((12 * (DateTime.Now.Year - person.DateLastOccupation.Value.Year)) + (DateTime.Now.Month - person.DateLastOccupation.Value.Month));
@@ -153,6 +154,8 @@ namespace Manager.Services.Specific
                         view.History.ActivitieExcellence = meritocracy.ActivitiesExcellence;
                         view.History.Activities = meritocracy.MeritocracyActivities?.Select(p => p.GetViewCrud()).ToList();
                     }
+                    if (view.History.Activities == null)
+                        view.History.Activities = new List<ViewCrudMeritocracyActivities>();
 
                     offboarding = serviceOffBoarding.InsertNewVersion(view).Result;
                 }
