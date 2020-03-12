@@ -547,7 +547,7 @@ namespace Manager.Services.Specific
                             list.Add(sk);
                     };
                 }
-                return list;
+                return list.OrderBy(p => p.Name).ToList();
             }
             catch (Exception e)
             {
