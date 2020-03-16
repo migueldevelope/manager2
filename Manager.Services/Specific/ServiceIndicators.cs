@@ -1693,11 +1693,12 @@ namespace Manager.Services.Specific
                     var countmonitorings = serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & (p.StatusMonitoring == EnumStatusMonitoring.WaitManager || p.StatusMonitoring == EnumStatusMonitoring.InProgressManager)).Result;
                     onboardings += countonboardings;
                     monitorings += countmonitorings;
-                    if ((countonboardings == 0) && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0))
+                    if (((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation)) && (countonboardings == 0) && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0))
                     {
                         onboardings += 1;
                     }
-                    if ((countmonitorings == 0) && (serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & p.StatusMonitoring == EnumStatusMonitoring.End).Result == 0))
+                    //if ((item.TypeJourney == EnumTypeJourney.Monitoring) && (countmonitorings == 0) && (serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & p.StatusMonitoring == EnumStatusMonitoring.End).Result == 0))
+                    if ((item.TypeJourney == EnumTypeJourney.Monitoring) && (countmonitorings == 0))
                     {
                         monitorings += 1;
                     }
