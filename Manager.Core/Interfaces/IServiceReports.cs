@@ -21,5 +21,6 @@ namespace Manager.Core.Interfaces
         string ListMyAwareness(string idperson);
         string ListOnBoarding(string id);
         string ListOffBoarding(string id);
+        string ListMonitoring(string id);
     }
 }

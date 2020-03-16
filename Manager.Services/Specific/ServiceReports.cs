@@ -1065,6 +1065,222 @@ namespace Manager.Services.Specific
             }
         }
 
+        public string ListMonitoring(string id)
+        {
+            try
+            {
+                Monitoring monitoring = serviceMonitoring.GetNewVersion(p => p._id == id).Result;
+                Person person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+                if (monitoring == null)
+                    return null;
+
+
+                var data = new List<ViewReportsMonitoring>();
+
+                foreach (var item in monitoring.SkillsCompany)
+                {
+                    var result = new ViewReportsMonitoring();
+                    if (item.Comments.Count() == 0)
+                    {
+                        result = new ViewReportsMonitoring()
+                        {
+                            Name = monitoring.Person.Name,
+                            Occupation = person.Occupation.Name,
+                            CommentsPerson = monitoring.CommentsPerson,
+                            CommentsManager = monitoring.CommentsManager,
+                            CommentsEnd = monitoring.CommentsEnd,
+                            Manager = monitoring.Person.Manager,
+                            DateAdm = monitoring.Person.DateAdm,
+                            TypeJourney = monitoring.Person.TypeJourney,
+                            Schooling = monitoring.Person.Schooling,
+                            Comments = "",
+                            Concept = item.Skill.Concept,
+                            NameItem = item.Skill.Name,
+                            UserComment = EnumUserComment.Person,
+                            _idItem = item.Skill._id,
+                            TypeItem = EnumTypeItem.SkillCompany,
+                            TypeSkill = item.Skill.TypeSkill
+                        };
+
+                        data.Add(result);
+                    }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsMonitoring()
+                            {
+                                Name = monitoring.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = monitoring.CommentsPerson,
+                                CommentsManager = monitoring.CommentsManager,
+                                CommentsEnd = monitoring.CommentsEnd,
+                                Manager = monitoring.Person.Manager,
+                                DateAdm = monitoring.Person.DateAdm,
+                                TypeJourney = monitoring.Person.TypeJourney,
+                                Schooling = monitoring.Person.Schooling,
+                                Comments = com.Comments,
+                                Concept = item.Skill.Concept,
+                                NameItem = item.Skill.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Skill._id,
+                                TypeItem = EnumTypeItem.SkillCompany,
+                                TypeSkill = item.Skill.TypeSkill
+                            };
+
+                            data.Add(result);
+                        }
+                    }
+                }
+
+
+
+                foreach (var item in monitoring.Activities)
+                {
+                    var result = new ViewReportsMonitoring();
+                    if (item.Comments.Count() == 0)
+                    {
+                        result = new ViewReportsMonitoring()
+                        {
+                            Name = monitoring.Person.Name,
+                            Occupation = person.Occupation.Name,
+                            CommentsPerson = monitoring.CommentsPerson,
+                            CommentsManager = monitoring.CommentsManager,
+                            CommentsEnd = monitoring.CommentsEnd,
+                            Manager = monitoring.Person.Manager,
+                            DateAdm = monitoring.Person.DateAdm,
+                            TypeJourney = monitoring.Person.TypeJourney,
+                            Schooling = monitoring.Person.Schooling,
+                            Comments = "",
+                            Order = item.Activities.Order,
+                            NameItem = item.Activities.Name,
+                            UserComment = EnumUserComment.Person,
+                            _idItem = item.Activities._id,
+                            TypeItem = EnumTypeItem.Activitie,
+                        };
+
+                        data.Add(result);
+                    }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsMonitoring()
+                            {
+                                Name = monitoring.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = monitoring.CommentsPerson,
+                                CommentsManager = monitoring.CommentsManager,
+                                CommentsEnd = monitoring.CommentsEnd,
+                                Manager = monitoring.Person.Manager,
+                                DateAdm = monitoring.Person.DateAdm,
+                                TypeJourney = monitoring.Person.TypeJourney,
+                                Schooling = monitoring.Person.Schooling,
+                                Comments = com.Comments,
+                                Order = item.Activities.Order,
+                                NameItem = item.Activities.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Activities._id,
+                                TypeItem = EnumTypeItem.Activitie,
+                            };
+
+                            data.Add(result);
+                        }
+
+                    }
+
+
+
+                }
+
+                foreach (var item in monitoring.Schoolings)
+                {
+                    var result = new ViewReportsMonitoring();
+                    if (item.Comments.Count() == 0)
+                    {
+                        result = new ViewReportsMonitoring()
+                        {
+                            Name = monitoring.Person.Name,
+                            Occupation = person.Occupation.Name,
+                            CommentsPerson = monitoring.CommentsPerson,
+                            CommentsManager = monitoring.CommentsManager,
+                            CommentsEnd = monitoring.CommentsEnd,
+                            Manager = monitoring.Person.Manager,
+                            DateAdm = monitoring.Person.DateAdm,
+                            TypeJourney = monitoring.Person.TypeJourney,
+                            Schooling = monitoring.Person.Schooling,
+                            Comments = "",
+                            Order = item.Schooling.Order,
+                            Complement = item.Schooling.Complement,
+                            NameItem = item.Schooling.Name,
+                            UserComment = EnumUserComment.Person,
+                            _idItem = item.Schooling._id,
+                            TypeItem = EnumTypeItem.Schooling,
+                            Type = item.Schooling.Type
+                        };
+
+                        data.Add(result);
+                    }
+                    else
+                    {
+                        foreach (var com in item.Comments)
+                        {
+                            result = new ViewReportsMonitoring()
+                            {
+                                Name = monitoring.Person.Name,
+                                Occupation = person.Occupation.Name,
+                                CommentsPerson = monitoring.CommentsPerson,
+                                CommentsManager = monitoring.CommentsManager,
+                                CommentsEnd = monitoring.CommentsEnd,
+                                Manager = monitoring.Person.Manager,
+                                DateAdm = monitoring.Person.DateAdm,
+                                TypeJourney = monitoring.Person.TypeJourney,
+                                Schooling = monitoring.Person.Schooling,
+                                Comments = com.Comments,
+                                Order = item.Schooling.Order,
+                                Complement = item.Schooling.Complement,
+                                NameItem = item.Schooling.Name,
+                                UserComment = com.UserComment,
+                                _idItem = item.Schooling._id,
+                                TypeItem = EnumTypeItem.Schooling,
+                                Type = item.Schooling.Type
+                            };
+
+                            data.Add(result);
+                        }
+
+
+                    }
+
+                }
+
+                var view = new ViewReport()
+                {
+                    Data = data,
+                    Name = "listmonitoring",
+                    _idReport = NewReport("listmonitoring"),
+                    _idAccount = _user._idAccount
+                };
+                SendMessageAsync(view);
+                var report = new ViewCrudReport();
+
+                while (report.StatusReport == EnumStatusReport.Open)
+                {
+                    var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+                    report.StatusReport = rest.StatusReport;
+                    report.Link = rest.Link;
+                    //Thread.Sleep(1000);
+                }
+
+                return report.Link;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public string ListOffBoarding(string id)
         {
             try

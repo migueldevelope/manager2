@@ -133,6 +133,19 @@ namespace Reports.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet]
+        [Route("listmonitoring/{id}")]
+        public async Task<string> ListMonitoring(string id)
+        {
+            return await Task.Run(() => service.ListMonitoring(id));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
         [Route("listoffboarding/{id}")]
         public async Task<string> ListOffBoarding(string id)
         {
