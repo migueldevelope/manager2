@@ -717,7 +717,7 @@ namespace Manager.Services.Specific
                                         .Replace("{Occupation}", person.Occupation.Name);
                 var sendMail = new MailLog
                 {
-                    From = new MailLogAddress("suporte@analisa.solutions", "Suporte ao Cliente | Analisa fluid careers"),
+                    From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
                     To = new List<MailLogAddress>(){
                         new MailLogAddress(mailreceived, namereceived)
                     },

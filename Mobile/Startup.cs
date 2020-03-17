@@ -194,7 +194,7 @@ namespace Mobile
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Mobile - Analisa Fluid Careers",
+              Title = "Mobile - Fluid",
               Version = "v1",
               Description = "Sistema de carreiras fluidas",
               Contact = new Contact

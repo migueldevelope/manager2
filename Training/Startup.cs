@@ -142,7 +142,7 @@ namespace Training
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Training - Analisa Fluid Careers",
+              Title = "Training - Fluid",
               Version = "v1",
               Description = "Sistema de carreiras fluidas",
               Contact = new Contact

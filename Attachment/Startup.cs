@@ -152,7 +152,7 @@ namespace Attachment
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Attachment - Analisa Fluid Careers",
+              Title = "Attachment - Fluid",
               Version = "v1",
               Description = "Sistema de carreiras fluidas",
               Contact = new Contact

@@ -141,7 +141,7 @@ namespace IntegrationServer
             {
               Title = "Integration Server - Integração de Colaboradores",
               Version = "v1",
-              Description = "Responsável pelas ferramentas de integração de colaboradores do ANALISA Fluid Careers",
+              Description = "Responsável pelas ferramentas de integração de colaboradores do Fluid",
               Contact = new Contact
               {
                 Name = "Jm Soft Informática Ltda",

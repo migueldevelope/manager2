@@ -141,7 +141,7 @@ namespace Indicators
         c.SwaggerDoc("v1",
             new Info
             {
-              Title = "Indicators - Analisa Fluid Careers",
+              Title = "Indicators - Fluid",
               Version = "v1",
               Description = "Sistema de carreiras fluidas",
               Contact = new Contact

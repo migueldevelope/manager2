@@ -199,7 +199,7 @@ namespace Manager
                 c.SwaggerDoc("v1",
               new Info
                   {
-                      Title = "Manager - Analisa Fluid Careers",
+                      Title = "Manager - Fluid",
                       Version = "v1",
                       Description = "Sistema de carreiras fluidas",
                       Contact = new Contact

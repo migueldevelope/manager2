@@ -144,7 +144,7 @@ namespace Reports
                 c.SwaggerDoc("v1",
               new Info
                   {
-                      Title = "Reports - Analisa Fluid Careers",
+                      Title = "Reports - Fluid",
                       Version = "v1",
                       Description = "Sistema de carreiras fluidas",
                       Contact = new Contact
