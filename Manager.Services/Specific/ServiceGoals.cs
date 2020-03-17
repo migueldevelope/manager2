@@ -165,7 +165,7 @@ namespace Manager.Services.Specific
         var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.User.Mail, person.User.Name)
                     },
@@ -207,7 +207,7 @@ namespace Manager.Services.Specific
         var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.User.Mail, person.User.Name)
                     },
@@ -249,7 +249,7 @@ namespace Manager.Services.Specific
         var body = model.Message.Replace("{Person}", person.User.Name).Replace("{Link}", model.Link).Replace("{Manager}", managername).Replace("{Company}", person.Company.Name).Replace("{Occupation}", person.Occupation.Name);
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = new List<MailLogAddress>(){
                         new MailLogAddress(person.User.Mail, person.User.Name)
                     },
