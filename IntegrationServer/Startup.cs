@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -119,34 +120,31 @@ namespace IntegrationServer
           }
         };
       });
-      services.AddCors(options =>
-        options.AddPolicy("AllowAll",
-          builder => builder
-          .AllowAnyOrigin()
-          .AllowAnyMethod()
-          .AllowAnyHeader()
-          .AllowCredentials()
-          .WithExposedHeaders("x-total-count")
-      ));
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("http://localhost")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("x-total-count")
+                    .AllowCredentials());
+            });
 
-      services.AddMvc();
+            //services.AddMvc();
+            services.AddRazorPages();
 
-      //services.AddSignalR();
+            services.AddControllersWithViews()
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-      // Configurando o serviço de documentação do Swagger
-      services.AddSwaggerGen(c =>
+            // Configurando o serviço de documentação do Swagger
+            services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1",
-            new Info
+            new Microsoft.OpenApi.Models.OpenApiInfo
             {
               Title = "Integration Server - Integração de Colaboradores",
               Version = "v1",
-              Description = "Responsável pelas ferramentas de integração de colaboradores do Fluid",
-              Contact = new Contact
-              {
-                Name = "Jm Soft Informática Ltda",
-                Url = "http://www.jmsoft.com.br"
-              }
+              Description = "Responsável pelas ferramentas de integração de colaboradores do Fluid"
             });
         string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
         string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;

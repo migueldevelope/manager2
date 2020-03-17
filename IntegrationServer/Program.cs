@@ -28,7 +28,10 @@ namespace IntegrationServer
 
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
-            .UseKestrel()
+            .ConfigureKestrel(serverOptions =>
+            {
+                // Set properties and call methods on options
+            })
             .UseStartup<Startup>()
             .Build();
   }

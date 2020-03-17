@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -122,33 +123,31 @@ namespace Indicators
           }
         };
       });
-      services.AddCors(options =>
-        options.AddPolicy("AllowAll",
-          builder => builder
-          .AllowAnyOrigin()
-          .AllowAnyMethod()
-          .AllowAnyHeader()
-          .AllowCredentials()
-          .WithExposedHeaders("x-total-count")
-      ));
-      services.AddMvc();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("http://localhost")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("x-total-count")
+                    .AllowCredentials());
+            });
 
-      //services.AddSignalR();
+            //services.AddMvc();
+            services.AddRazorPages();
 
-      // Configurando o serviço de documentação do Swagger
-      services.AddSwaggerGen(c =>
+            services.AddControllersWithViews()
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            // Configurando o serviço de documentação do Swagger
+            services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1",
-            new Info
+            new Microsoft.OpenApi.Models.OpenApiInfo
             {
               Title = "Indicators - Fluid",
               Version = "v1",
-              Description = "Sistema de carreiras fluidas",
-              Contact = new Contact
-              {
-                Name = "Jm Soft Informática Ltda",
-                Url = "http://www.jmsoft.com.br"
-              }
+              Description = "Sistema de carreiras fluidas"
             });
         string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
         string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
@@ -166,19 +165,23 @@ namespace Indicators
     /// </summary>
     /// <param name="app">Aplicação</param>
     /// <param name="env">Ambiente de hospedagem</param>
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-    {
-      if (env.IsDevelopment())
-        app.UseDeveloperExceptionPage();
-      app.UseAuthentication();
-      app.UseCors("AllowAll");
-      app.UseMvc();
-      //app.UseSignalR(routes =>
-      //{
-      //  routes.MapHub<MessagesHub>("/messagesHub");
-      //});
-      // Ativando middlewares para uso do Swagger
-      app.UseSwagger();
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseCors("AllowAll");
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
+            //app.UseSignalR(routes =>
+            //{
+            //  routes.MapHub<MessagesHub>("/messagesHub");
+            //});
+            // Ativando middlewares para uso do Swagger
+            app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
         c.RoutePrefix = "help";

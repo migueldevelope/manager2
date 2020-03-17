@@ -34,7 +34,10 @@ namespace Attachment
        .UseUrls("http://0.0.0.0:5202/")
         .UseContentRoot(Directory.GetCurrentDirectory())
         .UseIISIntegration()
-        .UseKestrel()
+        .ConfigureKestrel(serverOptions =>
+        {
+            // Set properties and call methods on options
+        })
         .UseStartup<Startup>()
         .Build();
   }

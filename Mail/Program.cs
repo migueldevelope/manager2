@@ -27,7 +27,10 @@ namespace Mail
     .UseUrls("http://0.0.0.0:5201/")
     .UseContentRoot(Directory.GetCurrentDirectory())
     .UseIISIntegration()
-    .UseKestrel()
+    .ConfigureKestrel(serverOptions =>
+    {
+        // Set properties and call methods on options
+    })
     .UseStartup<Startup>()
     .Build();
   }

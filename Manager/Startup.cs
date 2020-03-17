@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -170,26 +171,32 @@ namespace Manager
                 {
                     OnAuthenticationFailed = context =>
               {
-                    Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-                    return Task.CompletedTask;
-                },
+                  Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                  return Task.CompletedTask;
+              },
                     OnTokenValidated = context =>
               {
-                    Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
-                    return Task.CompletedTask;
-                }
+                  Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+                  return Task.CompletedTask;
+              }
                 };
             });
+
             services.AddCors(options =>
-              options.AddPolicy("AllowAll",
-                builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials()
-                .WithExposedHeaders("x-total-count")
-            ));
-            services.AddMvc();
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("http://localhost")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("x-total-count")
+                    .AllowCredentials());
+            });
+
+            //services.AddMvc();
+            services.AddRazorPages();
+
+            services.AddControllersWithViews()
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //services.AddSignalR();
 
@@ -197,17 +204,12 @@ namespace Manager
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
-              new Info
-                  {
-                      Title = "Manager - Fluid",
-                      Version = "v1",
-                      Description = "Sistema de carreiras fluidas",
-                      Contact = new Contact
-                      {
-                          Name = "Jm Soft Informática Ltda",
-                          Url = "http://www.jmsoft.com.br"
-                      }
-                  });
+              new Microsoft.OpenApi.Models.OpenApiInfo
+              {
+                  Title = "Manager - Fluid",
+                  Version = "v1",
+                  Description = "Sistema de carreiras fluidas"
+              });
                 string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
                 string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
                 string caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");
@@ -236,14 +238,17 @@ namespace Manager
         /// </summary>
         /// <param name="app">Aplicação</param>
         /// <param name="env">Ambiente de hospedagem</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            app.UseAuthentication();
-            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseCors("AllowAll");
-            app.UseMvc();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
             //app.UseSignalR(routes =>
             //{
             //  routes.MapHub<MessagesHub>("/MessagesHub");
@@ -253,8 +258,8 @@ namespace Manager
             app.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = "help";
-          //c.SwaggerEndpoint("..swagger/v1/swagger.json", "Manager");
-          c.SwaggerEndpoint("../swagger/v1/swagger.json", "Manager");
+                //c.SwaggerEndpoint("..swagger/v1/swagger.json", "Manager");
+                c.SwaggerEndpoint("../swagger/v1/swagger.json", "Manager");
             });
         }
     }
