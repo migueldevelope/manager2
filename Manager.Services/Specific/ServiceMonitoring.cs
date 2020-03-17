@@ -851,7 +851,7 @@ namespace Manager.Services.Specific
                     }).ToList(),
                     StatusMonitoring = monitoring.StatusMonitoring
                 };
-                if (person.Occupation._id != monitoring.Person.OccupationId)
+                if (person.Occupation?._id != monitoring.Person.OccupationId)
                     view.OccupationDiff = true;
 
                 return view;
