@@ -1260,26 +1260,29 @@ namespace Manager.Services.Specific
                 var planFluidCarrers = serviceFluidCareers.GetAllNewVersion(p => p.Person._id == id).Result;
                 foreach (var item in planFluidCarrers)
                 {
-                    var view = new ViewGetPlan()
+                    if (item.Plan != null)
                     {
-                        _id = item._id,
-                        Name = item.Plan.What,
-                        NamePerson = item.Person.Name,
-                        Deadline = item.Plan.Date,
-                        Description = item.Plan.What,
-                        Skills = item.Plan.Skills,
-                        OriginPlan = EnumOriginPlan.FluidCareers,
-                        _idPerson = item.Person._id,
-                        UserInclude = item.Person._id,
-                        TextEnd = item.Plan.Observation,
-                        StatusPlanApproved = item.Plan.StatusFluidCareerPlan == EnumStatusFluidCareerPlan.Open ?
+                        var view = new ViewGetPlan()
+                        {
+                            _id = item._id,
+                            Name = item.Plan.What,
+                            NamePerson = item.Person.Name,
+                            Deadline = item.Plan.Date,
+                            Description = item.Plan.What,
+                            Skills = item.Plan.Skills,
+                            OriginPlan = EnumOriginPlan.FluidCareers,
+                            _idPerson = item.Person._id,
+                            UserInclude = item.Person._id,
+                            TextEnd = item.Plan.Observation,
+                            StatusPlanApproved = item.Plan.StatusFluidCareerPlan == EnumStatusFluidCareerPlan.Open ?
                         EnumStatusPlanApproved.Open : item.Plan.StatusFluidCareerPlan == EnumStatusFluidCareerPlan.Realized ?
                         EnumStatusPlanApproved.Approved : EnumStatusPlanApproved.Invisible,
-                        StatusPlan = item.Plan.StatusFluidCareerPlan == EnumStatusFluidCareerPlan.Open ?
+                            StatusPlan = item.Plan.StatusFluidCareerPlan == EnumStatusFluidCareerPlan.Open ?
                         EnumStatusPlan.Open : item.Plan.StatusFluidCareerPlan == EnumStatusFluidCareerPlan.Realized ?
                         EnumStatusPlan.Realized : EnumStatusPlan.NoRealized
-                    };
-                    result.Add(view);
+                        };
+                        result.Add(view);
+                    }
                 }
 
                 if (open == 0)
@@ -1294,7 +1297,7 @@ namespace Manager.Services.Specific
                 if (wait == 0)
                     result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Wait).ToList();
 
-                
+
                 total = result.Count();
 
                 return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();

@@ -41,6 +41,7 @@ namespace Manager.Services.Specific
         private readonly ServiceGeneric<Recommendation> serviceRecommendation;
         private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
         private readonly ServiceGeneric<Parameter> serviceParameter;
+        private readonly ServiceGeneric<FluidCareers> serviceFluidCareers;
         private readonly IServicePerson serviceIPerson;
 
         public string path;
@@ -69,6 +70,7 @@ namespace Manager.Services.Specific
                 serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
                 serviceOccupation = new ServiceGeneric<Occupation>(context);
                 serviceArea = new ServiceGeneric<Area>(context);
+                serviceFluidCareers = new ServiceGeneric<FluidCareers>(context);
                 serviceIPerson = _serviceIPerson;
 
                 path = pathToken;
@@ -91,6 +93,7 @@ namespace Manager.Services.Specific
             serviceMailModel._user = _user;
             serviceWorkflow._user = _user;
             serviceMail._user = _user;
+            serviceFluidCareers._user = _user;
             serviceCertification._user = _user;
             serviceCheckpoint._user = _user;
             serviceRecommendation._user = _user;
@@ -1818,6 +1821,7 @@ namespace Manager.Services.Specific
             {
 
                 var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
+                var fluidcarrers = serviceFluidCareers.GetAllNewVersion(p => p.Person._id == idperson).Result;
 
                 List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
                 foreach (var item in list)
@@ -1834,6 +1838,14 @@ namespace Manager.Services.Specific
                     }
                 }
 
+                foreach (var item in fluidcarrers)
+                {
+                    if (item.Plan != null)
+                    {
+                        foreach (var row in item.Plan.Skills)
+                            listResult.Add(new ViewTagsCloud() { text = row.Name });
+                    }
+                }
 
                 var result = listResult.GroupBy(x => x.text)
                     .Select(x => new ViewTagsCloud()
@@ -1855,6 +1867,7 @@ namespace Manager.Services.Specific
             try
             {
                 var list = serviceMonitoring.GetAllNewVersion(p => p.Person._id == idperson & p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
+                var fluidcarrers = serviceFluidCareers.GetAllNewVersion(p => p.Person._id == idperson).Result;
 
                 List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
                 foreach (var item in list)
@@ -1866,6 +1879,14 @@ namespace Manager.Services.Specific
                     }
                 }
 
+                foreach (var item in fluidcarrers)
+                {
+                    if (item.Plan != null)
+                    {
+                        foreach (var row in item.Plan.Skills)
+                            listResult.Add(new ViewTagsCloud() { text = row.Name });
+                    }
+                }
 
                 var result = listResult.GroupBy(x => x.text)
                     .Select(x => new ViewTagsCloud()
