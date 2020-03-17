@@ -1713,7 +1713,7 @@ namespace Manager.Services.Specific
                 result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.OnBoarding, Qtd = onboardings, Total = totalqtd });
                 result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Workflow, Qtd = workflows, Total = totalqtd });
 
-                return result.OrderByDescending(p => p.Type).ToList();
+                return result.OrderBy(p => p.Type).ToList();
             }
             catch (Exception e)
             {
