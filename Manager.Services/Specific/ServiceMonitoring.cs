@@ -785,7 +785,7 @@ namespace Manager.Services.Specific
             try
             {
                 var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-                var person = servicePerson.GetNewVersion(p => p._id == monitoring._id).Result;
+                var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
 
                 var view = new ViewCrudMonitoring()
