@@ -424,7 +424,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
                 {
@@ -596,7 +596,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -647,7 +647,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
                 {
@@ -720,7 +720,7 @@ namespace Manager.Services.Specific
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = sendTest ?
             new List<MailLogAddress>()
               {
@@ -1093,7 +1093,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1400,7 +1400,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1502,7 +1502,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {

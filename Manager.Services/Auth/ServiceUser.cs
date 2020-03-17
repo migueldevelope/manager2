@@ -358,7 +358,7 @@ namespace Manager.Services.Auth
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("noreplay@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = new List<MailLogAddress>()
             { new MailLogAddress(user.Mail, user.Name) },
           Priority = EnumPriorityMail.Low,
