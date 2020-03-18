@@ -185,7 +185,7 @@ namespace Manager
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("http://*", "https://*")
+                    builder => builder.WithOrigins("http://localhosts/", "10.0.0.16", "http://test.analisa.solutions/")
                     //builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
