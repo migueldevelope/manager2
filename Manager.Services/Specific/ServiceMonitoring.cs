@@ -903,7 +903,7 @@ namespace Manager.Services.Specific
                     {
                         _id = item.Skill._id,
                         Name = item.Skill.Name,
-                        TypeItem = EnumTypeItem.Activitie
+                        TypeItem = EnumTypeItem.SkillCompany
                     };
                     result.Item = detail;
 
@@ -967,7 +967,7 @@ namespace Manager.Services.Specific
                         _id = item.Schooling._id,
                         Name = item.Schooling.Name,
                         Order = item.Schooling.Order,
-                        TypeItem = EnumTypeItem.Activitie
+                        TypeItem = EnumTypeItem.Schooling
                     };
                     result.Item = detail;
 
