@@ -120,7 +120,7 @@ namespace Mail
     /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors("AllowAll");
+            app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
