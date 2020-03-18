@@ -75,7 +75,14 @@ namespace IntegrationClient
           DisplayAlerts = false,
           Visible = true
         };
-        files = Directory.EnumerateFiles(txtPst.Text, "*.xls*", SearchOption.TopDirectoryOnly).OrderBy(filename => filename);
+        if (chkSub.Checked)
+        {
+          files = Directory.EnumerateFiles(txtPst.Text, "*.xls*", SearchOption.AllDirectories).OrderBy(filename => filename);
+        }
+        else
+        {
+          files = Directory.EnumerateFiles(txtPst.Text, "*.xls*", SearchOption.TopDirectoryOnly).OrderBy(filename => filename);
+        }
         occupations = new List<OccupationStatistic>();
         skills = new List<SkillStatistic>();
         schoolings = new List<SchoolingStatistic>();
@@ -222,24 +229,25 @@ namespace IntegrationClient
       // Gerente Comercial - BSA
       //    Nome na celula C5: Gerente Comercial,
       //    Complemento na célula K5: - BSA, exatamente igual ao campo Description, inclusive com os espaços na frente
-      string cellNameComplement = "K5";
-      string cellGroup = "C6";
+      // Se não existir complemento deixar em branco ""
+      string cellNameComplement = "";
+      string cellGroup = "H5";
       string cellColumnCheck = "A";
       // Responsabilidade
-      int responsibilityCellLine = 15;
+      int responsibilityCellLine = 16;
       string responsibilityCellColumn = "A";
-      string responsibilityTextCheck = "RESPONSABILIDADES / ENTREGAS nos processos de atuação";
+      string responsibilityTextCheck = "ENTREGAS DO CARGO";
       // Técnicas
-      string hardSkillTextCheck = "BLOCO DE COMPETÊNCIAS TÉCNICAS";
-      string softSkillTextCheck = "BLOCO DE COMPETÊNCIAS COMPORTAMENTAIS";
-      string hardSkillTextTypeCheck = "ESPECÍFICAS";
+      string hardSkillTextCheck = "COMPETÊNCIAS TÉCNICAS";
+      string softSkillTextCheck = "COMPETÊNCIAS COMPORTAMENTAIS";
+      string hardSkillTextTypeCheck = "ESPECÍFICAS DO CARGO";
       string hardSkillCellColumn = "B";
       // Formação
       string formationTextCheck = "FORMAÇÃO ESCOLAR / ACADÊMICA";
       string formationCellColumn = "C";
       string formationCellColumnComplement = "F";
       // Requisitos
-      string requirementTextCheck = "REQUISITOS NECESSÁRIOS (PARA CONTRATAÇÃO)";
+      string requirementTextCheck = "REQUISITOS ESPECÍFICOS (PARA CONTRATAÇÃO)";
       string requirement;
       // Linha de controle de leitura
       int line = 0;
@@ -248,9 +256,6 @@ namespace IntegrationClient
       ViewIntegrationProfileOccupation viewOccupation = new ViewIntegrationProfileOccupation
       {
         Messages = new List<string>(),
-        // TODO: inicialização Level Two
-        IdProcessLevelTwo = "5cc7790e28897595ddd49d5d",
-        // TODO
         Activities = new List<string>(),
         Schooling = new List<string>(),
         SchoolingComplement = new List<string>(),
@@ -261,15 +266,31 @@ namespace IntegrationClient
         Description = string.Empty,
         NameGroup = string.Empty,
         SpecificRequirements = string.Empty,
-        _id = string.Empty
+        _id = string.Empty,
+        Area = string.Empty,
+        Process = string.Empty,
+        SubProcess = string.Empty
       };
+      if (chkSub.Checked)
+      {
+        if (file.Replace(txtPst.Text,string.Empty).Split('\\').Count() != 4)
+        {
+          throw new Exception("Estrutura de pastas não está no formato AREA/PROCESSO/SUBPROCESSO/MAPA.XLSX");
+        }
+        viewOccupation.Area = file.Replace(txtPst.Text, string.Empty).Split('\\')[0].Replace(" = ", " | ");
+        viewOccupation.Process = file.Replace(txtPst.Text, string.Empty).Split('\\')[1].Replace(" = ", " | ");
+        viewOccupation.SubProcess = file.Replace(txtPst.Text, string.Empty).Split('\\')[2].Replace(" = ", " | ");
+      }
       try
       {
         excelPst = excelApp.Workbooks.Open(file, false);
         excelPln = excelPst.Worksheets[1];
         excelPln.Activate();
         viewOccupation.Name = excelPln.Range[cellName].Value.ToString().Trim();
-        viewOccupation.Description = excelPln.Range[cellNameComplement].Value ?? string.Empty;
+        if (!string.IsNullOrEmpty(cellNameComplement))
+        {
+          viewOccupation.Description = excelPln.Range[cellNameComplement].Value ?? string.Empty;
+        }
         viewOccupation.NameGroup = excelPln.Range[cellGroup].Value.ToString();
 
         if (!(excelPln.Range[string.Format("{0}{1}", responsibilityCellColumn, responsibilityCellLine)].Value).ToString().Trim().ToUpper().Equals(responsibilityTextCheck.ToUpper()))

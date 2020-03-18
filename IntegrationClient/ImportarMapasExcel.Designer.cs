@@ -35,6 +35,8 @@
       this.folder = new System.Windows.Forms.FolderBrowserDialog();
       this.chkLjo = new System.Windows.Forms.CheckBox();
       this.chkCom = new System.Windows.Forms.CheckBox();
+      this.chkAre = new System.Windows.Forms.CheckBox();
+      this.chkSub = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // txtPst
@@ -59,7 +61,7 @@
       this.btnImpV2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.btnImpV2.Name = "btnImpV2";
       this.btnImpV2.Size = new System.Drawing.Size(254, 23);
-      this.btnImpV2.TabIndex = 7;
+      this.btnImpV2.TabIndex = 8;
       this.btnImpV2.Text = "Importar Modelo Padrão Fluid";
       this.btnImpV2.UseVisualStyleBackColor = true;
       this.btnImpV2.Click += new System.EventHandler(this.BtnImpV2_Click);
@@ -67,10 +69,10 @@
       // chkAtu
       // 
       this.chkAtu.AutoSize = true;
-      this.chkAtu.Location = new System.Drawing.Point(114, 59);
+      this.chkAtu.Location = new System.Drawing.Point(114, 116);
       this.chkAtu.Name = "chkAtu";
       this.chkAtu.Size = new System.Drawing.Size(142, 21);
-      this.chkAtu.TabIndex = 5;
+      this.chkAtu.TabIndex = 7;
       this.chkAtu.Text = "Atualizar Cargos?";
       this.chkAtu.UseVisualStyleBackColor = true;
       this.chkAtu.CheckedChanged += new System.EventHandler(this.ChkAtu_CheckedChanged);
@@ -78,28 +80,50 @@
       // chkLjo
       // 
       this.chkLjo.AutoSize = true;
-      this.chkLjo.Location = new System.Drawing.Point(114, 86);
+      this.chkLjo.Location = new System.Drawing.Point(114, 143);
       this.chkLjo.Name = "chkLjo";
-      this.chkLjo.Size = new System.Drawing.Size(88, 21);
-      this.chkLjo.TabIndex = 6;
-      this.chkLjo.Text = "Log Json";
+      this.chkLjo.Size = new System.Drawing.Size(138, 21);
+      this.chkLjo.TabIndex = 5;
+      this.chkLjo.Text = "Ativar log JSON?";
       this.chkLjo.UseVisualStyleBackColor = true;
       // 
       // chkCom
       // 
       this.chkCom.AutoSize = true;
-      this.chkCom.Location = new System.Drawing.Point(114, 35);
+      this.chkCom.Location = new System.Drawing.Point(114, 89);
       this.chkCom.Name = "chkCom";
       this.chkCom.Size = new System.Drawing.Size(186, 21);
-      this.chkCom.TabIndex = 4;
+      this.chkCom.TabIndex = 6;
       this.chkCom.Text = "Atualizar Competências?";
       this.chkCom.UseVisualStyleBackColor = true;
+      // 
+      // chkAre
+      // 
+      this.chkAre.AutoSize = true;
+      this.chkAre.Location = new System.Drawing.Point(114, 62);
+      this.chkAre.Name = "chkAre";
+      this.chkAre.Size = new System.Drawing.Size(285, 21);
+      this.chkAre.TabIndex = 4;
+      this.chkAre.Text = "Estrutura de Pastas representa as LOs?";
+      this.chkAre.UseVisualStyleBackColor = true;
+      // 
+      // chkSub
+      // 
+      this.chkSub.AutoSize = true;
+      this.chkSub.Location = new System.Drawing.Point(114, 35);
+      this.chkSub.Name = "chkSub";
+      this.chkSub.Size = new System.Drawing.Size(191, 21);
+      this.chkSub.TabIndex = 3;
+      this.chkSub.Text = "Localizar nas subpastas?";
+      this.chkSub.UseVisualStyleBackColor = true;
       // 
       // ImportarMapasExcel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
+      this.Controls.Add(this.chkSub);
+      this.Controls.Add(this.chkAre);
       this.Controls.Add(this.chkCom);
       this.Controls.Add(this.chkLjo);
       this.Controls.Add(this.chkAtu);
@@ -124,5 +148,7 @@
     private System.Windows.Forms.FolderBrowserDialog folder;
     private System.Windows.Forms.CheckBox chkLjo;
     private System.Windows.Forms.CheckBox chkCom;
-  }
+        private System.Windows.Forms.CheckBox chkAre;
+        private System.Windows.Forms.CheckBox chkSub;
+    }
 }

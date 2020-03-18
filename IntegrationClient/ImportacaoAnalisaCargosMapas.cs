@@ -271,14 +271,16 @@ namespace IntegrationClient
                 Name = item["nome_cargo"].ToString().Trim(),
                 NameGroup = item["nome_grupo_cargo"].ToString().Trim(),
                 Activities = new List<string>(),
-                IdProcessLevelTwo = lblIdSubProc.Text,
                 Schooling = new List<string>(),
                 SchoolingComplement = new List<string>(),
                 Skills = new List<string>(),
                 SpecificRequirements = string.Empty,
                 Messages = new List<string>(),
                 Update = true,
-                UpdateSkill = true
+                UpdateSkill = true,
+                Area = string.Empty,
+                Process = string.Empty,
+                SubProcess = string.Empty
               };
             }
             switch (short.Parse(item["tipo"].ToString()))

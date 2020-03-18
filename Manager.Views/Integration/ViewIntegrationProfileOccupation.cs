@@ -8,7 +8,6 @@ namespace Manager.Views.Integration
     public string Name { get; set; }
     public string Description { get; set; }
     public string NameGroup { get; set; }
-    public string IdProcessLevelTwo { get; set; }
     public List<string> Activities { get; set; }
     public List<string> Skills { get; set; }
     public List<string> Schooling { get; set; }
@@ -17,5 +16,8 @@ namespace Manager.Views.Integration
     public List<string> Messages { get; set; }
     public bool Update { get; set; }
     public bool UpdateSkill { get; set; }
+    public string Area { get; set; }
+    public string Process { get; set; }
+    public string SubProcess { get; set; }
   }
 }

@@ -1571,10 +1571,18 @@ namespace Manager.Services.Specific
         view.Messages.Add("Grupo de cargo não encontrado!!!");
         return view;
       }
-      ProcessLevelTwo processLevelTwo = processLevelTwoService.GetNewVersion(p => p._id == view.IdProcessLevelTwo).Result;
-      if (processLevelTwo == null)
+      ProcessLevelTwo subProcess = null;
+      if (!string.IsNullOrEmpty(view.Area) && !string.IsNullOrEmpty(view.Process) && !string.IsNullOrEmpty(view.SubProcess))
       {
-        view.Messages.Add("Subprocesso de integração não localizado!!!");
+        subProcess = processLevelTwoService.GetNewVersion(p => p.Name == view.SubProcess && p.ProcessLevelOne.Name == view.Process && p.ProcessLevelOne.Area.Name == view.Area).Result;
+      }
+      else
+      {
+        subProcess = processLevelTwoService.GetNewVersion(p => p.Name == "Integração folha de pagamento").Result;
+      }
+      if (subProcess == null)
+      {
+        view.Messages.Add("Subprocesso de integração não localizado.");
         return view;
       }
       Occupation occupation = string.IsNullOrEmpty(view.Description)
@@ -1596,7 +1604,7 @@ namespace Manager.Services.Specific
           Schooling = group.Schooling,
           Line = 0
         };
-        occupation.Process.Add(processLevelTwo.GetViewList());
+        occupation.Process.Add(subProcess.GetViewList());
       }
       else
       {
@@ -1686,7 +1694,6 @@ namespace Manager.Services.Specific
       return new ViewIntegrationProfileOccupation()
       {
         _id = occupation._id,
-        IdProcessLevelTwo = occupation.Process[0]._id,
         Name = occupation.Name,
         Description = occupation.Description,
         NameGroup = occupation.Group.Name,
@@ -1696,7 +1703,11 @@ namespace Manager.Services.Specific
         Schooling = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Name).ToList(),
         SchoolingComplement = occupation.Schooling.OrderBy(o => o.Order).Select(x => x.Complement).ToList(),
         Messages = view.Messages,
-        Update = view.Update
+        Update = view.Update,
+        Area = occupation.Process[0].ProcessLevelOne.Area.Name,
+        Process = occupation.Process[0].ProcessLevelOne.Name,
+        SubProcess = occupation.Process[0].Name,
+        UpdateSkill = view.UpdateSkill
       };
     }
 
