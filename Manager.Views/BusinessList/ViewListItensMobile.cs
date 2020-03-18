@@ -6,13 +6,15 @@ using System.Text;
 
 namespace Manager.Views.BusinessList
 {
-  public class ViewListItensMobile:_ViewList
-  {
-    public ViewListItensDetailMobile Item { get; set; }
-    public string CommentsManager { get; set; }
-    public string CommentsPerson { get; set; }
-    public List<ViewCrudComment> Comments { get; set; }
-    public EnumStatusView StatusViewManager { get; set; }
-    public EnumStatusView StatusViewPerson { get; set; }
-  }
+    public class ViewListItensMobile : _ViewList
+    {
+        public ViewListItensDetailMobile Item { get; set; }
+        public string CommentsManager { get; set; }
+        public string CommentsPerson { get; set; }
+        public List<ViewCrudComment> Comments { get; set; }
+        public EnumStatusView StatusViewManager { get; set; }
+        public EnumStatusView StatusViewPerson { get; set; }
+        public string Praise { get; set; }
+        public List<ViewCrudPlan> Plans { get; set; }
+    }
 }

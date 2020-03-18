@@ -877,6 +877,7 @@ namespace Manager.Services.Specific
                     CommentsManager = monitoring.CommentsManager,
                     Items = new List<ViewListItensMobile>(),
                     StatusMonitoring = monitoring.StatusMonitoring
+
                 };
 
                 foreach (var item in monitoring.SkillsCompany)
@@ -897,7 +898,9 @@ namespace Manager.Services.Specific
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
-                        StatusViewPerson = item.StatusViewPerson
+                        StatusViewPerson = item.StatusViewPerson,
+                        Praise = item.Praise,
+                        Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
                     {
@@ -928,7 +931,8 @@ namespace Manager.Services.Specific
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
-                        StatusViewPerson = item.StatusViewPerson
+                        StatusViewPerson = item.StatusViewPerson,
+                        Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
                     {
@@ -960,7 +964,8 @@ namespace Manager.Services.Specific
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
-                        StatusViewPerson = item.StatusViewPerson
+                        StatusViewPerson = item.StatusViewPerson,
+                        Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
                     {
