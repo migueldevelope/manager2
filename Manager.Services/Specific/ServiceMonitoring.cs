@@ -950,7 +950,7 @@ namespace Manager.Services.Specific
                         _id = item.Activities._id,
                         Name = item.Activities.Name,
                         Order = item.Activities.Order,
-                        TypeItem = EnumTypeItem.Activitie
+                        TypeItem = (item.TypeAtivitie == EnumTypeAtivitie.Scope) ? EnumTypeItem.Scope : EnumTypeItem.Activitie
                     };
                     result.Item = detail;
 
@@ -990,6 +990,7 @@ namespace Manager.Services.Specific
                     view.Items.Add(result);
                 }
 
+                view.Items = view.Items.OrderBy(p => p.Item.TypeItem).ToList();
                 return view;
             }
             catch (Exception e)
