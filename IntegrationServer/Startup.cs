@@ -167,7 +167,7 @@ namespace IntegrationServer
 
       app.UseAuthentication();
       app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-      app.UseMvc();
+      //app.UseMvc();
       // Ativando middlewares para uso do Swagger
       app.UseSwagger();
       app.UseSwaggerUI(c =>
