@@ -45,6 +45,7 @@
       this.txtPst.Name = "txtPst";
       this.txtPst.Size = new System.Drawing.Size(674, 22);
       this.txtPst.TabIndex = 2;
+      this.txtPst.Text = "D:\\PUCRS\\MAPAS\\";
       // 
       // lblPst
       // 
@@ -133,7 +134,6 @@
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.Name = "ImportarMapasExcel";
       this.Text = "Importação de Mapas de Competência do Microsoft Excel";
-      this.Load += new System.EventHandler(this.ImportarMapasExcel_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 

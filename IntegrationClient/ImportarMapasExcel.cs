@@ -30,10 +30,6 @@ namespace IntegrationClient
     {
       InitializeComponent();
     }
-    private void ImportarMapasExcel_Load(object sender, EventArgs e)
-    {
-      txtPst.Text = Properties.Settings.Default.MapExcelPath;
-    }
     #endregion
 
     #region Objects
@@ -61,8 +57,6 @@ namespace IntegrationClient
         {
           throw new Exception("Informe a pasta de origem");
         }
-        Properties.Settings.Default.MapExcelPath = txtPst.Text;
-        Properties.Settings.Default.Save();
         if (File.Exists(Path.Combine(txtPst.Text, "Tabulacao.xlsx")))
         {
           File.Delete(Path.Combine(txtPst.Text, "Tabulacao.xlsx"));
@@ -313,8 +307,8 @@ namespace IntegrationClient
           }
           line++;
         }
-        // Encontrar a linha inicial das competências específicas
         line++;
+        // Encontrar a linha inicial das competências específicas
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
@@ -329,11 +323,10 @@ namespace IntegrationClient
           }
         }
         // Carregar as competências técnicas
-        line++;
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
-          if (work.Equals(softSkillTextCheck))
+          if (work.Equals(formationTextCheck))
           {
             break;
           }
@@ -382,7 +375,7 @@ namespace IntegrationClient
             break;
           }
           requirement = string.Concat(requirement, work);
-          line++;
+          break;
         }
         viewOccupation.SpecificRequirements = requirement;
         if (chkLjo.Checked)
