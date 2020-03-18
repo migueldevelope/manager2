@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
+using Manager.Data;
+using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
@@ -10,6 +14,11 @@ using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using NAudio.Wave;
+using Tools;
+using Tools.Data;
 
 namespace Mobile.Controllers
 {
@@ -21,6 +30,9 @@ namespace Mobile.Controllers
     public class MonitoringController : DefaultController
     {
         private readonly IServiceMonitoring service;
+        private readonly ServiceGeneric<Attachments> serviceAttachment;
+        private readonly DataContext context;
+        private readonly string blobKey;
 
         #region Constructor
         /// <summary>
@@ -30,8 +42,15 @@ namespace Mobile.Controllers
         /// <param name="contextAccessor">Token de segurança</param>
         public MonitoringController(IServiceMonitoring _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
         {
+            Config conn = XmlConnection.ReadVariablesSystem();
+            context = new DataContext(conn.Server, conn.DataBase);
+            blobKey = conn.BlobKey;
+            serviceAttachment = new ServiceGeneric<Attachments>(context);
+
             service = _service;
+
             service.SetUser(contextAccessor);
+            serviceAttachment.User(contextAccessor);
         }
         #endregion
 
@@ -56,7 +75,7 @@ namespace Mobile.Controllers
         [Authorize]
         [HttpDelete]
         [Route("delete/{idmonitoring}")]
-        public async Task<string> RemoveOnBoarding(string idmonitoring)
+        public async Task<string> RemoveMonitoring(string idmonitoring)
         {
             return await Task.Run(() => service.RemoveMonitoring(idmonitoring));
         }
@@ -442,6 +461,80 @@ namespace Mobile.Controllers
         #endregion
 
         #region Mobile
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idmonitoring"></param>
+        /// <param name="iditem"></param>
+        /// <param name="typeuser"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost("{idmonitoring}/speech/{iditem}/{typeuser}/monitoring")]
+        public async Task<string> PostSpeechRecognitionMonitoring(string idmonitoring, string iditem, EnumUserComment typeuser)
+        {
+            try
+            {
+                foreach (var file in HttpContext.Request.Form.Files)
+                {
+                    var ext = Path.GetExtension(file.FileName).ToLower();
+                    if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+                        return "Bad file type.";
+                }
+
+                List<Attachments> listAttachments = new List<Attachments>();
+                var url = "";
+                foreach (var file in HttpContext.Request.Form.Files)
+                {
+                    Attachments attachment = new Attachments()
+                    {
+                        Extension = ".mp3",
+                        LocalName = file.FileName,
+                        Lenght = file.Length,
+                        Status = EnumStatus.Enabled,
+                        Saved = true
+                    };
+                    await this.serviceAttachment.InsertNewVersion(attachment);
+                    try
+                    {
+                        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+                        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+                        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(serviceAttachment._user._idAccount);
+                        if (await cloudBlobContainer.CreateIfNotExistsAsync())
+                        {
+                            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+                            {
+                                PublicAccess = BlobContainerPublicAccessType.Blob
+                            });
+                        }
+                        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+
+                        blockBlob.Properties.ContentType = "audio/mpeg";
+
+
+                        await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+                        url = blockBlob.Uri.ToString();
+                    }
+                    catch (Exception e)
+                    {
+                        attachment.Saved = false;
+                        await serviceAttachment.Update(attachment, null);
+                        throw e;
+                    }
+                    service.AddCommentsSpeech(idmonitoring, iditem, url, typeuser);
+                    var i = Task.Run(() => SendCommentsSpeech(idmonitoring, iditem, typeuser, url));
+                    listAttachments.Add(attachment);
+                }
+                return url;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -456,5 +549,55 @@ namespace Mobile.Controllers
         }
         #endregion
 
+        #region audio
+
+        private void SendCommentsSpeech(string idonboarding, string iditem, EnumUserComment user, string link)
+        {
+            try
+            {
+
+                var pathspeech = "http://10.0.0.16:5400/";
+                service.UpdateCommentsSpeech(idonboarding, iditem, user, pathspeech, link);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        private async void ConvertMp3ToWav(Stream _inPath_, string _outPath_)
+        {
+            try
+            {
+                using (Mp3FileReader mp3 = new Mp3FileReader(_inPath_))
+                {
+                    using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+                    {
+                        WaveFileWriter.CreateWaveFile(_outPath_, pcm);
+                    }
+                }
+                Stream stream = new StreamReader(_outPath_).BaseStream;
+
+                CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+                CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+                CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(serviceAttachment._user._idAccount);
+                if (await cloudBlobContainer.CreateIfNotExistsAsync())
+                {
+                    await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+                    {
+                        PublicAccess = BlobContainerPublicAccessType.Blob
+                    });
+                }
+                CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(_outPath_.Replace(".wav", ""));
+
+                blockBlob.Properties.ContentType = "audio/wav";
+                await blockBlob.UploadFromStreamAsync(stream);
+                var url = blockBlob.Uri.ToString();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        #endregion
     }
 }

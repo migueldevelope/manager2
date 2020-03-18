@@ -11,12 +11,15 @@ using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.ServiceBus;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
@@ -34,8 +37,11 @@ namespace Manager.Services.Specific
         private readonly ServiceGeneric<Group> serviceGroup;
         private readonly ServiceGeneric<Company> serviceCompany;
         private readonly ServiceGeneric<Person> servicePerson;
+        private readonly ServiceGeneric<Reports> serviceReport;
         private readonly ServiceGeneric<Plan> servicePlan;
         private readonly IServiceControlQueue serviceControlQueue;
+        private readonly IQueueClient queueClient;
+        private readonly IQueueClient queueClientReturn;
 
         private readonly string path;
 
@@ -54,9 +60,12 @@ namespace Manager.Services.Specific
                 serviceGroup = new ServiceGeneric<Group>(context);
                 servicePerson = new ServiceGeneric<Person>(context);
                 servicePlan = new ServiceGeneric<Plan>(context);
+                serviceReport = new ServiceGeneric<Reports>(context);
                 serviceCompany = new ServiceGeneric<Company>(context);
                 serviceControlQueue = _serviceControlQueue;
                 path = pathToken;
+                queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "audios");
+                queueClientReturn = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "audiosreturn");
             }
             catch (Exception e)
             {
@@ -77,6 +86,7 @@ namespace Manager.Services.Specific
             serviceCompany._user = _user;
             servicePerson._user = _user;
             servicePlan._user = _user;
+            serviceReport._user = _user;
         }
         public void SetUser(BaseUser user)
         {
@@ -91,6 +101,7 @@ namespace Manager.Services.Specific
             serviceGroup._user = user;
             servicePerson._user = user;
             servicePlan._user = user;
+            serviceReport._user = user;
         }
         #endregion
 
@@ -1322,6 +1333,78 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public void UpdateCommentsSpeech(string idmonitoring, string iditem, EnumUserComment user, string path, string link)
+        {
+            try
+            {
+
+                var viewreport = new ViewReport()
+                {
+                    Data = link,
+                    Name = "audiomonitoring",
+                    _idReport = NewReport("audiomonitoring"),
+                    _idAccount = _user._idAccount
+                };
+                SendMessageAsync(viewreport);
+                var report = new ViewCrudReport();
+
+                while (report.StatusReport == EnumStatusReport.Open)
+                {
+                    var rest = serviceReport.GetNewVersion(p => p._id == viewreport._idReport).Result;
+                    report.StatusReport = rest.StatusReport;
+                    report.Link = rest.Link;
+                }
+
+                string comments = "";
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(path);
+                    var resultMail = client.GetAsync("speech/" + report.Link).Result;
+                    comments = resultMail.Content.ReadAsStringAsync().Result;
+                }
+
+                var view = new ViewCrudComment()
+                {
+                    CommentsSpeech = comments,
+                    Date = DateTime.Now,
+                    StatusView = EnumStatusView.None,
+                    UserComment = user,
+                    SpeechLink = report.Link
+                };
+
+                UpdateComments(idmonitoring, iditem, view);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user)
+        {
+            try
+            {
+
+                var view = new ViewCrudComment()
+                {
+                    CommentsSpeech = "",
+                    Date = DateTime.Now,
+                    StatusView = EnumStatusView.None,
+                    UserComment = user,
+                    SpeechLink = link
+                };
+                AddComments(idmonitoring, iditem, view);
+                return "ok";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
         {
             try
@@ -1871,6 +1954,39 @@ namespace Manager.Services.Specific
 
         #region private
 
+        private string NewReport(string name)
+        {
+            try
+            {
+                var report = new Reports()
+                {
+                    StatusReport = EnumStatusReport.Open,
+                    Date = DateTime.Now,
+                    Name = name
+                };
+
+                return serviceReport.InsertNewVersion(report).Result._id;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        private void SendMessageAsync(ViewReport view)
+        {
+            try
+            {
+                dynamic result = view;
+                var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result)));
+                queueClient.SendAsync(message);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
         private void SendQueue(string id, string idperson, List<string> countpraise)
         {
             try
@@ -2136,6 +2252,57 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public void RegisterOnMessageHandlerAndReceiveMesssages()
+        {
+            try
+            {
+                var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+                {
+                    MaxConcurrentCalls = 1,
+                    AutoComplete = false
+                };
+
+                queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        private async Task ProcessMessagesAsync(Message message, CancellationToken token)
+        {
+            try
+            {
+                var view = JsonConvert.DeserializeObject<ViewCrudReport>(Encoding.UTF8.GetString(message.Body));
+                SetUser(new BaseUser()
+                {
+                    _idAccount = view._idAccount
+                });
+
+                if (view.StatusReport != EnumStatusReport.Open)
+                {
+                    Reports report = serviceReport.GetFreeNewVersion(p => p._id == view._id).Result;
+                    report.StatusReport = view.StatusReport;
+                    report.Link = view.Link;
+                    serviceReport.UpdateAccount(report, null).Wait();
+
+                    await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e.Message;
+                await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+            }
+
+        }
+        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        {
+            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            return Task.CompletedTask;
+        }
+
 
         #endregion
 
