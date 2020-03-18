@@ -34,9 +34,10 @@ namespace Reports
            .UseUrls("http://0.0.0.0:5208/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
-            .UseKestrel(opts =>
-                opts.AllowSynchronousIO = true
-              )
+            .ConfigureKestrel(serverOptions =>
+            {
+                // Set properties and call methods on options
+            })
             .UseStartup<Startup>()
             .Build();
   }

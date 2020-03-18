@@ -34,9 +34,10 @@ namespace Training
            .UseUrls("http://0.0.0.0:5207/")
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseIISIntegration()
-            .UseKestrel(opts =>
-                opts.AllowSynchronousIO = true
-              )
+             .ConfigureKestrel(serverOptions =>
+             {
+                 // Set properties and call methods on options
+             })
             .UseStartup<Startup>()
             .Build();
   }
