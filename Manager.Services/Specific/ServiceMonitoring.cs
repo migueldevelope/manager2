@@ -1471,6 +1471,71 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public string AddPraise(string idmonitoring, string iditem, ViewText text)
+        {
+            try
+            {
+                var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+                var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+
+                if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+                {
+                    if (person.User._id == _user._idUser)
+                    {
+                        monitoring.DateBeginPerson = DateTime.Now;
+                        monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+                    }
+                    else
+                    {
+                        monitoring.DateBeginManager = DateTime.Now;
+                        monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+                    }
+                }
+                foreach (var item in monitoring.Activities)
+                {
+                    if (item._id == iditem)
+                    {
+                        item.Praise = text.Text;
+                        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+                        serviceMonitoring.Update(monitoring, null).Wait();
+
+                        return text.Text;
+                    }
+                }
+
+                foreach (var item in monitoring.Schoolings)
+                {
+                    if (item._id == iditem)
+                    {
+                        item.Praise = text.Text;
+                        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+                        serviceMonitoring.Update(monitoring, null).Wait();
+
+                        return text.Text;
+                    }
+                }
+
+
+                foreach (var item in monitoring.SkillsCompany)
+                {
+                    if (item._id == iditem)
+                    {
+                        item.Praise = text.Text;
+                        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+                        serviceMonitoring.Update(monitoring, null).Wait();
+
+                        return text.Text;
+                    }
+                }
+                return "";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         public List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
         {
             try
