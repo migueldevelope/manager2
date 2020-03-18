@@ -163,7 +163,7 @@ namespace ManagerMessages
     /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("x-total-count"));
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
