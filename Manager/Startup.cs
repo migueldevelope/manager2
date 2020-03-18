@@ -186,7 +186,7 @@ namespace Manager
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder.WithOrigins("http://localhosts/*", "10.0.0.16", "https://test.analisa.solutions/*")
-                    //builder => builder.AllowAnyOrigin()
+                     //builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithExposedHeaders("x-total-count")
@@ -241,7 +241,7 @@ namespace Manager
         /// <param name="env">Ambiente de hospedagem</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors("AllowAll");
+            //app.UseCors("AllowAll");
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
