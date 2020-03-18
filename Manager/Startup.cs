@@ -185,7 +185,9 @@ namespace Manager
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("*")
+                    //builder => builder.WithOrigins("*")
+                    builder =>
+                    builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithExposedHeaders("x-total-count")
