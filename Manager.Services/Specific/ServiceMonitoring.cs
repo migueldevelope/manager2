@@ -943,6 +943,7 @@ namespace Manager.Services.Specific
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
                         StatusViewPerson = item.StatusViewPerson,
+                        Praise = item.Praise,
                         Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
@@ -976,6 +977,7 @@ namespace Manager.Services.Specific
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
                         StatusViewPerson = item.StatusViewPerson,
+                        Praise = item.Praise,
                         Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
