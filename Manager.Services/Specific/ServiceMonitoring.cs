@@ -1711,6 +1711,29 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments)
+        {
+            try
+            {
+                var onboarding = serviceMonitoring.GetNewVersion(p => p._id == idonboarding).Result;
+                if (userComment == EnumUserComment.Person)
+                    onboarding.CommentsPerson = comments.Comments;
+                else if (userComment == EnumUserComment.Manager)
+                    onboarding.CommentsManager = comments.Comments;
+                else
+                    onboarding.CommentsEnd = comments.Comments;
+
+                var i = serviceMonitoring.Update(onboarding, null);
+
+                return "ok";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public List<ViewCrudComment> GetListComments(string idmonitoring, string iditem)
         {
             try
@@ -1727,7 +1750,8 @@ namespace Manager.Services.Specific
                                 Comments = p.Comments,
                                 Date = p.Date,
                                 StatusView = p.StatusView,
-                                UserComment = p.UserComment
+                                UserComment = p.UserComment,
+                                SpeechLink = p.SpeechLink
                             }).ToList();
                     }
                 }
@@ -1742,7 +1766,8 @@ namespace Manager.Services.Specific
                                 Comments = p.Comments,
                                 Date = p.Date,
                                 StatusView = p.StatusView,
-                                UserComment = p.UserComment
+                                UserComment = p.UserComment,
+                                SpeechLink = p.SpeechLink
                             }).ToList();
                     }
                 }
@@ -1758,7 +1783,8 @@ namespace Manager.Services.Specific
                                 Comments = p.Comments,
                                 Date = p.Date,
                                 StatusView = p.StatusView,
-                                UserComment = p.UserComment
+                                UserComment = p.UserComment,
+                                SpeechLink = p.SpeechLink
                             }).ToList();
                     }
                 }

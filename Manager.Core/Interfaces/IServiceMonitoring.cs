@@ -53,6 +53,7 @@ namespace Manager.Core.Interfaces
         string AddPraise(string idmonitoring, string iditem, ViewText text);
         string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user);
         void UpdateCommentsSpeech(string idmonitoring, string iditem, EnumUserComment user, string path, string link);
+        string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments);
         #endregion
 
     }
