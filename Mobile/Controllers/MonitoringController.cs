@@ -547,6 +547,22 @@ namespace Mobile.Controllers
         {
             return await Task.Run(() => service.GetMonitoringsMobile(id));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="comments"></param>
+        /// <param name="idonboarding"></param>
+        /// <param name="usercomment"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPut]
+        [Route("updatecommentsgeral/{idonboarding}/{usercomment}")]
+        public async Task<IActionResult> UpdateComments([FromBody]ViewCrudCommentEnd comments, string idonboarding, EnumUserComment usercomment)
+        {
+            return await Task.Run(() => Ok(service.UpdateCommentsEndMobile(idonboarding, usercomment, comments)));
+        }
+
         #endregion
 
         #region audio
