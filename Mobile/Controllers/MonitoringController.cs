@@ -606,6 +606,7 @@ namespace Mobile.Controllers
                 CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(_outPath_.Replace(".wav", ""));
 
                 blockBlob.Properties.ContentType = "audio/wav";
+                
                 await blockBlob.UploadFromStreamAsync(stream);
                 var url = blockBlob.Uri.ToString();
             }
