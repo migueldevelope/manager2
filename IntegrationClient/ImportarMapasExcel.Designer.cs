@@ -37,6 +37,7 @@
       this.chkCom = new System.Windows.Forms.CheckBox();
       this.chkAre = new System.Windows.Forms.CheckBox();
       this.chkSub = new System.Windows.Forms.CheckBox();
+      this.lblFile = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // txtPst
@@ -118,11 +119,20 @@
       this.chkSub.Text = "Localizar nas subpastas?";
       this.chkSub.UseVisualStyleBackColor = true;
       // 
+      // lblFile
+      // 
+      this.lblFile.Location = new System.Drawing.Point(114, 202);
+      this.lblFile.Name = "lblFile";
+      this.lblFile.Size = new System.Drawing.Size(674, 177);
+      this.lblFile.TabIndex = 9;
+      this.lblFile.Text = "lblImpCargo";
+      // 
       // ImportarMapasExcel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
+      this.Controls.Add(this.lblFile);
       this.Controls.Add(this.chkSub);
       this.Controls.Add(this.chkAre);
       this.Controls.Add(this.chkCom);
@@ -150,5 +160,6 @@
     private System.Windows.Forms.CheckBox chkCom;
         private System.Windows.Forms.CheckBox chkAre;
         private System.Windows.Forms.CheckBox chkSub;
+        private System.Windows.Forms.Label lblFile;
     }
 }

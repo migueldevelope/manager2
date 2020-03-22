@@ -105,6 +105,7 @@ namespace IntegrationClient
     private string DictionarySkill(string item)
     {
       item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim().ToUpper();
+      item = item.Replace("  ", " ");
       item = item.Replace("POLITICA", "POLÍTICA");
       item = item.Replace("LEGISLACAO", "LEGISLAÇÃO");
       item = item.Replace("TRIBUTARIA", "TRIBUTÁRIA");
@@ -188,11 +189,90 @@ namespace IntegrationClient
       item = item.Equals("TRATAMENTO DE RESSIDUOS E EFLENTES") ? "TRATAMENTO DE RESÍDUOS E EFLUNTES" : item;
       item = item.Equals("TRATAMENTO DE RESSIDUOS E EFLUNTES") ? "TRATAMENTO DE RESÍDUOS E EFLUNTES" : item;
       item = item.Equals("TRATAMENTO DE EFLUENTES") ? "TRATAMENTO DE RESSIDUOS E EFLUNTES" : item;
+      // PUCRS
+      item = item.Equals("ANÁLISE ECONOMICO-FINANCEIRO") ? "ANÁLISE ECONÔMICA E FINANCEIRA" : item;
+      item = item.Equals("ÁREA DE CONHECIMENTO IPR") ? "ÁREAS DE CONHECIMENTO DO IPR" : item;
+      item = item.Equals("ÁREA DE CONHECIMENTO DO IPR") ? "ÁREAS DE CONHECIMENTO DO IPR" : item;
+      item = item.Equals("AREAS DE CONHECIMENTO") ? "ÁREAS DE CONHECIMENTO" : item;
+      item = item.Equals("ÁREAS DE CONHECIMENTO  ESCOLAS / CURSO") ? "ÁREAS DE CONHECIMENTO DA SUA ESCOLA / CURSO" : item;
+      item = item.Equals("ÁREAS DE CONHECIMENTO DA SUA ESCOLA/CURSO") ? "ÁREAS DE CONHECIMENTO DA SUA ESCOLA / CURSO" : item;
+      item = item.Equals("ÁREAS DE CONHECIMENTO DO EMPREENDEDORISMO") ? "ÁREAS DE CONHECIMENTO DO EMPREENDEDORISMO" : item;
+      item = item.Equals("AVALIAÇÃO | IMPACTO") ? "AVALIAÇÃO E IMPACTO" : item;
+      item = item.Equals("BOAS PRÁTICAS DE LABORATÓRIO") ? "BOAS PRÁTICAS DE LABORATÓRIO (BPL)" : item;
+      item = item.Equals("C APTAÇÃO DE PROJETOS") ? "CAPTAÇÃO DE PROJETOS" : item;
+      item = item.Equals("CÓDIGO DEFESA DO CONSUMIDOR") ? "CÓDIGO DE DEFESA DO CONSUMIDOR" : item;
+      item = item.Equals("CONNHECIMENTO ESPECÍFICO") ? "CONHECIMENTO ESPECÍFICO" : item;
+      item = item.Equals("CURSOS DE CUMPLIANCE") ? "CURSOS DE COMPLIANCE" : item;
+      item = item.Equals("DEMOSTRAÇÕES FINANCEIRAS") ? "DEMONSTRAÇÕES FINANCEIRAS" : item;
+      item = item.Equals("DESENVOLVER | WEB") ? "DESENVOLVIMENTO WEB" : item;
+      item = item.Equals("DOMINIO PACOTE OFFICE") ? "APLICATIVOS OFFICE" : item;
+      item = item.Equals("ELÉTRICA - AVANÇADA") ? "ELÉTRICA AVANÇADA" : item;
+      item = item.Equals("ESTRATÉGIA E MARKETING") ? "ESTRATÉGIA DE MARKETING" : item;
+      item = item.Equals("EXCELL AVANÇADO") ? "EXCEL AVANÇADO" : item;
+      item = item.Equals("BI - BUSINESS INTELLIGENCE") ? "FERRAMENTAS BI - BUSINESS INTELLIGENCE" : item;
+      item = item.Equals("FERRAMENTAS BI") ? "FERRAMENTAS BI - BUSINESS INTELLIGENCE" : item;
+      item = item.Equals("FERAMENTAS GRÁFICAS") ? "FERRAMENTAS GRÁFICAS" : item;
+      item = item.Equals("GESTÃO DE PESSOAL") ? "GESTÃO DE PESSOAS" : item;
+      item = item.Equals("GESTÃO DE PROJETO") ? "GESTÃO DE PROJETOS" : item;
+      item = item.Equals("GESTÃO PESSOAS") ? "GESTÃO DE PESSOAS" : item;
+      item = item.Equals("GOVERNAÇA, DIRETRIZES E .....") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNAÇA, DIRETRIZES.....") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA  E DOCUMENTOS INSTITUCIONAIS") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA E DIRETRIZES") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES E .....") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES E DOCUMENTOS") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES E DOCUMENTOS  INSTITUCIONAIS") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSITUCIONAIS") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS.") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUIONAIS") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("GOVERNANÇA, DIRETTRIZES....") ? "GOVERNANÇA, DIRETRIZES E DOCUMENTOS INSTITUCIONAIS" : item;
+      item = item.Equals("HIDRAÚLICA") ? "HIDRÁULICA" : item;
+      item = item.Equals("INFRAESTRUTURA DE EVENTOS ;") ? "INFRAESTRUTURA DE EVENTOS" : item;
+      item = item.Equals("INGLES INTERMADIÁRIO") ? "INGLÊS INTERMEDIÁRIO" : item;
+      item = item.Equals("INGLÊS TÉCNIC0") ? "INGLÊS TÉCNICO" : item;
+      item = item.Equals("INGLÊS OU ESPANHOL INTERMEDIÁRIO") ? "INGLÊS/ESPANHOL INTERMEDIÁRIO" : item;
+      item = item.Equals("LEGISLAÇÃO APLIACADA NA CONSTRUCAO CIVIL") ? "LEGISLAÇÃO APLICADA NA CONSTRUÇÃO CIVIL" : item;
+      item = item.Equals("LEGISLAÇÃO APLICADA NA CONSTRUCAO CIVIL") ? "LEGISLAÇÃO APLICADA NA CONSTRUÇÃO CIVIL" : item;
+      item = item.Equals("LEGISLAÇÃO CÍVEL") ? "LEGISLAÇÃO CIVEL" : item;
+      item = item.Equals("LEGISLAÇÃO CÍVEL E PROCESSUAL CÍVEL") ? "LEGISLAÇÃO CIVEL" : item;
+      item = item.Equals("LEGISLAÇÃO DOS ORÇÃOS DE FOMENTO, CONEP") ? "LEGISLAÇÃO DOS ÓRGÃOS DE FOMENTO, CONEP" : item;
+      item = item.Equals("LEGISLAÇÃO SUBVENÇÕES") ? "LEGISLAÇÃO SUBVENÇÃO PÚBLICA" : item;
+      item = item.Equals("LINGUA ESPANHOLA AVANÇADA") ? "ESPANHOL AVANÇADO" : item;
+      item = item.Equals("LINGUA INGLESA") ? "INGLÊS BÁSICO" : item;
+      item = item.Equals("LÍNGUA INGLESA") ? "INGLÊS BÁSICO" : item;
+      item = item.Equals("LINGUA PORTUGUESA") ? "LÍNGUA PORTUGUESA" : item;
+      item = item.Equals("LINGUAGEM DE PROGRAMAÇÃO") ? "LINGUAGENS DE PROGRAMAÇÃO" : item;
+      item = item.Equals("MECÂNICA - AVANÇADA") ? "MECÂNICA AVANÇADA" : item;
+      item = item.Equals("METODOLOGIA EM ANÁLISES CLÍNICAS") ? "METODOLOGIA DE ANÁLISES CLÍNICAS" : item;
+      item = item.Equals("METODOLOGIAS DE ANÁLISES CLINICAS") ? "METODOLOGIA DE ANÁLISES CLÍNICAS" : item;
+      item = item.Equals("METOLODOGIA DE TESTES") ? "METODOLOGIA DE TESTES" : item;
+      item = item.Equals("METOLOGIAS ATIVAS") ? "METODOLOGIAS ATIVAS" : item;
+      item = item.Equals("METODOLOGIA ATIVAS") ? "METODOLOGIAS ATIVAS" : item;
+      item = item.Equals("NR-11") ? "NR 11" : item;
+      item = item.Equals("NR35") ? "NR 35" : item;
+      item = item.Equals("OFFICE") ? "APLICATIVOS OFFICE" : item;
+      item = item.Equals("PACOTTE OFFICE") ? "APLICATIVOS OFFICE" : item;
+      item = item.Equals("PACOTE OFFICE, PRINCIPALMENTE EXCEL") ? "APLICATIVOS OFFICE" : item;
+      item = item.Equals("PACOTE OFFICE | WORKFLOW") ? "APLICATIVOS OFFICE | WORKFLOW" : item;
+      item = item.Equals("PLATAFORMAS E ADMINISTRAÇÃO DE SUPORTE") ? "PLATAFORMAS DE ADMINISTRAÇÃO E SUPORTE" : item;
+      item = item.Equals("PORTIFOLIO DE SERVIÇOS") ? "PORTIFÓLIO DE SERVIÇOS" : item;
+      item = item.Equals("PRODUÇÕES AUDIOVISUAIS") ? "PRODUÇÃO AUDIOVISUAL" : item;
+      item = item.Equals("PROSPECÇÂO E FIDELIZAÇÂO") ? "PROSPECÇÃO E FIDELIZAÇÃO" : item;
+      item = item.Equals("PROTOTIPAÇÃO | DESENVOLVIMENTO") ? "PROTOTIPAÇÃO E DESENVOLVIMENTO" : item;
+      item = item.Equals("REDAÇÃO  EMPRESARIAL") ? "REDAÇÃO EMPRESARIAL" : item;
+      item = item.Equals("SISPROUNI") ? "SISTEMA SISPROUNI" : item;
+      item = item.Equals("SISTEMAS DE ADM. PESSOAL") ? "SISTEMAS DE ADMINISTRAÇÃO DE PESSOAL" : item;
+      item = item.Equals("SISTEMAS DE GESTÃO DE LABORATÓRIO") ? "SISTEMAS DE GESTÃO DE LABORATÓRIOS" : item;
+      item = item.Equals("TECNOLOGIAS DA INFORMAÇÃO") ? "TECNOLOGIA DA INFORMAÇÃO" : item;
+      item = item.Equals("TEORIA E TÉCNICAS") ? "TEORIA E TÉCNICA" : item;
       return item;
     }
     private string DictionarySchooling(string item)
     {
       item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim().ToUpper();
+      item = item.Replace("  ", " ");
       item = item.Replace("TECNICO", "TÉCNICO");
       item = item.Replace("MEDIO", "MÉDIO");
       item = item.Replace("ENSINO MÉDIO EM ANDAMENTO", "ENSINO MÉDIO INCOMPLETO");
@@ -211,6 +291,29 @@ namespace IntegrationClient
       item = item.Replace("PÓS-GRADUAÇÃO COMPLETO", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("PÓS - GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
       item = item.Replace("PÓS GRADUAÇÃO COMPLETA NAS ÁREAS DE INTERESSE DO NEGÓCIO", "PÓS GRADUAÇÃO COMPLETA");
+      // PUCRS
+      item = item.Equals("ESPECIALIZAÇÃO COMPLETO") ? "PÓS GRADUAÇÃO COMPLETA" : item;
+      item = item.Equals("ESPECIALIZAÇÃO COMPLETA") ? "PÓS GRADUAÇÃO COMPLETA" : item;
+      item = item.Equals("ESPECIALIZAÇÃO") ? "PÓS GRADUAÇÃO COMPLETA" : item;
+      item = item.Equals("GRADUAÇÃO") ? "ENSINO SUPERIOR COMPLETO" : item;
+      item = item.Equals("ENSINO FUNDAMENTAL") ? "ENSINO FUNDAMENTAL COMPLETO" : item;
+      item = item.Equals("ENSINO TÉCNICO") ? "TÉCNICO COMPLETO" : item;
+      item = item.Equals("ENSINO SUPERIOR") ? "ENSINO SUPERIOR COMPLETO" : item;
+      item = item.Equals("MESTRADO") ? "MESTRADO COMPLETO" : item;
+      item = item.Equals("ENSINO MÉDIO") ? "ENSINO MÉDIO COMPLETO" : item;
+      item = item.Equals("ENSINO SUPERIOR IMCOMPLETO") ? "ENSINO SUPERIOR INCOMPLETO" : item;
+      item = item.Equals("MESTRADO E/OU DOUTORADO.") ? "PÓS GRADUAÇÃO COMPLETA" : item;
+      item = item.Equals("ENSINO SUPERIOR COMPLETO/ DOUTORADO") ? "PÓS GRADUAÇÃO COMPLETA" : item;
+      return item;
+    }
+    private string DictionaryGroup(string item)
+    {
+      item = item.Replace((char)10, ' ').Replace((char)13, ' ').Trim();
+      item = item.Replace("  ", " ");
+      item = item.Replace("Assessor  Tec / Adm", "Especialista | Técnico Administrativo");
+      item = item.Replace("Assessor Tec/Adm", "Especialista | Técnico Administrativo");
+      item = item.Replace("Assessor Professor", "Especialista | Professor");
+      item = item.Replace("Assessor de Reitoria", "Assessor Reitoria");
       return item;
     }
     #endregion
@@ -218,13 +321,15 @@ namespace IntegrationClient
     #region Excel
     private void ImportFileExcel(string file, IntegrationApi infraIntegration)
     {
+      lblFile.Text = file;
+      Refresh();
       string cellName = "C5";
       // Utilizado para identificar a quebra de cargo por área (exemplo Bertolini)
       // Gerente Comercial - BSA
       //    Nome na celula C5: Gerente Comercial,
       //    Complemento na célula K5: - BSA, exatamente igual ao campo Description, inclusive com os espaços na frente
       // Se não existir complemento deixar em branco ""
-      string cellNameComplement = "";
+      string cellNameComplement = "K5";
       string cellGroup = "H5";
       string cellColumnCheck = "A";
       // Responsabilidade
@@ -278,14 +383,28 @@ namespace IntegrationClient
       try
       {
         excelPst = excelApp.Workbooks.Open(file, false);
-        excelPln = excelPst.Worksheets[1];
+        try
+        {
+          excelPln = excelPst.Worksheets["Mapa Competências "];
+        }
+        catch (Exception)
+        {
+          try
+          {
+            excelPln = excelPst.Worksheets["Mapa Competências"];
+          }
+          catch (Exception)
+          {
+            excelPln = excelPst.Worksheets[1];
+          }
+        }
         excelPln.Activate();
         viewOccupation.Name = excelPln.Range[cellName].Value.ToString().Trim();
         if (!string.IsNullOrEmpty(cellNameComplement))
         {
           viewOccupation.Description = excelPln.Range[cellNameComplement].Value ?? string.Empty;
         }
-        viewOccupation.NameGroup = excelPln.Range[cellGroup].Value.ToString();
+        viewOccupation.NameGroup = DictionaryGroup(excelPln.Range[cellGroup].Value.ToString());
 
         if (!(excelPln.Range[string.Format("{0}{1}", responsibilityCellColumn, responsibilityCellLine)].Value).ToString().Trim().ToUpper().Equals(responsibilityTextCheck.ToUpper()))
         {
@@ -296,7 +415,7 @@ namespace IntegrationClient
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
-          if (work.Equals(hardSkillTextCheck))
+          if (work.Equals(softSkillTextCheck))
           {
             break;
           }
@@ -312,7 +431,7 @@ namespace IntegrationClient
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
-          if (work.Equals(hardSkillTextTypeCheck))
+          if (work.Equals(hardSkillTextTypeCheck) || work.Equals("SKILLS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase))
           {
             break;
           }
@@ -399,6 +518,13 @@ namespace IntegrationClient
           Description = viewOccupation.Description,
           Status = viewOccupation.Messages.Count > 0 ? "Erro" : string.IsNullOrEmpty(viewOccupation._id) ? "Não Atualizado" : "Ok"
         };
+        if (viewOccupation.Messages.Count > 0)
+        {
+          if (viewOccupation.Messages[0].IndexOf("competência") == -1 && viewOccupation.Messages[0].IndexOf("escolaridade") == -1)
+          {
+            occupation.Status = viewOccupation.Messages[0];
+          }
+        }
         if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name && p.Description == viewOccupation.Description) == null)
         {
           occupations.Add(occupation);
@@ -457,7 +583,12 @@ namespace IntegrationClient
         foreach (string item in viewOccupation.Messages)
         {
           string[] itemAux = item.Split('@');
-          if (itemAux[1].IndexOf("competência") != -1)
+          string key = string.Empty;
+          if (itemAux.Count() == 2)
+          {
+            key = itemAux[1];
+          }
+          if (key.IndexOf("competência") != -1)
           {
             var index = skills.FindIndex(p => p.Name.Equals(itemAux[0]));
             if (index == -1)
@@ -479,28 +610,15 @@ namespace IntegrationClient
               SkillName = itemAux[0]
             });
           }
-          else
+          if (key.IndexOf("escolaridade") != -1)
           {
-            if (itemAux[1].IndexOf("cadastrada") != -1)
+            schoolings.Add(new SchoolingStatistic()
             {
-              schoolings.Add(new SchoolingStatistic()
-              {
-                Name = itemAux[0],
-                Register = false,
-                Found = false,
-                Profile = false
-              });
-            }
-            else
-            {
-              schoolings.Add(new SchoolingStatistic()
-              {
-                Name = itemAux[0],
-                Register = true,
-                Found = false,
-                Profile = false
-              });
-            }
+              Name = itemAux[0],
+              Register = false,
+              Found = false,
+              Profile = false
+            });
             occupationSchoolings.Add(new OccupationSchoolingStatistic()
             {
               FileName = file,
