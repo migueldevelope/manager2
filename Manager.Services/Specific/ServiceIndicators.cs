@@ -1694,8 +1694,11 @@ namespace Manager.Services.Specific
                 {
                     var countonboardings = serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & (p.StatusOnBoarding == EnumStatusOnBoarding.WaitManager || p.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager)).Result;
                     var countmonitorings = serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & (p.StatusMonitoring == EnumStatusMonitoring.WaitManager || p.StatusMonitoring == EnumStatusMonitoring.InProgressManager)).Result;
-                    onboardings += countonboardings;
-                    monitorings += countmonitorings;
+                    if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
+                        onboardings += countonboardings;
+
+                    if (item.TypeJourney == EnumTypeJourney.Monitoring)
+                        monitorings += countmonitorings;
                     if (((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation)) && (countonboardings == 0) && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0))
                     {
                         onboardings += 1;

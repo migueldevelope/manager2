@@ -11,12 +11,15 @@ using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.ServiceBus;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Manager.Services.Specific
@@ -34,8 +37,11 @@ namespace Manager.Services.Specific
         private readonly ServiceGeneric<Group> serviceGroup;
         private readonly ServiceGeneric<Company> serviceCompany;
         private readonly ServiceGeneric<Person> servicePerson;
+        private readonly ServiceGeneric<Reports> serviceReport;
         private readonly ServiceGeneric<Plan> servicePlan;
         private readonly IServiceControlQueue serviceControlQueue;
+        private readonly IQueueClient queueClient;
+        private readonly IQueueClient queueClientReturn;
 
         private readonly string path;
 
@@ -54,9 +60,12 @@ namespace Manager.Services.Specific
                 serviceGroup = new ServiceGeneric<Group>(context);
                 servicePerson = new ServiceGeneric<Person>(context);
                 servicePlan = new ServiceGeneric<Plan>(context);
+                serviceReport = new ServiceGeneric<Reports>(context);
                 serviceCompany = new ServiceGeneric<Company>(context);
                 serviceControlQueue = _serviceControlQueue;
                 path = pathToken;
+                queueClient = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "audios");
+                queueClientReturn = new QueueClient(serviceControlQueue.ServiceBusConnectionString(), "audiosreturn");
             }
             catch (Exception e)
             {
@@ -77,6 +86,7 @@ namespace Manager.Services.Specific
             serviceCompany._user = _user;
             servicePerson._user = _user;
             servicePlan._user = _user;
+            serviceReport._user = _user;
         }
         public void SetUser(BaseUser user)
         {
@@ -91,6 +101,7 @@ namespace Manager.Services.Specific
             serviceGroup._user = user;
             servicePerson._user = user;
             servicePlan._user = user;
+            serviceReport._user = user;
         }
         #endregion
 
@@ -877,6 +888,7 @@ namespace Manager.Services.Specific
                     CommentsManager = monitoring.CommentsManager,
                     Items = new List<ViewListItensMobile>(),
                     StatusMonitoring = monitoring.StatusMonitoring
+
                 };
 
                 foreach (var item in monitoring.SkillsCompany)
@@ -897,13 +909,15 @@ namespace Manager.Services.Specific
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
-                        StatusViewPerson = item.StatusViewPerson
+                        StatusViewPerson = item.StatusViewPerson,
+                        Praise = item.Praise,
+                        Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
                     {
                         _id = item.Skill._id,
                         Name = item.Skill.Name,
-                        TypeItem = EnumTypeItem.Activitie
+                        TypeItem = EnumTypeItem.SkillCompany
                     };
                     result.Item = detail;
 
@@ -928,14 +942,16 @@ namespace Manager.Services.Specific
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
-                        StatusViewPerson = item.StatusViewPerson
+                        StatusViewPerson = item.StatusViewPerson,
+                        Praise = item.Praise,
+                        Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
                     {
                         _id = item.Activities._id,
                         Name = item.Activities.Name,
                         Order = item.Activities.Order,
-                        TypeItem = EnumTypeItem.Activitie
+                        TypeItem = (item.TypeAtivitie == EnumTypeAtivitie.Scope) ? EnumTypeItem.Scope : EnumTypeItem.Activitie
                     };
                     result.Item = detail;
 
@@ -960,20 +976,23 @@ namespace Manager.Services.Specific
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
                         StatusViewManager = item.StatusViewManager,
-                        StatusViewPerson = item.StatusViewPerson
+                        StatusViewPerson = item.StatusViewPerson,
+                        Praise = item.Praise,
+                        Plans = item.Plans
                     };
                     var detail = new ViewListItensDetailMobile()
                     {
                         _id = item.Schooling._id,
                         Name = item.Schooling.Name,
                         Order = item.Schooling.Order,
-                        TypeItem = EnumTypeItem.Activitie
+                        TypeItem = EnumTypeItem.Schooling
                     };
                     result.Item = detail;
 
                     view.Items.Add(result);
                 }
 
+                view.Items = view.Items.OrderBy(p => p.Item.TypeItem).ToList();
                 return view;
             }
             catch (Exception e)
@@ -1317,6 +1336,78 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public void UpdateCommentsSpeech(string idmonitoring, string iditem, EnumUserComment user, string path, string link)
+        {
+            try
+            {
+
+                var viewreport = new ViewReport()
+                {
+                    Data = link,
+                    Name = "audiomonitoring",
+                    _idReport = NewReport("audiomonitoring"),
+                    _idAccount = _user._idAccount
+                };
+                SendMessageAsync(viewreport);
+                var report = new ViewCrudReport();
+
+                while (report.StatusReport == EnumStatusReport.Open)
+                {
+                    var rest = serviceReport.GetNewVersion(p => p._id == viewreport._idReport).Result;
+                    report.StatusReport = rest.StatusReport;
+                    report.Link = rest.Link;
+                }
+
+                string comments = "";
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(path);
+                    var resultMail = client.GetAsync("speech/" + report.Link).Result;
+                    comments = resultMail.Content.ReadAsStringAsync().Result;
+                }
+
+                var view = new ViewCrudComment()
+                {
+                    CommentsSpeech = comments,
+                    Date = DateTime.Now,
+                    StatusView = EnumStatusView.None,
+                    UserComment = user,
+                    SpeechLink = report.Link
+                };
+
+                UpdateComments(idmonitoring, iditem, view);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user)
+        {
+            try
+            {
+
+                var view = new ViewCrudComment()
+                {
+                    CommentsSpeech = "",
+                    Date = DateTime.Now,
+                    StatusView = EnumStatusView.None,
+                    UserComment = user,
+                    SpeechLink = link
+                };
+                AddComments(idmonitoring, iditem, view);
+                return "ok";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
         {
             try
@@ -1466,6 +1557,71 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public string AddPraise(string idmonitoring, string iditem, ViewText text)
+        {
+            try
+            {
+                var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+                var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+
+                if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+                {
+                    if (person.User._id == _user._idUser)
+                    {
+                        monitoring.DateBeginPerson = DateTime.Now;
+                        monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+                    }
+                    else
+                    {
+                        monitoring.DateBeginManager = DateTime.Now;
+                        monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+                    }
+                }
+                foreach (var item in monitoring.Activities)
+                {
+                    if (item._id == iditem)
+                    {
+                        item.Praise = text.Text;
+                        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+                        serviceMonitoring.Update(monitoring, null).Wait();
+
+                        return text.Text;
+                    }
+                }
+
+                foreach (var item in monitoring.Schoolings)
+                {
+                    if (item._id == iditem)
+                    {
+                        item.Praise = text.Text;
+                        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+                        serviceMonitoring.Update(monitoring, null).Wait();
+
+                        return text.Text;
+                    }
+                }
+
+
+                foreach (var item in monitoring.SkillsCompany)
+                {
+                    if (item._id == iditem)
+                    {
+                        item.Praise = text.Text;
+                        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+                        serviceMonitoring.Update(monitoring, null).Wait();
+
+                        return text.Text;
+                    }
+                }
+                return "";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         public List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
         {
             try
@@ -1555,6 +1711,29 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments)
+        {
+            try
+            {
+                var onboarding = serviceMonitoring.GetNewVersion(p => p._id == idonboarding).Result;
+                if (userComment == EnumUserComment.Person)
+                    onboarding.CommentsPerson = comments.Comments;
+                else if (userComment == EnumUserComment.Manager)
+                    onboarding.CommentsManager = comments.Comments;
+                else
+                    onboarding.CommentsEnd = comments.Comments;
+
+                var i = serviceMonitoring.Update(onboarding, null);
+
+                return "ok";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public List<ViewCrudComment> GetListComments(string idmonitoring, string iditem)
         {
             try
@@ -1571,7 +1750,8 @@ namespace Manager.Services.Specific
                                 Comments = p.Comments,
                                 Date = p.Date,
                                 StatusView = p.StatusView,
-                                UserComment = p.UserComment
+                                UserComment = p.UserComment,
+                                SpeechLink = p.SpeechLink
                             }).ToList();
                     }
                 }
@@ -1586,7 +1766,8 @@ namespace Manager.Services.Specific
                                 Comments = p.Comments,
                                 Date = p.Date,
                                 StatusView = p.StatusView,
-                                UserComment = p.UserComment
+                                UserComment = p.UserComment,
+                                SpeechLink = p.SpeechLink
                             }).ToList();
                     }
                 }
@@ -1602,7 +1783,8 @@ namespace Manager.Services.Specific
                                 Comments = p.Comments,
                                 Date = p.Date,
                                 StatusView = p.StatusView,
-                                UserComment = p.UserComment
+                                UserComment = p.UserComment,
+                                SpeechLink = p.SpeechLink
                             }).ToList();
                     }
                 }
@@ -1800,6 +1982,39 @@ namespace Manager.Services.Specific
         #endregion
 
         #region private
+
+        private string NewReport(string name)
+        {
+            try
+            {
+                var report = new Reports()
+                {
+                    StatusReport = EnumStatusReport.Open,
+                    Date = DateTime.Now,
+                    Name = name
+                };
+
+                return serviceReport.InsertNewVersion(report).Result._id;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        private void SendMessageAsync(ViewReport view)
+        {
+            try
+            {
+                dynamic result = view;
+                var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result)));
+                queueClient.SendAsync(message);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
         private void SendQueue(string id, string idperson, List<string> countpraise)
         {
@@ -2066,6 +2281,57 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public void RegisterOnMessageHandlerAndReceiveMesssages()
+        {
+            try
+            {
+                var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+                {
+                    MaxConcurrentCalls = 1,
+                    AutoComplete = false
+                };
+
+                queueClientReturn.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        private async Task ProcessMessagesAsync(Message message, CancellationToken token)
+        {
+            try
+            {
+                var view = JsonConvert.DeserializeObject<ViewCrudReport>(Encoding.UTF8.GetString(message.Body));
+                SetUser(new BaseUser()
+                {
+                    _idAccount = view._idAccount
+                });
+
+                if (view.StatusReport != EnumStatusReport.Open)
+                {
+                    Reports report = serviceReport.GetFreeNewVersion(p => p._id == view._id).Result;
+                    report.StatusReport = view.StatusReport;
+                    report.Link = view.Link;
+                    serviceReport.UpdateAccount(report, null).Wait();
+
+                    await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e.Message;
+                await queueClientReturn.CompleteAsync(message.SystemProperties.LockToken);
+            }
+
+        }
+        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        {
+            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            return Task.CompletedTask;
+        }
+
 
         #endregion
 

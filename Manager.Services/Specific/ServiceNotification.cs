@@ -1544,7 +1544,7 @@ namespace Manager.Services.Specific
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("SucessoCliente@analisa.solutions", "Sucesso do Cliente | Fluid"),
+          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Sucesso do Cliente | Fluid"),
           To = sendTest ?
             new List<MailLogAddress>()
             {
