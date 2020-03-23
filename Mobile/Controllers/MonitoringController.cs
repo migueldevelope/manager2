@@ -468,10 +468,11 @@ namespace Mobile.Controllers
         /// <param name="idmonitoring"></param>
         /// <param name="iditem"></param>
         /// <param name="typeuser"></param>
+        /// <param name="time"></param>
         /// <returns></returns>
         [Authorize]
         [HttpPost("{idmonitoring}/speech/{iditem}/{typeuser}/monitoring")]
-        public async Task<string> PostSpeechRecognitionMonitoring(string idmonitoring, string iditem, EnumUserComment typeuser)
+        public async Task<string> PostSpeechRecognitionMonitoring([FromBody]ViewTime time, string idmonitoring, string iditem, EnumUserComment typeuser)
         {
             try
             {
@@ -521,7 +522,7 @@ namespace Mobile.Controllers
                         await serviceAttachment.Update(attachment, null);
                         throw e;
                     }
-                    service.AddCommentsSpeech(idmonitoring, iditem, url, typeuser);
+                    service.AddCommentsSpeech(idmonitoring, iditem, url, typeuser, time.TotalTime);
                     var i = Task.Run(() => SendCommentsSpeech(idmonitoring, iditem, typeuser, url));
                     listAttachments.Add(attachment);
                 }

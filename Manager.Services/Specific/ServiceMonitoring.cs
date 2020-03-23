@@ -816,7 +816,9 @@ namespace Manager.Services.Specific
                             Comments = x.Comments,
                             Date = x.Date,
                             StatusView = x.StatusView,
-                            UserComment = x.UserComment
+                            UserComment = x.UserComment,
+                            SpeechLink = x.SpeechLink,
+                            TotalTime = x.TotalTime
                         }).ToList(),
                         StatusViewManager = p.StatusViewManager,
                         StatusViewPerson = p.StatusViewPerson,
@@ -833,7 +835,9 @@ namespace Manager.Services.Specific
                             Comments = x.Comments,
                             Date = x.Date,
                             StatusView = x.StatusView,
-                            UserComment = x.UserComment
+                            UserComment = x.UserComment,
+                            SpeechLink = x.SpeechLink,
+                            TotalTime = x.TotalTime
                         }).ToList(),
                         StatusViewManager = p.StatusViewManager,
                         StatusViewPerson = p.StatusViewPerson,
@@ -850,7 +854,9 @@ namespace Manager.Services.Specific
                             Comments = x.Comments,
                             Date = x.Date,
                             StatusView = x.StatusView,
-                            UserComment = x.UserComment
+                            UserComment = x.UserComment,
+                            SpeechLink = x.SpeechLink,
+                            TotalTime = x.TotalTime
                         }).ToList(),
                         Status = p.Status,
                         StatusViewManager = p.StatusViewManager,
@@ -904,7 +910,8 @@ namespace Manager.Services.Specific
                             Date = p.Date,
                             SpeechLink = p.SpeechLink,
                             StatusView = p.StatusView,
-                            UserComment = p.UserComment
+                            UserComment = p.UserComment,
+                            TotalTime = p.TotalTime
                         }).ToList(),
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
@@ -937,7 +944,8 @@ namespace Manager.Services.Specific
                             Date = p.Date,
                             SpeechLink = p.SpeechLink,
                             StatusView = p.StatusView,
-                            UserComment = p.UserComment
+                            UserComment = p.UserComment,
+                            TotalTime = p.TotalTime
                         }).ToList(),
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
@@ -971,7 +979,8 @@ namespace Manager.Services.Specific
                             Date = p.Date,
                             SpeechLink = p.SpeechLink,
                             StatusView = p.StatusView,
-                            UserComment = p.UserComment
+                            UserComment = p.UserComment,
+                            TotalTime = p.TotalTime
                         }).ToList(),
                         CommentsManager = item.CommentsManager,
                         CommentsPerson = item.CommentsPerson,
@@ -1386,7 +1395,7 @@ namespace Manager.Services.Specific
         }
 
 
-        public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user)
+        public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, decimal totalimte)
         {
             try
             {
@@ -1397,7 +1406,8 @@ namespace Manager.Services.Specific
                     Date = DateTime.Now,
                     StatusView = EnumStatusView.None,
                     UserComment = user,
-                    SpeechLink = link
+                    SpeechLink = link,
+                    TotalTime = totalimte
                 };
                 AddComments(idmonitoring, iditem, view);
                 return "ok";
@@ -1453,7 +1463,9 @@ namespace Manager.Services.Specific
                               Comments = comments.Comments,
                               Date = comments.Date,
                               StatusView = comments.StatusView,
-                              UserComment = comments.UserComment
+                              UserComment = comments.UserComment,
+                              SpeechLink = comments.SpeechLink,
+                              TotalTime = comments.TotalTime
                           });
                         Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
                         serviceMonitoring.Update(monitoring, null).Wait();
@@ -1464,7 +1476,9 @@ namespace Manager.Services.Specific
                             Comments = p.Comments,
                             Date = p.Date,
                             StatusView = p.StatusView,
-                            UserComment = p.UserComment
+                            UserComment = p.UserComment,
+                            SpeechLink = p.SpeechLink,
+                            TotalTime = p.TotalTime
                         }).ToList();
                     }
                 }
@@ -1493,7 +1507,9 @@ namespace Manager.Services.Specific
                              Comments = comments.Comments,
                              Date = comments.Date,
                              StatusView = comments.StatusView,
-                             UserComment = comments.UserComment
+                             UserComment = comments.UserComment,
+                             SpeechLink = comments.SpeechLink,
+                             TotalTime = comments.TotalTime
                          });
 
                         serviceMonitoring.Update(monitoring, null).Wait();
@@ -1505,7 +1521,9 @@ namespace Manager.Services.Specific
                             Comments = p.Comments,
                             Date = p.Date,
                             StatusView = p.StatusView,
-                            UserComment = p.UserComment
+                            UserComment = p.UserComment,
+                            SpeechLink = p.SpeechLink,
+                            TotalTime = p.TotalTime
                         }).ToList();
                     }
                 }
@@ -1535,7 +1553,9 @@ namespace Manager.Services.Specific
                              Comments = comments.Comments,
                              Date = comments.Date,
                              StatusView = comments.StatusView,
-                             UserComment = comments.UserComment
+                             UserComment = comments.UserComment,
+                             SpeechLink = comments.SpeechLink,
+                             TotalTime = comments.TotalTime
                          });
 
                         serviceMonitoring.Update(monitoring, null).Wait();
@@ -1546,7 +1566,9 @@ namespace Manager.Services.Specific
                             Comments = p.Comments,
                             Date = p.Date,
                             StatusView = p.StatusView,
-                            UserComment = p.UserComment
+                            UserComment = p.UserComment,
+                            SpeechLink = p.SpeechLink,
+                            TotalTime = p.TotalTime
                         }).ToList();
                     }
                 }
