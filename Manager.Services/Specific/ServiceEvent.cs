@@ -367,8 +367,8 @@ namespace Manager.Services.Specific
                               Name = item.User.Name,
                               Document = item.User.Document,
                               Registration = item.Registration,
-                  //Person = item.GetViewList(),
-                  Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
+                              //Person = item.GetViewList(),
+                              Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
                               {
                                   _id = item.Occupation.Cbo._id,
                                   Name = item.Occupation.Cbo.Name,
@@ -446,7 +446,7 @@ namespace Manager.Services.Specific
                     detail = serviceEvent.GetAllNewVersion(p => p.StatusEvent == EnumStatusEvent.Realized && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
                 }
 
-                detail = detail.Where(p => !(p.Participants.Count() == 0  && p.Days.Count() == 0 && p.StatusEvent == EnumStatusEvent.Realized)).ToList().OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
+                detail = detail.Where(p => !(p.Participants.Count() == 0 && p.Days.Count() == 0 && p.StatusEvent == EnumStatusEvent.Realized)).ToList().OrderBy(p => p.StatusEvent).ThenByDescending(p => p.End).Skip(skip).Take(count).ToList();
                 total = detail.Count();
 
                 return detail.Select(p => new ViewListEventDetail()
@@ -1085,6 +1085,7 @@ namespace Manager.Services.Specific
                     Equivalents = view.Equivalents
                 }).Result;
 
+                //VerifyEquivalent(course);
 
                 return "add success";
             }
@@ -1098,8 +1099,14 @@ namespace Manager.Services.Specific
             try
             {
                 var course = serviceCourse.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
+                var modifymatriz = false;
+                if (course.Periodicity != view.Periodicity)
+                    modifymatriz = true;
+
                 course.Content = view.Content;
+
                 course.Periodicity = view.Periodicity;
+
                 course.Deadline = view.Deadline;
                 course.Wordkload = view.Wordkload;
                 course.CourseESocial = view.CourseESocial;
@@ -1937,14 +1944,15 @@ namespace Manager.Services.Specific
         {
             try
             {
-                var list = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == course._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.ToList();
                 if (course.Equivalents != null)
                 {
                     foreach (var item in course.Equivalents)
                     {
+
+                        var list = serviceTrainingPlan.GetAllNewVersion(p => p.Course._id == item._id & p.StatusTrainingPlan == EnumStatusTrainingPlan.Open).Result.ToList();
                         foreach (var plan in list)
                         {
-                            var eventsHis = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == item._id & p.Person._id == plan.Person._id).Result;
+                            var eventsHis = serviceEventHistoric.GetAllNewVersion(p => p.Course._id == course._id & p.Person._id == plan.Person._id).Result;
                             if (eventsHis.Count() > 0)
                             {
                                 plan.StatusTrainingPlan = EnumStatusTrainingPlan.Realized;
