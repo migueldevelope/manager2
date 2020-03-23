@@ -51,7 +51,7 @@ namespace Manager.Core.Interfaces
 
         ViewCrudMonitoringMobile GetMonitoringsMobile(string id);
         string AddPraise(string idmonitoring, string iditem, ViewText text);
-        string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, decimal totalimte);
+        string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, string totalimte);
         void UpdateCommentsSpeech(string idmonitoring, string iditem, EnumUserComment user, string path, string link);
         string UpdateCommentsEndMobile(string idonboarding, EnumUserComment userComment, ViewCrudCommentEnd comments);
         #endregion

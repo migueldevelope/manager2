@@ -920,7 +920,7 @@ namespace Manager.Services.Specific
             }
         }
 
-        public string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user, decimal totalimte)
+        public string AddCommentsSpeech(string idonboarding, string iditem, string link, EnumUserComment user, string totalimte)
         {
             try
             {

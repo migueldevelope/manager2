@@ -1395,7 +1395,7 @@ namespace Manager.Services.Specific
         }
 
 
-        public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, decimal totalimte)
+        public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, string totalimte)
         {
             try
             {

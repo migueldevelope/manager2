@@ -2,6 +2,6 @@
 {
     public class ViewTime
     {
-        public decimal TotalTime { get; set; }
+        public string TotalTime { get; set; }
     }
 }

@@ -11,6 +11,6 @@ namespace Manager.Views.BusinessCrud
         public EnumStatusView StatusView { get; set; }
         public EnumUserComment UserComment { get; set; }
         public string SpeechLink { get; set; }
-        public decimal TotalTime { get; set; }
+        public string TotalTime { get; set; }
     }
 }
