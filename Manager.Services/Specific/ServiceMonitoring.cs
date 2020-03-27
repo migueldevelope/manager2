@@ -430,6 +430,46 @@ namespace Manager.Services.Specific
                 throw e;
             }
         }
+
+        public List<ViewCrudPlan> ListPlansMobile(string idmonitoring, string iditem)
+        {
+            try
+            {
+                var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == idmonitoring && p._idItem == iditem).Result;
+                var list = new List<ViewCrudPlan>();
+                foreach (var item in plans)
+                {
+                    var plan = new ViewCrudPlan()
+                    {
+                        _id = item._id,
+                        Attachments = item.Attachments,
+                        Deadline = item.Deadline,
+                        Description = item.Description,
+                        Evaluation = byte.Parse(item.Evaluation.ToString()),
+                        Name = item.Name,
+                        NewAction = item.NewAction,
+                        Skills = item.Skills,
+                        SourcePlan = item.SourcePlan,
+                        StatusPlan = item.StatusPlan,
+                        StatusPlanApproved = item.StatusPlanApproved,
+                        TextEnd = item.TextEnd,
+                        TextEndManager = item.TextEndManager,
+                        TypeAction = item.TypeAction,
+                        TypePlan = item.TypePlan
+                    };
+
+
+
+                    list.Add(plan);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan view)
         {
             try

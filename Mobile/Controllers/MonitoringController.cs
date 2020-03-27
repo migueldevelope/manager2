@@ -564,6 +564,20 @@ namespace Mobile.Controllers
             return await Task.Run(() => Ok(service.UpdateCommentsEndMobile(idonboarding, usercomment, comments)));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idmonitoring"></param>
+        /// <param name="iditem"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        [Route("listplan/{idmonitoring}/{iditem}")]
+        public async Task<List<ViewCrudPlan>> ListPlansMobile(string idmonitoring, string iditem)
+        {
+            return await Task.Run(() => service.ListPlansMobile(idmonitoring, iditem));
+        }
+
         #endregion
 
         #region audio
@@ -607,7 +621,7 @@ namespace Mobile.Controllers
                 CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(_outPath_.Replace(".wav", ""));
 
                 blockBlob.Properties.ContentType = "audio/wav";
-                
+
                 await blockBlob.UploadFromStreamAsync(stream);
                 var url = blockBlob.Uri.ToString();
             }
