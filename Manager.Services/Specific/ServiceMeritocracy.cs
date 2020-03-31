@@ -32,6 +32,7 @@ namespace Manager.Services.Specific
         private readonly ServiceGeneric<MailLog> serviceMail;
         private readonly ServiceMailModel serviceMailModel;
         private readonly ServiceGeneric<User> serviceUser;
+        private readonly ServiceGeneric<Monitoring> serviceMonitoring;
         private readonly ServiceGeneric<MeritocracyNameLevel> serviceMeritocracyNameLevel;
 
 
@@ -54,6 +55,7 @@ namespace Manager.Services.Specific
                 serviceMailModel = new ServiceMailModel(context);
                 serviceSchooling = new ServiceGeneric<Schooling>(context);
                 serviceUser = new ServiceGeneric<User>(context);
+                serviceMonitoring = new ServiceGeneric<Monitoring>(context);
                 serviceMeritocracyNameLevel = new ServiceGeneric<MeritocracyNameLevel>(context);
             }
             catch (Exception e)
@@ -78,6 +80,7 @@ namespace Manager.Services.Specific
             serviceSchooling._user = _user;
             serviceUser._user = _user;
             serviceMeritocracyNameLevel._user = _user;
+            serviceMonitoring._user = _user;
             serviceMailModel.SetUser(_user);
         }
         public void SetUser(BaseUser user)
@@ -95,6 +98,7 @@ namespace Manager.Services.Specific
             serviceLogMessages.SetUser(_user);
             serviceMail._user = user;
             serviceSchooling._user = _user;
+            serviceMonitoring._user = _user;
             serviceUser._user = _user;
             serviceMeritocracyNameLevel._user = _user;
             serviceMailModel.SetUser(_user);
@@ -1394,6 +1398,11 @@ namespace Manager.Services.Specific
         {
             try
             {
+                var meritocracy = serviceMeritocracy.GetNewVersion(p => p._id == idmeritocracy).Result;
+                var date = DateTime.Now.AddMonths(-12);
+                var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Person._id == meritocracy.Person._id
+                && p.StatusMonitoring == EnumStatusMonitoring.End && p.DateEndEnd >= date).Result;
+
                 List<ViewListMeritocracyActivitie> detail = serviceMeritocracy.GetAllNewVersion(p => p._id == idmeritocracy).Result.
                   FirstOrDefault().MeritocracyActivities
                   .Select(x => new ViewListMeritocracyActivitie()
@@ -1401,6 +1410,37 @@ namespace Manager.Services.Specific
                       Activitie = x.Activities,
                       Mark = x.Mark
                   }).ToList();
+                foreach (var act in detail)
+                {
+                    foreach (var moni in monitorings)
+                    {
+                        foreach (var item in moni.Activities)
+                        {
+                            if (item._id == act.Activitie._id)
+                            {
+                                var comments = item.Comments?.Select(p => new ViewCrudComment()
+                                {
+                                    Comments = p.Comments,
+                                    _id = p._id,
+                                    Date = p.Date,
+                                    StatusView = p.StatusView,
+                                    UserComment = p.UserComment,
+                                    SpeechLink = p.SpeechLink,
+                                    CommentsSpeech = p.CommentsSpeech,
+                                    TotalTime = p.TotalTime
+                                }).ToList();
+                                var plans = item.Plans;
+                                if (comments.Count > 0)
+                                    act.Comments.Concat(comments);
+                                if (plans.Count > 0)
+                                    act.Plans.Concat(plans);
+                                if (item.Praise != string.Empty)
+                                    act.Praises.Add(item.Praise);
+                            }
+                        }
+                    }
+                }
+
 
                 return detail;
             }
