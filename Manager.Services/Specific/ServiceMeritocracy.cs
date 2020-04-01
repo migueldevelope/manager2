@@ -32,6 +32,7 @@ namespace Manager.Services.Specific
         private readonly ServiceGeneric<MailLog> serviceMail;
         private readonly ServiceMailModel serviceMailModel;
         private readonly ServiceGeneric<User> serviceUser;
+        private readonly ServiceGeneric<Plan> servicePlan;
         private readonly ServiceGeneric<Monitoring> serviceMonitoring;
         private readonly ServiceGeneric<MeritocracyNameLevel> serviceMeritocracyNameLevel;
 
@@ -56,6 +57,7 @@ namespace Manager.Services.Specific
                 serviceSchooling = new ServiceGeneric<Schooling>(context);
                 serviceUser = new ServiceGeneric<User>(context);
                 serviceMonitoring = new ServiceGeneric<Monitoring>(context);
+                servicePlan = new ServiceGeneric<Plan>(context);
                 serviceMeritocracyNameLevel = new ServiceGeneric<MeritocracyNameLevel>(context);
             }
             catch (Exception e)
@@ -76,6 +78,7 @@ namespace Manager.Services.Specific
             serviceMaturity._user = _user;
             serviceLog.SetUser(_user);
             serviceLogMessages.SetUser(_user);
+            servicePlan._user = _user;
             serviceMail._user = _user;
             serviceSchooling._user = _user;
             serviceUser._user = _user;
@@ -100,6 +103,7 @@ namespace Manager.Services.Specific
             serviceSchooling._user = _user;
             serviceMonitoring._user = _user;
             serviceUser._user = _user;
+            servicePlan._user = _user;
             serviceMeritocracyNameLevel._user = _user;
             serviceMailModel.SetUser(_user);
         }
@@ -378,6 +382,9 @@ namespace Manager.Services.Specific
                     maturityWeight = maturity.Value;
 
 
+                var dateend = DateTime.Now.AddYears(-1);
+                var countplans = servicePlan.CountNewVersion(p => p.Person._id == person._id && p.DateEnd >= dateend
+                && p.StatusPlan == EnumStatusPlan.Realized).Result;
 
                 meritocracy.WeightSchooling = schoolingWeight;
                 meritocracy.WeightCompanyDate = companyDateWeight;
@@ -389,7 +396,7 @@ namespace Manager.Services.Specific
                 meritocracy.QtdPraise = maturity.CountPraise;
                 meritocracy.QtdRecommendation = maturity.CountRecommendation;
                 meritocracy.QtdCertification = maturity.CountCertification;
-                meritocracy.QtdPlan = maturity.CountPlan;
+                meritocracy.QtdPlan = countplans;
 
                 serviceMeritocracy.Update(meritocracy, null).Wait();
 
