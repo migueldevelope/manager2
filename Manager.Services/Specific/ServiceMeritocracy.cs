@@ -1408,7 +1408,10 @@ namespace Manager.Services.Specific
                   .Select(x => new ViewListMeritocracyActivitie()
                   {
                       Activitie = x.Activities,
-                      Mark = x.Mark
+                      Mark = x.Mark,
+                      Comments = new List<ViewCrudComment>(),
+                      Plans = new List<ViewCrudPlan>(),
+                      Praises = new List<string>()
                   }).ToList();
                 foreach (var act in detail)
                 {
@@ -1416,7 +1419,7 @@ namespace Manager.Services.Specific
                     {
                         foreach (var item in moni.Activities)
                         {
-                            if (item._id == act.Activitie._id)
+                            if (item.Activities._id == act.Activitie._id)
                             {
                                 var comments = item.Comments?.Select(p => new ViewCrudComment()
                                 {
@@ -1430,11 +1433,11 @@ namespace Manager.Services.Specific
                                     TotalTime = p.TotalTime
                                 }).ToList();
                                 var plans = item.Plans;
-                                if (comments.Count > 0)
-                                    act.Comments.Concat(comments);
-                                if (plans.Count > 0)
-                                    act.Plans.Concat(plans);
-                                if (item.Praise != string.Empty)
+                                foreach (var com in comments)
+                                    act.Comments.Add(com);
+                                foreach(var plan in plans)
+                                    act.Plans.Add(plan);
+                                if ((item.Praise != string.Empty) && (item.Praise != null))
                                     act.Praises.Add(item.Praise);
                             }
                         }
