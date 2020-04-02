@@ -76,10 +76,11 @@ namespace Indicators
       IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
 
       //IServiceManager serviceManager = new ServiceManager(_contextStruct, _context, serviceControlQueue, serviceBusConnectionString);
+      IServiceManager serviceManager = new ServiceManager(_context, _context, serviceControlQueue, serviceBusConnectionString);
+      
+      serviceManager.UpdateStructManager();
 
-      //serviceManager.UpdateStructManager();
-
-      //services.AddSingleton(_ => serviceManager);
+      services.AddSingleton(_ => serviceManager);
       services.AddSingleton(_ => serviceControlQueue);
       services.AddSingleton(_ => serviceAccount);
       services.AddSingleton(_ => serviceAuthentication);

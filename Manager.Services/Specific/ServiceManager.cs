@@ -83,22 +83,28 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public List<ViewListStructManager> GetHierarchy(string idmanager)
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+        var list = new List<ViewListStructManager>();
+        var managers = new List<string>();
 
-        var list = serviceStructManager.GetAllNewVersion(p => p._idManager == idmanager).Result
-          .Select(p => new ViewListStructManager()
+        foreach (var item in persons)
+        {
+          var structmanager = new ViewListStructManager()
           {
-            _idManager = p._idManager,
-            _id = p._id,
-            _idPerson = p._idPerson,
-            Name= persons.Where(x => x._id == p._idManager).FirstOrDefault()?.User?.Name,
-            Team = p.Team
-          }).ToList();
+            _idManager = idmanager,
+            _idPerson = item._id,
+            Team = new List<ViewListStructManager>()
+          };
+
+          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager }, managers);
+
+          list.Add(structmanager);
+        }
+        
 
         return list;
       }
@@ -107,6 +113,31 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    /*  public List<ViewListStructManager> GetHierarchy(string idmanager)
+      {
+        try
+        {
+          var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+
+          var list = serviceStructManager.GetAllNewVersion(p => p._idManager == idmanager).Result
+            .Select(p => new ViewListStructManager()
+            {
+              _idManager = p._idManager,
+              _id = p._id,
+              _idPerson = p._idPerson,
+              Name= persons.Where(x => x._id == p._idManager).FirstOrDefault()?.User?.Name,
+              Team = p.Team
+            }).ToList();
+
+          return list;
+        }
+        catch (Exception e)
+        {
+          throw e;
+        }
+      }*/
 
     #endregion
 
@@ -200,7 +231,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void NewStructManager()
+    /*private void NewStructManager()
     {
       try
       {
@@ -237,7 +268,7 @@ namespace Manager.Services.Specific
       {
         throw e;
       }
-    }
+    }*/
 
     private List<ViewListStructManager> GetTeam(ViewListStructManager it, List<string> managers)
     {
@@ -290,7 +321,7 @@ namespace Manager.Services.Specific
       }
       // clean list
       RemoveListManager();
-      NewStructManager();
+      //NewStructManager();
 
       await queueClient.CompleteAsync(message.SystemProperties.LockToken);
     }

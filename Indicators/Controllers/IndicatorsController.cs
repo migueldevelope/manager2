@@ -20,21 +20,21 @@ namespace Indicators.Controllers
   public class IndicatorsController : DefaultController
   {
     private readonly IServiceIndicators service;
-    //private readonly IServiceManager serviceManager;
+    private readonly IServiceManager serviceManager;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="_service"></param>
     /// <param name="contextAccessor"></param>
-    //public IndicatorsController(IServiceIndicators _service, IServiceManager _serviceManager,
-    public IndicatorsController(IServiceIndicators _service, 
+    public IndicatorsController(IServiceIndicators _service, IServiceManager _serviceManager,
+    //public IndicatorsController(IServiceIndicators _service, 
       IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       service = _service;
-      //serviceManager = _serviceManager;
+      serviceManager = _serviceManager;
       service.SetUser(contextAccessor);
-      //serviceManager.SetUser(contextAccessor);
+      serviceManager.SetUser(contextAccessor);
     }
 
     /// <summary>
@@ -47,8 +47,8 @@ namespace Indicators.Controllers
     [Route("gethierarchy/{idperson}")]
     public async Task<List<ViewListStructManager>> GetHierarchy(string idmanager)
     {
-      //return await Task.Run(() => serviceManager.GetHierarchy(idmanager));
-      return null;
+      return await Task.Run(() => serviceManager.GetHierarchy(idmanager));
+      //return null;
     }
 
     /// <summary>
