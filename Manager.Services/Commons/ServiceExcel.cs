@@ -124,7 +124,7 @@ namespace Manager.Services.Commons
         headerRowVersion.CreateCell(1).SetCellValue(header.Version);
 
         headerRowDate.CreateCell(0).SetCellValue("DATA EMISSÃO");
-        headerRowDate.CreateCell(1).SetCellValue(header.Version);
+        headerRowDate.CreateCell(1).SetCellValue(header.Date);
 
         headerRowCompany.GetCell(0).CellStyle = hssfwb.CreateCellStyle();
         headerRowCompany.GetCell(0).CellStyle.SetFont(font);
