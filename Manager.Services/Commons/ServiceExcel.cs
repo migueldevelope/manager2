@@ -83,7 +83,7 @@ namespace Manager.Services.Commons
 
     }
     //public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], string[], int[], long> tuple)
-    public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], int[], long> tuple, string[] descriptionnameT)
+    public string ExportSalaryScale(Tuple<double[][], string[], string[], string[], string[], int[], long> tuple, string[] descriptionnameT, dynamic header)
     {
       try
       {
@@ -103,16 +103,53 @@ namespace Manager.Services.Commons
         string[] spheres = tuple.Item5;
         int[] workloads = tuple.Item6;
 
+        var font = hssfwb.CreateFont();
+        font.Boldweight = (short)FontBoldWeight.Bold;
+
         // col i = 9 lin = 50
         double[][] matriz = tuple.Item1;
+        IRow headerRowCompany = sheet.CreateRow(0);
+        IRow headerRowName = sheet.CreateRow(1);
+        IRow headerRowVersion = sheet.CreateRow(2);
+        IRow headerRowDate = sheet.CreateRow(3);
+        IRow headerspace = sheet.CreateRow(4);
 
-        IRow headerRow = sheet.CreateRow(0); //Get Header Row
-        headerRow.CreateCell(0).SetCellValue("CARGOS");
+        headerRowCompany.CreateCell(0).SetCellValue("EMPRESA");
+        headerRowCompany.CreateCell(1).SetCellValue(header.Company);
+
+        headerRowName.CreateCell(0).SetCellValue("TABELA SALARIAL");
+        headerRowName.CreateCell(1).SetCellValue(header.Name);
+
+        headerRowVersion.CreateCell(0).SetCellValue("VERSÃO");
+        headerRowVersion.CreateCell(1).SetCellValue(header.Version);
+
+        headerRowDate.CreateCell(0).SetCellValue("DATA EMISSÃO");
+        headerRowDate.CreateCell(1).SetCellValue(header.Version);
+
+        headerRowCompany.GetCell(0).CellStyle = hssfwb.CreateCellStyle();
+        headerRowCompany.GetCell(0).CellStyle.SetFont(font);
+        headerRowCompany.GetCell(1).CellStyle = hssfwb.CreateCellStyle();
+        headerRowCompany.GetCell(1).CellStyle.SetFont(font);
+        headerRowName.GetCell(0).CellStyle = hssfwb.CreateCellStyle();
+        headerRowName.GetCell(0).CellStyle.SetFont(font);
+        headerRowName.GetCell(1).CellStyle = hssfwb.CreateCellStyle();
+        headerRowName.GetCell(1).CellStyle.SetFont(font);
+        headerRowVersion.GetCell(0).CellStyle = hssfwb.CreateCellStyle();
+        headerRowVersion.GetCell(0).CellStyle.SetFont(font);
+        headerRowVersion.GetCell(1).CellStyle = hssfwb.CreateCellStyle();
+        headerRowVersion.GetCell(1).CellStyle.SetFont(font);
+        headerRowDate.GetCell(0).CellStyle = hssfwb.CreateCellStyle();
+        headerRowDate.GetCell(0).CellStyle.SetFont(font);
+        headerRowDate.GetCell(1).CellStyle = hssfwb.CreateCellStyle();
+        headerRowDate.GetCell(1).CellStyle.SetFont(font);
+
+        IRow headerRow = sheet.CreateRow(5); //Get Header Row
+        headerRow.CreateCell(0).SetCellValue("CARGO");
         headerRow.CreateCell(1).SetCellValue("FUNÇÃO");
-        headerRow.CreateCell(2).SetCellValue("GRADE");
-        headerRow.CreateCell(3).SetCellValue("GRUPO");
-        headerRow.CreateCell(4).SetCellValue("ESFERA");
-        headerRow.CreateCell(5).SetCellValue("CARGA HORÁRIA");
+        headerRow.CreateCell(2).SetCellValue("GRUPO");
+        headerRow.CreateCell(3).SetCellValue("ESFERA");
+        headerRow.CreateCell(4).SetCellValue("CARGA HORÁRIA");
+        headerRow.CreateCell(5).SetCellValue("GRADE");
         headerRow.CreateCell(6).SetCellValue("A");
         headerRow.CreateCell(7).SetCellValue("B");
         headerRow.CreateCell(8).SetCellValue("C");
@@ -123,28 +160,25 @@ namespace Manager.Services.Commons
         headerRow.CreateCell(13).SetCellValue("H");
         //headerRow.CreateCell(14).SetCellValue("I");
 
-        var font = hssfwb.CreateFont();
-        font.Boldweight = (short)FontBoldWeight.Bold;
-        for (var hd = 0; hd <= 10; hd++)
+        for (var hd = 0; hd <= 13; hd++)
         {
           headerRow.GetCell(hd).CellStyle = hssfwb.CreateCellStyle();
-
           headerRow.GetCell(hd).CellStyle.SetFont(font);
         }
 
 
         long cellCount = count;
 
-        for (int i = 1; i < count; i++) //Read Excel File
+        for (int i = 6; i < count; i++) //Read Excel File
         {
           IRow row = sheet.CreateRow(i);
 
           row.CreateCell(0).SetCellValue(occupations[i - 1]);
           row.CreateCell(1).SetCellValue(descritionoccupations[i - 1]);
-          row.CreateCell(2).SetCellValue(grades[i - 1]);
-          row.CreateCell(3).SetCellValue(groups[i - 1]);
-          row.CreateCell(4).SetCellValue(spheres[i - 1]);
-          row.CreateCell(5).SetCellValue(workloads[i - 1]);
+          row.CreateCell(2).SetCellValue(groups[i - 1]);
+          row.CreateCell(3).SetCellValue(spheres[i - 1]);
+          row.CreateCell(4).SetCellValue(workloads[i - 1]);
+          row.CreateCell(5).SetCellValue(grades[i - 1]);
 
           for (int j = 6; j < 14; j++)
           {
