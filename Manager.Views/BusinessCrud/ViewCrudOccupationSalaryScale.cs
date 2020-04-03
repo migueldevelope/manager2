@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Manager.Views.Enumns;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Manager.Views.BusinessCrud
@@ -14,5 +15,6 @@ namespace Manager.Views.BusinessCrud
     public int Workload { get; set; }
     public string NameGrade { get; set; }
     public string NameSalaryScale { get; set; }
+    public EnumSteps StepLimit { get; set; }
   }
 }

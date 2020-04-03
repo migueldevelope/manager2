@@ -1,4 +1,5 @@
 ﻿using Manager.Core.Base;
+using Manager.Views.Enumns;
 
 namespace Manager.Core.BusinessModel
 {
@@ -12,5 +13,6 @@ namespace Manager.Core.BusinessModel
     public string _idSalaryScale { get; set; }
     public string NameSalaryScale { get; set; }
     public int Workload { get; set; }
+    public EnumSteps StepLimit { get; set; }
   }
 }

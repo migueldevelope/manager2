@@ -329,7 +329,8 @@ namespace Manager.Services.Specific
           Workload = view.Workload,
           _id = ObjectId.GenerateNewId().ToString(),
           NameGrade = view.NameGrade,
-          NameSalaryScale = view.NameSalaryScale
+          NameSalaryScale = view.NameSalaryScale,
+          StepLimit = view.StepLimit
         });
         var result = serviceOccupation.Update(occupation, null);
         return "add";
@@ -389,6 +390,7 @@ namespace Manager.Services.Specific
                   Name = occ.Name,
                   Description = occ.Description,
                   Wordload = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().Workload,
+                  StepLimit = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().StepLimit,
                   Process = occ.Process == null ? null : occ.Process.Select(
                   x => new ViewListProcessLevelTwo()
                   {
@@ -399,6 +401,7 @@ namespace Manager.Services.Specific
                   }).ToList()
                 };
                 occupationStep.Steps = new List<ViewListStep>();
+
                 foreach (var step in grade.ListSteps)
                 {
                   var newStep = new ViewListStep()
@@ -410,6 +413,9 @@ namespace Manager.Services.Specific
                   {
                     newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                   }
+                  if ((occupationStep.StepLimit != EnumSteps.E) && (step.Step > occupationStep.StepLimit))
+                    newStep.Salary = 0;
+
                   occupationStep.Steps.Add(newStep);
                 }
                 occupation.Add(occupationStep);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Manager.Views.Enumns;
+using System.Collections.Generic;
 
 namespace Manager.Views.BusinessList
 {
@@ -8,5 +9,7 @@ namespace Manager.Views.BusinessList
     public List<ViewListStep> Steps { get; set; }
     public List<ViewListProcessLevelTwo> Process { get; set; }
     public string Description { get; set; }
+    public EnumSteps StepLimit { get; set; }
+
   }
 }
