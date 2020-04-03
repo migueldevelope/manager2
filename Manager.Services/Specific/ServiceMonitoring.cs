@@ -1367,6 +1367,81 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    public string UpdateStatusMonitoring(string idmonitoring, EnumStatusMonitoring status)
+    {
+      try
+      {
+        List<string> countpraise = new List<string>();
+
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
+        monitoring.StatusMonitoring = status;
+
+        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        {
+          if (person.User._id == _user._idUser)
+          {
+            monitoring.DateBeginPerson = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+          }
+          else
+          {
+            monitoring.DateBeginManager = DateTime.Now;
+            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+          }
+        }
+
+        var userInclude = servicePerson.GetAllNewVersion(p => p.User._id == _user._idUser).Result.FirstOrDefault();
+
+        if (person.User._id != _user._idUser)
+        {
+          if (monitoring.StatusMonitoring == EnumStatusMonitoring.Wait)
+          {
+            monitoring.DateEndManager = DateTime.Now;
+            Task.Run(() => Mail(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
+          }
+        }
+        else
+        {
+          if (monitoring.StatusMonitoring == EnumStatusMonitoring.End)
+          {
+            Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + person.User.Name, person));
+            if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
+            {
+              Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + person.User.Name + " foi elogiado pelo gestor", person));
+            }
+            monitoring.DateEndEnd = DateTime.Now;
+            Task.Run(() => SendQueue(monitoring._id, person._id, countpraise));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
+          }
+          else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
+          {
+            monitoring.DateEndPerson = DateTime.Now;
+            Task.Run(() => MailManager(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
+
+          }
+          else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
+          {
+            Task.Run(() => MailDisApproval(person));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
+          }
+        }
+        serviceMonitoring.Update(monitoring, null).Wait();
+        return "Monitoring altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListSkill> GetSkills(string idperson)
     {
       try
