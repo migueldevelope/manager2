@@ -173,16 +173,16 @@ namespace Manager.Services.Commons
         {
           IRow row = sheet.CreateRow(i);
 
-          row.CreateCell(0).SetCellValue(occupations[i - 5]);
-          row.CreateCell(1).SetCellValue(descritionoccupations[i - 5]);
-          row.CreateCell(2).SetCellValue(groups[i - 5]);
-          row.CreateCell(3).SetCellValue(spheres[i - 5]);
-          row.CreateCell(4).SetCellValue(workloads[i - 5]);
-          row.CreateCell(5).SetCellValue(grades[i - 5]);
+          row.CreateCell(0).SetCellValue(occupations[i - 6]);
+          row.CreateCell(1).SetCellValue(descritionoccupations[i - 6]);
+          row.CreateCell(2).SetCellValue(groups[i - 6]);
+          row.CreateCell(3).SetCellValue(spheres[i - 6]);
+          row.CreateCell(4).SetCellValue(workloads[i - 6]);
+          row.CreateCell(5).SetCellValue(grades[i - 6]);
 
           for (int j = 6; j < 14; j++)
           {
-            row.CreateCell(j).SetCellValue(matriz[i - 5][j - 6]);
+            row.CreateCell(j).SetCellValue(matriz[i - 6][j - 6]);
           }
         }
         //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
