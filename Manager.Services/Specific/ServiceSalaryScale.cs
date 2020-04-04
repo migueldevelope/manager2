@@ -294,7 +294,7 @@ namespace Manager.Services.Specific
       try
       {
         SalaryScaleLog item = serviceSalaryScaleLog.GetNewVersion(p => p._id == id).Result;
-        return new ViewCrudSalaryScaleLog()
+        var view = new ViewCrudSalaryScaleLog()
         {
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
           Name = item.Name,
@@ -303,6 +303,20 @@ namespace Manager.Services.Specific
           Grades = item.Grades,
           _idSalaryScalePrevious = item._idSalaryScalePrevious
         };
+
+        foreach (var grade in view.Grades)
+        {
+          foreach (var occ in grade.Occupation)
+          {
+            foreach (var step in occ.Steps)
+            {
+              if ((occ.StepLimit != EnumSteps.Default) && (step.Step > occ.StepLimit))
+                step.Salary = 0;
+            }
+          }
+
+        }
+        return view;
       }
       catch (Exception e)
       {
@@ -1006,6 +1020,9 @@ namespace Manager.Services.Specific
                       matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
                     else
                       matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+
+                    if ((occ.SalaryScales.FirstOrDefault().StepLimit != EnumSteps.Default) && (step.Step > occ.SalaryScales.FirstOrDefault().StepLimit))
+                      matriz[row][(byte)step.Step] = 0;
                   }
                   row += 1;
                   countgrade += 1;
