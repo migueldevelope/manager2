@@ -1009,7 +1009,7 @@ namespace Manager.Services.Specific
                   descriptionname[row] = occ.Description;
                   groups[row] = occ.Group?.Name;
                   spheres[row] = occ.Group.Sphere.Name;
-                  var salaryscale = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault();
+                  var salaryscale = occ.SalaryScales.Where(p => p._idSalaryScale == salaryScale._idSalaryScalePrevious).FirstOrDefault();
                   if (salaryscale != null)
                     workloads[row] = salaryscale.Workload;
 
@@ -1017,11 +1017,11 @@ namespace Manager.Services.Specific
                   {
 
                     if (salaryscale.Workload != item.Wordload)
-                      matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().Workload) / (item.Wordload == 0 ? 1 : item.Wordload), 2).ToString());
+                      matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.Where(p => p._idSalaryScale == salaryScale._idSalaryScalePrevious).FirstOrDefault().Workload) / (item.Wordload == 0 ? 1 : item.Wordload), 2).ToString());
                     else
                       matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
 
-                    if ((occ.SalaryScales.FirstOrDefault().StepLimit != EnumSteps.Default) && (step.Step > occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().StepLimit))
+                    if ((occ.SalaryScales.FirstOrDefault().StepLimit != EnumSteps.Default) && (step.Step > occ.SalaryScales.Where(p => p._idSalaryScale == salaryScale._idSalaryScalePrevious).FirstOrDefault().StepLimit))
                       matriz[row][(byte)step.Step] = 0;
                   }
                   row += 1;
