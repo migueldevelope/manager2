@@ -908,6 +908,154 @@ namespace Manager.Services.Specific
       }
     }
 
+    public string ExportSalaryScaleLog(string idsalaryscale)
+    {
+      try
+      {
+        var serviceExcel = new ServiceExcel();
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
+        var salaryScale = serviceSalaryScaleLog.GetNewVersion(p => p._id == idsalaryscale).Result;
+        if (salaryScale.Grades.Count > 0)
+        {
+          //long count = salaryScale.Grades.Count;
+          long count = (occupations.Count + salaryScale.Grades.Count);
+          string[] occupationsname = new string[count];
+          string[] descriptionname = new string[count];
+          string[] grades = new string[count];
+          string[] groups = new string[count];
+          string[] spheres = new string[count];
+          int[] workloads = new int[count];
+          double[][] matriz = new double[count][];
+          for (int i = 0; i < count; i++)
+            matriz[i] = new double[9];
+
+          int row = 0;
+
+          //com grades vazios
+          //foreach (var item in salaryScale.Grades)
+          //{
+          //    grades[row] = item.Name;
+          //    long countgrade = 0;
+
+          //    foreach (var step in item.ListSteps)
+          //    {
+          //        matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+          //    }
+
+          //    workloads[row] = item.Workload;
+          //    descriptionname[row] = "";
+          //    groups[row] = "";
+          //    spheres[row] = "";
+
+          //    foreach (var occ in occupations)
+          //    {
+          //        if (occ.SalaryScales != null)
+          //        {
+          //            if (occ.SalaryScales.Where(p => p._idGrade == item._id).Count() > 0)
+          //            {
+          //                grades[row] = item.Name;
+          //                occupationsname[row] = occ.Name;
+          //                descriptionname[row] = occ.Description;
+          //                groups[row] = occ.Group?.Name;
+          //                spheres[row] = occ.Group.Sphere.Name;
+          //                var salaryscale = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault();
+          //                if (salaryscale != null)
+          //                    workloads[row] = salaryscale.Workload;
+
+          //                foreach (var step in item.ListSteps)
+          //                {
+
+          //                    if (salaryscale.Workload != item.Workload)
+          //                        matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
+          //                    else
+          //                        matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+          //                }
+          //                row += 1;
+          //                countgrade += 1;
+          //            }
+          //        }
+
+          //    }
+          //    if (countgrade == 0)
+          //        row += 1;
+          //}
+
+
+
+          foreach (var item in salaryScale.Grades)
+          {
+            long countgrade = 0;
+
+            //grades[row] = item.Name;
+            //foreach (var step in item.ListSteps)
+            //{
+            //    matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+            //}
+
+            //workloads[row] = item.Workload;
+            //descriptionname[row] = "";
+            //groups[row] = "";
+            //spheres[row] = "";
+
+            foreach (var occ in occupations)
+            {
+              if (occ.SalaryScales != null)
+              {
+                if (occ.SalaryScales.Where(p => p._idGrade == item._id).Count() > 0)
+                {
+                  grades[row] = item.Name;
+                  occupationsname[row] = occ.Name;
+                  descriptionname[row] = occ.Description;
+                  groups[row] = occ.Group?.Name;
+                  spheres[row] = occ.Group.Sphere.Name;
+                  var salaryscale = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault();
+                  if (salaryscale != null)
+                    workloads[row] = salaryscale.Workload;
+
+                  foreach (var step in item.Steps)
+                  {
+
+                    if (salaryscale.Workload != item.Wordload)
+                      matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.FirstOrDefault().Workload) / (item.Wordload == 0 ? 1 : item.Wordload), 2).ToString());
+                    else
+                      matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
+
+                    if ((occ.SalaryScales.FirstOrDefault().StepLimit != EnumSteps.Default) && (step.Step > occ.SalaryScales.FirstOrDefault().StepLimit))
+                      matriz[row][(byte)step.Step] = 0;
+                  }
+                  row += 1;
+                  countgrade += 1;
+                }
+              }
+
+            }
+
+            //if (countgrade == 0)
+            //    row += 1;
+          }
+          var salaryScaleLog = serviceSalaryScaleLog.GetAllNewVersion(p => p._idSalaryScalePrevious == idsalaryscale).Result.LastOrDefault();
+
+          var view = new
+          {
+            Company = salaryScale.Company.Name,
+            Name = salaryScale.Name,
+            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") : salaryScaleLog.Date.Value.ToString("dd/MM/yyyy hh:mm:ss"),
+            Date = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss")
+          };
+
+          var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname, view);
+          return export;
+        }
+
+        return "";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string ExportSalaryScale(string idsalaryscale)
     {
       try
