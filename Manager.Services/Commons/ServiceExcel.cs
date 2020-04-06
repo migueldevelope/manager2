@@ -169,7 +169,7 @@ namespace Manager.Services.Commons
 
         long cellCount = count;
 
-        for (int i = 6; i < count; i++) //Read Excel File
+        for (int i = 6; i < count + 5; i++) //Read Excel File
         {
           IRow row = sheet.CreateRow(i);
 
