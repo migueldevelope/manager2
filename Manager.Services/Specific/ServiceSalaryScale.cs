@@ -1163,16 +1163,13 @@ namespace Manager.Services.Specific
 
                   foreach (var step in item.ListSteps)
                   {
-                    var ixa = 1;
-                    if (occ._id == "5ba164842ebb1c7afb86ff1b")
-                      ixa = 2;
 
                     if (salaryscale.Workload != item.Workload)
                       matriz[row][(byte)step.Step] = double.Parse(Math.Round((step.Salary * occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().Workload) / (item.Workload == 0 ? 1 : item.Workload), 2).ToString());
                     else
                       matriz[row][(byte)step.Step] = double.Parse(step.Salary.ToString());
 
-                    if ((occ.SalaryScales.FirstOrDefault().StepLimit != EnumSteps.Default) && (step.Step > occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().StepLimit))
+                    if ((occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().StepLimit != EnumSteps.Default) && (step.Step > occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().StepLimit))
                       matriz[row][(byte)step.Step] = 0;
                   }
                   row += 1;
