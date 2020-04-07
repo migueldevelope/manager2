@@ -1034,7 +1034,7 @@ namespace Manager.Services.Specific
             //if (countgrade == 0)
             //    row += 1;
           }
-          var salaryScaleLog = serviceSalaryScaleLog.GetAllNewVersion(p => p._idSalaryScalePrevious == idsalaryscale).Result.LastOrDefault();
+          var salaryScaleLog = serviceSalaryScaleLog.GetAllNewVersion(p => p._id == idsalaryscale).Result.LastOrDefault();
 
           var view = new
           {
