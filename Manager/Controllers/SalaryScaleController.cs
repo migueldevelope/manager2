@@ -43,12 +43,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("list/{idcompany}")]
-    public async Task<List<ViewListSalaryScale>> List(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListSalaryScale>> List(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.List(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Buscar objeto de manutenção da tabela salarial
@@ -60,7 +60,7 @@ namespace Manager.Controllers
     [Route("get/{id}")]
     public async Task<ViewCrudSalaryScale> Get(string id)
     {
-      return await Task.Run(() =>service.Get(id));
+      return await Task.Run(() => service.Get(id));
     }
     /// <summary>
     /// Incluir nova tabela salarial
@@ -72,7 +72,7 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> New([FromBody]ViewCrudSalaryScale view)
     {
-      return await Task.Run(() =>Ok( service.New(view)));
+      return await Task.Run(() => Ok(service.New(view)));
     }
     /// <summary>
     /// Atualizar uma tabela salarial
@@ -84,7 +84,7 @@ namespace Manager.Controllers
     [Route("update")]
     public async Task<IActionResult> Update([FromBody]ViewCrudSalaryScale view)
     {
-      return await Task.Run(() =>Ok( service.Update(view)));
+      return await Task.Run(() => Ok(service.Update(view)));
     }
     /// <summary>
     /// Excluir uma tabela salarial
@@ -96,7 +96,7 @@ namespace Manager.Controllers
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-      return await Task.Run(() =>Ok( service.Delete(id)));
+      return await Task.Run(() => Ok(service.Delete(id)));
     }
     #endregion
 
@@ -148,6 +148,21 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatelog/{id}")]
+    public async Task<IActionResult> UpdateLog([FromBody]ViewCrudComment view, string id)
+    {
+      return await Task.Run(() => Ok(service.UpdateLog(id, view)));
+    }
+
     /// <summary>
     /// Buscar objeto de manutenção da tabela salarial
     /// </summary>
@@ -218,12 +233,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgrade/{idsalaryscale}")]
-    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGrade>> ListGrade(string idsalaryscale, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGrade(idsalaryscale, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
 
     /// <summary>
@@ -256,12 +271,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listgrades/{idcompany}")]
-    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany,  int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListGradeFilter>> ListGrades(string idcompany, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.ListGrades(idcompany, ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      return await Task.Run(() =>result);
+      return await Task.Run(() => result);
     }
     /// <summary>
     /// Buscar grade para alteração
@@ -274,7 +289,7 @@ namespace Manager.Controllers
     [Route("getgrade/{idsalaryscale}/{id}")]
     public async Task<ViewCrudGrade> GetGrade(string idsalaryscale, string id)
     {
-      return await Task.Run(() =>service.GetGrade(idsalaryscale, id));
+      return await Task.Run(() => service.GetGrade(idsalaryscale, id));
     }
     /// <summary>
     /// Incluir um novo grade na tabela salarial
@@ -286,7 +301,7 @@ namespace Manager.Controllers
     [Route("addgrade")]
     public async Task<IActionResult> AddGrade([FromBody]ViewCrudGrade view)
     {
-      return await Task.Run(() =>Ok( service.AddGrade(view)));
+      return await Task.Run(() => Ok(service.AddGrade(view)));
     }
     /// <summary>
     /// Alterar um grade da tabela salarial
@@ -298,7 +313,7 @@ namespace Manager.Controllers
     [Route("updategrade")]
     public async Task<IActionResult> UpdateGrade([FromBody]ViewCrudGrade view)
     {
-      return await Task.Run(() =>Ok( service.UpdateGrade(view)));
+      return await Task.Run(() => Ok(service.UpdateGrade(view)));
     }
     /// <summary>
     /// Alterar a ordem do grade
@@ -312,7 +327,7 @@ namespace Manager.Controllers
     [Route("updategradeposition/{idsalaryscale}/{idgrade}")]
     public async Task<IActionResult> UpdateGradePosition(string idsalaryscale, string idgrade, int position)
     {
-      return await Task.Run(() =>Ok( service.UpdateGradePosition(idsalaryscale, idgrade, position)));
+      return await Task.Run(() => Ok(service.UpdateGradePosition(idsalaryscale, idgrade, position)));
     }
     /// <summary>
     /// Remover um grade da tabela salarial
@@ -325,7 +340,7 @@ namespace Manager.Controllers
     [Route("deletegrade/{idsalaryscale}/{id}")]
     public async Task<string> DeleteGrade(string idsalaryscale, string id)
     {
-      return await Task.Run(() =>service.DeleteGrade(idsalaryscale, id));
+      return await Task.Run(() => service.DeleteGrade(idsalaryscale, id));
     }
     #endregion
 
@@ -340,7 +355,7 @@ namespace Manager.Controllers
     [Route("updatestep")]
     public async Task<IActionResult> UpdateStep([FromBody]ViewCrudStep view)
     {
-      return await Task.Run(() =>Ok( service.UpdateStep(view)));
+      return await Task.Run(() => Ok(service.UpdateStep(view)));
     }
     #endregion
 
