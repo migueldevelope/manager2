@@ -348,6 +348,7 @@ namespace Manager.Services.Specific
               {
                 var occupationStep = new ViewReportSalaryScale()
                 {
+                  Name = detail.Name,
                   GradeName = grade.Name,
                   GradeWordload = grade.Workload,
                   OccupationName = occ.Name,
