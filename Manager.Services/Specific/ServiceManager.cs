@@ -97,6 +97,7 @@ namespace Manager.Services.Specific
           {
             _idManager = idmanager,
             _idPerson = item._id,
+            Name = item.User?.Name,
             Team = new List<ViewListStructManager>()
           };
 
@@ -288,6 +289,8 @@ namespace Manager.Services.Specific
           {
             _idManager = it._idPerson,
             _idPerson = person._idPerson,
+            Name = it.Name,
+            _id = it._id,
             Team = new List<ViewListStructManager>()
           };
           team.Team = GetTeam(team, managers);

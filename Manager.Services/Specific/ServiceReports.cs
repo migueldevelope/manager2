@@ -384,6 +384,25 @@ namespace Manager.Services.Specific
                   occupationStep.OccupationSalaryStep6 = Math.Round((occupationStep.SalaryStep6 * occupationStep.OccupationWordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                   occupationStep.OccupationSalaryStep7 = Math.Round((occupationStep.SalaryStep7 * occupationStep.OccupationWordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                 }
+                var steplimit = occ.SalaryScales.Where(p => p._idGrade == grade._id).FirstOrDefault().StepLimit;
+                if(steplimit != EnumSteps.Default)
+                {
+                  if (steplimit < EnumSteps.B)
+                    occupationStep.OccupationSalaryStep1 = 0;
+                  if (steplimit < EnumSteps.C)
+                    occupationStep.OccupationSalaryStep2 = 0;
+                  if (steplimit < EnumSteps.D)
+                    occupationStep.OccupationSalaryStep3 = 0;
+                  if (steplimit < EnumSteps.E)
+                    occupationStep.OccupationSalaryStep4 = 0;
+                  if (steplimit < EnumSteps.F)
+                    occupationStep.OccupationSalaryStep5 = 0;
+                  if (steplimit < EnumSteps.G)
+                    occupationStep.OccupationSalaryStep6 = 0;
+                  if (steplimit < EnumSteps.H)
+                    occupationStep.OccupationSalaryStep7 = 0;
+                }
+
                 data.Add(occupationStep);
 
               }
