@@ -10,6 +10,7 @@ namespace Manager.Views.BusinessCrud
   {
     public ViewListCompany Company { get; set; }
     public List<ViewListGrade> Grades { get; set; }
+    public string Description { get; set; }
     public DateTime? Date { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idSalaryScalePrevious { get; set; }

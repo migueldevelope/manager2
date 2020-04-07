@@ -299,6 +299,7 @@ namespace Manager.Services.Specific
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
           Name = item.Name,
           _id = item._id,
+          Description = item.Description,
           Date = item.Date,
           Grades = item.Grades,
           _idSalaryScalePrevious = item._idSalaryScalePrevious
@@ -1040,8 +1041,8 @@ namespace Manager.Services.Specific
           {
             Company = salaryScale.Company.Name,
             Name = salaryScale.Name,
-            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
-            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            Version = salaryScaleLog == null ? DateTime.Now.AddHours(-3).ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
+            Date = DateTime.Now.ToString("dd/MM/yyyy")
           };
 
           var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname, view);
@@ -1188,8 +1189,8 @@ namespace Manager.Services.Specific
           {
             Company = salaryScale.Company.Name,
             Name = salaryScale.Name,
-            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") : salaryScaleLog.Date.Value.ToString("dd/MM/yyyy hh:mm:ss"),
-            Date = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss")
+            Version = salaryScaleLog == null ? DateTime.Now.AddHours(-3).ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
+            Date = DateTime.Now.ToString("dd/MM/yyyy")
           };
 
           var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname, view);
