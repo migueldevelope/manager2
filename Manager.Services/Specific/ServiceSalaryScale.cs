@@ -118,7 +118,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewVersion(string idsalaryscale)
+    public string NewVersion(string idsalaryscale, string description)
     {
       try
       {
@@ -127,6 +127,7 @@ namespace Manager.Services.Specific
         var salaryScale = new SalaryScaleLog()
         {
           Name = old.Name,
+          Description = description,
           Company = old.Company,
           Grades = null,
           _idSalaryScalePrevious = old._id,
@@ -709,7 +710,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => NewVersion(id));
+        var description = "Atualização de " + percent + "%";
+        Task.Run(() => NewVersion(id, description));
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         foreach (var item in salaryScale.Grades)
         {
@@ -894,7 +896,7 @@ namespace Manager.Services.Specific
         salaryScale.Grades = gradesnew;
 
         var scale = serviceSalaryScale.Update(salaryScale, null);
-        Task.Run(() => NewVersion(idsalaryscale));
+        Task.Run(() => NewVersion(idsalaryscale, "Modificado via Excel"));
 
         return "import_ok";
       }

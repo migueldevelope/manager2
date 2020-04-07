@@ -164,13 +164,14 @@ namespace Manager.Controllers
     /// Incluir nova tabela salarial
     /// </summary>
     /// <param name="idsalaryscale">identificador da tabela salarial</param>
+    /// <param name="comments">comentarios da alteração</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPost]
     [Route("newversion/{idsalaryscale}")]
-    public async Task<IActionResult> NewVersion(string idsalaryscale)
+    public async Task<IActionResult> NewVersion([FromBody] ViewCrudComment comments, string idsalaryscale)
     {
-      return await Task.Run(() => Ok(service.NewVersion(idsalaryscale)));
+      return await Task.Run(() => Ok(service.NewVersion(idsalaryscale, comments.Comments)));
     }
     #endregion
 
