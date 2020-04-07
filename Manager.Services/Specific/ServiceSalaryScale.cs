@@ -254,6 +254,22 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateLog(string id, ViewCrudComment view)
+    {
+      try
+      {
+        var salaryScaleLog = serviceSalaryScaleLog.GetNewVersion(p => p._id == view._id).Result;
+        salaryScaleLog.Description = view.Comments;
+        serviceSalaryScaleLog.Update(salaryScaleLog, null).Wait();
+        return "Salary scale Log altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string Delete(string id)
     {
       try

@@ -40,5 +40,6 @@ namespace Manager.Core.Interfaces
     string UpdateSteps(string id, decimal percent);
     string RestoreVersion(string idsalaryscale);
     string ExportSalaryScaleLog(string idsalaryscale);
+    string UpdateLog(string id, ViewCrudComment view);
   }
 }
