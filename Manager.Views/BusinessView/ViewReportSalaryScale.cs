@@ -5,6 +5,7 @@ namespace Manager.Views.BusinessView
 {
   public class ViewReportSalaryScale
   {
+    public string Name { get; set; }
     public EnumSteps StepMedium { get; set; }
     public int GradeWordload { get; set; }
     public string GradeName { get; set; }
