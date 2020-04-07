@@ -1040,8 +1040,8 @@ namespace Manager.Services.Specific
           {
             Company = salaryScale.Company.Name,
             Name = salaryScale.Name,
-            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") : salaryScaleLog.Date.Value.ToString("dd/MM/yyyy hh:mm:ss"),
-            Date = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss")
+            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
+            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
           };
 
           var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname, view);
