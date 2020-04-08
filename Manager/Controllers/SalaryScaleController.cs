@@ -158,7 +158,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatelog/{id}")]
-    public async Task<IActionResult> UpdateLog([FromBody]ViewCrudComment view, string id)
+    public async Task<IActionResult> UpdateLog([FromBody]ViewCrudDescription view, string id)
     {
       return await Task.Run(() => Ok(service.UpdateLog(id, view)));
     }
@@ -179,14 +179,14 @@ namespace Manager.Controllers
     /// Incluir nova tabela salarial
     /// </summary>
     /// <param name="idsalaryscale">identificador da tabela salarial</param>
-    /// <param name="comments">comentarios da alteração</param>
+    /// <param name="view">comentarios da alteração</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPost]
     [Route("newversion/{idsalaryscale}")]
-    public async Task<IActionResult> NewVersion([FromBody] ViewCrudComment comments, string idsalaryscale)
+    public async Task<IActionResult> NewVersion([FromBody] ViewCrudDescription view, string idsalaryscale)
     {
-      return await Task.Run(() => Ok(service.NewVersion(idsalaryscale, comments.Comments)));
+      return await Task.Run(() => Ok(service.NewVersion(idsalaryscale, view.Description)));
     }
     #endregion
 

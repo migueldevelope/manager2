@@ -255,12 +255,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateLog(string id, ViewCrudComment view)
+    public string UpdateLog(string id, ViewCrudDescription view)
     {
       try
       {
-        var salaryScaleLog = serviceSalaryScaleLog.GetNewVersion(p => p._id == view._id).Result;
-        salaryScaleLog.Description = view.Comments;
+        var salaryScaleLog = serviceSalaryScaleLog.GetNewVersion(p => p._id == id).Result;
+        salaryScaleLog.Description = view.Description;
         serviceSalaryScaleLog.Update(salaryScaleLog, null).Wait();
         return "Salary scale Log altered!";
       }
