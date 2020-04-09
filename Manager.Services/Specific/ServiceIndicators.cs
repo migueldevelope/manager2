@@ -116,15 +116,15 @@ namespace Manager.Services.Specific
       {
         var view = new ViewDashboard();
         var maturity = serviceMaturity.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
-        var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+        //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var plans = servicePlan.GetAllNewVersion(p => p.StatusPlan != EnumStatusPlan.NoRealized).Result;
 
         view.MonitoringRealized = maturity.Sum(p => p.CountMonitoring);
         view.CertificationRealized = maturity.Sum(p => p.CountCertification);
         view.Recommendation = maturity.Sum(p => p.CountRecommendation);
-        view.OnBoardingWait = onboardings.Count();
-        view.CheckpointWait = checkpoints.Count();
+        view.OnBoardingWait = persons.Where(p=> p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).Count();
+        view.CheckpointWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).Count();
         view.Plans = plans.Count();
 
         return view;
