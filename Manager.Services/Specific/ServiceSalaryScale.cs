@@ -446,7 +446,7 @@ namespace Manager.Services.Specific
                   {
                     newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                   }
-                  if ((occupationStep.StepLimit != EnumSteps.E) && (step.Step > occupationStep.StepLimit))
+                  if ((occupationStep.StepLimit != EnumSteps.Default) && (step.Step > occupationStep.StepLimit))
                     newStep.Salary = 0;
 
                   occupationStep.Steps.Add(newStep);
