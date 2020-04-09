@@ -118,7 +118,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewVersion(string idsalaryscale)
+    public string NewVersion(string idsalaryscale, string description)
     {
       try
       {
@@ -127,6 +127,7 @@ namespace Manager.Services.Specific
         var salaryScale = new SalaryScaleLog()
         {
           Name = old.Name,
+          Description = description,
           Company = old.Company,
           Grades = null,
           _idSalaryScalePrevious = old._id,
@@ -253,6 +254,22 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string UpdateLog(string id, ViewCrudDescription view)
+    {
+      try
+      {
+        var salaryScaleLog = serviceSalaryScaleLog.GetNewVersion(p => p._id == id).Result;
+        salaryScaleLog.Description = view.Description;
+        serviceSalaryScaleLog.Update(salaryScaleLog, null).Wait();
+        return "Salary scale Log altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string Delete(string id)
     {
       try
@@ -278,7 +295,8 @@ namespace Manager.Services.Specific
             _id = x._id,
             Name = x.Name,
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
-            Date = x.Date
+            Date = x.Date,
+            Description = x.Description
           }).ToList();
         total = serviceSalaryScaleLog.CountNewVersion(p => p._idSalaryScalePrevious == idsalaryscale && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.OrderByDescending(p => p.Date).ToList();
@@ -299,6 +317,7 @@ namespace Manager.Services.Specific
           Company = new ViewListCompany() { _id = item.Company._id, Name = item.Company.Name },
           Name = item.Name,
           _id = item._id,
+          Description = item.Description,
           Date = item.Date,
           Grades = item.Grades,
           _idSalaryScalePrevious = item._idSalaryScalePrevious
@@ -427,7 +446,7 @@ namespace Manager.Services.Specific
                   {
                     newStep.Salary = Math.Round((step.Salary * occupationStep.Wordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                   }
-                  if ((occupationStep.StepLimit != EnumSteps.E) && (step.Step > occupationStep.StepLimit))
+                  if ((occupationStep.StepLimit != EnumSteps.Default) && (step.Step > occupationStep.StepLimit))
                     newStep.Salary = 0;
 
                   occupationStep.Steps.Add(newStep);
@@ -708,7 +727,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        Task.Run(() => NewVersion(id));
+        var description = "Atualização de " + percent + "%";
+        Task.Run(() => NewVersion(id, description));
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         foreach (var item in salaryScale.Grades)
         {
@@ -893,7 +913,7 @@ namespace Manager.Services.Specific
         salaryScale.Grades = gradesnew;
 
         var scale = serviceSalaryScale.Update(salaryScale, null);
-        Task.Run(() => NewVersion(idsalaryscale));
+        Task.Run(() => NewVersion(idsalaryscale, "Modificado via Excel"));
 
         return "import_ok";
       }
@@ -1040,8 +1060,8 @@ namespace Manager.Services.Specific
           {
             Company = salaryScale.Company.Name,
             Name = salaryScale.Name,
-            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
-            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            Version = salaryScaleLog == null ? DateTime.Now.AddHours(-3).ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
+            Date = DateTime.Now.ToString("dd/MM/yyyy")
           };
 
           var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname, view);
@@ -1188,8 +1208,8 @@ namespace Manager.Services.Specific
           {
             Company = salaryScale.Company.Name,
             Name = salaryScale.Name,
-            Version = salaryScaleLog == null ? DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") : salaryScaleLog.Date.Value.ToString("dd/MM/yyyy hh:mm:ss"),
-            Date = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss")
+            Version = salaryScaleLog == null ? DateTime.Now.AddHours(-3).ToString("dd/MM/yyyy HH:mm") : salaryScaleLog.Date.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
+            Date = DateTime.Now.ToString("dd/MM/yyyy")
           };
 
           var export = serviceExcel.ExportSalaryScale(new Tuple<double[][], string[], string[], string[], string[], int[], long>(matriz, occupationsname, grades, groups, spheres, workloads, row + 1), descriptionname, view);

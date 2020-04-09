@@ -33,12 +33,13 @@ namespace Manager.Core.Interfaces
     string AddOccupationSalaryScale(ViewCrudOccupationSalaryScale view);
     string ExportSalaryScale(string idsalaryscale);
     string ExportUpdateSalaryScale(string idsalaryscale);
-    string NewVersion(string idsalaryscale);
+    string NewVersion(string idsalaryscale, string description);
     List<ViewListSalaryScaleLog> ListSalaryScaleLog(string idsalaryscale, ref long total, int count = 10, int page = 1, string filter = "");
     ViewCrudSalaryScaleLog GetSalaryScaleLog(string id);
     List<ViewListGrade> ListGradeManager(string idmanager, ref long total, int count = 10, int page = 1, string filter = "");
     string UpdateSteps(string id, decimal percent);
     string RestoreVersion(string idsalaryscale);
     string ExportSalaryScaleLog(string idsalaryscale);
+    string UpdateLog(string id, ViewCrudDescription view);
   }
 }

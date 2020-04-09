@@ -72,6 +72,9 @@ namespace Manager.Services.Specific
           Title = view.Title,
           Description = view.Description,
           Enabled = view.Enabled,
+          Infra = view.Infra,
+          Employee = view.Employee,
+          Manager = view.Manager,
           Included = DateTime.Now
         }).Result;
 
@@ -92,6 +95,9 @@ namespace Manager.Services.Specific
         model.Title = view.Title;
         model.Description = view.Description;
         model.Enabled = view.Enabled;
+        model.Infra = view.Infra;
+        model.Employee = view.Employee;
+        model.Manager = view.Manager;
 
         serviceNewsletter.Update(model, null).Wait();
 
@@ -122,6 +128,28 @@ namespace Manager.Services.Specific
           .Select(x => x.GetViewList()).ToList();
         total = serviceNewsletter.CountNewVersion(p => p.Title.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListNewsletter> ListNewsletter(EnumPortal portal, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var detail = serviceNewsletter.GetAllNewVersion(p => p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result
+          ;
+        if (portal == EnumPortal.Infra)
+          detail = detail.Where(p => p.Infra == true).ToList();
+        if (portal == EnumPortal.Employee)
+          detail = detail.Where(p => p.Employee == true).ToList();
+        if (portal == EnumPortal.Manager)
+          detail = detail.Where(p => p.Infra == true).ToList();
+
+        total = serviceNewsletter.CountNewVersion(p => p.Title.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail.Select(x => x.GetViewList()).ToList();
       }
       catch (Exception e)
       {

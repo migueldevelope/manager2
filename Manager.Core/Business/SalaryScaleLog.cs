@@ -8,10 +8,11 @@ using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
-  public class SalaryScaleLog: BaseEntity
+  public class SalaryScaleLog : BaseEntity
   {
     public ViewListCompany Company { get; set; }
     public string Name { get; set; }
+    public string Description { get; set; }
     public List<ViewListGrade> Grades { get; set; }
     public DateTime? Date { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]

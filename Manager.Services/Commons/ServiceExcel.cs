@@ -182,7 +182,10 @@ namespace Manager.Services.Commons
 
           for (int j = 6; j < 14; j++)
           {
-            row.CreateCell(j).SetCellValue(matriz[i - 6][j - 6]);
+            if (matriz[i - 6][j - 6].ToString() == "0")
+              row.CreateCell(j).SetCellValue("");
+            else
+              row.CreateCell(j).SetCellValue(matriz[i - 6][j - 6]);
           }
         }
         //FileStream sw = File.Create(ObjectId.GenerateNewId() + DateTime.Now.ToShortDateString().Replace("/", "") + ".xlsx");
