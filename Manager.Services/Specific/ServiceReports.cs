@@ -339,7 +339,7 @@ namespace Manager.Services.Specific
         var detail = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
         var log = serviceSalaryScaleLog.GetAllNewVersion(p => p._idSalaryScalePrevious == id).Result.LastOrDefault();
         var version = DateTime.Now.AddHours(-3);
-        if (version != null)
+        if (log != null)
           version = log.Date.Value.AddHours(-3);
 
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
@@ -395,7 +395,7 @@ namespace Manager.Services.Specific
                   occupationStep.OccupationSalaryStep7 = Math.Round((occupationStep.SalaryStep7 * occupationStep.OccupationWordload) / (grade.Workload == 0 ? 1 : grade.Workload), 2);
                 }
                 var steplimit = occ.SalaryScales.Where(p => p._idGrade == grade._id).FirstOrDefault().StepLimit;
-                if(steplimit != EnumSteps.Default)
+                if (steplimit != EnumSteps.Default)
                 {
                   if (steplimit < EnumSteps.B)
                     occupationStep.OccupationSalaryStep1 = 0;
@@ -1217,9 +1217,9 @@ namespace Manager.Services.Specific
               UserComment = EnumUserComment.Person,
               _idItem = item.Skill._id,
               TypeItem = EnumTypeItem.SkillCompany,
-              TypeSkill = item.Skill.TypeSkill
+              TypeSkill = item.Skill.TypeSkill,
+              Praise = item.Praise
             };
-
             data.Add(result);
           }
           else
@@ -1243,12 +1243,92 @@ namespace Manager.Services.Specific
                 UserComment = com.UserComment,
                 _idItem = item.Skill._id,
                 TypeItem = EnumTypeItem.SkillCompany,
-                TypeSkill = item.Skill.TypeSkill
+                TypeSkill = item.Skill.TypeSkill,
+                Praise = item.Praise
               };
 
               data.Add(result);
             }
           }
+
+          if (item.Plans.Count > 0)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan.Skills.Count > 0)
+              {
+                foreach (var sk in plan.Skills)
+                {
+                  result = new ViewReportsMonitoring()
+                  {
+                    Name = monitoring.Person.Name,
+                    Occupation = person.Occupation.Name,
+                    CommentsPerson = monitoring.CommentsPerson,
+                    CommentsManager = monitoring.CommentsManager,
+                    CommentsEnd = monitoring.CommentsEnd,
+                    Manager = monitoring.Person.Manager,
+                    DateAdm = monitoring.Person.DateAdm,
+                    TypeJourney = monitoring.Person.TypeJourney,
+                    Schooling = monitoring.Person.Schooling,
+                    Comments = "",
+                    Concept = item.Skill.Concept,
+                    NameItem = item.Skill.Name,
+                    UserComment = EnumUserComment.Person,
+                    _idItem = item.Skill._id,
+                    TypeItem = EnumTypeItem.SkillCompany,
+                    TypeSkill = item.Skill.TypeSkill,
+                    NamePlan = plan.Name,
+                    DescriptionPlan = plan.Description,
+                    Deadline = plan.Deadline,
+                    SourcePlan = plan.SourcePlan,
+                    StatusPlan = plan.StatusPlan,
+                    StatusPlanApproved = plan.StatusPlanApproved,
+                    Evaluation = plan.Evaluation,
+                    TextEnd = plan.TextEnd,
+                    TextEndManager = plan.TextEndManager,
+                    SkillPlan = sk.Name,
+                    ConceptPlan  = sk.Concept
+                  };
+                }
+              }
+              else
+              {
+                result = new ViewReportsMonitoring()
+                {
+                  Name = monitoring.Person.Name,
+                  Occupation = person.Occupation.Name,
+                  CommentsPerson = monitoring.CommentsPerson,
+                  CommentsManager = monitoring.CommentsManager,
+                  CommentsEnd = monitoring.CommentsEnd,
+                  Manager = monitoring.Person.Manager,
+                  DateAdm = monitoring.Person.DateAdm,
+                  TypeJourney = monitoring.Person.TypeJourney,
+                  Schooling = monitoring.Person.Schooling,
+                  Comments = "",
+                  Concept = item.Skill.Concept,
+                  NameItem = item.Skill.Name,
+                  UserComment = EnumUserComment.Person,
+                  _idItem = item.Skill._id,
+                  TypeItem = EnumTypeItem.SkillCompany,
+                  TypeSkill = item.Skill.TypeSkill,
+                  NamePlan = plan.Name,
+                  DescriptionPlan = plan.Description,
+                  Deadline = plan.Deadline,
+                  SourcePlan = plan.SourcePlan,
+                  StatusPlan = plan.StatusPlan,
+                  StatusPlanApproved = plan.StatusPlanApproved,
+                  Evaluation = plan.Evaluation,
+                  TextEnd = plan.TextEnd,
+                  TextEndManager = plan.TextEndManager,
+                  SkillPlan = "",
+                };
+              }
+
+
+              data.Add(result);
+            }
+          }
+
         }
 
 
@@ -1274,7 +1354,8 @@ namespace Manager.Services.Specific
               NameItem = item.Activities.Name,
               UserComment = EnumUserComment.Person,
               _idItem = item.Activities._id,
-              TypeItem = EnumTypeItem.Activitie,
+              TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
+              Praise = item.Praise
             };
 
             data.Add(result);
@@ -1299,7 +1380,8 @@ namespace Manager.Services.Specific
                 NameItem = item.Activities.Name,
                 UserComment = com.UserComment,
                 _idItem = item.Activities._id,
-                TypeItem = EnumTypeItem.Activitie,
+                TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
+                Praise = item.Praise
               };
 
               data.Add(result);
@@ -1334,7 +1416,8 @@ namespace Manager.Services.Specific
               UserComment = EnumUserComment.Person,
               _idItem = item.Schooling._id,
               TypeItem = EnumTypeItem.Schooling,
-              Type = item.Schooling.Type
+              Type = item.Schooling.Type,
+              Praise = item.Praise
             };
 
             data.Add(result);
@@ -1361,7 +1444,8 @@ namespace Manager.Services.Specific
                 UserComment = com.UserComment,
                 _idItem = item.Schooling._id,
                 TypeItem = EnumTypeItem.Schooling,
-                Type = item.Schooling.Type
+                Type = item.Schooling.Type,
+                Praise = item.Praise
               };
 
               data.Add(result);

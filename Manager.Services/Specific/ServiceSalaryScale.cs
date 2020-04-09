@@ -150,7 +150,8 @@ namespace Manager.Services.Specific
                   _id = occ._id,
                   Name = occ.Name,
                   Description = occ.Description,
-                  Wordload = occ.SalaryScales.FirstOrDefault().Workload,
+                  Wordload = occ.SalaryScales.Where(p =>p._idSalaryScale == idsalaryscale).FirstOrDefault().Workload,
+                  StepLimit = occ.SalaryScales.Where(p => p._idSalaryScale == idsalaryscale).FirstOrDefault().StepLimit,
                   Process = occ.Process == null ? null : occ.Process.Select(
                   x => new ViewListProcessLevelTwo()
                   {
@@ -186,7 +187,7 @@ namespace Manager.Services.Specific
             Order = grade.Order,
             Wordload = grade.Workload,
             Steps = new List<ViewListStep>(),
-            Occupation = occupation,
+            Occupation = occupation
           };
           foreach (var step in grade.ListSteps)
           {
