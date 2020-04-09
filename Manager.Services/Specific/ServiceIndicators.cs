@@ -119,10 +119,12 @@ namespace Manager.Services.Specific
         //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var plans = servicePlan.GetAllNewVersion(p => p.StatusPlan != EnumStatusPlan.NoRealized).Result;
+        var recommendation = serviceRecommendation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var certification = serviceCertification.GetAllNewVersion(p => p.StatusCertification == EnumStatusCertification.Approved).Result;
 
         view.MonitoringRealized = maturity.Sum(p => p.CountMonitoring);
-        view.CertificationRealized = maturity.Sum(p => p.CountCertification);
-        view.Recommendation = maturity.Sum(p => p.CountRecommendation);
+        view.CertificationRealized = certification.Count();
+        view.Recommendation = recommendation.Count();
         view.OnBoardingWait = persons.Where(p=> p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).Count();
         view.CheckpointWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).Count();
         view.Plans = plans.Count();
