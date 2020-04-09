@@ -17,6 +17,7 @@ namespace Manager.Services.Specific
   public class ServiceNewsletter : Repository<Newsletter>, IServiceNewsletter
   {
     private readonly ServiceGeneric<Newsletter> serviceNewsletter;
+    private readonly ServiceGeneric<NewsletterRead> serviceNewsletterRead;
     private readonly ServiceGeneric<Person> servicePerson;
 
     #region Constructor
@@ -25,6 +26,7 @@ namespace Manager.Services.Specific
       try
       {
         serviceNewsletter = new ServiceGeneric<Newsletter>(context);
+        serviceNewsletterRead = new ServiceGeneric<NewsletterRead>(context);
         servicePerson = new ServiceGeneric<Person>(context);
       }
       catch (Exception e)
@@ -139,7 +141,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
+        var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
         if (portal == EnumPortal.Infra)
           detail = detail.Where(p => p.Infra == true).ToList();
         if (portal == EnumPortal.Employee)
@@ -158,6 +160,90 @@ namespace Manager.Services.Specific
 
     #endregion
 
+    #region NewsletterRead
+    public string DeleteNewsletterRead(string id)
+    {
+      try
+      {
+        var item = serviceNewsletterRead.GetNewVersion(p => p._id == id).Result;
+        item.Status = EnumStatus.Disabled;
+        serviceNewsletterRead.Update(item, null).Wait();
+        return "Newsletter deleted!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
+    public string NewNewsletterRead(ViewCrudNewsletterRead view)
+    {
+      try
+      {
+        var newsletter = serviceNewsletterRead.InsertNewVersion(new NewsletterRead()
+        {
+          _id = view._id,
+          _idNewsletter = view._idNewsletter,
+          _idUser = view._idUser,
+          ReadDate = view.ReadDate,
+          DontShow = view.DontShow
+        }).Result;
+
+
+        return "Newsletter added!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public string UpdateNewsletterRead(ViewCrudNewsletterRead view)
+    {
+      try
+      {
+        var model = serviceNewsletterRead.GetNewVersion(p => p._id == view._id).Result;
+
+        model._idNewsletter = view._idNewsletter;
+        model._idUser = view._idUser;
+        model.ReadDate = view.ReadDate;
+        model.DontShow = view.DontShow;
+
+        serviceNewsletterRead.Update(model, null).Wait();
+
+
+        return "Newsletter altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public ViewCrudNewsletterRead GetNewsletterRead(string id)
+    {
+      try
+      {
+        return serviceNewsletterRead.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+    public List<ViewListNewsletterRead> ListNewsletterRead(ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var detail = serviceNewsletterRead.GetAllNewVersion(p => p._idNewsletter.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result
+          .Select(x => x.GetViewList()).ToList();
+        total = serviceNewsletterRead.CountNewVersion(p => p._idNewsletter.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
   }
 }

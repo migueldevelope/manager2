@@ -18,5 +18,12 @@ namespace Manager.Core.Interfaces
     ViewCrudNewsletter Get(string id);
     List<ViewListNewsletter> List(ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListNewsletter> ListNewsletter(EnumPortal portal, ref long total, int count = 10, int page = 1, string filter = "");
+
+
+    string DeleteNewsletterRead(string id);
+    string NewNewsletterRead(ViewCrudNewsletterRead view);
+    string UpdateNewsletterRead(ViewCrudNewsletterRead view);
+    ViewCrudNewsletterRead GetNewsletterRead(string id);
+    List<ViewListNewsletterRead> ListNewsletterRead(ref long total, int count = 10, int page = 1, string filter = "");
   }
 }

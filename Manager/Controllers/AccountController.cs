@@ -6,6 +6,7 @@ using Manager.Views.BusinessNew;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -47,7 +48,14 @@ namespace Manager.Controllers
     [Route("new")]
     public async Task<IActionResult> Post([FromBody]ViewNewAccount view)
     {
-      return await Task.Run(() => Ok(service.NewAccount(view)));
+      try
+      {
+        return await Task.Run(() => Ok(service.NewAccount(view)));
+      }
+      catch (Exception e)
+      {
+        return await Task.Run(() => BadRequest(e.Message));
+      }
     }
 
     /// <summary>

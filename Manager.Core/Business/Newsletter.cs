@@ -36,7 +36,8 @@ namespace Manager.Core.Business
       {
         Title = Title,
         Description = Description,
-        _id = _id
+        _id = _id,
+        Enabled = Enabled
       };
     }
   }
