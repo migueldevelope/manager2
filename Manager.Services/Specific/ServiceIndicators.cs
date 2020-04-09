@@ -119,7 +119,7 @@ namespace Manager.Services.Specific
         //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var plans = servicePlan.GetAllNewVersion(p => p.StatusPlan != EnumStatusPlan.NoRealized).Result;
-        var recommendation = serviceRecommendation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var recommendation = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var certification = serviceCertification.GetAllNewVersion(p => p.StatusCertification == EnumStatusCertification.Approved).Result;
 
         view.MonitoringRealized = maturity.Sum(p => p.CountMonitoring);
