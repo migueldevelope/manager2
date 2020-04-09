@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,26 @@ namespace Manager.Controllers
       Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="portal"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listnewsletter/{portal}")]
+    public async Task<List<ViewListNewsletter>> ListNewsletter(EnumPortal portal, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListNewsletter> result = service.ListNewsletter(portal, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
     /// <summary>
     /// Cadastrar uma nova empresa
     /// </summary>
