@@ -39,6 +39,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<Plan> servicePlan;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
+    private readonly ServiceGeneric<SalaryScaleLog> serviceSalaryScaleLog;
     private readonly ServiceLog serviceLog;
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<MailLog> serviceMail;
@@ -83,6 +84,7 @@ namespace Manager.Services.Specific
         serviceRecommendationPerson = new ServiceGeneric<RecommendationPerson>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
+        serviceSalaryScaleLog = new ServiceGeneric<SalaryScaleLog>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceArea = new ServiceGeneric<Area>(context);
         serviceReport = new ServiceGeneric<Reports>(context);
@@ -335,6 +337,11 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceSalaryScale.GetNewVersion(p => p._id == id).Result;
+        var log = serviceSalaryScaleLog.GetAllNewVersion(p => p._idSalaryScalePrevious == id).Result.LastOrDefault();
+        var version = DateTime.Now.AddHours(-3);
+        if (version != null)
+          version = log.Date.Value.AddHours(-3);
+
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         var data = new List<ViewReportSalaryScale>();
@@ -352,6 +359,8 @@ namespace Manager.Services.Specific
                   GradeName = grade.Name,
                   GradeWordload = grade.Workload,
                   OccupationName = occ.Name,
+                  NameCompany = occ.Group.Company.Name,
+                  Version = version,
                   OccupationWordload = occ.SalaryScales.Where(p => p._idSalaryScale == id).FirstOrDefault().Workload,
                   Order = grade.Order,
                   StepMedium = grade.StepMedium
