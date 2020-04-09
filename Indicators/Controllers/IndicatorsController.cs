@@ -51,6 +51,19 @@ namespace Indicators.Controllers
       //return null;
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getdashboard")]
+    public async Task<ViewDashboard> GetDashboard()
+    {
+      return await Task.Run(() => service.GetDashboard());
+    }
+
     /// <summary>
     /// 
     /// </summary>
