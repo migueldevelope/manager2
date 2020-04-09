@@ -139,8 +139,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = serviceNewsletter.GetAllNewVersion(p => p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result
-          ;
+        var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
         if (portal == EnumPortal.Infra)
           detail = detail.Where(p => p.Infra == true).ToList();
         if (portal == EnumPortal.Employee)
