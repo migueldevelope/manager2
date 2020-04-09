@@ -1390,7 +1390,81 @@ namespace Manager.Services.Specific
           }
 
 
+          if (item.Plans.Count > 0)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan.Skills.Count > 0)
+              {
+                foreach (var sk in plan.Skills)
+                {
+                  result = new ViewReportsMonitoring()
+                  {
+                    Name = monitoring.Person.Name,
+                    Occupation = person.Occupation.Name,
+                    CommentsPerson = monitoring.CommentsPerson,
+                    CommentsManager = monitoring.CommentsManager,
+                    CommentsEnd = monitoring.CommentsEnd,
+                    Manager = monitoring.Person.Manager,
+                    DateAdm = monitoring.Person.DateAdm,
+                    TypeJourney = monitoring.Person.TypeJourney,
+                    Schooling = monitoring.Person.Schooling,
+                    Comments = "",
+                    Order = item.Activities.Order,
+                    NameItem = item.Activities.Name,
+                    UserComment = EnumUserComment.Person,
+                    _idItem = item.Activities._id,
+                    TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
+                    NamePlan = plan.Name,
+                    DescriptionPlan = plan.Description,
+                    Deadline = plan.Deadline,
+                    SourcePlan = plan.SourcePlan,
+                    StatusPlan = plan.StatusPlan,
+                    StatusPlanApproved = plan.StatusPlanApproved,
+                    Evaluation = plan.Evaluation,
+                    TextEnd = plan.TextEnd,
+                    TextEndManager = plan.TextEndManager,
+                    SkillPlan = sk.Name,
+                    ConceptPlan = sk.Concept
+                  };
+                }
+              }
+              else
+              {
+                result = new ViewReportsMonitoring()
+                {
+                  Name = monitoring.Person.Name,
+                  Occupation = person.Occupation.Name,
+                  CommentsPerson = monitoring.CommentsPerson,
+                  CommentsManager = monitoring.CommentsManager,
+                  CommentsEnd = monitoring.CommentsEnd,
+                  Manager = monitoring.Person.Manager,
+                  DateAdm = monitoring.Person.DateAdm,
+                  TypeJourney = monitoring.Person.TypeJourney,
+                  Schooling = monitoring.Person.Schooling,
+                  Comments = "",
+                  Order = item.Activities.Order,
+                  NameItem = item.Activities.Name,
+                  UserComment = EnumUserComment.Person,
+                  _idItem = item.Activities._id,
+                  TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
+                  NamePlan = plan.Name,
+                  DescriptionPlan = plan.Description,
+                  Deadline = plan.Deadline,
+                  SourcePlan = plan.SourcePlan,
+                  StatusPlan = plan.StatusPlan,
+                  StatusPlanApproved = plan.StatusPlanApproved,
+                  Evaluation = plan.Evaluation,
+                  TextEnd = plan.TextEnd,
+                  TextEndManager = plan.TextEndManager,
+                  SkillPlan = "",
+                };
+              }
 
+
+              data.Add(result);
+            }
+          }
         }
 
         foreach (var item in monitoring.Schoolings)
@@ -1454,6 +1528,85 @@ namespace Manager.Services.Specific
 
           }
 
+          if (item.Plans.Count > 0)
+          {
+            foreach (var plan in item.Plans)
+            {
+              if (plan.Skills.Count > 0)
+              {
+                foreach (var sk in plan.Skills)
+                {
+                  result = new ViewReportsMonitoring()
+                  {
+                    Name = monitoring.Person.Name,
+                    Occupation = person.Occupation.Name,
+                    CommentsPerson = monitoring.CommentsPerson,
+                    CommentsManager = monitoring.CommentsManager,
+                    CommentsEnd = monitoring.CommentsEnd,
+                    Manager = monitoring.Person.Manager,
+                    DateAdm = monitoring.Person.DateAdm,
+                    TypeJourney = monitoring.Person.TypeJourney,
+                    Schooling = monitoring.Person.Schooling,
+                    Comments = "",
+                    Complement = item.Schooling.Complement,
+                    NameItem = item.Schooling.Name,
+                    UserComment = EnumUserComment.Person,
+                    _idItem = item.Schooling._id,
+                    TypeItem = EnumTypeItem.Schooling,
+                    Type = item.Schooling.Type,
+                    Order = item.Schooling.Order,
+                    NamePlan = plan.Name,
+                    DescriptionPlan = plan.Description,
+                    Deadline = plan.Deadline,
+                    SourcePlan = plan.SourcePlan,
+                    StatusPlan = plan.StatusPlan,
+                    StatusPlanApproved = plan.StatusPlanApproved,
+                    Evaluation = plan.Evaluation,
+                    TextEnd = plan.TextEnd,
+                    TextEndManager = plan.TextEndManager,
+                    SkillPlan = sk.Name,
+                    ConceptPlan = sk.Concept
+                  };
+                }
+              }
+              else
+              {
+                result = new ViewReportsMonitoring()
+                {
+                  Name = monitoring.Person.Name,
+                  Occupation = person.Occupation.Name,
+                  CommentsPerson = monitoring.CommentsPerson,
+                  CommentsManager = monitoring.CommentsManager,
+                  CommentsEnd = monitoring.CommentsEnd,
+                  Manager = monitoring.Person.Manager,
+                  DateAdm = monitoring.Person.DateAdm,
+                  TypeJourney = monitoring.Person.TypeJourney,
+                  Schooling = monitoring.Person.Schooling,
+                  Comments = "",
+                  Complement = item.Schooling.Complement,
+                  NameItem = item.Schooling.Name,
+                  UserComment = EnumUserComment.Person,
+                  _idItem = item.Schooling._id,
+                  TypeItem = EnumTypeItem.Schooling,
+                  Type = item.Schooling.Type,
+                  Order = item.Schooling.Order,
+                  NamePlan = plan.Name,
+                  DescriptionPlan = plan.Description,
+                  Deadline = plan.Deadline,
+                  SourcePlan = plan.SourcePlan,
+                  StatusPlan = plan.StatusPlan,
+                  StatusPlanApproved = plan.StatusPlanApproved,
+                  Evaluation = plan.Evaluation,
+                  TextEnd = plan.TextEnd,
+                  TextEndManager = plan.TextEndManager,
+                  SkillPlan = "",
+                };
+              }
+
+
+              data.Add(result);
+            }
+          }
         }
 
         var view = new ViewReport()
