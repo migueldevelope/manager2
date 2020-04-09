@@ -449,7 +449,7 @@ namespace Manager.Services.Auth
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
-            TypeHistory = EnumTypeHistory.Change,
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Establishment,
             Register = DateTime.UtcNow,
             OldKey = saveEstablishment?._id,
@@ -479,7 +479,7 @@ namespace Manager.Services.Auth
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
-            TypeHistory = EnumTypeHistory.Change,
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Occupation,
             Register = DateTime.UtcNow,
             OldKey = saveOccupation?._id,
@@ -494,7 +494,7 @@ namespace Manager.Services.Auth
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
-            TypeHistory = EnumTypeHistory.Change,
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Salary,
             Register = DateTime.UtcNow,
             OldKey = null,
@@ -509,7 +509,7 @@ namespace Manager.Services.Auth
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
-            TypeHistory = EnumTypeHistory.Change,
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Manager,
             Register = DateTime.UtcNow,
             OldKey = saveManager?._id,
@@ -524,7 +524,7 @@ namespace Manager.Services.Auth
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
-            TypeHistory = EnumTypeHistory.Change,
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
             TypeChange = EnumTypeHistoryChange.Jorney,
             Register = DateTime.UtcNow,
             OldKey = ((int)saveTypeJourney).ToString(),

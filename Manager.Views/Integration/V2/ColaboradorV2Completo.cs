@@ -239,6 +239,10 @@ namespace Manager.Views.Integration.V2
     {
       try
       {
+        if (field == null)
+        {
+          return null;
+        }
         DateTime.TryParse(field.Substring(0, 10), CultureInfo.CreateSpecificCulture(culture), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
         DateTime? result = defaultValue;
         if (!string.IsNullOrEmpty(field))
