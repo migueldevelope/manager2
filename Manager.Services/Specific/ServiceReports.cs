@@ -1218,7 +1218,7 @@ namespace Manager.Services.Specific
               _idItem = item.Skill._id,
               TypeItem = EnumTypeItem.SkillCompany,
               TypeSkill = item.Skill.TypeSkill,
-              Praise = item.Praise
+              TypeMonitoringAction = EnumTypeMonitoringAction.Comments,
             };
             data.Add(result);
           }
@@ -1244,7 +1244,7 @@ namespace Manager.Services.Specific
                 _idItem = item.Skill._id,
                 TypeItem = EnumTypeItem.SkillCompany,
                 TypeSkill = item.Skill.TypeSkill,
-                Praise = item.Praise
+                TypeMonitoringAction = EnumTypeMonitoringAction.Comments,
               };
 
               data.Add(result);
@@ -1287,7 +1287,8 @@ namespace Manager.Services.Specific
                     TextEnd = plan.TextEnd,
                     TextEndManager = plan.TextEndManager,
                     SkillPlan = sk.Name,
-                    ConceptPlan  = sk.Concept
+                    ConceptPlan = sk.Concept,
+                    TypeMonitoringAction = EnumTypeMonitoringAction.Plan
                   };
                 }
               }
@@ -1321,12 +1322,41 @@ namespace Manager.Services.Specific
                   TextEnd = plan.TextEnd,
                   TextEndManager = plan.TextEndManager,
                   SkillPlan = "",
+                  TypeMonitoringAction = EnumTypeMonitoringAction.Plan
                 };
               }
 
 
               data.Add(result);
             }
+          }
+
+          if (item.Praise != null)
+          {
+            result = new ViewReportsMonitoring()
+            {
+              Name = monitoring.Person.Name,
+              Occupation = person.Occupation.Name,
+              CommentsPerson = monitoring.CommentsPerson,
+              CommentsManager = monitoring.CommentsManager,
+              CommentsEnd = monitoring.CommentsEnd,
+              Manager = monitoring.Person.Manager,
+              DateAdm = monitoring.Person.DateAdm,
+              TypeJourney = monitoring.Person.TypeJourney,
+              Schooling = monitoring.Person.Schooling,
+              Comments = "",
+              Concept = item.Skill.Concept,
+              NameItem = item.Skill.Name,
+              UserComment = EnumUserComment.Person,
+              _idItem = item.Skill._id,
+              TypeItem = EnumTypeItem.SkillCompany,
+              TypeSkill = item.Skill.TypeSkill,
+              Praise = item.Praise,
+              SkillPlan = "",
+              TypeMonitoringAction = EnumTypeMonitoringAction.Praise
+            };
+
+            data.Add(result);
           }
 
         }
@@ -1355,7 +1385,7 @@ namespace Manager.Services.Specific
               UserComment = EnumUserComment.Person,
               _idItem = item.Activities._id,
               TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
-              Praise = item.Praise
+              TypeMonitoringAction = EnumTypeMonitoringAction.Comments,
             };
 
             data.Add(result);
@@ -1381,7 +1411,7 @@ namespace Manager.Services.Specific
                 UserComment = com.UserComment,
                 _idItem = item.Activities._id,
                 TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
-                Praise = item.Praise
+                TypeMonitoringAction = EnumTypeMonitoringAction.Comments,
               };
 
               data.Add(result);
@@ -1425,7 +1455,8 @@ namespace Manager.Services.Specific
                     TextEnd = plan.TextEnd,
                     TextEndManager = plan.TextEndManager,
                     SkillPlan = sk.Name,
-                    ConceptPlan = sk.Concept
+                    ConceptPlan = sk.Concept,
+                    TypeMonitoringAction = EnumTypeMonitoringAction.Plan
                   };
                 }
               }
@@ -1458,6 +1489,7 @@ namespace Manager.Services.Specific
                   TextEnd = plan.TextEnd,
                   TextEndManager = plan.TextEndManager,
                   SkillPlan = "",
+                  TypeMonitoringAction = EnumTypeMonitoringAction.Plan
                 };
               }
 
@@ -1465,6 +1497,34 @@ namespace Manager.Services.Specific
               data.Add(result);
             }
           }
+
+          if (item.Praise != null)
+          {
+            result = new ViewReportsMonitoring()
+            {
+              Name = monitoring.Person.Name,
+              Occupation = person.Occupation.Name,
+              CommentsPerson = monitoring.CommentsPerson,
+              CommentsManager = monitoring.CommentsManager,
+              CommentsEnd = monitoring.CommentsEnd,
+              Manager = monitoring.Person.Manager,
+              DateAdm = monitoring.Person.DateAdm,
+              TypeJourney = monitoring.Person.TypeJourney,
+              Schooling = monitoring.Person.Schooling,
+              Comments = "",
+              NameItem = item.Activities.Name,
+              UserComment = EnumUserComment.Person,
+              _idItem = item.Activities._id,
+              TypeItem = item.TypeAtivitie == EnumTypeAtivitie.Scope ? EnumTypeItem.Scope : EnumTypeItem.Activitie,
+              Order = item.Activities.Order,
+              Praise = item.Praise,
+              SkillPlan = "",
+              TypeMonitoringAction = EnumTypeMonitoringAction.Praise
+            };
+
+            data.Add(result);
+          }
+
         }
 
         foreach (var item in monitoring.Schoolings)
@@ -1491,7 +1551,7 @@ namespace Manager.Services.Specific
               _idItem = item.Schooling._id,
               TypeItem = EnumTypeItem.Schooling,
               Type = item.Schooling.Type,
-              Praise = item.Praise
+              TypeMonitoringAction = EnumTypeMonitoringAction.Comments,
             };
 
             data.Add(result);
@@ -1519,7 +1579,7 @@ namespace Manager.Services.Specific
                 _idItem = item.Schooling._id,
                 TypeItem = EnumTypeItem.Schooling,
                 Type = item.Schooling.Type,
-                Praise = item.Praise
+                TypeMonitoringAction = EnumTypeMonitoringAction.Comments,
               };
 
               data.Add(result);
@@ -1565,7 +1625,8 @@ namespace Manager.Services.Specific
                     TextEnd = plan.TextEnd,
                     TextEndManager = plan.TextEndManager,
                     SkillPlan = sk.Name,
-                    ConceptPlan = sk.Concept
+                    ConceptPlan = sk.Concept,
+                    TypeMonitoringAction = EnumTypeMonitoringAction.Plan
                   };
                 }
               }
@@ -1600,6 +1661,7 @@ namespace Manager.Services.Specific
                   TextEnd = plan.TextEnd,
                   TextEndManager = plan.TextEndManager,
                   SkillPlan = "",
+                  TypeMonitoringAction = EnumTypeMonitoringAction.Plan
                 };
               }
 
@@ -1607,6 +1669,36 @@ namespace Manager.Services.Specific
               data.Add(result);
             }
           }
+
+          if (item.Praise != null)
+          {
+            result = new ViewReportsMonitoring()
+            {
+              Name = monitoring.Person.Name,
+              Occupation = person.Occupation.Name,
+              CommentsPerson = monitoring.CommentsPerson,
+              CommentsManager = monitoring.CommentsManager,
+              CommentsEnd = monitoring.CommentsEnd,
+              Manager = monitoring.Person.Manager,
+              DateAdm = monitoring.Person.DateAdm,
+              TypeJourney = monitoring.Person.TypeJourney,
+              Schooling = monitoring.Person.Schooling,
+              Comments = "",
+              Complement = item.Schooling.Complement,
+              NameItem = item.Schooling.Name,
+              UserComment = EnumUserComment.Person,
+              _idItem = item.Schooling._id,
+              TypeItem = EnumTypeItem.Schooling,
+              Type = item.Schooling.Type,
+              Order = item.Schooling.Order,
+              Praise = item.Praise,
+              SkillPlan = "",
+              TypeMonitoringAction = EnumTypeMonitoringAction.Praise
+            };
+
+            data.Add(result);
+          }
+
         }
 
         var view = new ViewReport()

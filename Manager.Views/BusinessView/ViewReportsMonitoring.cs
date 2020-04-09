@@ -40,5 +40,6 @@ namespace Manager.Views.BusinessView
     public string ConceptPlan { get; set; }
 
     public EnumUserComment UserComment { get; set; }
+    public EnumTypeMonitoringAction TypeMonitoringAction { get; set; }
   }
 }
