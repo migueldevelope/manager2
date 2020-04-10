@@ -1,13 +1,17 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace Manager.Core.Business
 {
   public class NewsletterRead : BaseEntity
   {
+    [BsonRepresentation(BsonType.ObjectId)]
     public string _idNewsletter { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
     public string _idUser { get; set; }
     public DateTime? ReadDate { get; set; }
     public bool DontShow { get; set; }
