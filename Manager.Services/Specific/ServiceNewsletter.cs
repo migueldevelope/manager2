@@ -142,12 +142,15 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
+        var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser && p.DontShow == false).Result.Select(p => p._idNewsletter);
         if (portal == EnumPortal.Infra)
           detail = detail.Where(p => p.Infra == true).ToList();
         if (portal == EnumPortal.Employee)
           detail = detail.Where(p => p.Employee == true).ToList();
         if (portal == EnumPortal.Manager)
           detail = detail.Where(p => p.Infra == true).ToList();
+
+        detail = detail.Where(p => !ids.Contains(p._id)).ToList();
 
         total = serviceNewsletter.CountNewVersion(p => p.Title.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Select(x => x.GetViewList()).ToList();
@@ -207,6 +210,26 @@ namespace Manager.Services.Specific
         model._idUser = view._idUser;
         model.ReadDate = view.ReadDate;
         model.DontShow = view.DontShow;
+
+        serviceNewsletterRead.Update(model, null).Wait();
+
+
+        return "Newsletter altered!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string UpdateNewsletterRead(string idnewsletter)
+    {
+      try
+      {
+        var model = serviceNewsletterRead.GetNewVersion(p => p._idNewsletter == idnewsletter && p._idUser == _user._idUser).Result;
+
+        model.ReadDate = DateTime.Now;
+        model.DontShow = true;
 
         serviceNewsletterRead.Update(model, null).Wait();
 

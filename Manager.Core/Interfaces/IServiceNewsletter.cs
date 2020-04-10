@@ -25,5 +25,6 @@ namespace Manager.Core.Interfaces
     string UpdateNewsletterRead(ViewCrudNewsletterRead view);
     ViewCrudNewsletterRead GetNewsletterRead(string id);
     List<ViewListNewsletterRead> ListNewsletterRead(ref long total, int count = 10, int page = 1, string filter = "");
+    string UpdateNewsletterRead(string idnewsletter);
   }
 }

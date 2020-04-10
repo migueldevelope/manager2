@@ -141,14 +141,14 @@ namespace Manager.Controllers
     /// <summary>
     /// Alterar a empresa
     /// </summary>
-    /// <param name="view">Objeto de manutenção da empresa</param>
+    /// <param name="idnewsletter">Objeto de manutenção da empresa</param>
     /// <returns>Mensagem de sucesso</returns>
     [Authorize]
     [HttpPut]
-    [Route("updatenewsletterread")]
-    public async Task<IActionResult> UpdateNewsletterRead([FromBody]ViewCrudNewsletterRead view)
+    [Route("updatenewsletterread/{idnewsletter}")]
+    public async Task<IActionResult> UpdateNewsletterRead(string idnewsletter)
     {
-      return await Task.Run(() => Ok(service.UpdateNewsletterRead(view)));
+      return await Task.Run(() => Ok(service.UpdateNewsletterRead(idnewsletter)));
     }
     #endregion
 
