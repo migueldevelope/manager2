@@ -142,7 +142,7 @@ namespace Manager.Services.Specific
       try
       {
         var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
-        var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser && p.DontShow == false).Result.Select(p => p._idNewsletter);
+        var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser && p.DontShow == true).Result.Select(p => p._idNewsletter);
         if (portal == EnumPortal.Infra)
           detail = detail.Where(p => p.Infra == true).ToList();
         if (portal == EnumPortal.Employee)
