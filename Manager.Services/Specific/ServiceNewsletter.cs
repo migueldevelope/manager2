@@ -77,7 +77,9 @@ namespace Manager.Services.Specific
           Infra = view.Infra,
           Employee = view.Employee,
           Manager = view.Manager,
-          Included = DateTime.Now
+          Included = DateTime.Now,
+          BeginDate = view.BeginDate,
+          EndDate = view.EndDate
         }).Result;
 
 
@@ -100,6 +102,8 @@ namespace Manager.Services.Specific
         model.Infra = view.Infra;
         model.Employee = view.Employee;
         model.Manager = view.Manager;
+        model.BeginDate = view.BeginDate;
+        model.EndDate = view.EndDate;
 
         serviceNewsletter.Update(model, null).Wait();
 
@@ -141,8 +145,11 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
-        var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser && p.DontShow == true).Result.Select(p => p._idNewsletter);
+        var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
+        && DateTime.Now >= p.BeginDate && DateTime.Now <= p.EndDate
+        && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
+
+        var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser).Result.Select(p => p._idNewsletter);
         if (portal == EnumPortal.Infra)
           detail = detail.Where(p => p.Infra == true).ToList();
         if (portal == EnumPortal.Employee)

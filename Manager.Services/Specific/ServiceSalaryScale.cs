@@ -752,7 +752,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._idSalaryScale).Result;
+        var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._idSalaryScale).Result;
         var list = new List<Grade>();
         foreach (var grade in salaryScale.Grades)
         {

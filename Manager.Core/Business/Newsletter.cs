@@ -14,6 +14,8 @@ namespace Manager.Core.Business
     public bool Manager { get; set; }
     public bool Employee { get; set; }
     public DateTime? Included { get; set; }
+    public DateTime? BeginDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public ViewCrudNewsletter GetViewCrud()
     {
@@ -26,6 +28,8 @@ namespace Manager.Core.Business
         Infra = Infra,
         Employee = Employee,
         Manager = Manager,
+        BeginDate = BeginDate,
+        EndDate = EndDate,
         _id = _id
       };
     }
