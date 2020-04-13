@@ -68,6 +68,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var begindate = DateTime.Parse(view.BeginDate.Value.Year + "-" + view.BeginDate.Value.Month + "-" + view.BeginDate.Value.Day + " 00:00");
+        var enddate = DateTime.Parse(view.EndDate.Value.Year + "-" + view.EndDate.Value.Month + "-" + view.EndDate.Value.Day + " 00:00");
+
         Newsletter newsletter = serviceNewsletter.InsertNewVersion(new Newsletter()
         {
           _id = view._id,
@@ -78,8 +81,8 @@ namespace Manager.Services.Specific
           Employee = view.Employee,
           Manager = view.Manager,
           Included = DateTime.Now,
-          BeginDate = view.BeginDate,
-          EndDate = view.EndDate
+          BeginDate = begindate,
+          EndDate = enddate
         }).Result;
 
 
@@ -94,6 +97,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var begindate = DateTime.Parse(view.BeginDate.Value.Year + "-" + view.BeginDate.Value.Month + "-" + view.BeginDate.Value.Day + " 00:00");
+        var enddate = DateTime.Parse(view.EndDate.Value.Year + "-" + view.EndDate.Value.Month + "-" + view.EndDate.Value.Day + " 00:00");
         var model = serviceNewsletter.GetNewVersion(p => p._id == view._id).Result;
 
         model.Title = view.Title;
@@ -102,8 +107,8 @@ namespace Manager.Services.Specific
         model.Infra = view.Infra;
         model.Employee = view.Employee;
         model.Manager = view.Manager;
-        model.BeginDate = view.BeginDate;
-        model.EndDate = view.EndDate;
+        model.BeginDate = begindate;
+        model.EndDate = enddate;
 
         serviceNewsletter.Update(model, null).Wait();
 
@@ -145,8 +150,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
         var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
-        && DateTime.Now >= p.BeginDate && DateTime.Now <= p.EndDate
+        && datenow >= p.BeginDate && datenow <= p.EndDate
         && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
 
         var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser).Result.Select(p => p._idNewsletter);
