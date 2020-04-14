@@ -34,6 +34,8 @@ namespace Manager.Services.Auth
     private readonly ServiceDictionarySystem serviceDictionarySystem;
     private readonly ServiceTermsOfService serviceTermsOfService;
     private readonly ServiceGeneric<Parameter> serviceParameter;
+    private readonly ServiceGeneric<Newsletter> serviceNewsletter;
+    private readonly ServiceGeneric<NewsletterRead> serviceNewsletterRead;
     private readonly IServicePerson serviceIPerson;
     private readonly string pathSignalr;
 
@@ -50,6 +52,8 @@ namespace Manager.Services.Auth
         serviceDictionarySystem = new ServiceDictionarySystem(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
+        serviceNewsletter = new ServiceGeneric<Newsletter>(context);
+        serviceNewsletterRead = new ServiceGeneric<NewsletterRead>(context);
         pathSignalr = _pathSignalr;
       }
       catch (Exception e)
@@ -304,6 +308,17 @@ namespace Manager.Services.Auth
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
 
+        var newsletter = serviceNewsletter.GetAllFreeNewVersion(p => p.Enabled == true).Result.Select(p => p._id).ToList();
+        var newsletterread = serviceNewsletterRead.GetAllFreeNewVersion(p => p._idUser == person.IdUser).Result.Select(p => p._idNewsletter);
+        foreach (var item in newsletter.Where(p => !newsletterread.Contains(p)).ToList())
+        {
+          var i = serviceNewsletterRead.InsertNewVersion(new NewsletterRead(){
+            _idNewsletter = item,
+            _idUser = person.IdUser,
+            DontShow = false,
+            ReadDate = DateTime.Now
+          });
+        };
         serviceLog.SetUser(_user);
         if (logRegistration)
           Task.Run(() => LogSave(person.Contracts[0].IdPerson, EnumTypeAuth.Default));

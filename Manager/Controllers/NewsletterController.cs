@@ -119,6 +119,38 @@ namespace Manager.Controllers
     }
     #endregion
 
+    #region Newsletter
+    /// <summary>
+    /// Listar as empresas
+    /// </summary>
+    /// <param name="count">Quantidade de registros</param>
+    /// <param name="page">Página para mostrar</param>
+    /// <param name="filter">Filtro para o nome da empresa</param>
+    /// <returns>Lista de empresas cadastradas</returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listnewsletterread")]
+    public async Task<List<ViewListNewsletterRead>> ListNewsletterRead(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListNewsletterRead(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
+    /// Alterar a empresa
+    /// </summary>
+    /// <param name="idnewsletter">Objeto de manutenção da empresa</param>
+    /// <returns>Mensagem de sucesso</returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatenewsletterread/{idnewsletter}")]
+    public async Task<IActionResult> UpdateNewsletterRead(string idnewsletter)
+    {
+      return await Task.Run(() => Ok(service.UpdateNewsletterRead(idnewsletter)));
+    }
+    #endregion
 
   }
 }

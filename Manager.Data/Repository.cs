@@ -560,9 +560,9 @@ namespace Manager.Data
         IAsyncCursor<T> result = await _collection.FindAsync(lambda, findOptions);
         return result.FirstOrDefault();
       }
-      catch
+      catch(Exception e)
       {
-        throw;
+        throw e;
       }
     }
     public async Task<T> GetNewVersion(string id)

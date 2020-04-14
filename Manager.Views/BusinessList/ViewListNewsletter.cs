@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessList
   {
     public string Title { get; set; }
     public string Description { get; set; }
+    public bool Enabled { get; set; }
   }
 }

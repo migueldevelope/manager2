@@ -11,6 +11,8 @@ namespace Manager.Views.BusinessCrud
     public bool Infra { get; set; }
     public bool Manager { get; set; }
     public bool Employee { get; set; }
+    public DateTime? BeginDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
   }
 }
