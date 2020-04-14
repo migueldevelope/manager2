@@ -82,7 +82,8 @@ namespace Manager.Services.Specific
           Manager = view.Manager,
           Included = DateTime.Now,
           BeginDate = begindate,
-          EndDate = enddate
+          EndDate = enddate,
+          TypeNewsletter = view.TypeNewsletter
         }).Result;
 
 
@@ -109,6 +110,7 @@ namespace Manager.Services.Specific
         model.Manager = view.Manager;
         model.BeginDate = begindate;
         model.EndDate = enddate;
+        model.TypeNewsletter = view.TypeNewsletter;
 
         serviceNewsletter.Update(model, null).Wait();
 

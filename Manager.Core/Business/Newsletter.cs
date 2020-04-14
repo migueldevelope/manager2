@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using System;
 
 namespace Manager.Core.Business
@@ -13,6 +14,7 @@ namespace Manager.Core.Business
     public bool Infra { get; set; }
     public bool Manager { get; set; }
     public bool Employee { get; set; }
+    public EnumTypeNewsletter TypeNewsletter { get; set; }
     public DateTime? Included { get; set; }
     public DateTime? BeginDate { get; set; }
     public DateTime? EndDate { get; set; }
@@ -28,8 +30,9 @@ namespace Manager.Core.Business
         Infra = Infra,
         Employee = Employee,
         Manager = Manager,
-        BeginDate = BeginDate,
-        EndDate = EndDate,
+        TypeNewsletter = TypeNewsletter,
+        BeginDate = BeginDate.Value.AddHours(3),
+        EndDate = EndDate.Value.AddHours(3),
         _id = _id
       };
     }
@@ -41,6 +44,7 @@ namespace Manager.Core.Business
         Title = Title,
         Description = Description,
         _id = _id,
+        TypeNewsletter = TypeNewsletter,
         Enabled = Enabled
       };
     }
