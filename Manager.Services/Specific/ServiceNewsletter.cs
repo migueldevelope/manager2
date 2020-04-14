@@ -158,7 +158,7 @@ namespace Manager.Services.Specific
         && datenow >= p.BeginDate && datenow <= p.EndDate
         && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
 
-        var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser).Result.Select(p => p._idNewsletter);
+        //var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser).Result.Select(p => p._idNewsletter);
         if (portal == EnumPortal.Infra)
           detail = detail.Where(p => p.Infra == true).ToList();
         if (portal == EnumPortal.Employee)
@@ -166,7 +166,7 @@ namespace Manager.Services.Specific
         if (portal == EnumPortal.Manager)
           detail = detail.Where(p => p.Infra == true).ToList();
 
-        detail = detail.Where(p => !ids.Contains(p._id)).ToList();
+        //detail = detail.Where(p => !ids.Contains(p._id)).ToList();
 
         total = serviceNewsletter.CountNewVersion(p => p.Title.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Select(x => x.GetViewList()).ToList();
