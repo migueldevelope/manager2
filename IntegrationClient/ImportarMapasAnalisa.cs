@@ -1,11 +1,11 @@
 ﻿using IntegrationClient.Api;
+using IntegrationClient.DatabaseTools.OracleTools;
+using IntegrationClient.DatabaseTools.SqlServerTools;
 using IntegrationClient.Enumns;
 using IntegrationClient.Tools;
 using Manager.Views.BusinessList;
 using Manager.Views.Integration;
 using Newtonsoft.Json;
-using OracleTools;
-using SqlServerTools;
 using System;
 using System.Collections.Generic;
 using System.Data;

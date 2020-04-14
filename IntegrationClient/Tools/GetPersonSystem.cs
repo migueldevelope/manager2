@@ -1,7 +1,7 @@
-﻿using System.Data;
-using OdbcTools;
-using OracleTools;
-using SqlServerTools;
+﻿using IntegrationClient.DatabaseTools.OdbcTools;
+using IntegrationClient.DatabaseTools.OracleTools;
+using IntegrationClient.DatabaseTools.SqlServerTools;
+using System.Data;
 
 namespace IntegrationClient.Tools
 {

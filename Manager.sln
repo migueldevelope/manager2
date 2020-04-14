@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Core", "Manager.Core\Manager.Core.csproj", "{3A521E8C-6227-48BD-ABCC-3D5A55FADF02}"
 EndProject
@@ -21,11 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Attachment", "Attachment\At
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationServer", "IntegrationServer\IntegrationServer.csproj", "{0CE7F8E5-DBBA-4BA5-B806-2D58CCCBDD76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationService", "IntegrationService\IntegrationService.csproj", "{98D502D9-363E-4CC1-A1D0-7231D52A191A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationClient", "IntegrationClient\IntegrationClient.csproj", "{BF973A06-014A-4252-95ED-E0195E3760D0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTools", "DatabaseTools\DatabaseTools.csproj", "{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager.Views", "Manager.Views\Manager.Views.csproj", "{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}"
 EndProject
@@ -37,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Training", "Training\Traini
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reports", "Reports\Reports.csproj", "{6EA808E3-B7FB-4D25-AA90-D3679EFF6DF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile", "Mobile\Mobile.csproj", "{C8330979-1C4B-4EBC-A46E-67ADA771FF80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile", "Mobile\Mobile.csproj", "{C8330979-1C4B-4EBC-A46E-67ADA771FF80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,18 +77,10 @@ Global
 		{0CE7F8E5-DBBA-4BA5-B806-2D58CCCBDD76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CE7F8E5-DBBA-4BA5-B806-2D58CCCBDD76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CE7F8E5-DBBA-4BA5-B806-2D58CCCBDD76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98D502D9-363E-4CC1-A1D0-7231D52A191A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98D502D9-363E-4CC1-A1D0-7231D52A191A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98D502D9-363E-4CC1-A1D0-7231D52A191A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98D502D9-363E-4CC1-A1D0-7231D52A191A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF973A06-014A-4252-95ED-E0195E3760D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF973A06-014A-4252-95ED-E0195E3760D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF973A06-014A-4252-95ED-E0195E3760D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF973A06-014A-4252-95ED-E0195E3760D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F01A93C-CB02-4DE1-AC2D-EA5FC7DFBC13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D83A6EB3-11A2-4CA1-BE09-FF56F3E94198}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -6,14 +6,13 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
-using Newtonsoft.Json;
-using OracleTools;
-using SqlServerTools;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
+using IntegrationClient.DatabaseTools.OracleTools;
+using IntegrationClient.DatabaseTools.SqlServerTools;
 
 namespace IntegrationClient
 {
