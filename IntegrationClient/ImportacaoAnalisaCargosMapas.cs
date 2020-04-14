@@ -1,7 +1,7 @@
 ﻿using IntegrationClient.FileModel;
-using IntegrationService.Api;
-using IntegrationService.Enumns;
-using IntegrationService.Tools;
+using IntegrationClient.Api;
+using IntegrationClient.Enumns;
+using IntegrationClient.Tools;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
@@ -218,7 +218,7 @@ namespace IntegrationClient
               registro = string.Concat(registro, ";", ex.Message);
             }
             FileClass.SaveLog(string.Format("{0}/Skill.log", pathLogs), registro, EnumTypeLineOpportunityg.Register);
-            prb.Value = prb.Value + 1;
+            prb.Value += 1;
             Refresh();
           }
         }

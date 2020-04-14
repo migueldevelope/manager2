@@ -1,6 +1,6 @@
-﻿using IntegrationService.Api;
-using IntegrationService.Enumns;
-using IntegrationService.Tools;
+﻿using IntegrationClient.Api;
+using IntegrationClient.Enumns;
+using IntegrationClient.Tools;
 using Manager.Views.BusinessList;
 using Manager.Views.Integration;
 using Newtonsoft.Json;
@@ -59,7 +59,7 @@ namespace IntegrationClient
       Refresh();
       string salvaGrupoCargo = string.Empty;
       string salvaCargo = string.Empty;
-      string salvaCargoCodigo = string.Empty;
+      //string salvaCargoCodigo = string.Empty;
       //ViewIntegrationGroup grupoCargo = null;
       ViewIntegrationProfileOccupation cargo = null;
       Boolean novoCargo = false;
@@ -107,7 +107,7 @@ namespace IntegrationClient
               cargo = null;
             }
             salvaCargo = item["nome_cargo"].ToString().Trim().ToUpper();
-            salvaCargoCodigo = item["cargo"].ToString();
+            //salvaCargoCodigo = item["cargo"].ToString();
           }
           if (novoCargo)
           {
@@ -173,7 +173,6 @@ namespace IntegrationClient
         //string registro = string.Format("Ok;{0};{1};{2}", salvaCargo, salvaCargoCodigo, string.Format("Novo cargo, {0}",cargo.IdOccupation));
         //FileClass.SaveLog(file, registro, EnumTypeLineOpportunityg.Register);
         //txtLog.Text = string.Concat(txtLog.Text, registro, Environment.NewLine);
-        novoCargo = false;
       }
       MessageBox.Show("Importação de cargos realizada!");
     }

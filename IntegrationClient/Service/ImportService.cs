@@ -1,7 +1,6 @@
-﻿using IntegrationService.Api;
-using IntegrationService.Data;
-using IntegrationService.Enumns;
-using IntegrationService.Tools;
+﻿using IntegrationClient.Api;
+using IntegrationClient.Enumns;
+using IntegrationClient.Tools;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using Manager.Views.Integration.V2;
@@ -10,13 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Excel = Microsoft.Office.Interop.Excel;
 
-namespace IntegrationService.Service
+namespace IntegrationClient.Service
 {
   public class ImportService
   {
@@ -46,7 +44,7 @@ namespace IntegrationService.Service
         service = serviceConfiguration;
         Message = string.Empty;
         Status = EnumStatusService.Ok;
-        pathLogs = string.Format("{0}_{1}/integration", Person.NameAccount, Person.IdAccount);
+        pathLogs = string.Format("{0}{1}_{2}/integration", AppDomain.CurrentDomain.BaseDirectory, Person.NameAccount, Person.IdAccount);
         if (!Directory.Exists(pathLogs))
         {
           _ = Directory.CreateDirectory(pathLogs);

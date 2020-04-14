@@ -1,5 +1,5 @@
-﻿using IntegrationService.Enumns;
-using IntegrationService.Service;
+﻿using IntegrationClient.Enumns;
+using IntegrationClient.Service;
 using Manager.Views.Enumns;
 using System;
 using System.Windows.Forms;
@@ -78,7 +78,14 @@ namespace IntegrationClient
             MessageBox.Show("Versão de ausência não implementada!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             break;
           case EnumIntegrationVersion.V2:
-            import.ExecuteV2(chkLjo.Checked);
+            if (((Button)sender).Name.Equals("btnImp"))
+            {
+              import.ExecuteV2(chkLjo.Checked, chkLstAti.Checked, false);
+            }
+            if (((Button)sender).Name.Equals("btnAmb"))
+            {
+              import.ExecuteV2(chkLjo.Checked, chkLstAti.Checked, true);
+            }
             break;
           default:
             break;

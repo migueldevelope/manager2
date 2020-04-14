@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Text;
 
-namespace IntegrationService.Api
+namespace IntegrationClient.Api
 {
   public class ApiMetadados
   {
@@ -20,7 +20,7 @@ namespace IntegrationService.Api
         {
           client.Timeout = TimeSpan.FromMinutes(60);
           //client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", token));
-          client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", "MDRkMWI1ZmNiN2Q0NGUxMmJlNWYxMTA4ZjZiNjI1YWQ6MjUwYTUyYTljM2Y4NDczOTk0MmZiYWY0MTYxMmZkM2I="));
+          client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", "YzhlNjEyOTA4NzI5NDZmODliNjhlZGZkOWE0OTBhMjE6OTZmZjI5OWMxNTUwNGViM2JhYjI4NGJkMzNlYWFlODg="));
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
           HttpResponseMessage result = client.GetAsync(string.Format("https://metadados.linkapi.com.br/v2/analisaFluid?offset={0}&limit={1}", offset, limit)).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)

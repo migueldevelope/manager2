@@ -4,10 +4,10 @@ using System.Reflection;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Threading;
-using IntegrationService.Tools;
+using IntegrationClient.Tools;
 using Manager.Views.Integration;
-using IntegrationService.Service;
-using IntegrationService.Enumns;
+using IntegrationClient.Service;
+using IntegrationClient.Enumns;
 
 namespace IntegrationClient
 {
@@ -35,12 +35,10 @@ namespace IntegrationClient
           // Atualizar funcionários
           try
           {
-            FileClass.SaveLog(LogFileName, "Admissões e alterações", EnumTypeLineOpportunityg.Information);
+            FileClass.SaveLog(LogFileName, "Admissões/Demissões e alterações", EnumTypeLineOpportunityg.Information);
             ConfigurationService serviceConfiguration = new ConfigurationService(Program.PersonLogin);
             ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, initialTime);
-            import.ExecuteV2(false);
-            FileClass.SaveLog(LogFileName, "Demissões por ausencia de ativos", EnumTypeLineOpportunityg.Information);
-            import.ExecuteDemissionAbsenceV2(false);
+            import.ExecuteV2(false, false, true);
 
             if (import.Status == EnumStatusService.Error)
             {
@@ -73,7 +71,7 @@ namespace IntegrationClient
       try
       {
         // Iniciar Autenticação
-        var auth = new IntegrationService.Api.Authentication();
+        var auth = new Api.Authentication();
         Program.PersonLogin = auth.Connect(txtUrl.Text, txtEma.Text, txtSen.Text);
 
         // Se estiver OK preparar o objeto de persistência local

@@ -1,5 +1,5 @@
-﻿using IntegrationService.Enumns;
-using IntegrationService.Service;
+﻿using IntegrationClient.Enumns;
+using IntegrationClient.Service;
 using Manager.Views.Enumns;
 using Manager.Views.Integration;
 using System;

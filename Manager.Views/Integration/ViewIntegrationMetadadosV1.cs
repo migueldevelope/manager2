@@ -21,10 +21,10 @@
     public string NomeCargo { get; set; }
     public string DataTrocaCargo { get; set; }
     public string Situacao { get; set; }
-    public decimal SalarioNominal { get; set; }
+    public decimal? SalarioNominal { get; set; }
     public string DataUltimoReajuste { get; set; }
     public string MotivoUltimoReajuste { get; set; }
-    public decimal CargaHoraria { get; set; }
+    public decimal? CargaHoraria { get; set; }
     public string ClassContabil { get; set; }
     public string NomeClassContabil { get; set; }
     public string DataTrocaClassContabil { get; set; }

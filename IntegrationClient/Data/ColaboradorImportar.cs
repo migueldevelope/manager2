@@ -1,10 +1,10 @@
-﻿using IntegrationService.Enumns;
+﻿using IntegrationClient.Enumns;
 using Manager.Views.Integration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace IntegrationService.Data
+namespace IntegrationClient.Data
 {
   public class ColaboradorImportar : ViewColaborador
   {
@@ -480,7 +480,7 @@ namespace IntegrationService.Data
       else
         resto = 11 - resto;
       digito = resto.ToString();
-      tempCpf = tempCpf + digito;
+      tempCpf += digito;
       soma = 0;
       for (int i = 0; i < 10; i++)
         soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
@@ -489,7 +489,7 @@ namespace IntegrationService.Data
         resto = 0;
       else
         resto = 11 - resto;
-      digito = digito + resto.ToString();
+      digito += resto.ToString();
       return cpf.EndsWith(digito);
     }
     #endregion

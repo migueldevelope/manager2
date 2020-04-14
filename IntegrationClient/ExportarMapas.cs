@@ -1,7 +1,7 @@
 ﻿using IntegrationClient.ModelTools;
-using IntegrationService.Api;
-using IntegrationService.Enumns;
-using IntegrationService.Tools;
+using IntegrationClient.Api;
+using IntegrationClient.Enumns;
+using IntegrationClient.Tools;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Newtonsoft.Json;

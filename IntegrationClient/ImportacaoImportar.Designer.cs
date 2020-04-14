@@ -35,6 +35,8 @@
       this.lblPrb = new System.Windows.Forms.Label();
       this.chkLjo = new System.Windows.Forms.CheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.chkLstAti = new System.Windows.Forms.CheckBox();
+      this.btnAmb = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // btnImp
@@ -44,18 +46,18 @@
       this.btnImp.Name = "btnImp";
       this.btnImp.Size = new System.Drawing.Size(254, 23);
       this.btnImp.TabIndex = 6;
-      this.btnImp.Text = "Executar Importação";
+      this.btnImp.Text = "Importação sem Demissões";
       this.btnImp.UseVisualStyleBackColor = true;
       this.btnImp.Click += new System.EventHandler(this.BtnImp_Click);
       // 
       // btnDemAus
       // 
-      this.btnDemAus.Location = new System.Drawing.Point(12, 99);
+      this.btnDemAus.Location = new System.Drawing.Point(12, 37);
       this.btnDemAus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
       this.btnDemAus.Name = "btnDemAus";
       this.btnDemAus.Size = new System.Drawing.Size(254, 23);
       this.btnDemAus.TabIndex = 8;
-      this.btnDemAus.Text = "Demissões por Ausência";
+      this.btnDemAus.Text = "Apenas Demissões";
       this.toolTip1.SetToolTip(this.btnDemAus, "Demite os colaboradores que não aparecerem na lista de colaboradores ativos.");
       this.btnDemAus.UseVisualStyleBackColor = true;
       this.btnDemAus.Click += new System.EventHandler(this.BtnDemAus_Click);
@@ -79,18 +81,41 @@
       // chkLjo
       // 
       this.chkLjo.AutoSize = true;
-      this.chkLjo.Location = new System.Drawing.Point(12, 42);
+      this.chkLjo.Location = new System.Drawing.Point(9, 229);
       this.chkLjo.Name = "chkLjo";
       this.chkLjo.Size = new System.Drawing.Size(88, 21);
       this.chkLjo.TabIndex = 11;
       this.chkLjo.Text = "Log Json";
       this.chkLjo.UseVisualStyleBackColor = true;
       // 
+      // chkLstAti
+      // 
+      this.chkLstAti.AutoSize = true;
+      this.chkLstAti.Location = new System.Drawing.Point(9, 256);
+      this.chkLstAti.Name = "chkLstAti";
+      this.chkLstAti.Size = new System.Drawing.Size(130, 21);
+      this.chkLstAti.TabIndex = 12;
+      this.chkLstAti.Text = "Lista de Ativos?";
+      this.chkLstAti.UseVisualStyleBackColor = true;
+      // 
+      // btnAmb
+      // 
+      this.btnAmb.Location = new System.Drawing.Point(12, 93);
+      this.btnAmb.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.btnAmb.Name = "btnAmb";
+      this.btnAmb.Size = new System.Drawing.Size(254, 23);
+      this.btnAmb.TabIndex = 13;
+      this.btnAmb.Text = "Importação Completa";
+      this.btnAmb.UseVisualStyleBackColor = true;
+      this.btnAmb.Click += new System.EventHandler(this.BtnImp_Click);
+      // 
       // ImportacaoImportar
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(591, 335);
+      this.Controls.Add(this.btnAmb);
+      this.Controls.Add(this.chkLstAti);
       this.Controls.Add(this.chkLjo);
       this.Controls.Add(this.lblPrb);
       this.Controls.Add(this.prb);
@@ -115,5 +140,7 @@
     private System.Windows.Forms.Label lblPrb;
     private System.Windows.Forms.CheckBox chkLjo;
     private System.Windows.Forms.ToolTip toolTip1;
-  }
+        private System.Windows.Forms.CheckBox chkLstAti;
+        private System.Windows.Forms.Button btnAmb;
+    }
 }

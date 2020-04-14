@@ -143,8 +143,8 @@ namespace Manager.Views.Integration.V2
         CentroCusto = FieldString(view.ClassContabil, null);
         NomeCentroCusto = FieldString(view.ClassContabil, null);
         DataTrocaCentroCusto = FieldDate(view.DataTrocaClassContabil, null, cultureDate);
-        SalarioNominal = view.SalarioNominal;
-        CargaHoraria = view.CargaHoraria;
+        SalarioNominal = view.SalarioNominal == null ? 0 : (decimal)view.SalarioNominal;
+        CargaHoraria = view.CargaHoraria == null ? 0 : (decimal)view.CargaHoraria;
         DataUltimoReajuste = FieldDate(view.DataUltimoReajuste, null, cultureDate);
         MotivoUltimoReajuste = FieldString(view.MotivoUltimoReajuste, null);
         Gestor = new ColaboradorV2Base

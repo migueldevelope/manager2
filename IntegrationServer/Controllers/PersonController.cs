@@ -30,11 +30,8 @@ namespace IntegrationServer.InfraController
     /// </summary>
     /// <param name="_service">Serviço de integração</param>
     /// <param name="_servicePerson">Serviço específico da pessoa</param>
-    /// <param name="_serviceCompany">Serviço da empresa</param>
-    /// <param name="_serviceUser">Serviço do Usuário</param>
     /// <param name="contextAccessor">Token de segurança</param>
-    public PersonController(IServiceIntegration _service, IServicePerson _servicePerson, IServiceCompany _serviceCompany,
-      IServiceUser _serviceUser, IHttpContextAccessor contextAccessor)
+    public PersonController(IServiceIntegration _service, IServicePerson _servicePerson, IHttpContextAccessor contextAccessor)
     {
       try
       {

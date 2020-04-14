@@ -128,6 +128,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ApiMetadados.cs" />
+    <Compile Include="Api\ApiUnimedNers.cs" />
+    <Compile Include="Api\Authentication.cs" />
+    <Compile Include="Api\ConfigurationIntegration.cs" />
+    <Compile Include="Api\IntegrationApi.cs" />
+    <Compile Include="Api\PersonIntegration.cs" />
+    <Compile Include="Data\ColaboradorImportar.cs" />
+    <Compile Include="Data\ControleColaborador.cs" />
+    <Compile Include="Enumns\EnumActionPerson.cs" />
+    <Compile Include="Enumns\EnumDatabaseType.cs" />
+    <Compile Include="Enumns\EnumLayoutManualBasicV1.cs" />
+    <Compile Include="Enumns\EnumLayoutManualCompleteV1.cs" />
+    <Compile Include="Enumns\EnumLayoutSystemBasicV1.cs" />
+    <Compile Include="Enumns\EnumLayoutSystemCompleteV1.cs" />
+    <Compile Include="Enumns\EnumStatusAction.cs" />
+    <Compile Include="Enumns\EnumStatusService.cs" />
+    <Compile Include="Enumns\EnumTypeLog.cs" />
     <Compile Include="ExportarMapas.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +203,11 @@
     <Compile Include="ModelTools\SkillStatistic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\ConfigurationService.cs" />
+    <Compile Include="Service\ImportService.cs" />
+    <Compile Include="Tools\ConnectionString.cs" />
+    <Compile Include="Tools\FileClass.cs" />
+    <Compile Include="Tools\GetPersonSystem.cs" />
     <EmbeddedResource Include="ExportarMapas.resx">
       <DependentUpon>ExportarMapas.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,10 +265,6 @@
     <ProjectReference Include="..\DatabaseTools\DatabaseTools.csproj">
       <Project>{6f01a93c-cb02-4de1-ac2d-ea5fc7dfbc13}</Project>
       <Name>DatabaseTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\IntegrationService\IntegrationService.csproj">
-      <Project>{98d502d9-363e-4cc1-a1d0-7231d52a191a}</Project>
-      <Name>IntegrationService</Name>
     </ProjectReference>
     <ProjectReference Include="..\Manager.Views\Manager.Views.csproj">
       <Project>{d83a6eb3-11a2-4ca1-be09-ff56f3e94198}</Project>
