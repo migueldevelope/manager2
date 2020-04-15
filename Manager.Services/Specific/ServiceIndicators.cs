@@ -1356,7 +1356,7 @@ namespace Manager.Services.Specific
             item.PlansAvg = false;
         }
 
-        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
+        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
         return view;
       }
       catch (Exception e)
