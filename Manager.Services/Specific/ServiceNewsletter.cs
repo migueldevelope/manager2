@@ -184,7 +184,6 @@ namespace Manager.Services.Specific
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
         var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
-        && p.EndDate < datenow
         && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Title").Result;
 
         var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser && p.DontShow == true).Result.Select(p => p._idNewsletter);
@@ -196,7 +195,8 @@ namespace Manager.Services.Specific
         if (portal == EnumPortal.Manager)
           detail = detail.Where(p => p.Infra == true).ToList();
 
-        detail = detail.Where(p => ids.Contains(p._id)).ToList();
+        detail = detail.Where(p => ids.Contains(p._id)
+        || p.EndDate < datenow).ToList();
 
         total = serviceNewsletter.CountNewVersion(p => p.Title.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.Select(x => x.GetViewList()).ToList();
