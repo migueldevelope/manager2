@@ -125,7 +125,7 @@ namespace Manager.Services.Specific
         view.MonitoringRealized = maturity.Sum(p => p.CountMonitoring);
         view.CertificationRealized = certification.Count();
         view.Recommendation = recommendation.Count();
-        view.OnBoardingWait = persons.Where(p=> p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).Count();
+        view.OnBoardingWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).Count();
         view.CheckpointWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).Count();
         view.Plans = plans.Count();
 
@@ -348,6 +348,68 @@ namespace Manager.Services.Specific
         }).ToList();
 
         return list.OrderByDescending(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewExportLogs> ExportLogs()
+    {
+      try
+      {
+        var logs = serviceLog.GetAllNewVersion(p => p.DataLog >= DateTime.Now.AddMonths(-3)).Result;
+
+        return logs.Select(p => new ViewExportLogs()
+        {
+          Date = p.DataLog,
+          Description = p.Description,
+          Local = p.Local,
+          Person = p.Person?.Name
+        }).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewAccessAccount AccessAccount()
+    {
+      try
+      {
+        var logs = serviceLog.GetAllNewVersion(p => p.DataLog >= DateTime.Now.AddMonths(-3)
+        && p.Local == "Authentication").Result;
+
+        var list = new List<ViewAccessAccountDay>();
+        foreach(var item in logs.Where(p=> p.DataLog >= DateTime.Now.AddDays(-15)))
+        {
+          var day = item.DataLog.Value.ToString("dd/MM/yyyy");
+          if (list.Where(p => p.Day == day).Count() > 0)
+          {
+            foreach(var lst in list)
+            {
+              if (lst.Day == day)
+                lst.Qtd += 1;
+            }
+          }
+          else
+            list.Add(new ViewAccessAccountDay()
+            {
+              Day = day,
+              Qtd = 1
+            });
+
+        }
+
+        var view = new ViewAccessAccount()
+        {
+          Last3Month = logs.Count(),
+          Days = list
+        };
+
+        return view;
       }
       catch (Exception e)
       {
@@ -1221,7 +1283,7 @@ namespace Manager.Services.Specific
             item.PlansAvg = false;
         }
 
-        result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
+        result.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
         return result;
       }
       catch (Exception e)
@@ -1356,7 +1418,7 @@ namespace Manager.Services.Specific
             item.PlansAvg = false;
         }
 
-        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.Contains(filter)).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
+        view.List = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0) && p.Manager.ToUpper().Contains(filter.ToUpper())).OrderBy(p => p.Ranking).Skip(skip).Take(count).ToList();
         return view;
       }
       catch (Exception e)

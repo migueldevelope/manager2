@@ -51,6 +51,30 @@ namespace Indicators.Controllers
       //return null;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("exportlogs")]
+    public async Task<List<ViewExportLogs>> ExportLogs()
+    {
+      return await Task.Run(() => service.ExportLogs());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("accessaccount")]
+    public async Task<ViewAccessAccount> AccessAccount()
+    {
+      return await Task.Run(() => service.AccessAccount());
+    }
+
 
     /// <summary>
     /// 

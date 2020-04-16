@@ -71,6 +71,25 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="portal"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listnewsletterold/{portal}")]
+    public async Task<List<ViewListNewsletter>> ListNewsletterOld(EnumPortal portal, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      List<ViewListNewsletter> result = service.ListNewsletterOld(portal, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
     /// Cadastrar uma nova empresa
     /// </summary>
     /// <param name="view">Objeto de cadastro da empresa</param>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessCrud
 {
@@ -8,6 +9,7 @@ namespace Manager.Views.BusinessCrud
     public string Description { get; set; }
     public bool Enabled { get; set; }
     public DateTime? Included { get; set; }
+    public EnumTypeNewsletter TypeNewsletter { get; set; }
     public bool Infra { get; set; }
     public bool Manager { get; set; }
     public bool Employee { get; set; }

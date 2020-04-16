@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessList
 {
@@ -7,5 +8,6 @@ namespace Manager.Views.BusinessList
     public string Title { get; set; }
     public string Description { get; set; }
     public bool Enabled { get; set; }
+    public EnumTypeNewsletter TypeNewsletter { get; set; }
   }
 }

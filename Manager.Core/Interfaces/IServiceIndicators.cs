@@ -76,5 +76,7 @@ namespace Manager.Core.Interfaces
     void UpdateStatusPlanMonitoring();
     List<ViewListScheduleManager> ListScheduleManager(ViewFilterDate date);
     ViewDashboard GetDashboard();
+    ViewAccessAccount AccessAccount();
+    List<ViewExportLogs> ExportLogs();
   }
 }
