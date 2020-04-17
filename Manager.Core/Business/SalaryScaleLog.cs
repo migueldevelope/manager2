@@ -14,6 +14,7 @@ namespace Manager.Core.Business
     public string Name { get; set; }
     public string Description { get; set; }
     public List<ViewListGrade> Grades { get; set; }
+    public long VersionCode { get; set; }
     public DateTime? Date { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idSalaryScalePrevious { get; set; }

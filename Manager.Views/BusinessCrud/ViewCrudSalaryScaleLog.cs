@@ -14,5 +14,6 @@ namespace Manager.Views.BusinessCrud
     public DateTime? Date { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idSalaryScalePrevious { get; set; }
+    public long VersionCode { get; set; }
   }
 }
