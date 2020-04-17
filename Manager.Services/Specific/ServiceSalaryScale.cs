@@ -914,7 +914,7 @@ namespace Manager.Services.Specific
         salaryScale.Grades = gradesnew;
 
         var scale = serviceSalaryScale.Update(salaryScale, null);
-        Task.Run(() => NewVersion(idsalaryscale, "Modificado via Excel"));
+        Task.Run(() => NewVersion(idsalaryscale, "Alteração Manual"));
 
         return "import_ok";
       }
