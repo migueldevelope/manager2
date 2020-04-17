@@ -7,5 +7,6 @@ namespace Manager.Views.BusinessList
     public ViewListCompany Company { get; set; }
     public DateTime? Date { get; set; }
     public string Description { get; set; }
+    public long VersionCode { get; set; }
   }
 }

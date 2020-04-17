@@ -302,7 +302,8 @@ namespace Manager.Services.Specific
             Name = x.Name,
             Company = new ViewListCompany() { _id = x.Company._id, Name = x.Company.Name },
             Date = x.Date,
-            Description = x.Description
+            Description = x.Description,
+            VersionCode = x.VersionCode
           }).ToList();
         total = serviceSalaryScaleLog.CountNewVersion(p => p._idSalaryScalePrevious == idsalaryscale && p.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail.OrderByDescending(p => p.Date).ToList();
