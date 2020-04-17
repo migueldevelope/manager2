@@ -9,5 +9,7 @@ namespace Manager.Views.BusinessList
     public EnumTypeUser TypeUser { get; set; }
     public string Occupation { get; set; }
     public string Manager { get; set; }
+    public EnumStatusFormOffBoarding StatusFormOffBoardingStep1 { get; set; }
+    public EnumStatusFormOffBoarding StatusFormOffBoardingStep2 { get; set; }
   }
 }

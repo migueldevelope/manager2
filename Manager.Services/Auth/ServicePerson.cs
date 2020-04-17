@@ -37,6 +37,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<OnBoarding> serviceOnboarding;
     private ServiceGeneric<Monitoring> serviceMonitoring;
     private ServiceGeneric<Checkpoint> serviceCheckpoint;
+    private ServiceGeneric<OffBoarding> serviceOffBoarding;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
     private HubConnection hubConnection;
@@ -55,6 +56,7 @@ namespace Manager.Services.Auth
         serviceMail = new ServiceSendGrid(contextLog);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
+        serviceOffBoarding = new ServiceGeneric<OffBoarding>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         servicePersonHistory = new ServiceGeneric<PersonHistory>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
@@ -88,6 +90,7 @@ namespace Manager.Services.Auth
       serviceOnboarding._user = _user;
       serviceMonitoring._user = _user;
       serviceCheckpoint._user = _user;
+      serviceOffBoarding._user = _user;
       DefaultTypeRegisterPerson();
     }
     public void SetUser(BaseUser user)
@@ -107,6 +110,7 @@ namespace Manager.Services.Auth
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
       serviceCheckpoint._user = user;
+      serviceOffBoarding._user = user;
       DefaultTypeRegisterPerson();
     }
     #endregion
@@ -637,6 +641,8 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var offboardings = serviceOffBoarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
         switch (type)
         {
           case EnumTypeUser.Support:
@@ -656,7 +662,9 @@ namespace Manager.Services.Auth
                 TypeJourney = x.TypeJourney,
                 TypeUser = x.TypeUser,
                 Occupation = x.Occupation?.Name,
-                Manager = x.Manager?.Name
+                Manager = x.Manager?.Name,
+                StatusFormOffBoardingStep1 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step1.StatusFormOffBoarding,
+                StatusFormOffBoardingStep2 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step2.StatusFormOffBoarding,
               }).OrderBy(p => p.User.Name).ToList();
             }
 
@@ -677,7 +685,9 @@ namespace Manager.Services.Auth
                   TypeJourney = x.TypeJourney,
                   TypeUser = x.TypeUser,
                   Occupation = x.Occupation?.Name,
-                  Manager = x.Manager?.Name
+                  Manager = x.Manager?.Name,
+                  StatusFormOffBoardingStep1 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step1.StatusFormOffBoarding,
+                  StatusFormOffBoardingStep2 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step2.StatusFormOffBoarding,
                 }).OrderBy(p => p.User.Name).ToList();
               }
               else
@@ -695,7 +705,9 @@ namespace Manager.Services.Auth
                   TypeJourney = x.TypeJourney,
                   TypeUser = x.TypeUser,
                   Occupation = x.Occupation?.Name,
-                  Manager = x.Manager?.Name
+                  Manager = x.Manager?.Name,
+                  StatusFormOffBoardingStep1 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step1.StatusFormOffBoarding,
+                  StatusFormOffBoardingStep2 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step2.StatusFormOffBoarding,
                 }).OrderBy(p => p.User.Name).ToList();
               }
             }
@@ -716,7 +728,9 @@ namespace Manager.Services.Auth
                 TypeJourney = x.TypeJourney,
                 TypeUser = x.TypeUser,
                 Occupation = x.Occupation?.Name,
-                Manager = x.Manager?.Name
+                Manager = x.Manager?.Name,
+                StatusFormOffBoardingStep1 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step1.StatusFormOffBoarding,
+                StatusFormOffBoardingStep2 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step2.StatusFormOffBoarding,
               }).ToList();
             }
             else
@@ -734,7 +748,9 @@ namespace Manager.Services.Auth
                 TypeJourney = x.TypeJourney,
                 TypeUser = x.TypeUser,
                 Occupation = x.Occupation?.Name,
-                Manager = x.Manager?.Name
+                Manager = x.Manager?.Name,
+                StatusFormOffBoardingStep1 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step1.StatusFormOffBoarding,
+                StatusFormOffBoardingStep2 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step2.StatusFormOffBoarding,
               }).ToList();
             }
               
