@@ -88,7 +88,7 @@ namespace Manager.Services.Auth
             issuer: "localhost",
             audience: "localhost",
             claims: claims,
-            expires: DateTime.Now.AddDays(2),
+            expires: DateTime.Now.AddDays(1),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -354,7 +354,7 @@ namespace Manager.Services.Auth
             issuer: "localhost",
             audience: "localhost",
             claims: claims,
-            expires: DateTime.Now.AddDays(2),
+            expires: DateTime.Now.AddDays(1),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
         );
         person.Token = new JwtSecurityTokenHandler().WriteToken(token);
@@ -464,7 +464,7 @@ namespace Manager.Services.Auth
             issuer: "localhost",
             audience: "localhost",
             claims: claims,
-            expires: DateTime.Now.AddYears(1),
+            expires: DateTime.Now.AddYears(2),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)), SecurityAlgorithms.HmacSha256)
         );
         person.Token = new JwtSecurityTokenHandler().WriteToken(token);
