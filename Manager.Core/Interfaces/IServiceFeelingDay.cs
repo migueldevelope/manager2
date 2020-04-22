@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -18,5 +19,6 @@ namespace Manager.Core.Interfaces
     ViewCrudFeelingDay Get(string id);
     List<ViewListFeelingDay> List(ref long total, int count = 10, int page = 1, string filter = "");
     ViewCrudFeelingDay GetFeeelingDay();
+    List<ViewFeelingQtd> GetQuantity();
   }
 }

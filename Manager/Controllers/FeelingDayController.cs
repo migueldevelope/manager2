@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -74,6 +75,18 @@ namespace Manager.Controllers
     public async Task<ViewCrudFeelingDay> Get(string id)
     {
       return await Task.Run(() => service.Get(id));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getquantity")]
+    public async Task<List<ViewFeelingQtd>> GetQuantity()
+    {
+      return await Task.Run(() => service.GetQuantity());
     }
 
     /// <summary>

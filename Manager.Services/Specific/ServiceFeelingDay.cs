@@ -5,6 +5,7 @@ using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -74,7 +75,7 @@ namespace Manager.Services.Specific
           _idUser = _user._idUser
         }).Result;
 
-        
+
 
         return "FeelingDay added!";
       }
@@ -114,13 +115,37 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewFeelingQtd> GetQuantity()
+    {
+      try
+      {
+        var date = DateTime.Now.AddMonths(-12);
+        var list = new List<ViewFeelingQtd>();
+        var view = new ViewFeelingQtd();
+        var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
+
+        for (var item = 0; item < 5; item++)
+        {
+          view.Feeling = (EnumFeeling)item;
+          view.Qtd = feeling.Where(p => p.Feeling == (EnumFeeling)item).Count();
+        }
+
+        list.Add(view);
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public ViewCrudFeelingDay GetFeeelingDay()
     {
       try
       {
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        var view = serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser 
+        var view = serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser
         && p.Date == datenow).Result;
         if (view == null)
           return null;
