@@ -90,6 +90,7 @@ namespace Manager
       IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceParameters serviceParameters = new ServiceParameters(_context);
       IServiceNewsletter serviceNewsletter = new ServiceNewsletter(_context);
+      IServiceFeelingDay serviceFeelingDay = new ServiceFeelingDay(_context);
 
       IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
       IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
@@ -111,6 +112,7 @@ namespace Manager
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
 
+      services.AddSingleton(_ => serviceFeelingDay);
       services.AddSingleton(_ => serviceNewsletter);
       services.AddSingleton(_ => serviceOffBoarding);
       services.AddSingleton(_ => serviceHRDrive);
