@@ -19,8 +19,8 @@ namespace IntegrationClient.Api
         using (HttpClient client = new HttpClient())
         {
           client.Timeout = TimeSpan.FromMinutes(60);
-          //client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", token));
-          client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", "YzhlNjEyOTA4NzI5NDZmODliNjhlZGZkOWE0OTBhMjE6OTZmZjI5OWMxNTUwNGViM2JhYjI4NGJkMzNlYWFlODg="));
+          client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", token));
+          //client.DefaultRequestHeaders.Add("Authorization", string.Format("Basic {0}", "YzhlNjEyOTA4NzI5NDZmODliNjhlZGZkOWE0OTBhMjE6OTZmZjI5OWMxNTUwNGViM2JhYjI4NGJkMzNlYWFlODg="));
           client.DefaultRequestHeaders.Add("ContentType", "application/json");
           HttpResponseMessage result = client.GetAsync(string.Format("https://metadados.linkapi.com.br/v2/analisaFluid?offset={0}&limit={1}", offset, limit)).Result;
           if (result.StatusCode != System.Net.HttpStatusCode.OK)
