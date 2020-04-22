@@ -120,8 +120,12 @@ namespace Manager.Services.Specific
       {
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        return serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser 
-        && p.Date == datenow).Result.GetViewCrud();
+        var view = serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser 
+        && p.Date == datenow).Result;
+        if (view == null)
+          return null;
+        else
+          return view.GetViewCrud();
       }
       catch (Exception e)
       {
