@@ -113,6 +113,22 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public ViewCrudFeelingDay GetFeeelingDay()
+    {
+      try
+      {
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        return serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser 
+        && p.Date == datenow).Result.GetViewCrud();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListFeelingDay> List(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
