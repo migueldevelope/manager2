@@ -77,6 +77,18 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getfeelingday")]
+    public async Task<ViewCrudFeelingDay> GetFeeelingDay()
+    {
+      return await Task.Run(() => service.GetFeeelingDay());
+    }
+
+    /// <summary>
     /// Alterar a empresa
     /// </summary>
     /// <param name="view">Objeto de manutenção da empresa</param>
