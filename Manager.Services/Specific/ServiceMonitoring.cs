@@ -488,6 +488,7 @@ namespace Manager.Services.Specific
         plan.Name = view.Name;
         plan.SourcePlan = view.SourcePlan;
         plan.TypePlan = view.TypePlan;
+        plan.Skills = view.Skills;
         if (plan.SourcePlan == EnumSourcePlan.Activite)
         {
           foreach (var item in monitoring.Activities)
