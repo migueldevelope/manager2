@@ -115,14 +115,21 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewFeelingQtd> GetQuantity()
+    public List<ViewFeelingQtd> GetQuantity(string idmanager, int month)
     {
       try
       {
-        var date = DateTime.Now.AddMonths(-12);
+        month *= -1;
+        var date = DateTime.Now.AddMonths(month);
         var list = new List<ViewFeelingQtd>();
         var view = new ViewFeelingQtd();
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
+        if (idmanager != null)
+        {
+          var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id);
+          feeling = feeling.Where(p => persons.Contains(p._idUser)).ToList();
+        }
+
 
         for (var item = 0; item < 5; item++)
         {

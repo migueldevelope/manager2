@@ -80,13 +80,15 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="month"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getquantity")]
-    public async Task<List<ViewFeelingQtd>> GetQuantity()
+    public async Task<List<ViewFeelingQtd>> GetQuantity(string idmanager, int month = 1)
     {
-      return await Task.Run(() => service.GetQuantity());
+      return await Task.Run(() => service.GetQuantity(idmanager, month));
     }
 
     /// <summary>
