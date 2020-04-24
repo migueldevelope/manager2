@@ -1302,14 +1302,7 @@ namespace Manager.Services.Specific
       try
       {
         var item = serviceSchooling.GetAllNewVersion(p => p._id == id).Result.OrderBy(p => p.Name).FirstOrDefault();
-        return new ViewCrudSchooling()
-        {
-          _id = item._id,
-          Name = item.Name,
-          Complement = item.Complement,
-          Order = item.Order,
-          Type = item.Type
-        };
+        return item.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -1617,7 +1610,6 @@ namespace Manager.Services.Specific
         var group = serviceGroup.GetAllNewVersion(p => p._id == view._idGroup).Result.FirstOrDefault();
         var schooling = serviceSchooling.GetAllNewVersion(p => p._id == view.Schooling._id).Result.FirstOrDefault();
 
-        schooling.Complement = view.Schooling.Complement;
         schooling.Type = view.Schooling.Type;
 
         //if (view.Group.Schooling.Where(p => p.Type == view.Schooling.Type).Count() > 0)
@@ -1945,7 +1937,7 @@ namespace Manager.Services.Specific
           Cbo = view.Cbo,
           Activities = new List<ViewListActivitie>(),
           SalaryScales = new List<SalaryScaleGrade>(),
-          Schooling = new List<ViewCrudSchooling>(),
+          Schooling = new List<ViewCrudSchoolingOccupation>(),
           Process = new List<ViewListProcessLevelTwo>()
         };
 
@@ -1964,7 +1956,7 @@ namespace Manager.Services.Specific
             });
 
         if (group.Schooling != null)
-          occupation.Schooling = group.Schooling;
+          occupation.Schooling = group.Schooling.Select(p => p.GetViewCrud()).ToList();
 
         serviceOccupation.InsertNewVersion(occupation);
 
@@ -2010,7 +2002,6 @@ namespace Manager.Services.Specific
         {
           Name = schooling.Name,
           Order = schooling.Order,
-          Complement = schooling.Complement,
           Type = schooling.Type,
           Status = EnumStatus.Enabled
         }).Result;
@@ -3208,7 +3199,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view)
+    public string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchoolingOccupation view)
     {
       try
       {
@@ -3299,7 +3290,6 @@ namespace Manager.Services.Specific
         var group = serviceGroup.GetAllNewVersion(p => p._id == idgroup).Result.FirstOrDefault();
         var schooling = serviceSchooling.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
 
-        schooling.Complement = view.Complement;
         schooling.Type = view.Type;
 
         var schoolOld = group.Schooling.Where(p => p._id == schooling._id).FirstOrDefault();
@@ -3486,17 +3476,24 @@ namespace Manager.Services.Specific
 
         if (occupationOld.Group != occupation.Group)
         {
+          occupation.Schooling = new List<ViewCrudSchoolingOccupation>();
           var group = serviceGroup.GetNewVersion(p => p._id == occupation.Group._id).Result;
           foreach (var school in group.Schooling)
           {
-            foreach (var schoolOccupation in occupationOld.Schooling)
+            var schoolnew = new ViewCrudSchoolingOccupation()
             {
-              if (school._id == schoolOccupation._id)
-                school.Complement = schoolOccupation.Complement;
-            }
-          }
+              Name = school.Name,
+              Order = school.Order,
+              Type = school.Type,
+              _id = school._id
+            };
+            var schoolold = occupationOld.Schooling.Where(p => p._id == school._id).FirstOrDefault();
+            if (schoolold != null)
+                schoolnew.Complement = schoolold.Complement;
+            
+            occupation.Schooling.Add(schoolnew);
 
-          occupation.Schooling = group.Schooling;
+          }
         }
 
         //occupation.Areas = areas;
@@ -3590,7 +3587,6 @@ namespace Manager.Services.Specific
       {
         var model = serviceSchooling.GetAllNewVersion(p => p._id == view._id).Result.FirstOrDefault();
         model.Name = view.Name;
-        model.Complement = view.Complement;
         model.Type = view.Type;
 
         serviceSchooling.Update(model, null);
@@ -3802,14 +3798,7 @@ namespace Manager.Services.Specific
               Area = x.ProcessLevelOne?.Area
             }
           }).ToList(),
-          Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => new ViewCrudSchooling()
-          {
-            _id = x._id,
-            Name = x.Name,
-            Complement = x.Complement,
-            Type = x.Type,
-            Order = x.Order
-          }).ToList(),
+          Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => x.GetViewCrudOccupation()).ToList(),
           Skills = occupation.Skills?.OrderBy(o => o?.Name).ToList(),
           SkillsCompany = company.Skills?.OrderBy(o => o.Name).ToList(),
           SkillsGroup = group.Skills?.OrderBy(o => o.Name).ToList(),
@@ -3889,7 +3878,7 @@ namespace Manager.Services.Specific
           {
             if (list.Where(p => p._id == item._id && p.Date == group.Date).Count() == 0)
             {
-              if (group.Date >= list.FirstOrDefault()?.Date) 
+              if (group.Date >= list.FirstOrDefault()?.Date)
                 list.Add(new ViewListOccupationLog()
                 {
                   _id = item._id,
@@ -3902,7 +3891,7 @@ namespace Manager.Services.Specific
           }
         }
 
-        if(list.Count() == 0)
+        if (list.Count() == 0)
         {
           var item = occupations.FirstOrDefault();
           var company = listCompany.FirstOrDefault();
@@ -3913,7 +3902,7 @@ namespace Manager.Services.Specific
             Date = company.Date,
             DateLog = company.DateLog
           });
-          
+
         }
 
         total = list.Count();
@@ -3961,14 +3950,7 @@ namespace Manager.Services.Specific
               Area = x.ProcessLevelOne?.Area
             }
           }).ToList(),
-          Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => new ViewCrudSchooling()
-          {
-            _id = x._id,
-            Name = x.Name,
-            Complement = x.Complement,
-            Type = x.Type,
-            Order = x.Order
-          }).ToList(),
+          Schooling = occupation.Schooling?.OrderBy(o => o.Order).Select(x => x.GetViewCrudOccupation()).ToList(),
           Skills = occupation.Skills?.OrderBy(o => o?.Name).ToList(),
           SkillsCompany = company?.Skills?.OrderBy(o => o.Name).ToList(),
           SkillsGroup = group?.Skills?.OrderBy(o => o.Name).ToList(),
@@ -4390,10 +4372,13 @@ namespace Manager.Services.Specific
             foreach (var schoolOccupation in item.Schooling)
             {
               if (school._id == schoolOccupation._id)
-                school.Complement = schoolOccupation.Complement;
+              {
+                school.Name = schoolOccupation.Name;
+                school.Order = schoolOccupation.Order;
+              }
             }
           }
-          item.Schooling = group.Schooling;
+
           serviceOccupation.Update(item, null);
           Task.Run(() => UpdateOccupationAll(item));
           Task.Run(() => UpdateOccupationLog(item));
@@ -4404,16 +4389,7 @@ namespace Manager.Services.Specific
         {
           item.Occupation._idGroup = group._id;
           item.Occupation.NameGroup = group.Name;
-          foreach (var school in group.Schooling)
-          {
-            var occupation = serviceOccupation.GetNewVersion(p => p._id == item.Occupation._id).Result;
-            foreach (var schoolOccupation in occupation.Schooling)
-            {
-              if (school._id == schoolOccupation._id)
-                school.Complement = schoolOccupation.Complement;
-            }
-          }
-          //item.Occupation.Schooling = group.Schooling;
+
           servicePerson.Update(item, null);
         }
 

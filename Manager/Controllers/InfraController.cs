@@ -888,7 +888,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("updatemapoccupationschooling/{idoccupation}")]
-    public async Task<string> UpdateMapOccupationSchooling([FromBody]ViewCrudSchooling schooling, string idoccupation)
+    public async Task<string> UpdateMapOccupationSchooling([FromBody]ViewCrudSchoolingOccupation schooling, string idoccupation)
     {
       return await Task.Run(() => service.UpdateMapOccupationSchooling(idoccupation, schooling));
     }

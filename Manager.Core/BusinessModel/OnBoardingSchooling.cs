@@ -13,7 +13,7 @@ namespace Manager.Core.BusinessModel
   public class OnBoardingSchooling : BaseEntityId
   {
 
-    public ViewCrudSchooling Schooling { get; set; }
+    public ViewCrudSchoolingOccupation Schooling { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsPerson { get; set; }
     public List<ListComments> Comments { get; set; }

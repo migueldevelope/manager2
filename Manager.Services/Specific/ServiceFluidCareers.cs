@@ -339,7 +339,7 @@ namespace Manager.Services.Specific
                             viewOccupation.SkillsOccupation = occupation.Skills;
                             viewOccupation.SkillsCompany = company.Skills;
                             viewOccupation.SkillsGroup = group.Skills;
-                            viewOccupation.Schollings = occupation.Schooling;
+                            viewOccupation.Schollings = occupation.Schooling?.Select(p => p.GetViewCrud()).ToList();
 
 
                             if (occupationPerson.Group.Sphere.TypeSphere >= sphere.TypeSphere)

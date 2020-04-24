@@ -209,7 +209,8 @@ namespace IntegrationClient
             lineRef++;
           }
           // Formação
-          foreach (ViewCrudSchooling item in map.Schooling)
+          // GOTO: talvez aqui
+          foreach (ViewCrudSchoolingOccupation item in map.Schooling)
           {
             lineRef++;
             if (excelPln.Range[string.Format("A{0}", lineRef)].Value == nameRefs[6])

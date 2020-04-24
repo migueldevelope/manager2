@@ -97,7 +97,7 @@ namespace Manager.Core.Interfaces
     string AddOccupationSkill(ViewCrudOccupationSkill view);
     string AddOccupationActivities(ViewCrudOccupationActivities view);
     string UpdateMapGroupSchooling(string idgroup, ViewCrudSchooling view);
-    string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchooling view);
+    string UpdateMapOccupationSchooling(string idoccupation, ViewCrudSchoolingOccupation view);
     string UpdateMapOccupationActivities(string idoccupation, ViewCrudActivities view);
     string UpdateMapGroupScope(string idgroup, ViewCrudScope view);
     string AddTextDefault(ViewCrudTextDefault model);

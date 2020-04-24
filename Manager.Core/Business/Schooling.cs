@@ -35,9 +35,21 @@ namespace Manager.Core.Business
         _id = _id,
         Name = Name,
         Order = Order,
-        Complement = Complement,
         Type = Type
       };
     }
+
+    public ViewCrudSchoolingOccupation GetViewCrudOccupation()
+    {
+      return new ViewCrudSchoolingOccupation()
+      {
+        _id = _id,
+        Name = Name,
+        Order = Order,
+        Type = Type,
+        Complement = Complement
+      };
+    }
+
   }
 }

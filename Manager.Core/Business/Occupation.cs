@@ -18,7 +18,7 @@ namespace Manager.Core.Business
     public ViewListGroup Group { get; set; }
     public long Line { get; set; }
     public List<ViewListSkill> Skills { get; set; }
-    public List<ViewCrudSchooling> Schooling { get; set; }
+    public List<ViewCrudSchoolingOccupation> Schooling { get; set; }
     public List<ViewListActivitie> Activities { get; set; }
 
     [BsonRepresentation(BsonType.ObjectId)]

@@ -1590,6 +1590,7 @@ namespace Manager.Services.Specific
         : occupationService.GetNewVersion(p => p.Name == view.Name && p.Description == view.Description).Result;
       if (occupation == null)
       {
+        // GOTO: talvez aqui
         occupation = new Occupation()
         {
           Group = group.GetViewList(),
@@ -1601,7 +1602,7 @@ namespace Manager.Services.Specific
           Process = new List<ViewListProcessLevelTwo>(),
           Skills = new List<ViewListSkill>(),
           Activities = new List<ViewListActivitie>(),
-          Schooling = group.Schooling,
+          Schooling = group.Schooling?.Select(p => p.GetViewCrud()).ToList(),
           Line = 0
         };
         occupation.Process.Add(subProcess.GetViewList());
@@ -1611,7 +1612,7 @@ namespace Manager.Services.Specific
         occupation.Skills = new List<ViewListSkill>();
         occupation.SpecificRequirements = view.SpecificRequirements;
         occupation.Activities = new List<ViewListActivitie>();
-        occupation.Schooling = group.Schooling;
+        occupation.Schooling = group.Schooling?.Select(p => p.GetViewCrud()).ToList();
       }
       string itemAux;
       Skill skill;

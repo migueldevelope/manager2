@@ -375,7 +375,7 @@ namespace Manager.Services.Specific
                     Schoolings = onBoarding.Schoolings?.OrderBy(o => o.Schooling.Order).Select(p => new ViewCrudOnboardingSchooling()
                     {
                         _id = p._id,
-                        Schooling = new ViewCrudSchooling()
+                        Schooling = new ViewCrudSchoolingOccupation()
                         {
                             _id = p.Schooling._id,
                             Name = p.Schooling.Name,
@@ -1713,12 +1713,12 @@ namespace Manager.Services.Specific
                         }).ToList(),
                         StatusViewManager = p.StatusViewManager,
                         StatusViewPerson = p.StatusViewPerson,
-                        Schooling = new ViewCrudSchooling()
+                        Schooling = new ViewCrudSchoolingOccupation()
                         {
                             _id = p.Schooling._id,
                             Name = p.Schooling.Name,
                             Order = p.Schooling.Order,
-                            Complement = p.Schooling._id,
+                            Complement = p.Schooling.Complement,
                             Type = p.Schooling.Type
                         }
                     }).ToList(),
