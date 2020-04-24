@@ -254,7 +254,6 @@ namespace Manager.Services.Specific
           schoolingLocal = new Schooling()
           {
             Template = item._id,
-            Complement = item.Complement,
             Name = item.Name,
             Order = item.Order,
             Status = item.Status,

@@ -780,7 +780,6 @@ namespace Manager.Test.Commons
           Name = "Analfabeto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = -1,
           Type = EnumTypeSchooling.Basic
         };
@@ -791,7 +790,6 @@ namespace Manager.Test.Commons
           Name = "Ensino Fundamental Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 1,
           Type = EnumTypeSchooling.Basic
         };
@@ -802,7 +800,6 @@ namespace Manager.Test.Commons
           Name = "Ensino Fundamental Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 2,
           Type = EnumTypeSchooling.Basic
         };
@@ -813,7 +810,6 @@ namespace Manager.Test.Commons
           Name = "Ensino Médio Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 3,
           Type = EnumTypeSchooling.Basic
         };
@@ -824,7 +820,6 @@ namespace Manager.Test.Commons
           Name = "Ensino Médio Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 4,
           Type = EnumTypeSchooling.Basic
         };
@@ -835,7 +830,6 @@ namespace Manager.Test.Commons
           Name = "Técnico Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 5,
           Type = EnumTypeSchooling.Basic
         };
@@ -846,7 +840,6 @@ namespace Manager.Test.Commons
           Name = "Técnico Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 6,
           Type = EnumTypeSchooling.Basic
         };
@@ -857,7 +850,6 @@ namespace Manager.Test.Commons
           Name = "Ensino Superior Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 7,
           Type = EnumTypeSchooling.Basic
         };
@@ -868,7 +860,6 @@ namespace Manager.Test.Commons
           Name = "Ensino Superior Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 8,
           Type = EnumTypeSchooling.Basic
         };
@@ -879,7 +870,6 @@ namespace Manager.Test.Commons
           Name = "Pós Graduação Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 9,
           Type = EnumTypeSchooling.Basic
         };
@@ -890,7 +880,6 @@ namespace Manager.Test.Commons
           Name = "Pós Graduação Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 10,
           Type = EnumTypeSchooling.Basic
         };
@@ -901,7 +890,6 @@ namespace Manager.Test.Commons
           Name = "Mestrado Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 11,
           Type = EnumTypeSchooling.Basic
         };
@@ -912,7 +900,6 @@ namespace Manager.Test.Commons
           Name = "Mestrado Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 12,
           Type = EnumTypeSchooling.Basic
         };
@@ -923,7 +910,6 @@ namespace Manager.Test.Commons
           Name = "Doutorato Incompleto",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 13,
           Type = EnumTypeSchooling.Basic
         };
@@ -934,7 +920,6 @@ namespace Manager.Test.Commons
           Name = "Doutorato Completo",
           Template = null,
           Status = EnumStatus.Enabled,
-          Complement = null,
           Order = 14,
           Type = EnumTypeSchooling.Basic
         };

@@ -13,7 +13,6 @@ namespace Manager.Core.Business
   public class Schooling : BaseEntity
   {
     public string Name { get; set; }
-    public string Complement { get; set; }
     public EnumTypeSchooling Type { get; set; }
 
     public long Order { get; set; }
@@ -39,17 +38,6 @@ namespace Manager.Core.Business
       };
     }
 
-    public ViewCrudSchoolingOccupation GetViewCrudOccupation()
-    {
-      return new ViewCrudSchoolingOccupation()
-      {
-        _id = _id,
-        Name = Name,
-        Order = Order,
-        Type = Type,
-        Complement = Complement
-      };
-    }
 
   }
 }
