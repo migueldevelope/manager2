@@ -86,7 +86,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getquantity")]
-    public async Task<List<ViewFeelingQtd>> GetQuantity(string idmanager, int month = 1)
+    public async Task<List<ViewFeelingQtd>> GetQuantity(string idmanager = "", int month = 1)
     {
       return await Task.Run(() => service.GetQuantity(idmanager, month));
     }
