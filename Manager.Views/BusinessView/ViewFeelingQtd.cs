@@ -6,6 +6,5 @@ namespace Manager.Views.BusinessView
   {
     public EnumFeeling Feeling { get; set; }
     public long Qtd { get; set; }
-    public string Month { get; set; }
   }
 }
