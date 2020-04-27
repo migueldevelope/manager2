@@ -124,7 +124,7 @@ namespace Manager.Services.Specific
         var list = new List<ViewFeelingQtd>();
         var view = new ViewFeelingQtd();
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
-        if (idmanager != null)
+        if (idmanager != "")
         {
           var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id);
           feeling = feeling.Where(p => persons.Contains(p._idUser)).ToList();
