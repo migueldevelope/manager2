@@ -225,15 +225,14 @@ namespace Manager.Services.Specific
         {
           if (serviceCheckpoint.CountNewVersion(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result == 0)
           {
-            listManager.Add(new ManagerWorkNotification()
-            {
-              Manager = item.Manager,
-              Person = item,
-              Type = ManagerListType.Defeated
-            });
+            //listManager.Add(new ManagerWorkNotification()
+            //{
+            //  Manager = item.Manager,
+            //  Person = item,
+            //  Type = ManagerListType.Defeated
+            //});
             StatusCheckpoint(item);
           }
-        
         }
         // Checkpoint vencendo hoje
         nowLimit = DateTime.Now.AddDays(daysCheckpoint).Date;
@@ -465,7 +464,7 @@ namespace Manager.Services.Specific
       try
       {
         var checkpoint = serviceCheckpoint.GetNewVersion(p => p.Person._id == person._id).Result;
-        if(checkpoint != null)
+        if (checkpoint != null)
         {
           checkpoint.StatusCheckpoint = EnumStatusCheckpoint.End;
           var c = serviceCheckpoint.Update(checkpoint, null);
@@ -473,7 +472,8 @@ namespace Manager.Services.Specific
         person.TypeJourney = EnumTypeJourney.Monitoring;
         var x = servicePerson.Update(person, null);
 
-      }catch(Exception e)
+      }
+      catch (Exception e)
       {
         throw e;
       }
@@ -494,7 +494,7 @@ namespace Manager.Services.Specific
         foreach (Person item in persons)
         {
           if ((serviceMonitoring.CountNewVersion(p => p.Person._id == item._id && p.StatusMonitoring == EnumStatusMonitoring.End && p.DateEndEnd >= nowLimit).Result == 0)
-            &&(serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End && p.DateEndEnd >= nowLimit).Result == 0)
+            && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End && p.DateEndEnd >= nowLimit).Result == 0)
             && (serviceCheckpoint.CountNewVersion(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End && p.DateEnd >= nowLimit).Result == 0))
             listManager.Add(new ManagerWorkNotification()
             {
@@ -1633,7 +1633,7 @@ namespace Manager.Services.Specific
     {
       throw new Exception("Não implementado");
     }
-  #endregion
+    #endregion
 
-}
+  }
 }
