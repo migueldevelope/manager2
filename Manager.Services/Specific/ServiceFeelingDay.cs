@@ -135,9 +135,9 @@ namespace Manager.Services.Specific
         {
           view.Feeling = (EnumFeeling)item;
           view.Qtd = feeling.Where(p => p.Feeling == (EnumFeeling)item).Count();
+          list.Add(view);
         }
 
-        list.Add(view);
 
         return list;
       }
