@@ -122,7 +122,7 @@ namespace Manager.Services.Specific
         month *= -1;
         var date = DateTime.Now.AddMonths(month);
         var list = new List<ViewFeelingQtd>();
-        var view = new ViewFeelingQtd();
+        
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
         if (idmanager != "")
         {
@@ -133,6 +133,7 @@ namespace Manager.Services.Specific
 
         for (var item = 0; item < 5; item++)
         {
+          var view = new ViewFeelingQtd();
           view.Feeling = (EnumFeeling)item;
           view.Qtd = feeling.Where(p => p.Feeling == (EnumFeeling)item).Count();
           list.Add(view);
