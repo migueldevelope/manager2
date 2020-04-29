@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessList
 {
@@ -8,5 +9,7 @@ namespace Manager.Views.BusinessList
     public string Name { get; set; }
     public string Occupation { get; set; }
     public DateTime? DataAdm { get; set; }
+    public string Photo { get; set; }
+    public EnumFeeling? Feeling { get; set; }
   }
 }

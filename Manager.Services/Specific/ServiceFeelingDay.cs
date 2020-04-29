@@ -126,7 +126,7 @@ namespace Manager.Services.Specific
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
         if (idmanager != "")
         {
-          var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id);
+          var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p.User._id);
           feeling = feeling.Where(p => persons.Contains(p._idUser)).ToList();
         }
 

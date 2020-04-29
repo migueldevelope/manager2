@@ -38,6 +38,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Monitoring> serviceMonitoring;
     private ServiceGeneric<Checkpoint> serviceCheckpoint;
     private ServiceGeneric<OffBoarding> serviceOffBoarding;
+    private readonly ServiceGeneric<FeelingDay> serviceFeelingDay;
     private ServiceGeneric<User> serviceUser;
     private readonly IQueueClient queueClient;
     private HubConnection hubConnection;
@@ -55,6 +56,7 @@ namespace Manager.Services.Auth
         serviceEstablishment = new ServiceGeneric<Establishment>(context);
         serviceMail = new ServiceSendGrid(contextLog);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
+        serviceFeelingDay = new ServiceGeneric<FeelingDay>(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
         serviceOffBoarding = new ServiceGeneric<OffBoarding>(context);
         servicePerson = new ServiceGeneric<Person>(context);
@@ -80,6 +82,7 @@ namespace Manager.Services.Auth
       serviceCompany._user = _user;
       serviceEstablishment._user = _user;
       serviceMail.SetUser(_user);
+      serviceFeelingDay._user = _user;
       serviceOccupation._user = _user;
       serviceParameter._user = _user;
       servicePerson._user = _user;
@@ -106,6 +109,7 @@ namespace Manager.Services.Auth
       servicePersonHistory._user = user;
       serviceSalaryScale._user = user;
       serviceSchooling._user = user;
+      serviceFeelingDay._user = user;
       serviceUser._user = user;
       serviceOnboarding._user = user;
       serviceMonitoring._user = user;
@@ -574,6 +578,9 @@ namespace Manager.Services.Auth
     {
       try
       {
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        var feelings = serviceFeelingDay.GetAllNewVersion(p => p.Date == datenow).Result;
+
         total = servicePerson.CountNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result;
         int skip = count * (page - 1);
         return servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.Manager._id == idPerson && p.TypeJourney != EnumTypeJourney.OutOfJourney && p._id != idPerson && p.User.Name.ToUpper().Contains(filter.ToUpper()), count, skip, "User.Name").Result
@@ -582,7 +589,9 @@ namespace Manager.Services.Auth
             Name = item.User.Name,
             _idPerson = item._id,
             Occupation = item.Occupation?.Name,
-            DataAdm = item.User.DateAdm
+            DataAdm = item.User.DateAdm,
+            Photo = item.User.PhotoUrl,
+            Feeling = feelings.Where(p => p._idUser == item.User._id).FirstOrDefault()?.Feeling
           }).OrderBy(p => p.Name).ToList();
       }
       catch (Exception e)
