@@ -34,6 +34,7 @@ namespace Mobile.Controllers
     private readonly IServiceIndicators serviceIndicators;
     private readonly IServicePerson servicePerson;
     private readonly IServiceUser serviceUser;
+    private readonly IServiceFeelingDay serviceFeelingDay;
     private readonly DataContext context;
     private readonly string blobKey;
 
@@ -66,6 +67,45 @@ namespace Mobile.Controllers
     #endregion
 
     #region Panel
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="view"></param>
+    /// <param name="idUser"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("alterpass/{idUser}")]
+    public async Task<string> AlterPassword([FromBody]ViewAlterPass view, string idUser)
+    {
+      return await Task.Run(() => serviceUser.AlterPassword(view, idUser));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="feeling"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("new/{feeling}")]
+    public async Task<IActionResult> Post(EnumFeeling feeling)
+    {
+      return await Task.Run(() => Ok(serviceFeelingDay.New(feeling)));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getfeelingday")]
+    public async Task<ViewCrudFeelingDay> GetFeeelingDay()
+    {
+      return await Task.Run(() => serviceFeelingDay.GetFeeelingDay());
+    }
+
 
     /// <summary>
     /// 
