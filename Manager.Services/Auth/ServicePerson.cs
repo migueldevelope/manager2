@@ -1408,6 +1408,8 @@ namespace Manager.Services.Auth
       try
       {
 
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        var feelings = serviceFeelingDay.GetAllNewVersion(p => p.Date == datenow).Result;
 
         var list = servicePerson.GetAllNewVersion(p => 
         p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney != EnumTypeJourney.OutOfJourney
@@ -1423,7 +1425,9 @@ namespace Manager.Services.Auth
             Name = item.User?.Name,
             DataAdm = item.User?.DateAdm,
             Occupation = item.Occupation?.Name,
-            _idPerson = item._id
+            _idPerson = item._id,
+            Photo = item.User.PhotoUrl,
+            Feeling = feelings.Where(p => p._idUser == item.User._id).FirstOrDefault()?.Feeling
           });
 
         }
