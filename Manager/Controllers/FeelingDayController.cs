@@ -94,6 +94,19 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idmanager"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getmanager/{idmanager}")]
+    public async Task<List<ViewFeelingManager>> GetManager(string idmanager)
+    {
+      return await Task.Run(() => service.GetManager(idmanager));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <returns></returns>
     [Authorize]
     [HttpGet]

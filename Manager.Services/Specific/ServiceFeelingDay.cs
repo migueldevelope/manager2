@@ -122,7 +122,7 @@ namespace Manager.Services.Specific
         month *= -1;
         var date = DateTime.Now.AddMonths(month);
         var list = new List<ViewFeelingQtd>();
-        
+
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
         if (idmanager != "")
         {
@@ -136,6 +136,40 @@ namespace Manager.Services.Specific
           var view = new ViewFeelingQtd();
           view.Feeling = (EnumFeeling)item;
           view.Qtd = feeling.Where(p => p.Feeling == (EnumFeeling)item).Count();
+          list.Add(view);
+        }
+
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewFeelingManager> GetManager(string idmanager)
+    {
+      try
+      {
+        var date = DateTime.Now.AddDays(-7);
+        var list = new List<ViewFeelingManager>();
+
+        var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
+
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+        feeling = feeling.Where(p => persons.Select(p => p.User._id).Contains(p._idUser)).ToList();
+
+
+
+        foreach (var item in feeling)
+        {
+          var view = new ViewFeelingManager();
+          view.Felling = item.Feeling;
+          view.Day = item.Date;
+          view._idUser = item._idUser;
+          view.Name = persons.Where(p => p.User._id == item._idUser).FirstOrDefault().User.Name;
           list.Add(view);
         }
 
