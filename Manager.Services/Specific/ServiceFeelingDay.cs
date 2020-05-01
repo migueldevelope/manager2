@@ -115,12 +115,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewFeelingQtd> GetQuantity(string idmanager, int month)
+    public List<ViewFeelingQtd> GetQuantity(string idmanager, long days)
     {
       try
       {
-        month *= -1;
-        var date = DateTime.Now.AddMonths(month);
+        days *= -1;
+        var date = DateTime.Now.AddDays(days);
         var list = new List<ViewFeelingQtd>();
 
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
@@ -149,11 +149,12 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewFeelingManager> GetManager(string idmanager)
+    public List<ViewFeelingManager> GetManager(string idmanager, long days)
     {
       try
       {
-        var date = DateTime.Now.AddDays(-7);
+        days *= -1;
+        var date = DateTime.Now.AddDays(days);
         var list = new List<ViewFeelingManager>();
 
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;

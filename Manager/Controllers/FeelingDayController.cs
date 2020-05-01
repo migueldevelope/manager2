@@ -81,27 +81,28 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <param name="idmanager"></param>
-    /// <param name="month"></param>
+    /// <param name="days"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getquantity")]
-    public async Task<List<ViewFeelingQtd>> GetQuantity(string idmanager = "", int month = 1)
+    public async Task<List<ViewFeelingQtd>> GetQuantity(string idmanager = "", long days = 7)
     {
-      return await Task.Run(() => service.GetQuantity(idmanager, month));
+      return await Task.Run(() => service.GetQuantity(idmanager, days));
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="idmanager"></param>
+    /// <param name="days"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getmanager/{idmanager}")]
-    public async Task<List<ViewFeelingManager>> GetManager(string idmanager)
+    public async Task<List<ViewFeelingManager>> GetManager(string idmanager, long days = 7)
     {
-      return await Task.Run(() => service.GetManager(idmanager));
+      return await Task.Run(() => service.GetManager(idmanager, days));
     }
 
     /// <summary>

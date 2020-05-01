@@ -19,7 +19,7 @@ namespace Manager.Core.Interfaces
     ViewCrudFeelingDay Get(string id);
     List<ViewListFeelingDay> List(ref long total, int count = 10, int page = 1, string filter = "");
     ViewCrudFeelingDay GetFeeelingDay();
-    List<ViewFeelingQtd> GetQuantity(string idmanager, int month);
-    List<ViewFeelingManager> GetManager(string idmanager);
+    List<ViewFeelingQtd> GetQuantity(string idmanager, long days);
+    List<ViewFeelingManager> GetManager(string idmanager, long days);
   }
 }
