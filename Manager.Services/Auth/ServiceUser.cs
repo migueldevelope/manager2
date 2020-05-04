@@ -238,7 +238,7 @@ namespace Manager.Services.Auth
         user.Phone = view.Phone;
         user.PhoneFixed = view.PhoneFixed;
         user.PhotoUrl = view.PhotoUrl;
-        user.Schooling = user.Schooling;
+        user.Schooling = view.Schooling;
         user.Sex = view.Sex;
         user.ShowSalary = view.ShowSalary;
         serviceUser.Update(user, null).Wait();
