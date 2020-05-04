@@ -2295,30 +2295,34 @@ namespace Manager.Services.Specific
         result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ")
           .Replace(" Iii", " III").Replace(" Ii", " II").Replace(" Em ", " em ").Replace(" A ", " a ").Replace(" À ", " à ")
           .Replace(" Ao ", " ao ").Replace(" E ", " e ").Replace(" Com ", " com ").Replace(" Por ", " por ");
-
-        if (result.IndexOf(" Ti") + 3 == result.Length)
+        string wordRight = result.Substring(result.Length - 3, 3);
+        if (wordRight.Equals(" Ti"))
         {
-          result = string.Concat(result.Substring(0, result.Length - 2), "TI");
+          result = string.Concat(result[0..^2], "TI");
         }
-        if (result.IndexOf(" Jr") + 3 == result.Length)
+        if (wordRight.Equals(" Jr"))
         {
-          result = string.Concat(result.Substring(0, result.Length - 2), "JR");
+          result = string.Concat(result[0..^2], "JR");
         }
-        if (result.IndexOf(" Pl") + 3 == result.Length)
+        if (wordRight.Equals(" Pl"))
         {
-          result = string.Concat(result.Substring(0, result.Length - 2), "PL");
+          result = string.Concat(result[0..^2], "PL");
         }
-        if (result.IndexOf(" Sr") + 3 == result.Length)
+        if (wordRight.Equals(" Sr"))
         {
-          result = string.Concat(result.Substring(0, result.Length - 2), "SR");
+          result = string.Concat(result[0..^2], "SR");
         }
-        if (result.IndexOf(" Iii") + 4 == result.Length)
+        if (wordRight.Equals(" Ii"))
         {
-          result = string.Concat(result.Substring(0, result.Length - 3), "III");
+          result = string.Concat(result[0..^2], "II");
         }
-        if (result.IndexOf(" Ii") + 3 == result.Length)
+        if (result.Length > 3)
         {
-          result = string.Concat(result.Substring(0, result.Length - 2), "II");
+          wordRight = result.Substring(result.Length - 4, 4);
+          if (wordRight.Equals(" Iii"))
+          {
+            result = string.Concat(result[0..^3], "III");
+          }
         }
         return result;
       }

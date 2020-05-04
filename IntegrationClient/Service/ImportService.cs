@@ -691,28 +691,28 @@ namespace IntegrationClient.Service
           _ = excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
           // Buscar nome da empresa do gestor
           _ = excelPln.Range["AN2"].Select();
-          excelPln.Range["AN2"].FormulaR1C1 = "=VLOOKUP(RC[-2],C[-39]:C[-38],2,FALSE)";
+          excelPln.Range["AN2"].FormulaR1C1 = @"=IF(ISERROR(VLOOKUP(RC[-2],C[-39]:C[-38],2,FALSE)),"""",VLOOKUP(RC[-2],C[-39]:C[-38],2,FALSE))";
           _ = excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AN2:AN{0}", finalRow)]);
           _ = excelPln.Range[string.Format("AN2:AN{0}", finalRow)].Select();
           _ = excelApp.Selection.Copy();
           _ = excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
           // Buscar cpf do gestor
           _ = excelPln.Range["AP2"].Select();
-          excelPln.Range["AP2"].FormulaR1C1 = "=VLOOKUP(RC[-3],C[-39]:C[-19],21,FALSE)";
+          excelPln.Range["AP2"].FormulaR1C1 = @"=IF(ISERROR(VLOOKUP(RC[-3],C[-39]:C[-19],21,FALSE)),"""",VLOOKUP(RC[-3],C[-39]:C[-19],21,FALSE))";
           _ = excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AP2:AP{0}", finalRow)]);
           _ = excelPln.Range[string.Format("AP2:AP{0}", finalRow)].Select();
           _ = excelApp.Selection.Copy();
           _ = excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
           // Buscar estabelecimento do gestor
           _ = excelPln.Range["AQ2"].Select();
-          excelPln.Range["AQ2"].FormulaR1C1 = "=VLOOKUP(RC[-4],C[-40]:C[-9],32,FALSE)";
+          excelPln.Range["AQ2"].FormulaR1C1 = @"=IF(ISERROR(VLOOKUP(RC[-4],C[-40]:C[-9],32,FALSE)),"""",VLOOKUP(RC[-4],C[-40]:C[-9],32,FALSE))";
           _ = excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AQ2:AQ{0}", finalRow)]);
           _ = excelPln.Range[string.Format("AQ2:AQ{0}", finalRow)].Select();
           _ = excelApp.Selection.Copy();
           _ = excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
           // Buscar nome do estabelecimento do gestor
           _ = excelPln.Range["AR2"].Select();
-          excelPln.Range["AR2"].FormulaR1C1 = "=VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE)";
+          excelPln.Range["AR2"].FormulaR1C1 = @"=IF(ISERROR(VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE)),"""",VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE))"; 
           _ = excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AR2:AR{0}", finalRow)]);
           _ = excelPln.Range[string.Format("AR2:AR{0}", finalRow)].Select();
           _ = excelApp.Selection.Copy();

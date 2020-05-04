@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Manager.Views.Integration.V2
 {
@@ -244,6 +245,10 @@ namespace Manager.Views.Integration.V2
           return null;
         }
         DateTime.TryParse(field.Substring(0, 10), CultureInfo.CreateSpecificCulture(culture), DateTimeStyles.AdjustToUniversal, out DateTime resultParse);
+        if (field.Length == 10)
+        {
+          resultParse = resultParse.AddHours(12);
+        }
         DateTime? result = defaultValue;
         if (!string.IsNullOrEmpty(field))
           result = resultParse.ToUniversalTime();
