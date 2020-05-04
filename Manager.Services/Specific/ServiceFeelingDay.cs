@@ -191,7 +191,7 @@ namespace Manager.Services.Specific
         
 
         var view = serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser
-        && p.Date == datenow).Result;
+        && p.Date >= datenow.AddDays(-1) && p.Date <= datenow.AddDays(+1)).Result;
         if (view == null)
           return null;
         else
