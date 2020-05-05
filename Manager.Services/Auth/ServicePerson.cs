@@ -789,7 +789,7 @@ namespace Manager.Services.Auth
           }).FirstOrDefault();
 
         if (_idManager != _idManagerOld)
-          Task.Run(() => SendQueue(_idManager, person._id));
+          Task.Run(() => SendQueue(_idManager, person._id, person.User?.Name));
 
         person.Manager = manager;
         var result = servicePerson.Update(person, null);
@@ -1469,7 +1469,7 @@ namespace Manager.Services.Auth
       }
     }
 
-    private void SendQueue(string idmanager, string idperson)
+    private void SendQueue(string idmanager, string idperson, string name)
     {
       try
       {
@@ -1477,7 +1477,8 @@ namespace Manager.Services.Auth
         {
           _idPerson = idperson,
           _idManager = idmanager,
-          _idAccount = _user._idAccount
+          _idAccount = _user._idAccount,
+          Name = name
         };
 
         SendMessageAsync(JsonConvert.SerializeObject(data));

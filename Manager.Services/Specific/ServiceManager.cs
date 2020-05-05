@@ -87,11 +87,12 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+
+        var personsmanager = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
         var list = new List<ViewListStructManager>();
         var managers = new List<string>();
 
-        foreach (var item in persons)
+        foreach (var item in personsmanager)
         {
           var structmanager = new ViewListStructManager()
           {
@@ -101,11 +102,11 @@ namespace Manager.Services.Specific
             Team = new List<ViewListStructManager>()
           };
 
-          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager, Name= item.User?.Name }, managers);
+          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager, Name = item.User?.Name }, managers);
 
           list.Add(structmanager);
         }
-        
+
 
         return list;
       }
@@ -210,7 +211,7 @@ namespace Manager.Services.Specific
     }
 
 
-    private void NewDirectTeam(string idManager, string idPerson)
+    private void NewDirectTeam(string idManager, string idPerson, string name)
     {
       try
       {
@@ -220,7 +221,8 @@ namespace Manager.Services.Specific
           var result = serviceDirectTeam.InsertNewVersion(new DirectTeam()
           {
             _idPerson = idPerson,
-            _idManager = idManager
+            _idManager = idManager,
+            Name = name
           });
         }
         RemoveManager(idPerson, idManager);
@@ -289,8 +291,8 @@ namespace Manager.Services.Specific
           {
             _idManager = it._idPerson,
             _idPerson = person._idPerson,
-            Name = it.Name,
-            _id = it._id,
+            Name = person.Name,
+            _id = person._id,
             Team = new List<ViewListStructManager>()
           };
           team.Team = GetTeam(team, managers);
@@ -320,7 +322,7 @@ namespace Manager.Services.Specific
         // add news managers
         NewListManager(view._idManager);
         // adjust direct team
-        NewDirectTeam(view._idManager, view._idPerson);
+        NewDirectTeam(view._idManager, view._idPerson, view.Name);
       }
       // clean list
       RemoveListManager();

@@ -11,5 +11,6 @@ namespace Manager.Core.Business
     public string _idManager { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idPerson { get; set; }
+    public string Name { get; set; }
   }
 }
