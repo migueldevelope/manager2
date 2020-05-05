@@ -101,7 +101,7 @@ namespace Manager.Services.Specific
             Team = new List<ViewListStructManager>()
           };
 
-          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager }, managers);
+          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager, Name= item.User?.Name }, managers);
 
           list.Add(structmanager);
         }

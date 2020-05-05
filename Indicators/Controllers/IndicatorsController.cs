@@ -44,7 +44,7 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("gethierarchy/{idperson}")]
+    [Route("gethierarchy/{idmanager}")]
     public async Task<List<ViewListStructManager>> GetHierarchy(string idmanager)
     {
       return await Task.Run(() => serviceManager.GetHierarchy(idmanager));
