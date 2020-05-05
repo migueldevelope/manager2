@@ -295,6 +295,8 @@ namespace Manager.Services.Auth
           MeritocracyProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content,
           ShowAutoManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showAutoManager").Result?.Content,
           ShowSalaryScaleManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showSalaryScaleManager").Result?.Content,
+          FeelingProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "feelingProcess").Result?.Content,
+          ShowOffboardingProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showOffboardingProcess").Result?.Content,
           DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result,
         };
         person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id && p.StatusUser != EnumStatusUser.Disabled).Result
@@ -421,6 +423,8 @@ namespace Manager.Services.Auth
           MeritocracyProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "meritocracyProcess").Result?.Content,
           ShowAutoManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showAutoManager").Result?.Content,
           ShowSalaryScaleManager = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showSalaryScaleManager").Result?.Content,
+          FeelingProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "feelingProcess").Result?.Content,
+          ShowOffboardingProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showOffboardingProcess").Result?.Content,
           DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result,
         };
         person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id && p.StatusUser != EnumStatusUser.Disabled).Result
