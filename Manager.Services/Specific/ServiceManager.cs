@@ -25,6 +25,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<StructManager> serviceStructManager;
     private readonly IQueueClient queueClient;
     private readonly IServiceControlQueue serviceControlQueue;
+    private List<DirectTeam> directteam;
+
     public ServiceManager(DataContext contextStruct, DataContext context, IServiceControlQueue _serviceControlQueue, string serviceBusConnectionString) : base(contextStruct)
     {
       try
@@ -87,8 +89,10 @@ namespace Manager.Services.Specific
     {
       try
       {
+        directteam = serviceDirectTeam.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
-        var personsmanager = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+        var personsmanager = directteam.Where(p => p._idManager == idmanager).ToList();
+        //var personsmanager = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
         var list = new List<ViewListStructManager>();
         var managers = new List<string>();
 
@@ -98,11 +102,12 @@ namespace Manager.Services.Specific
           {
             _idManager = idmanager,
             _idPerson = item._id,
-            Name = item.User?.Name,
+            //Name = item.User?.Name,
+            Name = item.Name,
             Team = new List<ViewListStructManager>()
           };
 
-          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager, Name = item.User?.Name }, managers);
+          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager, Name = item.Name }, managers);
 
           list.Add(structmanager);
         }
@@ -283,8 +288,9 @@ namespace Manager.Services.Specific
       if (it != null)
       {
         //var i = 0;
-        var directteam = serviceDirectTeam.GetAllNewVersion(p => p._idManager == it._idPerson).Result;
-        foreach (var person in directteam)
+        //var directteam = serviceDirectTeam.GetAllNewVersion(p => p._idManager == it._idPerson).Result;
+         var directteamlocal = directteam.Where(p => p._idManager == it._idPerson).ToList();
+        foreach (var person in directteamlocal)
         {
 
           var team = new ViewListStructManager
