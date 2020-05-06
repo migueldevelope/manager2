@@ -101,13 +101,13 @@ namespace Manager.Services.Specific
           var structmanager = new ViewListStructManager()
           {
             _idManager = idmanager,
-            _idPerson = item._id,
+            _idPerson = item._idPerson,
             //Name = item.User?.Name,
             Name = item.Name,
             Team = new List<ViewListStructManager>()
           };
 
-          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._id, _idManager = idmanager, Name = item.Name }, managers);
+          structmanager.Team = GetTeam(new ViewListStructManager { _idPerson = item._idPerson, _idManager = idmanager, Name = item.Name }, managers);
 
           list.Add(structmanager);
         }
@@ -295,10 +295,10 @@ namespace Manager.Services.Specific
 
           var team = new ViewListStructManager
           {
-            _idManager = it._idPerson,
+            _idManager = person._idManager,
             _idPerson = person._idPerson,
             Name = person.Name,
-            _id = person._id,
+            //_id = person._id,
             Team = new List<ViewListStructManager>()
           };
           team.Team = GetTeam(team, managers);
