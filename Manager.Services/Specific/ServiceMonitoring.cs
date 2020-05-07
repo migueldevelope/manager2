@@ -916,8 +916,9 @@ namespace Manager.Services.Specific
         };
         var occupationLog = serviceOccupationLog.GetAllNewVersion(p => p._idOccupationPrevious == person.Occupation._id).Result.LastOrDefault();
 
-        if (person.Occupation?._id != monitoring.Person.OccupationId)
-          view.OccupationDiff = true;
+        if (monitoring.Person.OccupationId != null)
+          if (person.Occupation?._id != monitoring.Person.OccupationId)
+            view.OccupationDiff = true;
 
         var lastdate = monitoring.DateBeginManager;
         if ((monitoring.DateBeginPerson != null) && (monitoring.DateBeginManager != null))
