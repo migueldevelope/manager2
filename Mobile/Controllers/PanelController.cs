@@ -48,7 +48,7 @@ namespace Mobile.Controllers
     /// <param name="_serviceUser">Serviço de Usuários</param>
     /// <param name="contextAccessor">Token de segurança</param>
     public PanelController(IServiceOnBoarding _serviceOnborading, IServiceIndicators _serviceIndicators,
-      IServiceUser _serviceUser, IServicePerson _servicePerson, IHttpContextAccessor contextAccessor) : base(contextAccessor)
+      IServiceUser _serviceUser, IServicePerson _servicePerson, IServiceFeelingDay _serviceFeelingDay, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       Config conn = XmlConnection.ReadVariablesSystem();
       context = new DataContext(conn.Server, conn.DataBase);
@@ -59,10 +59,12 @@ namespace Mobile.Controllers
       serviceIndicators = _serviceIndicators;
       servicePerson = _servicePerson;
       serviceUser = _serviceUser;
+      serviceFeelingDay = _serviceFeelingDay;
       serviceOnborading.SetUser(contextAccessor);
       serviceIndicators.SetUser(contextAccessor);
       servicePerson.SetUser(contextAccessor);
       serviceUser.SetUser(contextAccessor);
+      serviceFeelingDay.SetUser(contextAccessor);
     }
     #endregion
 
