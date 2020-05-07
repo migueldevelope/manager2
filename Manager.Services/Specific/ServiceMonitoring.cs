@@ -991,6 +991,7 @@ namespace Manager.Services.Specific
           {
             _id = item.Skill._id,
             Name = item.Skill.Name,
+            Concept = item.Skill.Concept,
             TypeItem = EnumTypeItem.SkillCompany
           };
           result.Item = detail;
