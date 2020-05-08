@@ -112,9 +112,9 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getfeelingday")]
-    public async Task<ViewCrudFeelingDay> GetFeeelingDay()
+    public async Task<ViewCrudFeelingDay> GetFeelingDay()
     {
-      return await Task.Run(() => service.GetFeeelingDay());
+      return await Task.Run(() => service.GetFeelingDay());
     }
 
     /// <summary>

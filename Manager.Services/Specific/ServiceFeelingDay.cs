@@ -183,15 +183,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudFeelingDay GetFeeelingDay()
+    public ViewCrudFeelingDay GetFeelingDay()
     {
       try
       {
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
         
-
         var view = serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser
-        && p.Date >= datenow.AddDays(-1) && p.Date <= datenow.AddDays(+1)).Result;
+        && p.Date > datenow.AddDays(-1) && p.Date < datenow.AddDays(+1)).Result;
         if (view == null)
           return null;
         else
