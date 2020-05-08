@@ -115,14 +115,17 @@ namespace Manager.Services.Specific
       try
       {
         var view = new ViewDashboard();
-        var maturity = serviceMaturity.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        //var maturity = serviceMaturity.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
         //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var plans = servicePlan.GetAllNewVersion(p => p.StatusPlan != EnumStatusPlan.NoRealized).Result;
         var recommendation = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var certification = serviceCertification.GetAllNewVersion(p => p.StatusCertification == EnumStatusCertification.Approved).Result;
 
-        view.MonitoringRealized = maturity.Sum(p => p.CountMonitoring);
+        plans = plans.Where(p => monitorings.Select(x => x._id).Contains(p._idMonitoring)).ToList();
+
+        view.MonitoringRealized = monitorings.Count();
         view.CertificationRealized = certification.Count();
         view.Recommendation = recommendation.Count();
         view.OnBoardingWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).Count();
