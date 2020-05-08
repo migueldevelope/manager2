@@ -187,7 +187,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 23:59");
         
         var view = serviceFeelingDay.GetNewVersion(p => p._idUser == _user._idUser
         && p.Date > datenow.AddDays(-1) && p.Date < datenow.AddDays(+1)).Result;
