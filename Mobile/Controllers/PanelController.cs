@@ -103,9 +103,9 @@ namespace Mobile.Controllers
     [Authorize]
     [HttpGet]
     [Route("getfeelingday")]
-    public async Task<ViewCrudFeelingDay> GetFeeelingDay()
+    public async Task<ViewCrudFeelingDay> GetFeelingDay()
     {
-      return await Task.Run(() => serviceFeelingDay.GetFeeelingDay());
+      return await Task.Run(() => serviceFeelingDay.GetFeelingDay());
     }
 
 
