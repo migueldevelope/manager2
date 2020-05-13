@@ -160,7 +160,13 @@ namespace Manager.Services.Specific
 
         var feeling = serviceFeelingDay.GetAllNewVersion(p => p.Date >= date).Result;
 
-        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result;
+        List<Person> persons = new List<Person>();
+
+        if(idmanager != "")
+          persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.StatusUser != EnumStatusUser.Disabled).Result;
+        else
+          persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+
         feeling = feeling.Where(p => persons.Select(p => p.User._id).Contains(p._idUser)).ToList();
 
 

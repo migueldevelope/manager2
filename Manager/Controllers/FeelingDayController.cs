@@ -99,8 +99,8 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getmanager/{idmanager}")]
-    public async Task<List<ViewFeelingManager>> GetManager(string idmanager, long days = 7)
+    [Route("getmanager")]
+    public async Task<List<ViewFeelingManager>> GetManager(string idmanager = "", long days = 7)
     {
       return await Task.Run(() => service.GetManager(idmanager, days));
     }
