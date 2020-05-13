@@ -1226,7 +1226,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewListMonitoring NewMonitoring(string idperson)
+    public ViewListMonitoring NewMonitoring(string idperson,string plataform)
     {
       try
       {
@@ -1243,7 +1243,7 @@ namespace Manager.Services.Specific
 
           monitoring.StatusMonitoring = EnumStatusMonitoring.Show;
           serviceMonitoring.InsertNewVersion(monitoring).Wait();
-          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id)));
+          Task.Run(() => LogSave(_user._idPerson, string.Format("Start new process | {0}", monitoring._id), plataform));
         }
         else
         {
@@ -1270,7 +1270,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string UpdateMonitoring(ViewCrudMonitoring view)
+    public string UpdateMonitoring(ViewCrudMonitoring view, string plataform)
     {
       try
       {
@@ -1331,7 +1331,7 @@ namespace Manager.Services.Specific
           {
             monitoring.DateEndManager = DateTime.Now;
             Task.Run(() => Mail(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id), plataform));
           }
         }
         else
@@ -1347,19 +1347,19 @@ namespace Manager.Services.Specific
             }
             monitoring.DateEndEnd = DateTime.Now;
             Task.Run(() => SendQueue(monitoring._id, person._id, countpraise));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id), plataform));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
             Task.Run(() => MailManager(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id), plataform));
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
           {
             Task.Run(() => MailDisApproval(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id), plataform));
           }
         }
         serviceMonitoring.Update(monitoring, null).Wait();
@@ -1372,7 +1372,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public string UpdateStatusMonitoring(string idmonitoring, EnumStatusMonitoring status)
+    public string UpdateStatusMonitoring(string idmonitoring, EnumStatusMonitoring status, string plataform)
     {
       try
       {
@@ -1405,7 +1405,7 @@ namespace Manager.Services.Specific
           {
             monitoring.DateEndManager = DateTime.Now;
             Task.Run(() => Mail(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send person approval | {0}", monitoring._id), plataform));
           }
         }
         else
@@ -1421,19 +1421,19 @@ namespace Manager.Services.Specific
             }
             monitoring.DateEndEnd = DateTime.Now;
             Task.Run(() => SendQueue(monitoring._id, person._id, countpraise));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Conclusion process | {0}", monitoring._id), plataform));
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.WaitManager)
           {
             monitoring.DateEndPerson = DateTime.Now;
             Task.Run(() => MailManager(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager approval | {0}", monitoring._id), plataform));
 
           }
           else if (monitoring.StatusMonitoring == EnumStatusMonitoring.Disapproved)
           {
             Task.Run(() => MailDisApproval(person));
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Send manager review | {0}", monitoring._id), plataform));
           }
         }
         serviceMonitoring.Update(monitoring, null).Wait();
@@ -1538,7 +1538,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, string totalimte)
+    public string AddCommentsSpeech(string idmonitoring, string iditem, string link, EnumUserComment user, string totalimte, string plataform)
     {
       try
       {
@@ -1552,7 +1552,7 @@ namespace Manager.Services.Specific
           SpeechLink = link,
           TotalTime = totalimte
         };
-        AddComments(idmonitoring, iditem, view);
+        AddComments(idmonitoring, iditem, view,plataform);
         return "ok";
       }
       catch (Exception e)
@@ -1561,7 +1561,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments, string plataform)
     {
       try
       {
@@ -1610,7 +1610,7 @@ namespace Manager.Services.Specific
                 SpeechLink = comments.SpeechLink,
                 TotalTime = comments.TotalTime
               });
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return item.Comments.Select(p => new ViewCrudComment()
@@ -1656,7 +1656,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null).Wait();
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
 
             return item.Comments.Select(p => new ViewCrudComment()
             {
@@ -1702,7 +1702,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null).Wait();
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -1723,7 +1723,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string AddPraise(string idmonitoring, string iditem, ViewText text)
+    public string AddPraise(string idmonitoring, string iditem, ViewText text, string plataform)
     {
       try
       {
@@ -1749,7 +1749,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -1761,7 +1761,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -1774,7 +1774,7 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring)));
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -2218,14 +2218,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void LogSave(string iduser, string local)
+    private void LogSave(string iduser, string local, string plataform)
     {
       try
       {
         var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
         var log = new ViewLog()
         {
-          Description = "Access Monitoring",
+          Description = "Access Monitoring " + plataform,
           Local = local,
           _idPerson = user._id
         };

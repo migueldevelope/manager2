@@ -117,7 +117,7 @@ namespace Mobile.Controllers
     [Route("newrecommendationperson")]
     public async Task<IActionResult> PostRecommendationPerson([FromBody]ViewCrudRecommendationPerson view)
     {
-      return await Task.Run(() => Ok(service.NewRecommendationPerson(view)));
+      return await Task.Run(() => Ok(service.NewRecommendationPerson(view, "mobile")));
     }
 
     /// <summary>

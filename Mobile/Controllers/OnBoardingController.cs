@@ -131,7 +131,7 @@ namespace Mobile.Controllers
         [Route("new/{idperson}")]
         public async Task<ViewListOnBoarding> New(string idperson)
         {
-            return await Task.Run(() => service.New(idperson));
+            return await Task.Run(() => service.New(idperson, "mobile"));
         }
         /// <summary>
         /// Apagar comentários
@@ -145,7 +145,7 @@ namespace Mobile.Controllers
         [Route("deletecomments/{idonboarding}/{iditem}/{idcomment}")]
         public async Task<IActionResult> DeleteComments(string idonboarding, string iditem, string idcomment)
         {
-            return await Task.Run(() => Ok(service.DeleteComments(idonboarding, iditem, idcomment)));
+            return await Task.Run(() => Ok(service.DeleteComments(idonboarding, iditem, idcomment, "mobile")));
         }
         /// <summary>
         /// Alteração de leitura de comentário
@@ -171,7 +171,7 @@ namespace Mobile.Controllers
         [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            return await Task.Run(() => Ok(service.Delete(id)));
+            return await Task.Run(() => Ok(service.Delete(id, "mobile")));
         }
         /// <summary>
         /// Atualiza informações do onboarding
@@ -183,7 +183,7 @@ namespace Mobile.Controllers
         [Route("update")]
         public async Task<IActionResult> Update([FromBody]ViewCrudOnboarding onboarding)
         {
-            return await Task.Run(() => Ok(service.Update(onboarding)));
+            return await Task.Run(() => Ok(service.Update(onboarding, "mobile")));
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Mobile.Controllers
         [Route("updatestatus/{idonboarding}/{status}")]
         public async Task<IActionResult> UpdateStatus(string idonboarding, EnumStatusOnBoarding status)
         {
-            return await Task.Run(() => Ok(service.UpdateStatusOnBoarding(idonboarding, status)));
+            return await Task.Run(() => Ok(service.UpdateStatusOnBoarding(idonboarding, status, "mobile")));
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Mobile.Controllers
         public async Task<List<ViewListOnBoarding>> ListEnded(string idmanager, int count = 10, int page = 1, string filter = "")
         {
             long total = 0;
-            var result = service.ListEnded(idmanager, ref total, filter, count, page);
+            var result = service.ListEnded(idmanager, "mobile", ref total, filter, count, page);
             Response.Headers.Add("x-total-count", total.ToString());
             return await Task.Run(() => result);
         }
@@ -247,7 +247,7 @@ namespace Mobile.Controllers
         public async Task<List<ViewListOnBoarding>> ListPersonEnd(string idmanager, int count = 10, int page = 1, string filter = "")
         {
             long total = 0;
-            var result = service.ListPersonEnd(idmanager, ref total, filter, count, page);
+            var result = service.ListPersonEnd(idmanager, "mobile", ref total, filter, count, page);
             Response.Headers.Add("x-total-count", total.ToString());
             return await Task.Run(() => result);
         }
@@ -307,7 +307,7 @@ namespace Mobile.Controllers
         [Route("addcomments/{idonboarding}/{iditem}")]
         public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idonboarding, string iditem)
         {
-            return await Task.Run(() => service.AddComments(idonboarding, iditem, comments));
+            return await Task.Run(() => service.AddComments(idonboarding, iditem, comments, "mobile"));
         }
 
 
@@ -413,7 +413,7 @@ namespace Mobile.Controllers
                         await serviceAttachment.Update(attachment, null);
                         throw e;
                     }
-                    service.AddCommentsSpeech(idonboarding, iditem, url, typeuser, time.TotalTime);
+                    service.AddCommentsSpeech(idonboarding, iditem, url, typeuser, time.TotalTime, "mobile");
                     var i = Task.Run(() => SendCommentsSpeech(idonboarding, iditem, typeuser, url));
                     listAttachments.Add(attachment);
                 }

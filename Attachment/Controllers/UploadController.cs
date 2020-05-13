@@ -343,7 +343,7 @@ namespace EdeskIntegration.Controllers
                         throw;
                     }
                     // var pathspeech = "http://10.0.0.16:5400/";
-                    serviceOnBoarding.AddCommentsSpeech(idregister, iditem, url, typeuser, time.TotalTime);
+                    serviceOnBoarding.AddCommentsSpeech(idregister, iditem, url, typeuser, time.TotalTime, "web");
                     listAttachments.Add(attachment);
                 }
                 return Ok(listAttachments);

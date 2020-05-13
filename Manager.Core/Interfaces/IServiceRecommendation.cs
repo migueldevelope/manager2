@@ -17,7 +17,7 @@ namespace Manager.Core.Interfaces
     string Update(ViewCrudRecommendation view);
     ViewCrudRecommendation Get(string id);
     List<ViewListRecommendation> List(ref long total, int count = 10, int page = 1, string filter = "");
-    string NewRecommendationPerson(ViewCrudRecommendationPerson view);
+    string NewRecommendationPerson(ViewCrudRecommendationPerson view, string plataform);
     List<ViewListRecommendationPerson> ListRecommendationPerson(string idrecommendation, ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListRecommendationPerson> ListRecommendationPerson(ref long total, int count = 10, int page = 1, string filter = "");
     List<ViewListRecommendationPersonId> ListRecommendationPersonId(string idperson, ref long total, int count = 10, int page = 1, string filter = "");

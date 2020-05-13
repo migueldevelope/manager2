@@ -135,7 +135,7 @@ namespace Manager.Controllers
         [Route("new/{idperson}")]
         public async Task<ViewListMonitoring> NewMonitoring(string idperson)
         {
-            return await Task.Run(() => service.NewMonitoring(idperson));
+            return await Task.Run(() => service.NewMonitoring(idperson, "web"));
         }
         /// <summary>
         /// Atualiza informações monitogin
@@ -147,7 +147,7 @@ namespace Manager.Controllers
         [Route("update")]
         public async Task<string> UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring)
         {
-            return await Task.Run(() => service.UpdateMonitoring(monitoring));
+            return await Task.Run(() => service.UpdateMonitoring(monitoring, "web"));
         }
         /// <summary>
         /// Lista monitoring finalizado para gestor
@@ -336,7 +336,7 @@ namespace Manager.Controllers
         [Route("addcomments/{idmonitoring}/{iditem}")]
         public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
         {
-            return await Task.Run(() => service.AddComments(idmonitoring, iditem, comments));
+            return await Task.Run(() => service.AddComments(idmonitoring, iditem, comments, "web"));
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Manager.Controllers
         [Route("addpraise/{idmonitoring}/{iditem}")]
         public async Task<string> AddPraise([FromBody]ViewText text, string idmonitoring, string iditem)
         {
-            return await Task.Run(() => service.AddPraise(idmonitoring, iditem, text));
+            return await Task.Run(() => service.AddPraise(idmonitoring, iditem, text, "web"));
         }
 
         /// <summary>

@@ -233,7 +233,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string NewRecommendationPerson(ViewCrudRecommendationPerson view)
+    public string NewRecommendationPerson(ViewCrudRecommendationPerson view, string plataform)
     {
       try
       {
@@ -269,7 +269,7 @@ namespace Manager.Services.Specific
 
         Task.Run(() => Mail(person, view.Recommendation.Name));
         Task.Run(() => SendQueue(recommendationperson._id, person._id));
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Send reccomendation | {0}", recommendationperson._id)));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Send reccomendation | {0}", recommendationperson._id),plataform));
 
         return "RecommendationPerson added!";
       }
@@ -593,14 +593,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void LogSave(string iduser, string local)
+    private void LogSave(string iduser, string local, string plataform)
     {
       try
       {
         var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
         var log = new ViewLog()
         {
-          Description = "Access Recommendation",
+          Description = "Access Recommendation " + plataform,
           Local = local,
           _idPerson = user._id
         };

@@ -145,7 +145,7 @@ namespace Mobile.Controllers
     [Route("addpraise/{idmonitoring}/{iditem}")]
     public async Task<string> AddPraise([FromBody]ViewText text, string idmonitoring, string iditem)
     {
-      return await Task.Run(() => service.AddPraise(idmonitoring, iditem, text));
+      return await Task.Run(() => service.AddPraise(idmonitoring, iditem, text, "mobile"));
     }
     /// <summary>
     /// Alteração do comentário
@@ -169,7 +169,7 @@ namespace Mobile.Controllers
     [Route("new/{idperson}")]
     public async Task<ViewListMonitoring> NewMonitoring(string idperson)
     {
-      return await Task.Run(() => service.NewMonitoring(idperson));
+      return await Task.Run(() => service.NewMonitoring(idperson, "mobile"));
     }
     /// <summary>
     /// Atualiza informações monitogin
@@ -181,7 +181,7 @@ namespace Mobile.Controllers
     [Route("update")]
     public async Task<string> UpdateMonitoring([FromBody]ViewCrudMonitoring monitoring)
     {
-      return await Task.Run(() => service.UpdateMonitoring(monitoring));
+      return await Task.Run(() => service.UpdateMonitoring(monitoring, "mobile"));
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ namespace Mobile.Controllers
     [Route("updatestatus/{idmonitoring}/{status}")]
     public async Task<string> UpdateStatusMonitoring(string idmonitoring, EnumStatusMonitoring status)
     {
-      return await Task.Run(() => service.UpdateStatusMonitoring(idmonitoring, status));
+      return await Task.Run(() => service.UpdateStatusMonitoring(idmonitoring, status, "mobile"));
     }
 
     /// <summary>
@@ -373,7 +373,7 @@ namespace Mobile.Controllers
     [Route("addcomments/{idmonitoring}/{iditem}")]
     public async Task<List<ViewCrudComment>> AddComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
     {
-      return await Task.Run(() => service.AddComments(idmonitoring, iditem, comments));
+      return await Task.Run(() => service.AddComments(idmonitoring, iditem, comments, "mobile"));
     }
     /// <summary>
     /// Atualiza comentario item do monitoring
@@ -537,7 +537,7 @@ namespace Mobile.Controllers
             await serviceAttachment.Update(attachment, null);
             throw e;
           }
-          service.AddCommentsSpeech(idmonitoring, iditem, url, typeuser, time.TotalTime);
+          service.AddCommentsSpeech(idmonitoring, iditem, url, typeuser, time.TotalTime, "mobile");
           var i = Task.Run(() => SendCommentsSpeech(idmonitoring, iditem, typeuser, url));
           listAttachments.Add(attachment);
         }
