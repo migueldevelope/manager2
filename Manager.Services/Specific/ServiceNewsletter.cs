@@ -152,10 +152,11 @@ namespace Manager.Services.Specific
     {
       try
       {
+        int skip = (count * (page - 1));
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
         //&& datenow >= p.BeginDate && datenow <= p.EndDate
         var detail = serviceNewsletter.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
-        && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "BeginDate").Result;
+        && p.Enabled == true && p.Title.ToUpper().Contains(filter.ToUpper())).Result.OrderByDescending(p => p.BeginDate).Skip(skip).Take(count);
 
         //var ids = serviceNewsletterRead.GetAllNewVersion(p => p._idUser == _user._idUser && p.DontShow == true).Result.Select(p => p._idNewsletter);
         if (portal == EnumPortal.Infra)
