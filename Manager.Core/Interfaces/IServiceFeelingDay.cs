@@ -14,7 +14,7 @@ namespace Manager.Core.Interfaces
     void SetUser(IHttpContextAccessor contextAccessor);
     void SetUser(BaseUser user);
     string Delete(string id);
-    string New(EnumFeeling feeling);
+    string New(EnumFeeling feeling, string plataform);
     string Update(ViewCrudFeelingDay view);
     ViewCrudFeelingDay Get(string id);
     List<ViewListFeelingDay> List(ref long total, int count = 10, int page = 1, string filter = "");

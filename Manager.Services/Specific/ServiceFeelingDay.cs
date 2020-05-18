@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
@@ -19,6 +20,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<FeelingDay> serviceFeelingDay;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceLog serviceLog;
 
     #region Constructor
     public ServiceFeelingDay(DataContext context) : base(context)
@@ -27,6 +29,7 @@ namespace Manager.Services.Specific
       {
         serviceFeelingDay = new ServiceGeneric<FeelingDay>(context);
         servicePerson = new ServiceGeneric<Person>(context);
+        serviceLog = new ServiceLog(context, context);
       }
       catch (Exception e)
       {
@@ -38,12 +41,14 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       serviceFeelingDay._user = _user;
       servicePerson._user = _user;
+      serviceLog._user = _user;
     }
     public void SetUser(BaseUser user)
     {
       _user = user;
       serviceFeelingDay._user = user;
       servicePerson._user = user;
+      serviceLog._user = user;
     }
     #endregion
 
@@ -63,7 +68,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string New(EnumFeeling feeling)
+    public string New(EnumFeeling feeling, string plataform)
     {
       try
       {
@@ -76,7 +81,7 @@ namespace Manager.Services.Specific
           _idUser = _user._idUser
         }).Result;
 
-
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Send FeelingDay | {0}", model._id), plataform));
 
         return "FeelingDay added!";
       }
@@ -224,6 +229,27 @@ namespace Manager.Services.Specific
     }
 
 
+    #endregion
+
+    #region private
+    private void LogSave(string idperson, string local, string plataform)
+    {
+      try
+      {
+        var user = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "FeelingDay " + plataform,
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
 
 

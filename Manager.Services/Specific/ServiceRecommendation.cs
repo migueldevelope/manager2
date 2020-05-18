@@ -133,7 +133,7 @@ namespace Manager.Services.Specific
       try
       {
         Recommendation recommendation = serviceRecommendation.GetNewVersion(p => p._id == idrecommendation).Result;
-        if(recommendation == null)
+        if (recommendation == null)
         {
           recommendation = serviceRecommendation.GetNewVersion(p => p._id == idrecommendation).Result;
           recommendation.Image = url;
@@ -144,9 +144,9 @@ namespace Manager.Services.Specific
           recommendation.Image = url;
           serviceRecommendation.Update(recommendation, null).Wait();
         }
-          
 
-        
+
+
         //Task.Run(() => SynchronizeRecommendationsAsyncUpdate());
       }
       catch (Exception e)
@@ -219,7 +219,7 @@ namespace Manager.Services.Specific
       try
       {
         var recommendations = serviceRecommendationPerson.GetAllNewVersion(p => p.Person._id == idperson).Result;
-        foreach(var recommendation in recommendations)
+        foreach (var recommendation in recommendations)
         {
           recommendation.Read = true;
           var i = serviceRecommendationPerson.Update(recommendation, null);
@@ -269,7 +269,7 @@ namespace Manager.Services.Specific
 
         Task.Run(() => Mail(person, view.Recommendation.Name));
         Task.Run(() => SendQueue(recommendationperson._id, person._id));
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Send reccomendation | {0}", recommendationperson._id),plataform));
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Send reccomendation | {0}", recommendationperson._id), plataform));
 
         return "RecommendationPerson added!";
       }

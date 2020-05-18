@@ -93,7 +93,7 @@ namespace Mobile.Controllers
     [Route("new/{feeling}")]
     public async Task<IActionResult> Post(EnumFeeling feeling)
     {
-      return await Task.Run(() => Ok(serviceFeelingDay.New(feeling)));
+      return await Task.Run(() => Ok(serviceFeelingDay.New(feeling, "mobile")));
     }
 
     /// <summary>

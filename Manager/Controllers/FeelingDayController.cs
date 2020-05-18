@@ -61,7 +61,7 @@ namespace Manager.Controllers
     [Route("new/{feeling}")]
     public async Task<IActionResult> Post(EnumFeeling feeling)
     {
-      return await Task.Run(() => Ok(service.New(feeling)));
+      return await Task.Run(() => Ok(service.New(feeling, "web")));
     }
 
     /// <summary>
