@@ -233,6 +233,7 @@ namespace Manager.Services.Specific
         if (payrollEmployee.Messages.Count() > 0)
           return payrollEmployee;
 
+        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         ViewCrudPerson personManager = null;
         if (!string.IsNullOrEmpty(payrollEmployee.ManagerDocument) && !string.IsNullOrEmpty(payrollEmployee.ManagerCompanyName)
           && !string.IsNullOrEmpty(payrollEmployee.ManagerEstablishmentName) && !string.IsNullOrEmpty(payrollEmployee.ManagerRegistration))
@@ -245,8 +246,22 @@ namespace Manager.Services.Specific
             IntegrationEstablishment integrationEstablishmentManager = GetIntegrationEstablishment(payrollEmployee.ManagerEstablishment, payrollEmployee.ManagerEstablishmentName, companyManager._id);
             Establishment establishmentManager = establishmentService.GetNewVersion(p => p._id == integrationEstablishmentManager.IdEstablishment).Result;
             if (establishmentManager != null)
-              personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument && p.Company._id == companyManager._id
-                  && p.Establishment._id == establishmentManager._id && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
+              switch (viewCrudIntegrationParameter.IntegrationKey)
+              {
+                case EnumIntegrationKey.CompanyEstablishment:
+                  personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument && p.Company._id == companyManager._id
+                    && p.Establishment._id == establishmentManager._id && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
+                  break;
+                case EnumIntegrationKey.Company:
+                  personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument && p.Company._id == companyManager._id
+                    && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
+                  break;
+                case EnumIntegrationKey.Document:
+                  personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument).Result?.GetViewCrud();
+                  break;
+                default:
+                  throw new Exception("Tipo de integração de chaves inválida");
+              }
           }
         }
         if (personManager != null && (personManager.TypeUser != EnumTypeUser.Manager || personManager.TypeUser != EnumTypeUser.ManagerHR))
@@ -254,7 +269,6 @@ namespace Manager.Services.Specific
           personManager.TypeUser = EnumTypeUser.Manager;
           string updatePerson = personService.Update(personManager);
         }
-        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
         ViewCrudPerson person;
         switch (viewCrudIntegrationParameter.IntegrationKey)
         {
@@ -299,19 +313,6 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
-          if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
-          // Ajuste de jornada para grupos de cargos da BERTOLINI
-          {
-            if (person.Occupation != null)
-            {
-              if (person.Occupation._idGroup.Equals("5de53b3bea38bc0001636705") ||
-                  person.Occupation._idGroup.Equals("5cb8bed427a5e8f3ef548c7a") ||
-                  person.Occupation._idGroup.Equals("5cb8bee027a5e8f3ef548c7b"))
-              {
-                person.TypeJourney = EnumTypeJourney.OutOfJourney;
-              }
-            }
-          }
           // Afastados aparecem fora de jornada
           if (person.StatusUser == EnumStatusUser.Away)
           {
@@ -351,18 +352,6 @@ namespace Manager.Services.Specific
             }
           }
           if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
-          // Ajuste de jornada para grupos de cargos da BERTOLINI
-          {
-            if (person.Occupation != null)
-            {
-              if (person.Occupation._idGroup.Equals("5de53b3bea38bc0001636705") ||
-                  person.Occupation._idGroup.Equals("5cb8bed427a5e8f3ef548c7a") ||
-                  person.Occupation._idGroup.Equals("5cb8bee027a5e8f3ef548c7b"))
-              {
-                person.TypeJourney = EnumTypeJourney.OutOfJourney;
-              }
-            }
-          }
           if (personManager != null)
           {
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
