@@ -1850,7 +1850,7 @@ namespace Manager.Services.Specific
                 }
                 else
                 {
-                    if (planUpdate.NewAction == EnumNewAction.Yes)
+                    if (viewPlan[0].NewAction == EnumNewAction.Yes)
                     {
                         NewPlanView(idmonitoring, planUpdate, planNew);
                     }
