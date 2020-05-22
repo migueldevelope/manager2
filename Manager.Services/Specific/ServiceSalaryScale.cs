@@ -54,6 +54,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceSalaryScaleLog._user = _user;
       serviceLog._user = _user;
+      serviceLog.SetUser(_user);
     }
     public void SetUser(BaseUser user)
     {
@@ -64,6 +65,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = user;
       serviceSalaryScaleLog._user = user;
       serviceLog._user = user;
+      serviceLog.SetUser(user);
     }
     #endregion
 
