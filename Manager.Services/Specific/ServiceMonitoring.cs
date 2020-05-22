@@ -319,19 +319,19 @@ namespace Manager.Services.Specific
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
-        if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
-        {
-          if (person._id == _user._idUser)
-          {
-            monitoring.DateBeginPerson = DateTime.Now;
-            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
-          }
-          else
-          {
-            monitoring.DateBeginManager = DateTime.Now;
-            monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
-          }
-        }
+        //if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
+        //{
+        //  if (person._id == _user._idUser)
+        //  {
+        //    monitoring.DateBeginPerson = DateTime.Now;
+        //    monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressPerson;
+        //  }
+        //  else
+        //  {
+        //    monitoring.DateBeginManager = DateTime.Now;
+        //    monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
+        //  }
+        //}
         Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada para o colaborador " + person.User.Name, person));
         var newPlan = AddPlan(new Plan()
         {
