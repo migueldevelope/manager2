@@ -3,6 +3,7 @@ using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
@@ -25,6 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleLog> serviceSalaryScaleLog;
+    private readonly ServiceLog serviceLog;
 
     #region Constructor
     public ServiceSalaryScale(DataContext context) : base(context)
@@ -36,6 +38,7 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSalaryScaleLog = new ServiceGeneric<SalaryScaleLog>(context);
+        serviceLog = new ServiceLog(context, context);
       }
       catch (Exception e)
       {
@@ -50,6 +53,7 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
       serviceSalaryScale._user = _user;
       serviceSalaryScaleLog._user = _user;
+      serviceLog._user = _user;
     }
     public void SetUser(BaseUser user)
     {
@@ -59,6 +63,7 @@ namespace Manager.Services.Specific
       serviceOccupation._user = user;
       serviceSalaryScale._user = user;
       serviceSalaryScaleLog._user = user;
+      serviceLog._user = user;
     }
     #endregion
 
@@ -252,6 +257,7 @@ namespace Manager.Services.Specific
       {
         SalaryScale salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == view._id).Result;
         salaryScale.Name = view.Name;
+
         serviceSalaryScale.Update(salaryScale, null).Wait();
         return "Salary scale altered!";
       }
@@ -864,6 +870,9 @@ namespace Manager.Services.Specific
         }
         var scale = serviceSalaryScale.Update(salaryScale, null);
 
+
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Upload salaryscale | {0} ", salaryScale._id)));
+
         return "import_ok";
       }
       catch (Exception e)
@@ -1281,5 +1290,26 @@ namespace Manager.Services.Specific
 
     #endregion
 
+    #region private
+    private void LogSave(string iduser, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAllNewVersion(p => p._id == iduser).Result.FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Access SalaryScale",
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    #endregion
   }
 }
