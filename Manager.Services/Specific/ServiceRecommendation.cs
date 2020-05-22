@@ -71,6 +71,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceMail._user = _user;
       serviceLog._user = _user;
+      serviceLog.SetUser(_user);
       serviceMailModel._user = _user;
       serviceMailModel.SetUser(_user);
 
@@ -84,6 +85,7 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = user;
       serviceMail._user = user;
       serviceLog._user = user;
+      serviceLog.SetUser(user);
       serviceMailModel._user = user;
       serviceMailModel.SetUser(_user);
     }

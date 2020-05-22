@@ -42,6 +42,7 @@ namespace Manager.Services.Specific
       serviceFeelingDay._user = _user;
       servicePerson._user = _user;
       serviceLog._user = _user;
+      serviceLog.SetUser(_user);
     }
     public void SetUser(BaseUser user)
     {
@@ -49,6 +50,7 @@ namespace Manager.Services.Specific
       serviceFeelingDay._user = user;
       servicePerson._user = user;
       serviceLog._user = user;
+      serviceLog.SetUser(user);
     }
     #endregion
 
