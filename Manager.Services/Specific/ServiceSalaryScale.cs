@@ -873,7 +873,9 @@ namespace Manager.Services.Specific
         var scale = serviceSalaryScale.Update(salaryScale, null);
 
 
-        Task.Run(() => LogSave(_user._idPerson, string.Format("Upload salaryscale | {0} ", salaryScale._id)));
+        //Task.Run(() => LogSave(_user._idPerson, string.Format("Upload salaryscale | {0} ", salaryScale._id)));
+        var description = string.Format("Upload salaryscale | {0} ", salaryScale._id);
+        Task.Run(() => NewVersion(salaryScale._id, description));
 
         return "import_ok";
       }
