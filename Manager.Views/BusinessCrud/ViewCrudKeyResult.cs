@@ -16,5 +16,6 @@ namespace Manager.Views.BusinessCrud
     public string Description { get; set; }
     public byte Weight { get; set; }
     public ViewListObjective Objective { get; set; }
+    public List<ViewListPersonBase> Participants { get; set; }
   }
 }

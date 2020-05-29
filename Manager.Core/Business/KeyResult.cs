@@ -2,6 +2,7 @@
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using System.Collections.Generic;
 
 namespace Manager.Core.Business
 {
@@ -17,11 +18,16 @@ namespace Manager.Core.Business
     public string Description { get; set; }
     public byte Weight { get; set; }
     public ViewListObjective Objective { get; set; }
+    public List<ViewCrudParticipantKeyResult> Participants { get; set; }
+    public decimal Achievement { get; set; }
+    public decimal QuantityResult { get; set; }
+    public string QuanlityResult { get; set; }
 
     public ViewCrudKeyResult GetViewCrud()
     {
       return new ViewCrudKeyResult
       {
+        _id = _id,
         Name = Name,
         TypeKeyResult = TypeKeyResult,
         QuantityGoal = QuantityGoal,
