@@ -233,7 +233,7 @@ namespace Manager.Services.Specific
           // Company Manager
           IntegrationCompany integrationCompanyManager = GetIntegrationCompany(payrollEmployee.ManagerCompany, payrollEmployee.ManagerCompanyName);
           Company companyManager = companyService.GetNewVersion(p => p._id == integrationCompanyManager.IdCompany).Result;
-          if (companyManager != null)
+          if (companyManager == null)
           {
             payrollEmployee.Messages.Add("Falta integração da empresa do gestor");
             return payrollEmployee;
@@ -241,7 +241,7 @@ namespace Manager.Services.Specific
           // Establishment Manager
           IntegrationEstablishment integrationEstablishmentManager = GetIntegrationEstablishment(payrollEmployee.ManagerEstablishment, payrollEmployee.ManagerEstablishmentName, companyManager._id);
           Establishment establishmentManager = establishmentService.GetNewVersion(p => p._id == integrationEstablishmentManager.IdEstablishment).Result;
-          if (establishmentManager != null)
+          if (establishmentManager == null)
           {
             payrollEmployee.Messages.Add("Falta integração do estabelecimento do gestor");
             return payrollEmployee;
