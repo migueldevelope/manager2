@@ -37,9 +37,9 @@ namespace Manager.Core.Business
         Date = Date,
         Impediments = Impediments,
         Iniciatives = Iniciatives,
-        Achievement = Achievement,
-        QuantityResult = QuantityResult,
-        QuanlityResult = QuanlityResult
+        Achievement = Achievement
+        //QuantityResult = QuantityResult,
+        //QuanlityResult = QuanlityResult
       };
     }
 
