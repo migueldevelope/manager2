@@ -23,7 +23,8 @@ namespace Manager.Core.Business
     public List<ViewCrudImpedimentsIniciatives> Iniciatives { get; set; }
     public decimal Achievement { get; set; }
     public decimal QuantityResult { get; set; }
-    public string QuanlityResult { get; set; }
+    public string QualityResult { get; set; }
+    public int Week { get; set; }
 
     public ViewCrudPendingCheckinObjective GetViewCrud()
     {
@@ -37,9 +38,9 @@ namespace Manager.Core.Business
         Date = Date,
         Impediments = Impediments,
         Iniciatives = Iniciatives,
-        Achievement = Achievement
-        //QuantityResult = QuantityResult,
-        //QuanlityResult = QuanlityResult
+        Achievement = Achievement,
+        QuantityResult = QuantityResult,
+        QuanlityResult = QuanlityResult
       };
     }
 
