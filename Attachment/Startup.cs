@@ -78,7 +78,9 @@ namespace Attachment
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
       IServiceHRDrive serviceHRDrive = new ServiceHRDrive(_context);
+      IServiceObjective serviceObjective = new ServiceObjective(_context);
 
+      services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceHRDrive);
       services.AddSingleton(_ => serviceSalaryScale);
       services.AddSingleton(_ => serviceRecommendation);

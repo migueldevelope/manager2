@@ -19,8 +19,6 @@ namespace Manager.Views.BusinessCrud
     public List<ViewCrudImpedimentsIniciatives> Impediments { get; set; }
     public List<ViewCrudImpedimentsIniciatives> Iniciatives { get; set; }
     public decimal Achievement { get; set; }
-    public decimal QuantityResult { get; set; }
-    public string QuanlityResult { get; set; }
 
   }
 }

@@ -105,13 +105,14 @@ namespace Manager
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
       IServiceOffBoarding serviceOffBoarding = new ServiceOffBoarding(_context);
+      IServiceObjective serviceObjective = new ServiceObjective(_context);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       //audios
       serviceOnBoarding.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
-
+      services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceFeelingDay);
       services.AddSingleton(_ => serviceNewsletter);
       services.AddSingleton(_ => serviceOffBoarding);

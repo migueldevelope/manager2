@@ -15,8 +15,8 @@ namespace Manager.Core.Business
     public DateTime? EndDate { get; set; }
     public EnumStausObjective StausObjective { get; set; }
     public ViewCrudDimension Dimension { get; set; }
-    public ViewListPersonBase Responsible { get; set; }
-    public List<ViewListPersonBase> Editors { get; set; }
+    public ViewListPersonPhoto Responsible { get; set; }
+    public List<ViewListPersonPhoto> Editors { get; set; }
     public EnumTypeCheckin TypeCheckin { get; set; }
 
     public ViewCrudObjective GetViewCrud()
