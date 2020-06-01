@@ -21,7 +21,7 @@ namespace Manager.Core.Business
     public List<ViewCrudParticipantKeyResult> Participants { get; set; }
     public decimal Achievement { get; set; }
     public decimal QuantityResult { get; set; }
-    public string QuanlityResult { get; set; }
+    public string QualityResult { get; set; }
 
     public ViewCrudKeyResult GetViewCrud()
     {

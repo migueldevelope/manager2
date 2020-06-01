@@ -40,7 +40,7 @@ namespace Manager.Core.Business
         Iniciatives = Iniciatives,
         Achievement = Achievement,
         QuantityResult = QuantityResult,
-        QuanlityResult = QuanlityResult
+        QualityResult = QualityResult
       };
     }
 

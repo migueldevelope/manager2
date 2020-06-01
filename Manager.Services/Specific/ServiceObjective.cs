@@ -351,7 +351,7 @@ namespace Manager.Services.Specific
       try
       {
         var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
-        model.QuanlityResult = view.Text;
+        model.QualityResult = view.Text;
         model.QuantityResult = result;
 
         model.Achievement = (achievement / 100) * model.QuantityGoal;
