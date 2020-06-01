@@ -6,7 +6,7 @@ namespace Manager.Views.BusinessList
   {
     public decimal AverageAchievement { get; set; }
     public decimal AverageTrust { get; set; }
-    public EnumLevelTrust LevelTrust { get; set; }
+    public byte LevelTrust { get; set; }
     public long QtdObjective { get; set; }
   }
 }

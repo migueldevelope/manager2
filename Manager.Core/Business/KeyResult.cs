@@ -37,7 +37,7 @@ namespace Manager.Core.Business
         Sense = Sense,
         Description = Description,
         Weight = Weight,
-        Objective = Objective
+        Objective = Objective,
       };
     }
 

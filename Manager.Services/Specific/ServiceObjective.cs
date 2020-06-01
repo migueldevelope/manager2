@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -161,6 +162,119 @@ namespace Manager.Services.Specific
     }
 
 
+    public ViewListObjectiveParticipantCard GetParticipantCard()
+    {
+      try
+      {
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+        var view = new ViewListObjectiveParticipantCard();
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Participants.Where(x => x._idPerson == _user._idPerson).Count() > 0).Result;
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
+
+        view.AverageAchievement = keyresults.Average(p => p.Achievement);
+        view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+        view.QtdKeyResults = keyresults.Count();
+        if (view.AverageTrust <= 50)
+          view.LevelTrust = 0;
+        else if ((view.AverageTrust > 50) && (view.AverageTrust <= 75))
+          view.LevelTrust = 1;
+        else
+          view.LevelTrust = 2;
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewListObjectiveResponsibleCard GetResponsibleCard()
+    {
+      try
+      {
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+        var view = new ViewListObjectiveResponsibleCard();
+        var objective = serviceObjective.GetAllNewVersion(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
+        || p.Responsible._id == _user._idPerson).Result.Select(p => p._id);
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
+
+        view.AverageAchievement = keyresults.Average(p => p.Achievement);
+        view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+        view.QtdObjective = objective.Count();
+        if (view.AverageTrust <= 50)
+          view.LevelTrust = 0;
+        else if ((view.AverageTrust > 50) && (view.AverageTrust <= 75))
+          view.LevelTrust = 1;
+        else
+          view.LevelTrust = 2;
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListDetailResposibleObjective> GetDetailResposibleObjective()
+    {
+      try
+      {
+        var list = new List<ViewListDetailResposibleObjective>();
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+        var objectives = serviceObjective.GetAllNewVersion(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
+        || p.Responsible._id == _user._idPerson).Result;
+        
+        foreach(var item in objectives)
+        {
+          var keyresults = serviceKeyResult.GetAllNewVersion(p => item._id == p.Objective._id).Result;
+          var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
+          && p.Week == week && p._idObjective == item._id).Result;
+
+          var view = new ViewListDetailResposibleObjective();
+          view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
+          view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
+          view.Description = item.Description;
+          view._id = item._id;
+          var achievement = keyresults.Average(p => p.Achievement);
+          var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+
+          if (trust <= 50)
+            view.LevelTrust = 0;
+          else if ((trust > 50) && (trust <= 75))
+            view.LevelTrust = 1;
+          else
+            view.LevelTrust = 2;
+
+
+          if (achievement <= 60)
+            view.LevelTrust = 0;
+          else if ((achievement > 60) && (achievement <= 90))
+            view.LevelTrust = 1;
+          else if ((achievement > 90) && (achievement <= 100))
+            view.LevelTrust = 2;
+          else 
+            view.LevelTrust = 3;
+
+          list.Add(view);
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
     #region KeyResult
@@ -232,17 +346,15 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal result, ViewText view)
+    public ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view)
     {
       try
       {
         var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
-        //Objective objective = serviceObjective.GetNewVersion(p => p._id == model.Objective._id).Result;
         model.QuanlityResult = view.Text;
         model.QuantityResult = result;
 
-        //var average = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == objective._id).Result.Average(p => p.QuantityResult);
-        //serviceObjective.Update(objective, null).Wait();
+        model.Achievement = (achievement / 100) * model.QuantityGoal;
 
         serviceKeyResult.Update(model, null).Wait();
 
@@ -455,10 +567,14 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
     public ViewCrudPendingCheckinObjective NewPendingCheckinObjective(ViewCrudPendingCheckinObjective view)
     {
       try
       {
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
         var model = servicePendingCheckinObjective.InsertNewVersion(
           new PendingCheckinObjective()
           {
@@ -468,6 +584,7 @@ namespace Manager.Services.Specific
             _idPerson = view._idPerson,
             LevelTrust = view.LevelTrust,
             Date = DateTime.Now,
+            Week = week,
             Impediments = new List<ViewCrudImpedimentsIniciatives>(),
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
           }).Result;
