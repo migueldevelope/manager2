@@ -105,8 +105,9 @@ namespace Mobile
       IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
       IServiceFeelingDay serviceFeelingDay = new ServiceFeelingDay(_context);
+      IServiceObjective serviceObjective = new ServiceObjective(_context);
 
-
+      services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceFeelingDay);
       services.AddSingleton(_ => serviceMyAwareness);
       services.AddSingleton(_ => serviceFluidCareers);

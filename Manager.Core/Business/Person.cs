@@ -59,6 +59,17 @@ namespace Manager.Core.Business
         Name = User?.Name
       };
     }
+
+    public ViewListPersonPhoto GetViewListPhoto()
+    {
+      return new ViewListPersonPhoto()
+      {
+        _id = _id,
+        Name = User?.Name,
+        Photo = User?.PhotoUrl
+      };
+    }
+
     public ViewListPersonBaseManager GetViewListBaseManager()
     {
       var view = new ViewListPersonBaseManager()
