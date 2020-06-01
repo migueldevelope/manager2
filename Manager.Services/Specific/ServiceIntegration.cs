@@ -187,104 +187,115 @@ namespace Manager.Services.Specific
         return payrollEmployee;
       }
     }
-    private PayrollEmployee PersonUpdate(PayrollEmployee payrollEmployee, bool equalOccupation)
+    private PayrollEmployee PersonUpdate(PayrollEmployee payrollEmployee, bool changeOcuppation)
     {
       try
       {
+        // Company
         IntegrationCompany integrationCompany = GetIntegrationCompany(payrollEmployee.Company, payrollEmployee.CompanyName);
         Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
-        IntegrationEstablishment integrationEstablishment = null;
-        Establishment establishment = null;
-        IntegrationOccupation integrationOccupation = null;
-        Occupation occupation = null;
         if (company == null)
         {
           payrollEmployee.Messages.Add("Falta integração da empresa");
           payrollEmployee.Messages.Add("Falta integração de estabelecimento");
           payrollEmployee.Messages.Add("Falta integração de cargo");
-        }
-        else
-        {
-          // Estabelecimento
-          payrollEmployee._idCompany = company._id;
-          integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.EstablishmentKey(), payrollEmployee.EstablishmentName, company._id);
-          establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
-          if (establishment == null)
-          {
-            payrollEmployee.Messages.Add("Falta integração de estabelecimento");
-          }
-          else
-          {
-            payrollEmployee._idEstablishment = establishment._id;
-          }
-          // Cargo
-          integrationOccupation = GetIntegrationOccupation(payrollEmployee.OccupationKey(), payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenterKey(), payrollEmployee.CostCenterName);
-          payrollEmployee._idIntegrationOccupation = integrationOccupation._id;
-          occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
-          if (occupation == null)
-          {
-            payrollEmployee.Messages.Add("Falta integração de cargo");
-          }
-          else
-          {
-            payrollEmployee._idOccupation = occupation._id;
-          }
-        }
-        if (payrollEmployee.Messages.Count() > 0)
           return payrollEmployee;
-
-        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
-        ViewCrudPerson personManager = null;
-        if (!string.IsNullOrEmpty(payrollEmployee.ManagerDocument) && !string.IsNullOrEmpty(payrollEmployee.ManagerCompanyName)
-          && !string.IsNullOrEmpty(payrollEmployee.ManagerEstablishmentName) && !string.IsNullOrEmpty(payrollEmployee.ManagerRegistration))
+        }
+        payrollEmployee._idCompany = company._id;
+        // Establishment
+        IntegrationEstablishment  integrationEstablishment = GetIntegrationEstablishment(payrollEmployee.EstablishmentKey(), payrollEmployee.EstablishmentName, company._id);
+        Establishment establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
+        if (establishment == null)
         {
+          payrollEmployee.Messages.Add("Falta integração de estabelecimento");
+          return payrollEmployee;
+        }
+        payrollEmployee._idEstablishment = establishment._id;
+        // Occupation
+        IntegrationOccupation integrationOccupation = GetIntegrationOccupation(payrollEmployee.OccupationKey(), payrollEmployee.OccupationName, company._id, payrollEmployee.CostCenterKey(), payrollEmployee.CostCenterName);
+        Occupation occupation = occupationService.GetNewVersion(p => p._id == integrationOccupation.IdOccupation).Result;
+        if (occupation == null)
+        {
+          payrollEmployee.Messages.Add("Falta integração de cargo");
+          return payrollEmployee;
+        }
+        payrollEmployee._idOccupation = occupation._id;
+        payrollEmployee._idIntegrationOccupation = integrationOccupation._id;
+
+        // Type key person contract
+        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
+
+        // Search manager contract
+        ViewCrudPerson personManager = null;
+        if (!string.IsNullOrEmpty(payrollEmployee.ManagerCompanyName) && !string.IsNullOrEmpty(payrollEmployee.ManagerEstablishmentName) &&
+            !string.IsNullOrEmpty(payrollEmployee.ManagerDocument) && !string.IsNullOrEmpty(payrollEmployee.ManagerRegistration))
+        {
+          // Company Manager
           IntegrationCompany integrationCompanyManager = GetIntegrationCompany(payrollEmployee.ManagerCompany, payrollEmployee.ManagerCompanyName);
           Company companyManager = companyService.GetNewVersion(p => p._id == integrationCompanyManager.IdCompany).Result;
           if (companyManager != null)
           {
-            // Estabelecimento
-            IntegrationEstablishment integrationEstablishmentManager = GetIntegrationEstablishment(payrollEmployee.ManagerEstablishment, payrollEmployee.ManagerEstablishmentName, companyManager._id);
-            Establishment establishmentManager = establishmentService.GetNewVersion(p => p._id == integrationEstablishmentManager.IdEstablishment).Result;
-            if (establishmentManager != null)
-              switch (viewCrudIntegrationParameter.IntegrationKey)
-              {
-                case EnumIntegrationKey.CompanyEstablishment:
-                  personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument && p.Company._id == companyManager._id
-                    && p.Establishment._id == establishmentManager._id && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
-                  break;
-                case EnumIntegrationKey.Company:
-                  personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument && p.Company._id == companyManager._id
-                    && p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
-                  break;
-                case EnumIntegrationKey.Document:
-                  personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument).Result?.GetViewCrud();
-                  break;
-                default:
-                  throw new Exception("Tipo de integração de chaves inválida");
-              }
+            payrollEmployee.Messages.Add("Falta integração da empresa do gestor");
+            return payrollEmployee;
           }
+          // Establishment Manager
+          IntegrationEstablishment integrationEstablishmentManager = GetIntegrationEstablishment(payrollEmployee.ManagerEstablishment, payrollEmployee.ManagerEstablishmentName, companyManager._id);
+          Establishment establishmentManager = establishmentService.GetNewVersion(p => p._id == integrationEstablishmentManager.IdEstablishment).Result;
+          if (establishmentManager != null)
+          {
+            payrollEmployee.Messages.Add("Falta integração do estabelecimento do gestor");
+            return payrollEmployee;
+          }
+          switch (viewCrudIntegrationParameter.IntegrationKey)
+          {
+            case EnumIntegrationKey.CompanyEstablishment:
+              personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument &&
+                                                          p.Company._id == companyManager._id &&
+                                                          p.Establishment._id == establishmentManager._id &&
+                                                          p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
+              break;
+            case EnumIntegrationKey.Company:
+              personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument &&
+                                                          p.Company._id == companyManager._id &&
+                                                          p.Registration == payrollEmployee.ManagerRegistration).Result?.GetViewCrud();
+              break;
+            case EnumIntegrationKey.Document:
+              personManager = personService.GetNewVersion(p => p.User.Document == payrollEmployee.ManagerDocument).Result?.GetViewCrud();
+              break;
+            default:
+              payrollEmployee.Messages.Add("Tipo de integração de chaves inválida");
+              return payrollEmployee;
+          }
+          // Testar se o gestor existe mas não é do tipo gestor
+          if (personManager != null && (personManager.TypeUser != EnumTypeUser.Manager || personManager.TypeUser != EnumTypeUser.ManagerHR))
+          {
+            personManager.TypeUser = personManager.TypeUser == EnumTypeUser.HR ? EnumTypeUser.ManagerHR : EnumTypeUser.Manager;
+            string updatePerson = personService.Update(personManager);
+          }
+
         }
-        if (personManager != null && (personManager.TypeUser != EnumTypeUser.Manager || personManager.TypeUser != EnumTypeUser.ManagerHR))
-        {
-          personManager.TypeUser = EnumTypeUser.Manager;
-          string updatePerson = personService.Update(personManager);
-        }
+
+        // Person contract
         ViewCrudPerson person;
         switch (viewCrudIntegrationParameter.IntegrationKey)
         {
           case EnumIntegrationKey.CompanyEstablishment:
-            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
-                && p.Establishment._id == establishment._id && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document &&
+                                                 p.Company._id == company._id &&
+                                                 p.Establishment._id == establishment._id &&
+                                                 p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
             break;
           case EnumIntegrationKey.Company:
-            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document && p.Company._id == company._id
-                && p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
+            person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document &&
+                                                 p.Company._id == company._id &&
+                                                 p.Registration == payrollEmployee.Registration).Result?.GetViewCrud();
             break;
           case EnumIntegrationKey.Document:
             person = personService.GetNewVersion(p => p.User.Document == payrollEmployee.Document).Result?.GetViewCrud();
             break;
           default:
-            throw new Exception("Tipo de integração de chaves inválida");
+            payrollEmployee.Messages.Add("Tipo de integração de chaves inválida");
+            return payrollEmployee;
         }
         if (person == null)
         {
@@ -302,9 +313,9 @@ namespace Manager.Services.Specific
             DateLastReadjust = payrollEmployee.SalaryChangeDate,
             DateResignation = payrollEmployee.DemissionDate,
             TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding,
-            Workload = payrollEmployee.Workload
+            Workload = payrollEmployee.Workload,
+            StatusUser = payrollEmployee.StatusUser
           };
-
           if (_user._idAccount.Equals("5b91299a17858f95ffdb79f6"))
           // Ajuste de jornada para temporários e estagiários da UNIMED NORDESTE RS
           {
@@ -314,16 +325,15 @@ namespace Manager.Services.Specific
             }
           }
           // Afastados aparecem fora de jornada
-          if (person.StatusUser == EnumStatusUser.Away)
-          {
-            person.TypeJourney = EnumTypeJourney.OutOfJourney;
-          }
+          person.TypeJourney = person.StatusUser == EnumStatusUser.Away ? EnumTypeJourney.OutOfJourney : person.TypeJourney;
+          // Manager of person contract
           if (personManager != null)
           {
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
           }
-          person.StatusUser = payrollEmployee.StatusUser;
+          // User of person contract
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result.GetViewCrud();
+          // Insert
           person = personService.New(person);
         }
         else
@@ -331,10 +341,7 @@ namespace Manager.Services.Specific
           person.Company = company.GetViewList();
           person.Establishment = establishment.GetViewList();
           // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
-          if (!equalOccupation)
-          {
-            person.Occupation = occupation.GetViewListResume();
-          }
+          person.Occupation = changeOcuppation ? occupation.GetViewListResume() : person.Occupation;
           person.Registration = payrollEmployee.Registration;
           person.HolidayReturn = null;
           person.MotiveAside = null;
@@ -343,6 +350,7 @@ namespace Manager.Services.Specific
           person.DateLastReadjust = payrollEmployee.SalaryChangeDate;
           person.DateResignation = payrollEmployee.DemissionDate;
           person.Workload = payrollEmployee.Workload;
+          person.StatusUser = payrollEmployee.StatusUser;
           // Ajuste de jornada para temporários e estagiários da UNIMED NORDESTE RS
           if (_user._idAccount.Equals("5b91299a17858f95ffdb79f6"))
           {
@@ -351,17 +359,19 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
-          if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
+          // Afastados aparecem fora de jornada
+          person.TypeJourney = person.StatusUser == EnumStatusUser.Away ? EnumTypeJourney.OutOfJourney : person.TypeJourney;
+          // Manager of person contract
           if (personManager != null)
           {
             person.Manager = new ViewBaseFields() { Mail = personManager.User.Mail, Name = personManager.User.Name, _id = personManager._id };
           }
-          person.StatusUser = payrollEmployee.StatusUser;
+          // User of person contract
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
+          // Update
           string updatePerson = personService.Update(person);
         }
         payrollEmployee._idContract = person._id;
-        payrollEmployee.StatusIntegration = EnumStatusIntegration.Atualized;
         return payrollEmployee;
       }
       catch (Exception ex)
@@ -1926,20 +1936,32 @@ namespace Manager.Services.Specific
         // Não tem registros anteriores (VAZIO)
         if (payrollEmployees.Count() == 0)
         {
-          ConclusionV2(payrollEmployee, null, false);
+          InsertHistory(payrollEmployee, true);
           return resultV2;
         };
-        // Tem registro anterior, trazer o último
-        PayrollEmployee payrollEmployeePrevious = null;
-        payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
-        if (!payrollEmployee.Equal(payrollEmployeePrevious))
+        // Comparar com o registro anterior
+        PayrollEmployee payrollEmployeePrevious = payrollEmployees.FirstOrDefault();
+        if (payrollEmployee.Equal(payrollEmployeePrevious))
         {
-          // Anterior e novo são diferentes
-          ConclusionV2(payrollEmployee, payrollEmployeePrevious, false);
+          // Se for igual
+          resultV2.IdUser = payrollEmployeePrevious._idUser;
+          resultV2.IdContract = payrollEmployeePrevious._idContract;
+          resultV2.IdPayrollEmployee = payrollEmployeePrevious._id;
+          resultV2.Mensagem.Add("Colaborador sem alterações");
+          return resultV2;
+        }
+        // Se for diferente
+        if (payrollEmployeePrevious.StatusIntegration == EnumStatusIntegration.Atualized)
+        {
+          payrollEmployee._idPrevious = payrollEmployeePrevious._id;
+          InsertHistory(payrollEmployee, payrollEmployee.OccupationName != payrollEmployeePrevious.OccupationName);
           return resultV2;
         }
         // Anterior e novo são iguais, não gravar o novo e retornar mensagens do antigo.
-        ConclusionV2(payrollEmployee, payrollEmployeePrevious, true);
+        payrollEmployeePrevious.StatusIntegration = EnumStatusIntegration.Reject;
+        Task taskPrevious = payrollEmployeeService.Update(payrollEmployeePrevious, null);
+        payrollEmployee._idPrevious = payrollEmployeePrevious._idPrevious;
+        InsertHistory(payrollEmployee, payrollEmployee.OccupationName != payrollEmployeePrevious.OccupationName);
         return resultV2;
       }
       catch (Exception ex)
@@ -2324,6 +2346,57 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Conclusion PayrollEmployee
+    private void InsertHistory(PayrollEmployee payrollEmployee, bool changeOccupation)
+    {
+      try
+      {
+        // Atualização de usuário e devolve o id do usuário e mensagens
+        payrollEmployee._idUser = string.Empty;
+        payrollEmployee._idSchooling = string.Empty;
+        payrollEmployee = UserUpdate(payrollEmployee);
+        if ( payrollEmployee.Messages.Count ==0 )
+        {
+          // Apenas continuar se não tiver mensagens de aviso
+          resultV2.IdUser = payrollEmployee._idUser;
+          // Atualização de contratos do usuário
+          payrollEmployee._idContract = string.Empty;
+          payrollEmployee._idCompany = string.Empty;
+          payrollEmployee._idEstablishment = string.Empty;
+          payrollEmployee._idOccupation = string.Empty;
+          payrollEmployee._idIntegrationOccupation = string.Empty;
+          payrollEmployee = PersonUpdate(payrollEmployee, changeOccupation);
+          if (payrollEmployee.Messages.Count == 0)
+          {
+            payrollEmployee.StatusIntegration = EnumStatusIntegration.Atualized;
+            resultV2.IdContract = payrollEmployee._idContract;
+          }
+        }
+        // Incluir novo histórico
+        payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
+        resultV2.IdPayrollEmployee = payrollEmployee._id;
+
+        for (int i = 0; i < payrollEmployee.Messages.Count; i++)
+        {
+          resultV2.Mensagem.Add(payrollEmployee.Messages[i]);
+        }
+        if (resultV2.Mensagem.Count == 0)
+        {
+          resultV2.Situacao = "Ok";
+          if (payrollEmployee.StatusIntegration == EnumStatusIntegration.Atualized)
+          {
+            resultV2.Mensagem.Add("Colaborador atualizado");
+          }
+          else
+          {
+            resultV2.Mensagem.Add("Apenas histórico incluído");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
     private void ConclusionV2(PayrollEmployee payrollEmployee, PayrollEmployee payrollEmployeePrevious, bool equals)
     {
       try
@@ -2389,6 +2462,7 @@ namespace Manager.Services.Specific
         throw ex;
       }
     }
+
     #endregion
 
     #endregion

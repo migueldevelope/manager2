@@ -545,7 +545,7 @@ namespace IntegrationClient
         excelPln.Range["5:5"].Select();
         excelApp.Selection.Delete(Excel.XlDirection.xlUp);
         excelPln.Range["A1"].Select();
-        excelPst.SaveAs(string.Format(@"{0}\_LO_{1}.xlsx", pathExport, areaName));
+        excelPst.SaveAs(string.Format(@"{0}\_LO_{1}.xlsx", pathExport, areaName.Replace("|", "_")));
         excelPst.Close();
       }
       catch (Exception ex)
