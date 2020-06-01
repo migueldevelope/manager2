@@ -18,6 +18,7 @@ namespace Manager.Core.Business
     public ViewListPersonPhoto Responsible { get; set; }
     public List<ViewListPersonPhoto> Editors { get; set; }
     public EnumTypeCheckin TypeCheckin { get; set; }
+    public bool Reached { get; set; }
 
     public ViewCrudObjective GetViewCrud()
     {
