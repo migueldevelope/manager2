@@ -22,6 +22,7 @@ namespace Manager.Core.Business
     public decimal Achievement { get; set; }
     public decimal QuantityResult { get; set; }
     public string QualityResult { get; set; }
+    public bool Reached { get; set; }
 
     public ViewCrudKeyResult GetViewCrud()
     {

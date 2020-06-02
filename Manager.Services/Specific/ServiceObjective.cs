@@ -91,6 +91,7 @@ namespace Manager.Services.Specific
           Dimension = view.Dimension,
           Responsible = view.Responsible,
           Editors = view.Editors,
+          Reached = false,
           TypeCheckin = view.TypeCheckin
         }).Result;
 
@@ -232,8 +233,8 @@ namespace Manager.Services.Specific
 
         var objectives = serviceObjective.GetAllNewVersion(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
         || p.Responsible._id == _user._idPerson).Result;
-        
-        foreach(var item in objectives)
+
+        foreach (var item in objectives)
         {
           var keyresults = serviceKeyResult.GetAllNewVersion(p => item._id == p.Objective._id).Result;
           var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
@@ -261,7 +262,7 @@ namespace Manager.Services.Specific
             view.LevelTrust = 1;
           else if ((achievement > 90) && (achievement <= 100))
             view.LevelTrust = 2;
-          else 
+          else
             view.LevelTrust = 3;
 
           list.Add(view);
@@ -310,6 +311,7 @@ namespace Manager.Services.Specific
             Sense = view.Sense,
             Description = view.Description,
             Weight = view.Weight,
+            Reached = false,
             Participants = new List<ViewCrudParticipantKeyResult>(),
             Objective = objective.GetViewList()
           }).Result;
@@ -355,6 +357,26 @@ namespace Manager.Services.Specific
         model.QuantityResult = result;
 
         model.Achievement = (achievement / 100) * model.QuantityGoal;
+
+        if (model.Achievement >= 100)
+          model.Reached = true;
+
+        var objective = serviceObjective.GetNewVersion(p => p._id == model.Objective._id).Result;
+
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == model.Objective._id).Result;
+        var reached = true;
+        foreach (var item in keyresults)
+        {
+          if (item.Reached == false)
+            reached = false;
+        }
+
+        if (reached)
+        {
+          objective.Reached = true;
+          var i = serviceObjective.Update(objective, null);
+        }
+
 
         serviceKeyResult.Update(model, null).Wait();
 
