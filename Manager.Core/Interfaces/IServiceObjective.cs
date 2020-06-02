@@ -31,5 +31,39 @@ namespace Manager.Core.Interfaces
     ViewCrudDimension GetDimension(string id);
     List<ViewListDimension> ListDimension(ref long total, int count = 10, int page = 1, string filter = "");
     string DeleteDimension(string id);
+
+    ViewCrudPendingCheckinObjective NewPendingCheckinObjective(ViewCrudPendingCheckinObjective view);
+    ViewCrudPendingCheckinObjective UpdatePendingCheckinObjective(ViewCrudPendingCheckinObjective view);
+    ViewCrudPendingCheckinObjective GetPendingCheckinObjective(string id);
+    List<ViewListPendingCheckinObjective> ListPendingCheckinObjective(ref long total, int count = 10, int page = 1, string filter = "");
+    string DeletePendingCheckinObjective(string id);
+
+    ViewListObjectiveParticipantCard GetParticipantCard();
+
+    ViewListObjectiveResponsibleCard GetResponsibleCard();
+
+    List<ViewListDetailResposibleObjective> GetDetailResposibleObjective();
+
+    ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view);
+
+    string AddParticipants(string idkeyresult, ViewCrudParticipantKeyResult view);
+
+    string DeleteParticipants(string idkeyresult, string idperson);
+
+    List<ViewListPersonPhoto> AddEditors(string idobjective, string idperson);
+
+    string DeleteEditor(string idobjetctive, string idperson);
+
+    List<ViewCrudImpedimentsIniciatives> AddImpediment(string idcheckin, ViewCrudImpedimentsIniciatives view);
+
+    List<ViewCrudImpedimentsIniciatives> DeleteImpediment(string idcheckin, string idimpediment);
+
+    List<ViewCrudImpedimentsIniciatives> AddInitiatives(string idcheckin, ViewCrudImpedimentsIniciatives view);
+
+    List<ViewCrudImpedimentsIniciatives> DeleteIniciative(string idcheckin, string idiniciative);
+
+    string LikeImpediment(string idimpediment, string idpendingcheckin, bool like);
+
+    string LikeIniciative(string idiniciatives, string idpendingcheckin, bool like);
   }
 }

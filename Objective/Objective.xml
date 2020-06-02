@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Objective</name>
+    </assembly>
+    <members>
+        <member name="T:Manager.Controllers.ObjectiveController">
+            <summary>
+            Controlador da empresa
+            </summary>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.#ctor(Manager.Core.Interfaces.IServiceObjective,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Construtor
+            </summary>
+            <param name="_service">Serviço da empresa</param>
+            <param name="contextAccessor">Token de segurança</param>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.List(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar as empresas
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome da empresa</param>
+            <returns>Lista de empresas cadastradas</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.Post(Manager.Views.BusinessCrud.ViewCrudObjective)">
+            <summary>
+            Cadastrar uma nova empresa
+            </summary>
+            <param name="view">Objeto de cadastro da empresa</param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.Get(System.String)">
+            <summary>
+            Retorar a empresa para manutenção
+            </summary>
+            <param name="id">Identificador da empresa</param>
+            <returns>Objeto de manutenção da empresa</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.Update(Manager.Views.BusinessCrud.ViewCrudObjective)">
+            <summary>
+            Alterar a empresa
+            </summary>
+            <param name="view">Objeto de manutenção da empresa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.Delete(System.String)">
+            <summary>
+            Excluir uma empresa
+            </summary>
+            <param name="id">Identificação da empresa</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListKeyResult(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar estabelecimentos
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do estabelecimento</param>
+            <returns>Lista de estabelecimentos</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListKeyResult(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar estabelecimento de uma empresa
+            </summary>
+            <param name="idobjective">Identificador da empresa</param>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do estabelecimento</param>
+            <returns>Lista de estabelecimentos da empresa</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.PostKeyResult(Manager.Views.BusinessCrud.ViewCrudKeyResult)">
+            <summary>
+            Novo estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListKeyResult(System.String)">
+            <summary>
+            Buscar estabelecimento para manutenção
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Objeto de manutenção do estabelecimento</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.UpdateKeyResult(Manager.Views.BusinessCrud.ViewCrudKeyResult)">
+            <summary>
+            Alterar o estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteKeyResult(System.String)">
+            <summary>
+            Deletar um estabelecimento
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListDimension(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar estabelecimentos
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do estabelecimento</param>
+            <returns>Lista de estabelecimentos</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.PostDimension(Manager.Views.BusinessCrud.ViewCrudDimension)">
+            <summary>
+            Novo estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListDimension(System.String)">
+            <summary>
+            Buscar estabelecimento para manutenção
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Objeto de manutenção do estabelecimento</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.UpdateDimension(Manager.Views.BusinessCrud.ViewCrudDimension)">
+            <summary>
+            Alterar o estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteDimension(System.String)">
+            <summary>
+            Deletar um estabelecimento
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListPendingCheckinObjective(System.Int32,System.Int32,System.String)">
+            <summary>
+            Listar estabelecimentos
+            </summary>
+            <param name="count">Quantidade de registros</param>
+            <param name="page">Página para mostrar</param>
+            <param name="filter">Filtro para o nome do estabelecimento</param>
+            <returns>Lista de estabelecimentos</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.PostPendingCheckinObjective(Manager.Views.BusinessCrud.ViewCrudPendingCheckinObjective)">
+            <summary>
+            Novo estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.ListPendingCheckinObjective(System.String)">
+            <summary>
+            Buscar estabelecimento para manutenção
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Objeto de manutenção do estabelecimento</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.UpdatePendingCheckinObjective(Manager.Views.BusinessCrud.ViewCrudPendingCheckinObjective)">
+            <summary>
+            Alterar o estabelecimento
+            </summary>
+            <param name="view">Objeto de manutenção do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeletePendingCheckinObjective(System.String)">
+            <summary>
+            Deletar um estabelecimento
+            </summary>
+            <param name="id">Identificador do estabelecimento</param>
+            <returns>Mensagem de sucesso</returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetParticipantCard">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetResponsibleCard">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetDetailResposibleObjective">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.UpdateResultKeyResult(Manager.Views.BusinessList.ViewText,System.String,System.Decimal,System.Decimal)">
+            <summary>
+            
+            </summary>
+            <param name="idkeyresult"></param>
+            <param name="achievement"></param>
+            <param name="result"></param>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.AddParticipants(Manager.Views.BusinessCrud.ViewCrudParticipantKeyResult,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idkeyresult"></param>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteParticipants(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idkeyresult"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.AddEditors(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idobjective"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteEditor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idobjetctive"></param>
+            <param name="idperson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.AddImpediment(Manager.Views.BusinessCrud.ViewCrudImpedimentsIniciatives,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcheckin"></param>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteImpediment(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcheckin"></param>
+            <param name="idimpediment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.AddInitiatives(Manager.Views.BusinessCrud.ViewCrudImpedimentsIniciatives,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcheckin"></param>
+            <param name="view"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteIniciative(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idcheckin"></param>
+            <param name="idiniciative"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.LikeImpediment(System.String,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="idimpediment"></param>
+            <param name="idpendingcheckin"></param>
+            <param name="like"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.LikeIniciative(System.String,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="idiniciatives"></param>
+            <param name="idpendingcheckin"></param>
+            <param name="like"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Program">
+            <summary>
+            Configurador do programa
+            </summary>
+        </member>
+        <member name="M:Manager.Program.Main(System.String[])">
+            <summary>
+            Ponto de entrada
+            </summary>
+            <param name="args">Argumentos da linha de comando</param>
+        </member>
+        <member name="M:Manager.Program.BuildWebHost(System.String[])">
+            <summary>
+            Configurador do servidor Web
+            </summary>
+            <param name="args">Argumentos da linha de comando</param>
+            <returns></returns>
+        </member>
+        <member name="T:Manager.Startup">
+            <summary>
+            Controle de inicialização da API
+            </summary>
+        </member>
+        <member name="M:Manager.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Construtor do controle
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Manager.Startup.Configuration">
+            <summary>
+            Propriedade de configuração
+            </summary>
+        </member>
+        <member name="M:Manager.Startup.RegistreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registrador de serviços
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Manager.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configurador de servicos
+            </summary>
+            <param name="services">Coleção de serviços</param>
+        </member>
+        <member name="M:Manager.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configuração de aplicação
+            </summary>
+            <param name="app">Aplicação</param>
+            <param name="env">Ambiente de hospedagem</param>
+        </member>
+    </members>
+</doc>
