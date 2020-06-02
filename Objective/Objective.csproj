@@ -25,5 +25,11 @@
     <ProjectReference Include="..\Tools\Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Objective.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
 </Project>
