@@ -96,8 +96,6 @@ namespace Manager.Services.Specific
 
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-
-
         return model.GetViewCrud();
       }
       catch (Exception e)
@@ -233,7 +231,8 @@ namespace Manager.Services.Specific
       {
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser == EnumTypeUser.Manager || p.TypeUser == EnumTypeUser.ManagerHR).Result;
         return persons.Select(p => p.GetViewListPhoto()).ToList();
-      }catch(Exception e)
+      }
+      catch (Exception e)
       {
         throw e;
       }
@@ -271,29 +270,37 @@ namespace Manager.Services.Specific
           && p.Week == week && p._idObjective == item._id).Result;
 
           var view = new ViewListDetailResposibleObjective();
-          view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
-          view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
+          if (pendingchecking.Count() > 0)
+          {
+            view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
+            view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
+
+            var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+
+            if (trust <= 50)
+              view.LevelTrust = 0;
+            else if ((trust > 50) && (trust <= 75))
+              view.LevelTrust = 1;
+            else
+              view.LevelTrust = 2;
+          }
           view.Description = item.Description;
           view._id = item._id;
-          var achievement = keyresults.Average(p => p.Achievement);
-          var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
 
-          if (trust <= 50)
-            view.LevelTrust = 0;
-          else if ((trust > 50) && (trust <= 75))
-            view.LevelTrust = 1;
-          else
-            view.LevelTrust = 2;
+          if (keyresults.Count() > 0)
+          {
+            var achievement = keyresults.Average(p => p.Achievement);
 
+            if (achievement <= 60)
+              view.LevelTrust = 0;
+            else if ((achievement > 60) && (achievement <= 90))
+              view.LevelTrust = 1;
+            else if ((achievement > 90) && (achievement <= 100))
+              view.LevelTrust = 2;
+            else
+              view.LevelTrust = 3;
+          }
 
-          if (achievement <= 60)
-            view.LevelTrust = 0;
-          else if ((achievement > 60) && (achievement <= 90))
-            view.LevelTrust = 1;
-          else if ((achievement > 90) && (achievement <= 100))
-            view.LevelTrust = 2;
-          else
-            view.LevelTrust = 3;
 
           list.Add(view);
         }
