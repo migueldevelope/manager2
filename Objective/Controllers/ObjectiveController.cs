@@ -338,6 +338,31 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
+    [Route("getlistresponsabile")]
+    public async Task<List<ViewListPersonPhoto>> GetListResponsabile()
+    {
+      return await Task.Run(() => service.GetListResponsabile());
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getlisteditors")]
+    public async Task<List<ViewListPersonPhoto>> GetListEditors()
+    {
+      return await Task.Run(() => service.GetListEditors());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
     [Route("getresponsiblecard")]
     public async Task<ViewListObjectiveResponsibleCard> GetResponsibleCard()
     {

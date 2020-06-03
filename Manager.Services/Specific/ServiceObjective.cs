@@ -233,10 +233,22 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
-
-        return null;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeUser == EnumTypeUser.Manager || p.TypeUser == EnumTypeUser.ManagerHR).Result;
+        return persons.Select(p => p.GetViewListPhoto()).ToList();
       }catch(Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewListPersonPhoto> GetListEditors()
+    {
+      try
+      {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        return persons.Select(p => p.GetViewListPhoto()).ToList();
+      }
+      catch (Exception e)
       {
         throw e;
       }
