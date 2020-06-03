@@ -171,11 +171,14 @@ namespace Manager.Services.Specific
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
         var view = new ViewListObjectiveParticipantCard();
-        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Participants.Where(x => x._idPerson == _user._idPerson).Count() > 0).Result;
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result.Where(p => p.Participants.Where(x => x._idPerson == _user._idPerson).Count() > 0).ToList();
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
 
-        view.AverageAchievement = keyresults.Average(p => p.Achievement);
-        view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+        if(keyresults.Count() >0)
+          view.AverageAchievement = keyresults.Average(p => p.Achievement);
+        if (pendingchecking.Count() > 0)
+          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+
         view.QtdKeyResults = keyresults.Count();
         if (view.AverageTrust <= 50)
           view.LevelTrust = 0;
@@ -200,13 +203,16 @@ namespace Manager.Services.Specific
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
         var view = new ViewListObjectiveResponsibleCard();
-        var objective = serviceObjective.GetAllNewVersion(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
-        || p.Responsible._id == _user._idPerson).Result.Select(p => p._id);
+        var objective = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+          .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson).Select(p => p._id);
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
 
-        view.AverageAchievement = keyresults.Average(p => p.Achievement);
-        view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+        if(keyresults.Count() > 0)
+          view.AverageAchievement = keyresults.Average(p => p.Achievement);
+        if (pendingchecking.Count() > 0)
+          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+
         view.QtdObjective = objective.Count();
         if (view.AverageTrust <= 50)
           view.LevelTrust = 0;
