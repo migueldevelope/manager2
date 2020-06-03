@@ -65,5 +65,9 @@ namespace Manager.Core.Interfaces
     string LikeImpediment(string idimpediment, string idpendingcheckin, bool like);
 
     string LikeIniciative(string idiniciatives, string idpendingcheckin, bool like);
+
+    List<ViewListPersonPhoto> GetListResponsabile();
+
+    List<ViewListPersonPhoto> GetListEditors();
   }
 }
