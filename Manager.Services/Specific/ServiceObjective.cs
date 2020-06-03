@@ -229,6 +229,19 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListPersonPhoto> GetListResponsabile()
+    {
+      try
+      {
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+
+        return null;
+      }catch(Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListDetailResposibleObjective> GetDetailResposibleObjective()
     {
       try
