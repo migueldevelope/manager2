@@ -17,7 +17,6 @@ namespace Manager.Core.Business
     public ViewCrudDimension Dimension { get; set; }
     public ViewListPersonPhoto Responsible { get; set; }
     public List<ViewListPersonPhoto> Editors { get; set; }
-    public EnumTypeCheckin TypeCheckin { get; set; }
     public bool Reached { get; set; }
 
     public ViewCrudObjective GetViewCrud()
@@ -32,8 +31,7 @@ namespace Manager.Core.Business
         StausObjective = StausObjective,
         Dimension = Dimension,
         Responsible = Responsible,
-        Editors = Editors,
-        TypeCheckin = TypeCheckin
+        Editors = Editors
       };
     }
 

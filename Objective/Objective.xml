@@ -180,6 +180,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetListResponsabile">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetListEditors">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Manager.Controllers.ObjectiveController.GetResponsibleCard">
             <summary>
             

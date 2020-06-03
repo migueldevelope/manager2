@@ -92,7 +92,6 @@ namespace Manager.Services.Specific
           Responsible = view.Responsible,
           Editors = view.Editors,
           Reached = false,
-          TypeCheckin = view.TypeCheckin
         }).Result;
 
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
@@ -120,7 +119,6 @@ namespace Manager.Services.Specific
         model.Dimension = view.Dimension;
         model.Responsible = view.Responsible;
         model.Editors = view.Editors;
-        model.TypeCheckin = view.TypeCheckin;
         serviceObjective.Update(model, null).Wait();
 
 
