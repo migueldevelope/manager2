@@ -2351,19 +2351,19 @@ namespace Manager.Services.Specific
       try
       {
         // Atualização de usuário e devolve o id do usuário e mensagens
-        payrollEmployee._idUser = string.Empty;
-        payrollEmployee._idSchooling = string.Empty;
+        payrollEmployee._idUser = null;
+        payrollEmployee._idSchooling = null;
         payrollEmployee = UserUpdate(payrollEmployee);
         if ( payrollEmployee.Messages.Count ==0 )
         {
           // Apenas continuar se não tiver mensagens de aviso
           resultV2.IdUser = payrollEmployee._idUser;
           // Atualização de contratos do usuário
-          payrollEmployee._idContract = string.Empty;
-          payrollEmployee._idCompany = string.Empty;
-          payrollEmployee._idEstablishment = string.Empty;
-          payrollEmployee._idOccupation = string.Empty;
-          payrollEmployee._idIntegrationOccupation = string.Empty;
+          payrollEmployee._idContract = null;
+          payrollEmployee._idCompany = null;
+          payrollEmployee._idEstablishment = null;
+          payrollEmployee._idOccupation = null;
+          payrollEmployee._idIntegrationOccupation = null;
           payrollEmployee = PersonUpdate(payrollEmployee, changeOccupation);
           if (payrollEmployee.Messages.Count == 0)
           {
