@@ -2101,7 +2101,7 @@ namespace Manager.Services.Specific
         List<IntegrationEstablishment> integrationEstablishments = integrationEstablishmentService.GetAllNewVersion().ToList();
         List<Person> persons = personService.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled &&
           p.TypeUser > EnumTypeUser.Administrator && p.Company != null && p.Establishment != null).Result;
-        return persons.Select(x => new ColaboradorV2Ativo()
+        return persons.Where(p => !p.Registration.Contains("off")).Select(x => new ColaboradorV2Ativo()
         {
           _id = x._id,
           Cpf = x.User.Document,
