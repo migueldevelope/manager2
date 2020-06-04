@@ -18,7 +18,8 @@ namespace Manager.Core.Business
     public string Description { get; set; }
     public byte Weight { get; set; }
     public ViewListObjective Objective { get; set; }
-    public List<ViewCrudParticipantKeyResult> Participants { get; set; }
+    public List<ViewCrudParticipantKeyResult> ParticipantsAdd { get; set; }
+    public List<ViewListPersonPhoto> ParticipantsGet { get; set; }
     public decimal Achievement { get; set; }
     public decimal QuantityResult { get; set; }
     public string QualityResult { get; set; }
@@ -44,7 +45,9 @@ namespace Manager.Core.Business
         Objective = Objective,
         TypeCheckin = TypeCheckin,
         TypeBinary = TypeBinary,
-        Binary = Binary
+        Binary = Binary,
+        ParticipantsAdd = ParticipantsAdd,
+        ParticipantsGet = ParticipantsGet
       };
     }
 

@@ -167,7 +167,33 @@ namespace Manager.Services.Specific
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
         var view = new ViewListObjectiveParticipantCard();
-        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result.Where(p => p.Participants.Where(x => x._idPerson == _user._idPerson).Count() > 0).ToList();
+        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var keyresults = new List<KeyResult>();
+
+        foreach (var item in keyresultsprevious)
+        {
+          foreach (var par in item.ParticipantsAdd)
+          {
+            if (par.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+            {
+              var team = persons.Where(p => p.Manager._id == par._idPerson).Select(p => p.GetViewListPhoto());
+              foreach (var person in team)
+              {
+                if (person._id == _user._idPerson)
+                  keyresults.Add(item);
+              }
+            }
+            else
+            {
+              if (par._idPerson == _user._idPerson)
+                keyresults.Add(item);
+            }
+          }
+        }
+
+        //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
+
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
 
         if (keyresults.Count() > 0)
@@ -349,7 +375,8 @@ namespace Manager.Services.Specific
             Description = view.Description,
             Weight = view.Weight,
             Reached = false,
-            Participants = new List<ViewCrudParticipantKeyResult>(),
+            ParticipantsAdd = view.ParticipantsAdd,
+            ParticipantsGet = view.ParticipantsGet,
             Objective = objective.GetViewList()
           }).Result;
 
@@ -430,7 +457,7 @@ namespace Manager.Services.Specific
       try
       {
         var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
-        model.Participants.Add(view);
+        model.ParticipantsAdd.Add(view);
 
         return "add success";
       }
@@ -445,11 +472,11 @@ namespace Manager.Services.Specific
       try
       {
         var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
-        foreach (var item in model.Participants)
+        foreach (var item in model.ParticipantsAdd)
         {
           if (item._idPerson == idperson)
           {
-            model.Participants.Remove(item);
+            model.ParticipantsAdd.Remove(item);
             var i = serviceKeyResult.Update(model, null);
           }
         }
@@ -469,20 +496,20 @@ namespace Manager.Services.Specific
         var model = serviceKeyResult.GetNewVersion(p => p._id == id).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var view = model.GetViewCrud();
-        view.Participants = new List<ViewListPersonPhoto>();
-        foreach (var item in model.Participants)
+        view.ParticipantsGet = new List<ViewListPersonPhoto>();
+        foreach (var item in model.ParticipantsAdd)
         {
           if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
           {
             var team = persons.Where(p => p.Manager._id == item._idPerson).Select(p => p.GetViewListPhoto());
             foreach (var person in team)
             {
-              view.Participants.Add(person);
+              view.ParticipantsGet.Add(person);
             }
           }
           else
           {
-            view.Participants.Add(persons.Where(p => p._id == item._idPerson).FirstOrDefault().GetViewListPhoto());
+            view.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson).FirstOrDefault().GetViewListPhoto());
           }
 
         }
