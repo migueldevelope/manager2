@@ -16,6 +16,7 @@ namespace Manager.Views.BusinessCrud
     public string Description { get; set; }
     public byte Weight { get; set; }
     public ViewListObjective Objective { get; set; }
+    public EnumTypeCheckin TypeCheckin { get; set; }
     public List<ViewListPersonPhoto> Participants { get; set; }
   }
 }

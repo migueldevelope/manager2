@@ -23,6 +23,7 @@ namespace Manager.Core.Business
     public decimal QuantityResult { get; set; }
     public string QualityResult { get; set; }
     public bool Reached { get; set; }
+    public EnumTypeCheckin TypeCheckin { get; set; }
 
     public ViewCrudKeyResult GetViewCrud()
     {
@@ -39,6 +40,7 @@ namespace Manager.Core.Business
         Description = Description,
         Weight = Weight,
         Objective = Objective,
+        TypeCheckin = TypeCheckin
       };
     }
 
