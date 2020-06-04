@@ -19,6 +19,7 @@ namespace Manager.Views.BusinessCrud
     public EnumTypeCheckin TypeCheckin { get; set; }
     public EnumTypeBinary TypeBinary { get; set; }
     public decimal Binary { get; set; }
+    public decimal Achievement { get; set; }
     public List<ViewCrudParticipantKeyResult> ParticipantsAdd { get; set; }
     public List<ViewListPersonPhoto> ParticipantsGet { get; set; }
   }

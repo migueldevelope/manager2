@@ -46,6 +46,7 @@ namespace Manager.Core.Business
         TypeCheckin = TypeCheckin,
         TypeBinary = TypeBinary,
         Binary = Binary,
+        Achievement = Achievement,
         ParticipantsAdd = ParticipantsAdd,
         ParticipantsGet = ParticipantsGet
       };

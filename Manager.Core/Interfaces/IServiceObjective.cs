@@ -69,5 +69,7 @@ namespace Manager.Core.Interfaces
     List<ViewListPersonPhoto> GetListResponsabile();
 
     List<ViewListPersonPhoto> GetListEditors();
+
+    List<ViewListObjectiveEdit> GetObjectiveEditResponsible();
   }
 }

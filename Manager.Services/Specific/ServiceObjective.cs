@@ -318,13 +318,13 @@ namespace Manager.Services.Specific
             var achievement = keyresults.Average(p => p.Achievement);
 
             if (achievement <= 60)
-              view.LevelTrust = 0;
+              view.LevelAchievement = 0;
             else if ((achievement > 60) && (achievement <= 90))
-              view.LevelTrust = 1;
+              view.LevelAchievement = 1;
             else if ((achievement > 90) && (achievement <= 100))
-              view.LevelTrust = 2;
+              view.LevelAchievement = 2;
             else
-              view.LevelTrust = 3;
+              view.LevelAchievement = 3;
           }
 
 
@@ -339,6 +339,120 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListObjectiveEdit> GetObjectiveEditResponsible()
+    {
+      try
+      {
+        var list = new List<ViewListObjectiveEdit>();
+
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+          .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson);
+
+        var ids = objectives.Select(p => p._id).ToList();
+
+        foreach (var obj in objectives)
+        {
+          var view = new ViewListObjectiveEdit();
+          var keyresults = serviceKeyResult.GetAllNewVersion(p => p._id == obj._id).Result;
+          var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result
+            .Where(p => ids.Contains(p._idObjective));
+
+          view.StartDate = obj.StartDate;
+          view.EndDate = obj.EndDate;
+          view._id = obj._id;
+          view.Editors = obj.Editors;
+          view.Responsible = obj.Responsible;
+
+          if (keyresults.Count() > 0)
+            view.AverageAchievement = keyresults.Average(p => p.Achievement);
+          if (pendingchecking.Count() > 0)
+          {
+            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+          }
+
+          if (view.AverageTrust <= 50)
+            view.LevelTrust = 0;
+          else if ((view.AverageTrust > 50) && (view.AverageTrust <= 75))
+            view.LevelTrust = 1;
+          else
+            view.LevelTrust = 2;
+
+          if (view.AverageAchievement <= 60)
+            view.LevelAchievement = 0;
+          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
+            view.LevelAchievement = 1;
+          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
+            view.LevelAchievement = 2;
+          else
+            view.LevelAchievement = 3;
+
+          view.KeyResults = new List<ViewListKeyResultsEdit>();
+
+          foreach (var kr in keyresults)
+          {
+            var viewKeyResult = new ViewListKeyResultsEdit();
+            viewKeyResult._id = kr._id;
+            viewKeyResult.Name = kr.Name;
+            viewKeyResult.TypeKeyResult = kr.TypeKeyResult;
+            viewKeyResult.QuantityGoal = kr.QuantityGoal;
+            viewKeyResult.QualityGoal = kr.QualityGoal;
+            viewKeyResult.BeginProgressGoal = kr.BeginProgressGoal;
+            viewKeyResult.EndProgressGoal = kr.EndProgressGoal;
+            viewKeyResult.Sense = kr.Sense;
+            viewKeyResult.Description = kr.Description;
+            viewKeyResult.Weight = kr.Weight;
+            viewKeyResult.Objective = kr.Objective;
+            viewKeyResult.TypeCheckin = kr.TypeCheckin;
+            viewKeyResult.TypeBinary = kr.TypeBinary;
+            viewKeyResult.Binary = kr.Binary;
+
+            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id).ToList();
+            
+            if (pendingchecking.Count() > 0)
+            {
+              viewKeyResult.PendingChecking = false;
+              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+              if (trustkey <= 50)
+                viewKeyResult.LevelTrust = 0;
+              else if ((trustkey > 50) && (trustkey <= 75))
+                viewKeyResult.LevelTrust = 1;
+              else
+                viewKeyResult.LevelTrust = 2;
+            }
+            else
+            {
+              viewKeyResult.PendingChecking = true;
+            }
+            
+            viewKeyResult.Achievement = kr.Achievement;
+            if (viewKeyResult.Achievement <= 60)
+              viewKeyResult.LevelAchievement = 0;
+            else if ((viewKeyResult.Achievement > 60) && (viewKeyResult.Achievement <= 90))
+              viewKeyResult.LevelAchievement = 1;
+            else if ((viewKeyResult.Achievement > 90) && (viewKeyResult.Achievement <= 100))
+              viewKeyResult.LevelAchievement = 2;
+            else
+              viewKeyResult.LevelAchievement = 3;
+
+
+
+
+            view.KeyResults.Add(viewKeyResult);
+          }
+
+          list.Add(view);
+        }
+
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     #endregion
 
     #region KeyResult
