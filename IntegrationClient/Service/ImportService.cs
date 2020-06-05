@@ -229,7 +229,7 @@ namespace IntegrationClient.Service
         FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
         if (full)
         {
-          ExecuteDemissionAbsenceV2(jsonLog);
+          ExecuteDemissionAbsenceV2();
         }
       }
       catch (Exception ex)
@@ -434,7 +434,7 @@ namespace IntegrationClient.Service
         throw ex;
       }
     }
-    public void ExecuteDemissionAbsenceV2(bool jsonLog)
+    public void ExecuteDemissionAbsenceV2()
     {
       try
       {

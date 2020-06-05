@@ -44,8 +44,9 @@ namespace Mobile.Controllers
     /// </summary>
     /// <param name="_serviceOnborading">Serviço de Onboarding</param>
     /// <param name="_serviceIndicators">Serviço de Indicadores</param>
-    /// <param name="_servicePerson">Serviço de Contratos</param>
     /// <param name="_serviceUser">Serviço de Usuários</param>
+    /// <param name="_servicePerson">Serviço de Contratos</param>
+    /// <param name="_serviceFeelingDay">Serviço do Emocionometro</param>
     /// <param name="contextAccessor">Token de segurança</param>
     public PanelController(IServiceOnBoarding _serviceOnborading, IServiceIndicators _serviceIndicators,
       IServiceUser _serviceUser, IServicePerson _servicePerson, IServiceFeelingDay _serviceFeelingDay, IHttpContextAccessor contextAccessor) : base(contextAccessor)

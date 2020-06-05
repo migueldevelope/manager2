@@ -4017,34 +4017,29 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
-        var list = new List<ViewListOpportunityLine>();
-
+        List<Occupation> occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
+        List<ViewListOpportunityLine> list = new List<ViewListOpportunityLine>();
         foreach (var item in occupations)
         {
-
-          var group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
-
-
+          Group group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
           foreach (var proc in item.Process)
           {
-            var view = new ViewListOpportunityLine();
-            view.Occupation = item.Name;
-            view.Group = item.Group.Name;
-            view.LineGroup = item.Group.Line;
-            view.Shepre = group.Sphere.Name;
-            view.TypeShepre = group.Sphere.TypeSphere;
-            view.Axis = group.Axis.Name;
-            view.TypeAxis = group.Axis.TypeAxis;
-            view.ProcessLevelOne = proc.ProcessLevelOne?.Name;
-            view.Area = proc.ProcessLevelOne?.Area?.Name;
-            view.ProcessLevelTwo = proc.Name;
-
+            ViewListOpportunityLine view = new ViewListOpportunityLine
+            {
+              Occupation = item.Name,
+              Group = item.Group.Name,
+              LineGroup = item.Group.Line,
+              Shepre = group.Sphere.Name,
+              TypeShepre = group.Sphere.TypeSphere,
+              Axis = group.Axis.Name,
+              TypeAxis = group.Axis.TypeAxis,
+              ProcessLevelOne = proc.ProcessLevelOne?.Name,
+              Area = proc.ProcessLevelOne?.Area?.Name,
+              ProcessLevelTwo = proc.Name
+            };
             list.Add(view);
           }
-
         }
-
         return list.OrderBy(p => p.Area).ThenBy(p => p.TypeShepre).ThenBy(p => p.TypeAxis)
           .ThenBy(p => p.LineGroup).ThenBy(p => p.ProcessLevelOne)
           .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation).ToList();
@@ -4054,7 +4049,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     #endregion Infra
 
 
