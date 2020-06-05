@@ -44,7 +44,7 @@ namespace IntegrationClient.Service
         service = serviceConfiguration;
         Message = string.Empty;
         Status = EnumStatusService.Ok;
-        pathLogs = string.Format("{0}{1}_{2}/integration", AppDomain.CurrentDomain.BaseDirectory, Person.NameAccount, Person.IdAccount);
+        pathLogs = string.Format("{0}{1}_{2}/integration", AppDomain.CurrentDomain.BaseDirectory, Person.NameAccount.Replace("/","_").Replace(".","_").Replace("|","_"), Person.IdAccount);
         if (!Directory.Exists(pathLogs))
         {
           _ = Directory.CreateDirectory(pathLogs);

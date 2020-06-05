@@ -42,7 +42,7 @@ namespace IntegrationClient.DatabaseTools.SqlServerTools
       {
         if (mDbConnecion == null)
         {
-          mDbConnecion = new SqlConnection(String.Concat(GetStringConnection()));
+          mDbConnecion = new SqlConnection(string.Concat(GetStringConnection()));
           mDbConnecion.Open();
         }
       }

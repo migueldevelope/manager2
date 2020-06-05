@@ -23,14 +23,14 @@ namespace IntegrationClient
       {
         serviceConfiguration = new ConfigurationService(Program.PersonLogin);
         Text = "Configuração da Importãção de Colaboradores";
-        CboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
-        CboMode.SelectedIndex = CboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
-        CboVersion.DataSource = Enum.GetValues(typeof(EnumIntegrationVersion));
-        CboVersion.SelectedIndex = CboVersion.FindStringExact(serviceConfiguration.Param.Version.ToString());
         CboChave.DataSource = Enum.GetValues(typeof(EnumIntegrationKey));
+        CboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
+        CboMode.DataSource = Enum.GetValues(typeof(EnumIntegrationMode));
+        CboVersion.DataSource = Enum.GetValues(typeof(EnumIntegrationVersion));
+        CboMode.SelectedIndex = CboMode.FindStringExact(serviceConfiguration.Param.Mode.ToString());
+        CboVersion.SelectedIndex = CboVersion.FindStringExact(serviceConfiguration.Param.Version.ToString());
         CboChave.SelectedIndex = CboChave.FindStringExact(serviceConfiguration.Param.IntegrationKey.ToString());
         txtDatCul.Text = string.IsNullOrEmpty(serviceConfiguration.Param.CultureDate) ? "en-US" : serviceConfiguration.Param.CultureDate;
-        CboDatabaseType.DataSource = Enum.GetValues(typeof(EnumDatabaseType));
       }
       catch (Exception ex)
       {
