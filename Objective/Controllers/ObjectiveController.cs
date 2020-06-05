@@ -338,6 +338,18 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
+    [Route("getobjectiveeditresponsible")]
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditResponsible()
+    {
+      return await Task.Run(() => service.GetObjectiveEditResponsible());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
     [Route("getlistresponsabile")]
     public async Task<List<ViewListPersonPhoto>> GetListResponsabile()
     {

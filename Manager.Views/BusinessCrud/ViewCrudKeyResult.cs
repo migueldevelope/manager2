@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Manager.Views.BusinessCrud
 {
-  public class ViewCrudKeyResult:_ViewCrudBase
+  public class ViewCrudKeyResult : _ViewCrudBase
   {
     public EnumTypeKeyResult TypeKeyResult { get; set; }
     public decimal QuantityGoal { get; set; }
@@ -16,6 +16,11 @@ namespace Manager.Views.BusinessCrud
     public string Description { get; set; }
     public byte Weight { get; set; }
     public ViewListObjective Objective { get; set; }
-    public List<ViewListPersonPhoto> Participants { get; set; }
+    public EnumTypeCheckin TypeCheckin { get; set; }
+    public EnumTypeBinary TypeBinary { get; set; }
+    public decimal Binary { get; set; }
+    public decimal Achievement { get; set; }
+    public List<ViewCrudParticipantKeyResult> ParticipantsAdd { get; set; }
+    public List<ViewListPersonPhoto> ParticipantsGet { get; set; }
   }
 }
