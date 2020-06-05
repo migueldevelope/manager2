@@ -500,7 +500,7 @@ namespace Manager.Services.Specific
         {
           if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
           {
-            var team = persons.Where(p => p.Manager._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+            var team = persons.Where(p => p.Manager?._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
             {
               Name = p.User.Name,
               Photo = p.User.PhotoUrl,
@@ -648,17 +648,21 @@ namespace Manager.Services.Specific
         {
           if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
           {
-            var team = persons.Where(p => p.Manager._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+            var team = persons.Where(p => p.Manager?._id == item._idPerson).ToList();
+            if(team != null)
             {
-              Name = p.User.Name,
-              Photo = p.User.PhotoUrl,
-              _id = p._id,
-              TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
-            });
-            foreach (var person in team)
-            {
-              view.ParticipantsGet.Add(person);
+              foreach (var person in team.Select(p => new ViewListPersonPhotoKeyResult()
+              {
+                Name = p.User.Name,
+                Photo = p.User.PhotoUrl,
+                _id = p._id,
+                TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
+              }))
+              {
+                view.ParticipantsGet.Add(person);
+              }
             }
+            
           }
           else
           {
