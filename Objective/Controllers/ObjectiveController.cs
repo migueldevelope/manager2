@@ -350,10 +350,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getlistresponsabile")]
-    public async Task<List<ViewListPersonPhoto>> GetListResponsabile()
+    [Route("getlistmanager")]
+    public async Task<List<ViewListPersonPhoto>> GetListManager()
     {
-      return await Task.Run(() => service.GetListResponsabile());
+      return await Task.Run(() => service.GetListManager());
     }
 
 
@@ -363,10 +363,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getlisteditors")]
-    public async Task<List<ViewListPersonPhoto>> GetListEditors()
+    [Route("getlistemployee")]
+    public async Task<List<ViewListPersonPhoto>> GetListEmployee()
     {
-      return await Task.Run(() => service.GetListEditors());
+      return await Task.Run(() => service.GetListEmployee());
     }
 
     /// <summary>

@@ -251,7 +251,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPersonPhoto> GetListResponsabile()
+    public List<ViewListPersonPhoto> GetListManager()
     {
       try
       {
@@ -264,7 +264,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListPersonPhoto> GetListEditors()
+    public List<ViewListPersonPhoto> GetListEmployee()
     {
       try
       {
