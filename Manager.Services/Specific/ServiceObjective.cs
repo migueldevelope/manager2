@@ -409,7 +409,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Binary = kr.Binary;
 
             var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id).ToList();
-            
+
             if (pendingchecking.Count() > 0)
             {
               viewKeyResult.PendingChecking = false;
@@ -425,7 +425,7 @@ namespace Manager.Services.Specific
             {
               viewKeyResult.PendingChecking = true;
             }
-            
+
             viewKeyResult.Achievement = kr.Achievement;
             if (viewKeyResult.Achievement <= 60)
               viewKeyResult.LevelAchievement = 0;
@@ -490,7 +490,6 @@ namespace Manager.Services.Specific
             Weight = view.Weight,
             Reached = false,
             ParticipantsAdd = view.ParticipantsAdd,
-            ParticipantsGet = view.ParticipantsGet,
             Objective = objective.GetViewList()
           }).Result;
 
@@ -610,12 +609,18 @@ namespace Manager.Services.Specific
         var model = serviceKeyResult.GetNewVersion(p => p._id == id).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var view = model.GetViewCrud();
-        view.ParticipantsGet = new List<ViewListPersonPhoto>();
+        view.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
         foreach (var item in model.ParticipantsAdd)
         {
           if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
           {
-            var team = persons.Where(p => p.Manager._id == item._idPerson).Select(p => p.GetViewListPhoto());
+            var team = persons.Where(p => p.Manager._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+            {
+              Name = p.User.Name,
+              Photo = p.User.PhotoUrl,
+              _id = p._id,
+              TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
+            });
             foreach (var person in team)
             {
               view.ParticipantsGet.Add(person);
@@ -623,7 +628,15 @@ namespace Manager.Services.Specific
           }
           else
           {
-            view.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson).FirstOrDefault().GetViewListPhoto());
+            view.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson)
+              .Select(p => new ViewListPersonPhotoKeyResult()
+              {
+                Name = p.User.Name,
+                Photo = p.User.PhotoUrl,
+                _id = p._id,
+                TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+              })
+              .FirstOrDefault());
           }
 
         }
