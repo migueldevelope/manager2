@@ -6,7 +6,7 @@ using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using SendGrid;
 namespace Manager.Controllers
 {
   /// <summary>
@@ -338,10 +338,10 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("getobjectiveeditresponsible")]
-    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditResponsible()
+    [Route("getobjectiveeditparticipant")]
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditParticipant()
     {
-      return await Task.Run(() => service.GetObjectiveEditResponsible());
+      return await Task.Run(() => service.GetObjectiveEditParticipant());
     }
 
     /// <summary>
@@ -388,9 +388,12 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getdetailresposibleobjective")]
-    public async Task<List<ViewListDetailResposibleObjective>> GetDetailResposibleObjective()
+    public async Task<List<ViewListDetailResposibleObjective>> GetDetailResposibleObjective(int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.GetDetailResposibleObjective());
+      long total = 0;
+      var result = service.GetDetailResposibleObjective(ref total, count, page, filter);
+      //Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>

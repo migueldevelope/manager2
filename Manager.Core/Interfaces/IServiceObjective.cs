@@ -42,7 +42,7 @@ namespace Manager.Core.Interfaces
 
     ViewListObjectiveResponsibleCard GetResponsibleCard();
 
-    List<ViewListDetailResposibleObjective> GetDetailResposibleObjective();
+    List<ViewListDetailResposibleObjective> GetDetailResposibleObjective(ref long total, int count = 10, int page = 1, string filter = "");
 
     ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view);
 
@@ -70,6 +70,6 @@ namespace Manager.Core.Interfaces
 
     List<ViewListPersonPhoto> GetListEmployee();
 
-    List<ViewListObjectiveEdit> GetObjectiveEditResponsible();
+    List<ViewListObjectiveEdit> GetObjectiveEditParticipant();
   }
 }

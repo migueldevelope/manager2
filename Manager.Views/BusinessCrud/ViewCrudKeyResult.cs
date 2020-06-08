@@ -21,6 +21,6 @@ namespace Manager.Views.BusinessCrud
     public decimal Binary { get; set; }
     public decimal Achievement { get; set; }
     public List<ViewCrudParticipantKeyResult> ParticipantsAdd { get; set; }
-    public List<ViewListPersonPhoto> ParticipantsGet { get; set; }
+    public List<ViewListPersonPhotoKeyResult> ParticipantsGet { get; set; }
   }
 }

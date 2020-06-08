@@ -6,5 +6,6 @@ namespace Manager.Views.BusinessCrud
   {
     public EnumTypeParticipantKeyResult TypeParticipantKeyResult { get; set; }
     public string _idPerson {get;set;}
+    public string Name { get; set; }
   }
 }

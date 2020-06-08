@@ -180,13 +180,19 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.ObjectiveController.GetListResponsabile">
+        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditParticipant">
             <summary>
             
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.ObjectiveController.GetListEditors">
+        <member name="M:Manager.Controllers.ObjectiveController.GetListManager">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetListEmployee">
             <summary>
             
             </summary>
@@ -198,7 +204,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.ObjectiveController.GetDetailResposibleObjective">
+        <member name="M:Manager.Controllers.ObjectiveController.GetDetailResposibleObjective(System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
