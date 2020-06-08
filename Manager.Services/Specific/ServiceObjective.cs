@@ -578,29 +578,6 @@ namespace Manager.Services.Specific
         model.Sense = view.Sense;
         model.Description = view.Description;
         model.Weight = view.Weight;
-        serviceKeyResult.Update(model, null).Wait();
-        return model.GetViewCrud();
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    public ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view)
-    {
-      try
-      {
-        var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
-        model.QualityResult = view.Text;
-        model.QuantityResult = result;
-
-        model.Achievement = (achievement / 100) * model.QuantityGoal;
-
-        if (model.Achievement >= 100)
-          model.Reached = true;
-
-        var objective = serviceObjective.GetNewVersion(p => p._id == model.Objective._id).Result;
 
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == model.Objective._id).Result;
         var reached = true;
@@ -615,7 +592,6 @@ namespace Manager.Services.Specific
           objective.Reached = true;
           var i = serviceObjective.Update(objective, null);
         }
-
 
         serviceKeyResult.Update(model, null).Wait();
 
@@ -655,6 +631,48 @@ namespace Manager.Services.Specific
 
 
         return viewreturn;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view)
+    {
+      try
+      {
+        var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
+        model.QualityResult = view.Text;
+        model.QuantityResult = result;
+
+        model.Achievement = (achievement / 100) * model.QuantityGoal;
+
+        if (model.Achievement >= 100)
+          model.Reached = true;
+
+        var objective = serviceObjective.GetNewVersion(p => p._id == model.Objective._id).Result;
+
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == model.Objective._id).Result;
+        var reached = true;
+        foreach (var item in keyresults)
+        {
+          if (item.Reached == false)
+            reached = false;
+        }
+
+        if (reached)
+        {
+          objective.Reached = true;
+          var i = serviceObjective.Update(objective, null);
+        }
+
+
+        serviceKeyResult.Update(model, null).Wait();
+
+       
+
+        return model.GetViewCrud();
       }
       catch (Exception e)
       {
