@@ -384,11 +384,13 @@ namespace Manager.Services.Specific
         foreach (var obj in objectives)
         {
           var view = new ViewListObjectiveEdit();
-          keyresults = keyresults.Where(p => p._id == obj._id).ToList();
+          keyresults = keyresults.Where(p => p.Objective._id == obj._id).ToList();
 
           var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result
             .Where(p => ids.Contains(p._idObjective));
 
+          view.Description = obj.Description;
+          view.Detail = obj.Detail;
           view.StartDate = obj.StartDate;
           view.EndDate = obj.EndDate;
           view._id = obj._id;
