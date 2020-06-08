@@ -591,7 +591,42 @@ namespace Manager.Services.Specific
 
         serviceKeyResult.Update(model, null).Wait();
 
-        return model.GetViewCrud();
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var viewreturn = model.GetViewCrud();
+        viewreturn.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
+        foreach (var item in model.ParticipantsAdd)
+        {
+          if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+          {
+            var team = persons.Where(p => p.Manager?._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+            {
+              Name = p.User.Name,
+              Photo = p.User.PhotoUrl,
+              _id = p._id,
+              TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
+            });
+            foreach (var person in team)
+            {
+              viewreturn.ParticipantsGet.Add(person);
+            }
+          }
+          else
+          {
+            viewreturn.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson)
+              .Select(p => new ViewListPersonPhotoKeyResult()
+              {
+                Name = p.User.Name,
+                Photo = p.User.PhotoUrl,
+                _id = p._id,
+                TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+              })
+              .FirstOrDefault());
+          }
+
+        }
+
+
+        return viewreturn;
       }
       catch (Exception e)
       {
