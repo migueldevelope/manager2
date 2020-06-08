@@ -339,7 +339,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListObjectiveEdit> GetObjectiveEditResponsible()
+    public List<ViewListObjectiveEdit> GetObjectiveEditParticipant()
     {
       try
       {
