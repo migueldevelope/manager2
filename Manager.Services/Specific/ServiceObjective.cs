@@ -582,6 +582,7 @@ namespace Manager.Services.Specific
         model.Sense = view.Sense;
         model.Description = view.Description;
         model.Weight = view.Weight;
+        model.ParticipantsAdd = view.ParticipantsAdd;
 
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == model.Objective._id).Result;
         var reached = true;
