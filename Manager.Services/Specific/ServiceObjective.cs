@@ -177,7 +177,7 @@ namespace Manager.Services.Specific
           {
             if (par.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
             {
-              var team = persons.Where(p => p.Manager._id == par._idPerson).Select(p => p.GetViewListPhoto());
+              var team = persons.Where(p => p.Manager?._id == par._idPerson).Select(p => p.GetViewListPhoto());
               foreach (var person in team)
               {
                 if (person._id == _user._idPerson)
