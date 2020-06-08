@@ -347,15 +347,43 @@ namespace Manager.Services.Specific
 
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
-          .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson);
+        //var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+        // .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson);
 
-        var ids = objectives.Select(p => p._id).ToList();
+        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var keyresults = new List<KeyResult>();
+        foreach (var item in keyresultsprevious)
+        {
+          foreach (var par in item.ParticipantsAdd)
+          {
+            if (par.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+            {
+              var team = persons.Where(p => p.Manager?._id == par._idPerson).Select(p => p.GetViewListPhoto());
+              foreach (var person in team)
+              {
+                if (person._id == _user._idPerson)
+                  keyresults.Add(item);
+              }
+            }
+            else
+            {
+              if (par._idPerson == _user._idPerson)
+                keyresults.Add(item);
+            }
+          }
+        }
+
+        var ids = keyresults.Select(p => p.Objective._id).ToList();
+
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+         .Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
         {
           var view = new ViewListObjectiveEdit();
-          var keyresults = serviceKeyResult.GetAllNewVersion(p => p._id == obj._id).Result;
+          keyresults = keyresults.Where(p => p._id == obj._id).ToList();
+
           var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result
             .Where(p => ids.Contains(p._idObjective));
 
@@ -684,7 +712,7 @@ namespace Manager.Services.Specific
           if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
           {
             var team = persons.Where(p => p.Manager?._id == item._idPerson).ToList();
-            if(team != null)
+            if (team != null)
             {
               foreach (var person in team.Select(p => new ViewListPersonPhotoKeyResult()
               {
@@ -697,7 +725,7 @@ namespace Manager.Services.Specific
                 view.ParticipantsGet.Add(person);
               }
             }
-            
+
           }
           else
           {
