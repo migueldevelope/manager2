@@ -277,7 +277,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListDetailResposibleObjective> GetDetailResposibleObjective()
+    public List<ViewListDetailResposibleObjective> GetDetailResposibleObjective(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -285,7 +285,8 @@ namespace Manager.Services.Specific
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active)
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active
+        && p.Description.Contains(filter))
         .Result.Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
         || p.Responsible._id == _user._idPerson);
 
@@ -330,8 +331,9 @@ namespace Manager.Services.Specific
 
           list.Add(view);
         }
-
-        return list;
+        var skip = count * (page - 1);
+        
+        return list.OrderBy(p => p.Description).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
