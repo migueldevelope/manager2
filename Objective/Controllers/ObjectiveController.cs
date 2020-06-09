@@ -364,6 +364,20 @@ namespace Manager.Controllers
       return await Task.Run(() => service.GetObjectiveEditParticipant());
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idobjective"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getobjectiveeditresponsible/{idobjective}")]
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditResponsible(string idobjective)
+    {
+      return await Task.Run(() => service.GetObjectiveEditResponsible(idobjective));
+    }
+
     /// <summary>
     /// 
     /// </summary>
