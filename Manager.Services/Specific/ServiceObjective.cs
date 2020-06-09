@@ -806,8 +806,10 @@ namespace Manager.Services.Specific
         model.QualityResult = view.Text;
         model.QuantityResult = result;
 
-        if(view.Text == string.Empty)
+        if ((model.TypeKeyResult == EnumTypeKeyResult.Progress) || (model.TypeKeyResult == EnumTypeKeyResult.Quantity))
           model.Achievement = (model.QuantityResult / 100) * model.QuantityGoal;
+        else
+          model.Achievement = achievement;
 
         if (model.Achievement >= 100)
           model.Reached = true;
