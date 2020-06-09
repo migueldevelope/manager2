@@ -806,7 +806,8 @@ namespace Manager.Services.Specific
         model.QualityResult = view.Text;
         model.QuantityResult = result;
 
-        model.Achievement = (achievement / 100) * model.QuantityGoal;
+        if(view.Text == string.Empty)
+          model.Achievement = (model.QuantityResult / 100) * model.QuantityGoal;
 
         if (model.Achievement >= 100)
           model.Reached = true;
@@ -1280,6 +1281,8 @@ namespace Manager.Services.Specific
         model._idPerson = view._idPerson;
         model.LevelTrust = view.LevelTrust;
         model.Date = DateTime.Now;
+        model.Achievement = view.Achievement;
+        model.QualityResult = view.QualityResult;
 
         servicePendingCheckinObjective.Update(model, null).Wait();
         return model.GetViewCrud();
