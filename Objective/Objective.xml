@@ -25,6 +25,16 @@
             <param name="filter">Filtro para o nome da empresa</param>
             <returns>Lista de empresas cadastradas</returns>
         </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetImpedimentsIniciatives(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idkeyresult"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
         <member name="M:Manager.Controllers.ObjectiveController.Post(Manager.Views.BusinessCrud.ViewCrudObjective)">
             <summary>
             Cadastrar uma nova empresa

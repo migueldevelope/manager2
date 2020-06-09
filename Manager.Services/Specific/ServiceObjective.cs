@@ -467,10 +467,10 @@ namespace Manager.Services.Specific
             var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
             && p.Week == week && p._idPerson == _user._idPerson).ToList();
 
-            if (pendingchecking.Count() > 0)
+            if (pendingcheckingkey.Count() > 0)
             {
               viewKeyResult.PendingChecking = false;
-              viewKeyResult._idPendingChecking = pendingchecking.FirstOrDefault()._id;
+              viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
               var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
