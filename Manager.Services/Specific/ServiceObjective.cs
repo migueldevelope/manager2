@@ -332,8 +332,32 @@ namespace Manager.Services.Specific
           list.Add(view);
         }
         var skip = count * (page - 1);
-        
+
         return list.OrderBy(p => p.Description).Skip(skip).Take(count).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewCrudImpedimentsIniciatives> GetImpedimentsIniciatives(string idkeyresult, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        var pendingcheckings = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == idkeyresult).Result;
+        var list = new List<ViewCrudImpedimentsIniciatives>();
+        foreach (var item in pendingcheckings)
+        {
+          var view = new ViewCrudImpedimentsIniciatives();
+          list.Concat(item.Impediments);
+          list.Concat(item.Iniciatives);
+        }
+
+        total = list.Count();
+
+        var skip = count * (page - 1);
+        return list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Date).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -440,11 +464,13 @@ namespace Manager.Services.Specific
             viewKeyResult.TypeBinary = kr.TypeBinary;
             viewKeyResult.Binary = kr.Binary;
 
-            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id).ToList();
+            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
+            && p.Week == week && p._idPerson == _user._idPerson).ToList();
 
             if (pendingchecking.Count() > 0)
             {
               viewKeyResult.PendingChecking = false;
+              viewKeyResult._idPendingChecking = pendingchecking.FirstOrDefault()._id;
               var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
@@ -675,7 +701,7 @@ namespace Manager.Services.Specific
 
         serviceKeyResult.Update(model, null).Wait();
 
-       
+
 
         return model.GetViewCrud();
       }
@@ -974,6 +1000,8 @@ namespace Manager.Services.Specific
       {
         var model = servicePendingCheckinObjective.GetNewVersion(p => p._id == idchecking).Result;
         view._id = ObjectId.GenerateNewId().ToString();
+        view.TypeImpedimentsIniciatives = EnumTypeImpedimentsIniciatives.Impediments;
+        view.Date = DateTime.Now;
         view.Like = new List<ViewCrudLike>();
         view.Deslike = new List<ViewCrudLike>();
         model.Impediments.Add(view);
@@ -1014,6 +1042,8 @@ namespace Manager.Services.Specific
       {
         var model = servicePendingCheckinObjective.GetNewVersion(p => p._id == idchecking).Result;
         view._id = ObjectId.GenerateNewId().ToString();
+        view.TypeImpedimentsIniciatives = EnumTypeImpedimentsIniciatives.Iniciatives;
+        view.Date = DateTime.Now;
         view.Like = new List<ViewCrudLike>();
         view.Deslike = new List<ViewCrudLike>();
         model.Iniciatives.Add(view);

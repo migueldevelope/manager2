@@ -1,5 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Manager.Views.Enumns;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace Manager.Views.BusinessCrud
@@ -12,5 +14,7 @@ namespace Manager.Views.BusinessCrud
     public string Description { get; set; }
     public List<ViewCrudLike> Like { get; set; }
     public List<ViewCrudLike> Deslike { get; set; }
+    public DateTime? Date { get; set; }
+    public EnumTypeImpedimentsIniciatives TypeImpedimentsIniciatives { get; set; }
   }
 }
