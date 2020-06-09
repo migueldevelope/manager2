@@ -350,8 +350,8 @@ namespace Manager.Services.Specific
         foreach (var item in pendingcheckings)
         {
           var view = new ViewCrudImpedimentsIniciatives();
-          list.Concat(item.Impediments);
-          list.Concat(item.Iniciatives);
+          list = list.Concat(item.Impediments).ToList();
+          list = list.Concat(item.Iniciatives).ToList();
         }
 
         total = list.Count();

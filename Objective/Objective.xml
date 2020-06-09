@@ -196,6 +196,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditResponsible(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="idobjective"></param>
+            <returns></returns>
+        </member>
         <member name="M:Manager.Controllers.ObjectiveController.GetListManager">
             <summary>
             
