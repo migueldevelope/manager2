@@ -11,6 +11,8 @@ namespace Manager.Views.BusinessCrud
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string _id {get;set;}
+    public string _idPerson { get; set; }
+    public string NamePerson { get; set; }
     public string Description { get; set; }
     public List<ViewCrudLike> Like { get; set; }
     public List<ViewCrudLike> Deslike { get; set; }

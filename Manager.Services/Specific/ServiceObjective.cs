@@ -1138,6 +1138,8 @@ namespace Manager.Services.Specific
         view._id = ObjectId.GenerateNewId().ToString();
         view.TypeImpedimentsIniciatives = EnumTypeImpedimentsIniciatives.Impediments;
         view.Date = DateTime.Now;
+        view._idPerson = _user._idPerson;
+        view.NamePerson = _user.NamePerson;
         view.Like = new List<ViewCrudLike>();
         view.Deslike = new List<ViewCrudLike>();
         model.Impediments.Add(view);
@@ -1181,6 +1183,8 @@ namespace Manager.Services.Specific
         view._id = ObjectId.GenerateNewId().ToString();
         view.TypeImpedimentsIniciatives = EnumTypeImpedimentsIniciatives.Iniciatives;
         view.Date = DateTime.Now;
+        view._idPerson = _user._idPerson;
+        view.NamePerson = _user.NamePerson;
         view.Like = new List<ViewCrudLike>();
         view.Deslike = new List<ViewCrudLike>();
         model.Iniciatives.Add(view);
