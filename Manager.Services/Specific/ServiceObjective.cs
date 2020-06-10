@@ -414,7 +414,6 @@ namespace Manager.Services.Specific
         foreach (var obj in objectives)
         {
           var view = new ViewListObjectiveEdit();
-          keyresults = keyresults.Where(p => p.Objective._id == obj._id).ToList();
 
           var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result
             .Where(p => ids.Contains(p._idObjective));
@@ -427,8 +426,8 @@ namespace Manager.Services.Specific
           view.Editors = obj.Editors;
           view.Responsible = obj.Responsible;
 
-          if (keyresults.Count() > 0)
-            view.AverageAchievement = keyresults.Average(p => p.Achievement);
+          if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
+            view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
           if (pendingchecking.Count() > 0)
           {
             view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
@@ -452,7 +451,7 @@ namespace Manager.Services.Specific
 
           view.KeyResults = new List<ViewListKeyResultsEdit>();
 
-          foreach (var kr in keyresults)
+          foreach (var kr in keyresults.Where(p => p.Objective._id == obj._id))
           {
             var viewKeyResult = new ViewListKeyResultsEdit();
             viewKeyResult._id = kr._id;
@@ -500,7 +499,7 @@ namespace Manager.Services.Specific
             else
               viewKeyResult.LevelAchievement = 3;
 
-
+            
 
 
             view.KeyResults.Add(viewKeyResult);
