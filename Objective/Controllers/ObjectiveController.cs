@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Web;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SendGrid;
+using Microsoft.AspNetCore.Http;
+
 namespace Manager.Controllers
 {
   /// <summary>
@@ -14,7 +15,7 @@ namespace Manager.Controllers
   /// </summary>
   [Produces("application/json")]
   [Route("objective")]
-  public class ObjectiveController
+  public class ObjectiveController : Controller
   {
     private readonly IServiceObjective service;
 
@@ -46,7 +47,8 @@ namespace Manager.Controllers
     {
       long total = 0;
       List<ViewListObjective> result = service.List(ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
+      
       return await Task.Run(() => result);
     }
 
@@ -65,7 +67,7 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.GetImpedimentsIniciatives(idkeyresult, ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
 
@@ -133,7 +135,7 @@ namespace Manager.Controllers
     {
       long total = 0;
       List<ViewListKeyResult> result = service.ListKeyResult(ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
     /// <summary>
@@ -151,7 +153,7 @@ namespace Manager.Controllers
     {
       long total = 0;
       List<ViewListKeyResult> result = service.ListKeyResult(idobjective, ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
     /// <summary>
@@ -218,7 +220,7 @@ namespace Manager.Controllers
     {
       long total = 0;
       List<ViewListDimension> result = service.ListDimension(ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
     /// <summary>
@@ -285,7 +287,7 @@ namespace Manager.Controllers
     {
       long total = 0;
       List<ViewListPendingCheckinObjective> result = service.ListPendingCheckinObjective(ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
 
@@ -426,7 +428,7 @@ namespace Manager.Controllers
     {
       long total = 0;
       var result = service.GetDetailResposibleObjective(ref total, count, page, filter);
-      //Response.Headers.Add("x-total-count", total.ToString());
+      Response.Headers.Add("x-total-count", total.ToString());
       return await Task.Run(() => result);
     }
 

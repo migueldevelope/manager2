@@ -335,6 +335,7 @@ namespace Manager.Services.Specific
           list.Add(view);
         }
         var skip = count * (page - 1);
+        total = list.Count();
 
         return list.OrderBy(p => p.Description).Skip(skip).Take(count).ToList();
       }
@@ -360,6 +361,8 @@ namespace Manager.Services.Specific
         total = list.Count();
 
         var skip = count * (page - 1);
+        total = list.Count();
+
         return list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Date).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
