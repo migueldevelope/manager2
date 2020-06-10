@@ -227,7 +227,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.ObjectiveController.UpdateResultKeyResult(Manager.Views.BusinessList.ViewText,System.String,System.Decimal,System.Decimal)">
+        <member name="M:Manager.Controllers.ObjectiveController.UpdateResultKeyResult(Manager.Views.BusinessList.ViewText,System.String,System.String,System.Decimal,System.Decimal)">
             <summary>
             
             </summary>
@@ -235,6 +235,7 @@
             <param name="achievement"></param>
             <param name="result"></param>
             <param name="view"></param>
+            <param name="idcheckin"></param>
             <returns></returns>
         </member>
         <member name="M:Manager.Controllers.ObjectiveController.AddParticipants(Manager.Views.BusinessCrud.ViewCrudParticipantKeyResult,System.String)">

@@ -293,6 +293,7 @@ namespace Manager.Services.Specific
         .Result.Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
         || p.Responsible._id == _user._idPerson).ToList();
 
+
         foreach (var item in objectives)
         {
           var keyresults = serviceKeyResult.GetAllNewVersion(p => item._id == p.Objective._id).Result;
@@ -300,13 +301,14 @@ namespace Manager.Services.Specific
           && p.Week == week && p._idObjective == item._id).Result;
 
           var view = new ViewListDetailResposibleObjective();
+          
           if (pendingchecking.Count() > 0)
           {
             view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
             view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
 
             var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
-
+            view.AverageTrust = trust;
             if (trust <= 50)
               view.LevelTrust = 0;
             else if ((trust > 50) && (trust <= 75))
@@ -320,6 +322,9 @@ namespace Manager.Services.Specific
           if (keyresults.Count() > 0)
           {
             var achievement = keyresults.Average(p => p.Achievement);
+
+
+            view.AverageAchievement = achievement;
 
             if (achievement <= 60)
               view.LevelAchievement = 0;
