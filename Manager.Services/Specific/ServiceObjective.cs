@@ -506,7 +506,8 @@ namespace Manager.Services.Specific
           list.Add(view);
         }
 
-
+        list = list.Where(p => p.KeyResults != null).ToList();
+        list = list.Where(p => p.KeyResults.Count() > 0).ToList();
         return list;
       }
       catch (Exception e)
