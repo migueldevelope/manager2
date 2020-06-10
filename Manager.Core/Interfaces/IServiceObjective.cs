@@ -44,7 +44,7 @@ namespace Manager.Core.Interfaces
 
     List<ViewListDetailResposibleObjective> GetDetailResposibleObjective(ref long total, int count = 10, int page = 1, string filter = "");
 
-    ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view);
+    ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, string idcheckin, decimal achievement, decimal result, ViewText view);
 
     string AddParticipants(string idkeyresult, ViewCrudParticipantKeyResult view);
 

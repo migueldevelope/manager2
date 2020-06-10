@@ -805,11 +805,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, decimal achievement, decimal result, ViewText view)
+    public ViewCrudKeyResult UpdateResultKeyResult(string idkeyresult, string idcheckin, decimal achievement, decimal result, ViewText view)
     {
       try
       {
         var model = serviceKeyResult.GetNewVersion(p => p._id == idkeyresult).Result;
+        var checkin = servicePendingCheckinObjective.GetNewVersion(p => p._id == idcheckin).Result;
+
+
         model.QualityResult = view.Text;
         model.QuantityResult = result;
 
@@ -840,6 +843,11 @@ namespace Manager.Services.Specific
 
         serviceKeyResult.Update(model, null).Wait();
 
+        checkin.QualityResult = view.Text;
+        checkin.QuantityResult = result;
+        checkin.Achievement = model.Achievement;
+
+        servicePendingCheckinObjective.Update(checkin, null).Wait();
 
 
         return model.GetViewCrud();

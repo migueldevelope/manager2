@@ -48,7 +48,7 @@ namespace Manager.Controllers
       long total = 0;
       List<ViewListObjective> result = service.List(ref total, count, page, filter);
       Response.Headers.Add("x-total-count", total.ToString());
-      
+
       return await Task.Run(() => result);
     }
 
@@ -439,13 +439,14 @@ namespace Manager.Controllers
     /// <param name="achievement"></param>
     /// <param name="result"></param>
     /// <param name="view"></param>
+    /// <param name="idcheckin"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("updateresultkeyresult/{idkeyresult}/{achievement}/{result}")]
-    public async Task<ViewCrudKeyResult> UpdateResultKeyResult([FromBody]ViewText view, string idkeyresult, decimal achievement, decimal result)
+    [Route("updateresultkeyresult/{idkeyresult}/{achievement}/{result}/{idcheckin}")]
+    public async Task<ViewCrudKeyResult> UpdateResultKeyResult([FromBody]ViewText view, string idkeyresult, string idcheckin, decimal achievement, decimal result)
     {
-      return await Task.Run(() => service.UpdateResultKeyResult(idkeyresult, achievement, result, view));
+      return await Task.Run(() => service.UpdateResultKeyResult(idkeyresult, idcheckin, achievement, result, view));
     }
 
     /// <summary>
