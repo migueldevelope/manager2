@@ -1161,6 +1161,7 @@ namespace Manager.Services.Specific
           {
             model.Impediments.Remove(item);
             var i = servicePendingCheckinObjective.Update(model, null);
+            return model.Impediments;
           }
 
         }
