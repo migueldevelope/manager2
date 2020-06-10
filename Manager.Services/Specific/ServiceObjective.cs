@@ -80,6 +80,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        if (view.Editors == null)
+          view.Editors = new List<ViewListPersonPhoto>();
+
         var model = serviceObjective.InsertNewVersion(new Objective()
         {
           _id = view._id,
@@ -288,7 +291,7 @@ namespace Manager.Services.Specific
         var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active
         && p.Description.Contains(filter))
         .Result.Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
-        || p.Responsible._id == _user._idPerson);
+        || p.Responsible._id == _user._idPerson).ToList();
 
         foreach (var item in objectives)
         {
@@ -662,6 +665,7 @@ namespace Manager.Services.Specific
       try
       {
         Objective objective = serviceObjective.GetNewVersion(p => p._id == view.Objective._id).Result;
+
         var model = serviceKeyResult.InsertNewVersion(
           new KeyResult()
           {
