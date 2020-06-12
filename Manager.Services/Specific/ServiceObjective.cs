@@ -119,7 +119,11 @@ namespace Manager.Services.Specific
         model.StausObjective = view.StausObjective;
         model.Dimension = view.Dimension;
         model.Responsible = view.Responsible;
-        model.Editors = view.Editors;
+        if (model.Editors == null)
+          model.Editors = view.Editors;
+        else
+          model.Editors = new List<ViewListPersonPhoto>();
+
         serviceObjective.Update(model, null).Wait();
 
 
