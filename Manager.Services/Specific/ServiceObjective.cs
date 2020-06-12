@@ -496,7 +496,6 @@ namespace Manager.Services.Specific
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
               viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
             }
-            
 
             foreach (var item in viewKeyResult.ParticipantsAdd)
             {
