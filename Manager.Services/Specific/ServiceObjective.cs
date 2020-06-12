@@ -301,7 +301,7 @@ namespace Manager.Services.Specific
           && p.Week == week && p._idObjective == item._id).Result;
 
           var view = new ViewListDetailResposibleObjective();
-          
+
           if (pendingchecking.Count() > 0)
           {
             view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
@@ -537,7 +537,7 @@ namespace Manager.Services.Specific
             else
               viewKeyResult.LevelAchievement = 3;
 
-            
+
 
 
             view.KeyResults.Add(viewKeyResult);
@@ -1356,7 +1356,14 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return servicePendingCheckinObjective.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+        var view = servicePendingCheckinObjective.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+        var objective = serviceObjective.GetNewVersion(p => p._id == view._idObjective).Result;
+        if ((objective.Responsible._id == _user._idPerson) || (objective.Editors.Where(p => p._id == _user._idPerson).Count() > 0))
+          view.TypePersonObjective = EnumTypePersonObjective.Responsible;
+        else
+          view.TypePersonObjective = EnumTypePersonObjective.Participant;
+
+        return view;
       }
       catch (Exception e)
       {
