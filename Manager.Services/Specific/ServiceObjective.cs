@@ -488,6 +488,16 @@ namespace Manager.Services.Specific
             viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
+            var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
+
+            if(pendingcheckingkeyresult.Count() >0)
+            {
+              viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
+              viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
+              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
+            }
+            
+
             foreach (var item in viewKeyResult.ParticipantsAdd)
             {
               if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)

@@ -13,5 +13,8 @@ namespace Manager.Views.BusinessList
     public bool PendingChecking { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idPendingChecking { get; set; }
+    public long QuantityImpediments { get; set; }
+    public long QuantityIniciatives { get; set; }
+    public decimal AverageTrust { get; set; }
   }
 }
