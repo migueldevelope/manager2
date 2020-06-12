@@ -2014,6 +2014,9 @@ namespace Manager.Services.Specific
               view.NameManager = monitoring.Person.Manager;
               view.NamePerson = monitoring.Person.Name;
               view.NameItem = item.Schooling.Name;
+              view.CommentsManager = monitoring.CommentsManager;
+              view.CommentsPerson = monitoring.CommentsPerson;
+              view.CommentsEnd = monitoring.CommentsEnd;
               if (item.Comments != null)
                 foreach (var comm in item.Comments)
                 {

@@ -420,8 +420,11 @@ namespace Manager.Services.Specific
         {
           var view = new ViewListObjectiveEdit();
 
-          var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result
             .Where(p => ids.Contains(p._idObjective));
+
+          var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
+
 
           view.Description = obj.Description;
           view.Detail = obj.Detail;
@@ -430,6 +433,12 @@ namespace Manager.Services.Specific
           view._id = obj._id;
           view.Editors = obj.Editors;
           view.Responsible = obj.Responsible;
+          if(pendingcheckingprevious.Count() > 0)
+          {
+            view.QuantityImpediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
+            view.QuantityIniciatives = pendingcheckingprevious.Sum(p => p.Iniciatives.Count());
+          }
+          
 
           if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
             view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
