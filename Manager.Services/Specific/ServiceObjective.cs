@@ -473,6 +473,39 @@ namespace Manager.Services.Specific
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
             viewKeyResult.Binary = kr.Binary;
+            viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
+            viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
+            foreach (var item in viewKeyResult.ParticipantsAdd)
+            {
+              if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+              {
+                var team = persons.Where(p => p.Manager?._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+                {
+                  Name = p.User.Name,
+                  Photo = p.User.PhotoUrl,
+                  _id = p._id,
+                  TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
+                });
+                foreach (var person in team)
+                {
+                  viewKeyResult.ParticipantsGet.Add(person);
+                }
+              }
+              else
+              {
+                viewKeyResult.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson)
+                  .Select(p => new ViewListPersonPhotoKeyResult()
+                  {
+                    Name = p.User.Name,
+                    Photo = p.User.PhotoUrl,
+                    _id = p._id,
+                    TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+                  })
+                  .FirstOrDefault());
+              }
+
+            }
+
 
             var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
             && p.Week == week && p._idPerson == _user._idPerson).ToList();
