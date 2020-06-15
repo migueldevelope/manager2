@@ -437,12 +437,12 @@ namespace Manager.Services.Specific
           view._id = obj._id;
           view.Editors = obj.Editors;
           view.Responsible = obj.Responsible;
-          if(pendingcheckingprevious.Count() > 0)
+          if (pendingcheckingprevious.Count() > 0)
           {
             view.QuantityImpediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
             view.QuantityIniciatives = pendingcheckingprevious.Sum(p => p.Iniciatives.Count());
           }
-          
+
 
           if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
             view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
@@ -490,7 +490,7 @@ namespace Manager.Services.Specific
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
             var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
 
-            if(pendingcheckingkeyresult.Count() >0)
+            if (pendingcheckingkeyresult.Count() > 0)
             {
               viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
@@ -1291,11 +1291,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string LikeImpediment(string idimpediment, string idpendingchecking, bool like)
+    public string LikeImpediment(string idimpediment, string idkeyresult, bool like)
     {
       try
       {
-        var model = servicePendingCheckinObjective.GetNewVersion(p => p._id == idpendingchecking).Result;
+        var model = servicePendingCheckinObjective.GetNewVersion(p => p._idKeyResult == idkeyresult).Result;
 
         foreach (var item in model.Impediments)
         {
@@ -1312,7 +1312,7 @@ namespace Manager.Services.Specific
               item.Deslike.Add(view);
           }
         }
-
+        var i = servicePendingCheckinObjective.Update(model, null);
 
         return "like";
       }
@@ -1322,11 +1322,11 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string LikeIniciative(string idiniciatives, string idpendingchecking, bool like)
+    public string LikeIniciative(string idiniciatives, string idkeyresult, bool like)
     {
       try
       {
-        var model = servicePendingCheckinObjective.GetNewVersion(p => p._id == idpendingchecking).Result;
+        var model = servicePendingCheckinObjective.GetNewVersion(p => p._idKeyResult == idkeyresult).Result;
 
         foreach (var item in model.Iniciatives)
         {
@@ -1344,6 +1344,7 @@ namespace Manager.Services.Specific
           }
         }
 
+        var i = servicePendingCheckinObjective.Update(model, null);
 
         return "like";
       }
