@@ -62,9 +62,9 @@ namespace Manager.Core.Interfaces
 
     List<ViewCrudImpedimentsIniciatives> DeleteIniciative(string idcheckin, string idiniciative);
 
-    string LikeImpediment(string idimpediment, string idpendingcheckin, bool like);
+    string LikeImpediment(string idimpediment, string idkeyresult, bool like);
 
-    string LikeIniciative(string idiniciatives, string idpendingcheckin, bool like);
+    string LikeIniciative(string idiniciatives, string idkeyresult, bool like);
 
     List<ViewListPersonPhoto> GetListManager();
 

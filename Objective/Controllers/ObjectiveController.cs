@@ -565,30 +565,30 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <param name="idimpediment"></param>
-    /// <param name="idpendingcheckin"></param>
+    /// <param name="idkeyresult"></param>
     /// <param name="like"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("likeimpediment/{idimpediment}/{idpendingcheckin}/{like}")]
-    public async Task<string> LikeImpediment(string idimpediment, string idpendingcheckin, bool like)
+    [Route("likeimpediment/{idimpediment}/{idkeyresult}/{like}")]
+    public async Task<string> LikeImpediment(string idimpediment, string idkeyresult, bool like)
     {
-      return await Task.Run(() => service.LikeImpediment(idimpediment, idpendingcheckin, like));
+      return await Task.Run(() => service.LikeImpediment(idimpediment, idkeyresult, like));
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="idiniciatives"></param>
-    /// <param name="idpendingcheckin"></param>
+    /// <param name="idkeyresult"></param>
     /// <param name="like"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("likeiniciative/{idiniciatives}/{idpendingcheckin}/{like}")]
-    public async Task<string> LikeIniciative(string idiniciatives, string idpendingcheckin, bool like)
+    public async Task<string> LikeIniciative(string idiniciatives, string idkeyresult, bool like)
     {
-      return await Task.Run(() => service.LikeIniciative(idiniciatives, idpendingcheckin, like));
+      return await Task.Run(() => service.LikeIniciative(idiniciatives, idkeyresult, like));
     }
     #endregion
   }
