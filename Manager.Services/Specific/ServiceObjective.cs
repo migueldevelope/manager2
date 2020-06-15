@@ -1310,6 +1310,9 @@ namespace Manager.Services.Specific
               item.Like.Add(view);
             else
               item.Deslike.Add(view);
+
+            item.CountLike = item.Like.Count();
+            item.CountDeslike = item.Deslike.Count();
           }
         }
         var i = servicePendingCheckinObjective.Update(model, null);
@@ -1342,6 +1345,9 @@ namespace Manager.Services.Specific
             else
               item.Deslike.Add(view);
           }
+
+          item.CountLike = item.Like.Count();
+          item.CountDeslike = item.Deslike.Count();
         }
 
         var i = servicePendingCheckinObjective.Update(model, null);

@@ -18,5 +18,7 @@ namespace Manager.Views.BusinessCrud
     public List<ViewCrudLike> Deslike { get; set; }
     public DateTime? Date { get; set; }
     public EnumTypeImpedimentsIniciatives TypeImpedimentsIniciatives { get; set; }
+    public long CountLike { get; set; }
+    public long CountDeslike { get; set; }
   }
 }
