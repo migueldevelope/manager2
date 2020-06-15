@@ -2,6 +2,6 @@
 {
   public enum EnumLevelTrust : byte
   {
-    Low = 0, Medium = 1, Hight = 2
+    Hight = 1, Medium = 2, Low = 3
   }
 }

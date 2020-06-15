@@ -16,6 +16,8 @@ namespace Manager.Views.BusinessCrud
     public string _idPerson { get; set; }
     public EnumLevelTrust LevelTrust { get; set; }
     public DateTime? Date { get; set; }
+    public int Week { get; set; }
+    public int Month { get; set; }
     public List<ViewCrudImpedimentsIniciatives> Impediments { get; set; }
     public List<ViewCrudImpedimentsIniciatives> Iniciatives { get; set; }
     public decimal Achievement { get; set; }

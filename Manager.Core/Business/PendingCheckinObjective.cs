@@ -26,6 +26,7 @@ namespace Manager.Core.Business
     public string QualityResult { get; set; }
     public int Week { get; set; }
 
+    public int Month { get; set; }
     public ViewCrudPendingCheckinObjective GetViewCrud()
     {
       return new ViewCrudPendingCheckinObjective
@@ -40,7 +41,9 @@ namespace Manager.Core.Business
         Iniciatives = Iniciatives,
         Achievement = Achievement,
         QuantityResult = QuantityResult,
-        QualityResult = QualityResult
+        QualityResult = QualityResult,
+        Week = Week,
+        Month = Month
       };
     }
 
