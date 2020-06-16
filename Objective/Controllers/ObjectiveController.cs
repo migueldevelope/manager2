@@ -585,7 +585,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [Route("likeiniciative/{idiniciatives}/{idpendingcheckin}/{like}")]
+    [Route("likeiniciative/{idiniciatives}/{idkeyresult}/{like}")]
     public async Task<string> LikeIniciative(string idiniciatives, string idkeyresult, bool like)
     {
       return await Task.Run(() => service.LikeIniciative(idiniciatives, idkeyresult, like));
