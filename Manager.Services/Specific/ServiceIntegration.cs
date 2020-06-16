@@ -493,7 +493,7 @@ namespace Manager.Services.Specific
         {
           // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
           person.DateResignation = view.DataDemissao;
-          person.StatusUser = EnumStatusUser.Disabled;
+          //person.StatusUser = EnumStatusUser.Disabled;
           string updatePerson = personService.Update(person);
           resultV2.IdContract = person._id;
           resultV2.IdUser = person.User._id;
@@ -1988,7 +1988,7 @@ namespace Manager.Services.Specific
             payrollEmployee = payrollEmployees.FirstOrDefault();
             payrollEmployee.Action = EnumActionIntegration.Demission;
             payrollEmployee.DateRegister = DateTime.Now.Date;
-            payrollEmployee.StatusUser = EnumStatusUser.Disabled;
+            //payrollEmployee.StatusUser = EnumStatusUser.Disabled;
             payrollEmployee.DemissionDate = view.DataDemissao;
           }
           else
@@ -1998,7 +1998,7 @@ namespace Manager.Services.Specific
             payrollEmployee.DateRegister = DateTime.Now.Date;
             payrollEmployee._idPrevious = payrollEmployeePrevious._id;
             payrollEmployee._id = null;
-            payrollEmployee.StatusUser = EnumStatusUser.Disabled;
+            //payrollEmployee.StatusUser = EnumStatusUser.Disabled;
             payrollEmployee.DemissionDate = view.DataDemissao;
             payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
           }
