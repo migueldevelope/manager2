@@ -428,7 +428,7 @@ namespace Manager.Services.Specific
             .Where(p => ids.Contains(p._idObjective));
 
           var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
-
+       
 
           view.Description = obj.Description;
           view.Detail = obj.Detail;
@@ -657,6 +657,49 @@ namespace Manager.Services.Specific
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
             viewKeyResult.Binary = kr.Binary;
+            viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
+            viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
+            var pendingcheckingkeyresult = pendingchecking.Where(p => p._idKeyResult == kr._id);
+
+            if (pendingcheckingkeyresult.Count() > 0)
+            {
+              viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
+              viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
+              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
+            }
+
+            foreach (var item in viewKeyResult.ParticipantsAdd)
+            {
+              if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+              {
+                var team = persons.Where(p => p.Manager?._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+                {
+                  Name = p.User.Name,
+                  Photo = p.User.PhotoUrl,
+                  _id = p._id,
+                  TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
+                });
+                foreach (var person in team)
+                {
+                  viewKeyResult.ParticipantsGet.Add(person);
+                }
+              }
+              else
+              {
+                viewKeyResult.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson)
+                  .Select(p => new ViewListPersonPhotoKeyResult()
+                  {
+                    Name = p.User.Name,
+                    Photo = p.User.PhotoUrl,
+                    _id = p._id,
+                    TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+                  })
+                  .FirstOrDefault());
+              }
+
+            }
+
+
 
             var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
             && p.Week == week && p._idPerson == _user._idPerson).ToList();
