@@ -422,7 +422,7 @@ namespace Manager.Services.Auth
           p.StatusUser != EnumStatusUser.Disabled).Result;
           if (persons == 0)
           {
-            user.Status = EnumStatus.Disabled;
+            //user.Status = EnumStatus.Disabled;
             var i = serviceUser.Update(user, null);
           }
         }
@@ -1139,7 +1139,7 @@ namespace Manager.Services.Auth
           p.StatusUser != EnumStatusUser.Disabled).Result;
           if (persons == 0)
           {
-            user.Status = EnumStatus.Disabled;
+            //user.Status = EnumStatus.Disabled;
             var i = serviceUser.Update(user, null);
           }
         }

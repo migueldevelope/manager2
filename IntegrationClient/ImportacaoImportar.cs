@@ -32,7 +32,7 @@ namespace IntegrationClient
             MessageBox.Show("Versão de ausência não implementada!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             break;
           case EnumIntegrationVersion.V2:
-            //import.ExecuteDemissionAbsenceV2(chkLjo.Checked);
+            import.ExecuteDemissionAbsenceV2();
             break;
           default:
             break;

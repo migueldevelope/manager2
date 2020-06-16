@@ -15,7 +15,7 @@ namespace IntegrationClient.Api
     {
       Person = person;
       string pathUrl;
-      if (Person.Url.Equals("https://analisa.solutions"))
+      if (Person.Url.Equals("https://fluidstate.com.br"))
         pathUrl = string.Format("{0}/", Person.Url).Replace("//", "//integrationserver.");
       else
         pathUrl = string.Format("{0}/", Person.Url).Replace("//test.", "//test_integrationserver.");

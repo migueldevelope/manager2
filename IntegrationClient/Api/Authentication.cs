@@ -12,7 +12,7 @@ namespace IntegrationClient.Api
       try
       {
         string pathUrl = string.Empty;
-        if (url.Equals("https://analisa.solutions"))
+        if (url.Equals("https://fluidstate.com.br"))
           pathUrl = string.Format("{0}/authentication", url).Replace("//", "//integrationserver.");
         else
           pathUrl = string.Format("{0}/authentication", url).Replace("//test.", "//test_integrationserver.");

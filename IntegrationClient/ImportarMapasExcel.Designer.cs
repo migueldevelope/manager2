@@ -46,7 +46,7 @@
       this.txtPst.Name = "txtPst";
       this.txtPst.Size = new System.Drawing.Size(674, 22);
       this.txtPst.TabIndex = 2;
-      this.txtPst.Text = "D:\\PUCRS\\MAPAS\\";
+      this.txtPst.Text = "D:\\GUARIDA\\MAPAS\\";
       // 
       // lblPst
       // 
