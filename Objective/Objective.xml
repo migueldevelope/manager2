@@ -196,6 +196,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditParticipantRH">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditResponsible(System.String)">
             <summary>
             
@@ -307,7 +313,7 @@
             
             </summary>
             <param name="idimpediment"></param>
-            <param name="idpendingcheckin"></param>
+            <param name="idkeyresult"></param>
             <param name="like"></param>
             <returns></returns>
         </member>
@@ -316,7 +322,7 @@
             
             </summary>
             <param name="idiniciatives"></param>
-            <param name="idpendingcheckin"></param>
+            <param name="idkeyresult"></param>
             <param name="like"></param>
             <returns></returns>
         </member>

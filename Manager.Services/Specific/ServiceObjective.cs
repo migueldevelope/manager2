@@ -380,6 +380,200 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListObjectiveEdit> GetObjectiveEditParticipantRH()
+    {
+      try
+      {
+        var list = new List<ViewListObjectiveEdit>();
+
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
+        var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var keyresults = new List<KeyResult>();
+        foreach (var item in keyresultsprevious)
+        {
+          foreach (var par in item.ParticipantsAdd)
+          {
+            if (par.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+            {
+              var team = persons.Where(p => p.Manager?._id == par._idPerson).Select(p => p.GetViewListPhoto());
+              foreach (var person in team)
+              {
+                  keyresults.Add(item);
+              }
+            }
+            else
+            {
+                keyresults.Add(item);
+            }
+          }
+        }
+
+        var ids = keyresults.Select(p => p.Objective._id).ToList();
+
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+         .Where(p => ids.Contains(p._id));
+
+        foreach (var obj in objectives)
+        {
+          var view = new ViewListObjectiveEdit();
+
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+            .Where(p => ids.Contains(p._idObjective));
+
+          var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
+
+
+          view.Description = obj.Description;
+          view.Detail = obj.Detail;
+          view.StartDate = obj.StartDate;
+          view.EndDate = obj.EndDate;
+          view._id = obj._id;
+          view.Editors = obj.Editors;
+          view.Responsible = obj.Responsible;
+          if (pendingcheckingprevious.Count() > 0)
+          {
+            view.QuantityImpediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
+            view.QuantityIniciatives = pendingcheckingprevious.Sum(p => p.Iniciatives.Count());
+          }
+
+
+          if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
+            view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
+          if (pendingchecking.Count() > 0)
+          {
+            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+          }
+
+          if (view.AverageTrust <= 50)
+            view.LevelTrust = 0;
+          else if ((view.AverageTrust > 50) && (view.AverageTrust <= 75))
+            view.LevelTrust = 1;
+          else
+            view.LevelTrust = 2;
+
+          if (view.AverageAchievement <= 60)
+            view.LevelAchievement = 0;
+          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
+            view.LevelAchievement = 1;
+          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
+            view.LevelAchievement = 2;
+          else
+            view.LevelAchievement = 3;
+
+          view.KeyResults = new List<ViewListKeyResultsEdit>();
+
+          foreach (var kr in keyresults.Where(p => p.Objective._id == obj._id))
+          {
+            var viewKeyResult = new ViewListKeyResultsEdit();
+            viewKeyResult._id = kr._id;
+            viewKeyResult.Name = kr.Name;
+            viewKeyResult.TypeKeyResult = kr.TypeKeyResult;
+            viewKeyResult.QuantityGoal = kr.QuantityGoal;
+            viewKeyResult.QualityGoal = kr.QualityGoal;
+            viewKeyResult.BeginProgressGoal = kr.BeginProgressGoal;
+            viewKeyResult.EndProgressGoal = kr.EndProgressGoal;
+            viewKeyResult.Sense = kr.Sense;
+            viewKeyResult.Description = kr.Description;
+            viewKeyResult.Weight = kr.Weight;
+            viewKeyResult.Objective = kr.Objective;
+            viewKeyResult.TypeCheckin = kr.TypeCheckin;
+            viewKeyResult.TypeBinary = kr.TypeBinary;
+            viewKeyResult.Binary = kr.Binary;
+            viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
+            viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
+            var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
+
+            if (pendingcheckingkeyresult.Count() > 0)
+            {
+              viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
+              viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
+              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
+            }
+
+            foreach (var item in viewKeyResult.ParticipantsAdd)
+            {
+              if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
+              {
+                var team = persons.Where(p => p.Manager?._id == item._idPerson).Select(p => new ViewListPersonPhotoKeyResult()
+                {
+                  Name = p.User.Name,
+                  Photo = p.User.PhotoUrl,
+                  _id = p._id,
+                  TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Team
+                });
+                foreach (var person in team)
+                {
+                  viewKeyResult.ParticipantsGet.Add(person);
+                }
+              }
+              else
+              {
+                viewKeyResult.ParticipantsGet.Add(persons.Where(p => p._id == item._idPerson)
+                  .Select(p => new ViewListPersonPhotoKeyResult()
+                  {
+                    Name = p.User.Name,
+                    Photo = p.User.PhotoUrl,
+                    _id = p._id,
+                    TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+                  })
+                  .FirstOrDefault());
+              }
+
+            }
+
+
+            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
+            && p.Week == week ).ToList();
+
+            if (pendingcheckingkey.Count() > 0)
+            {
+              viewKeyResult.PendingChecking = false;
+              viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
+              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+              if (trustkey <= 50)
+                viewKeyResult.LevelTrust = 0;
+              else if ((trustkey > 50) && (trustkey <= 75))
+                viewKeyResult.LevelTrust = 1;
+              else
+                viewKeyResult.LevelTrust = 2;
+            }
+            else
+            {
+              viewKeyResult.PendingChecking = true;
+            }
+
+            viewKeyResult.Achievement = kr.Achievement;
+            if (viewKeyResult.Achievement <= 60)
+              viewKeyResult.LevelAchievement = 0;
+            else if ((viewKeyResult.Achievement > 60) && (viewKeyResult.Achievement <= 90))
+              viewKeyResult.LevelAchievement = 1;
+            else if ((viewKeyResult.Achievement > 90) && (viewKeyResult.Achievement <= 100))
+              viewKeyResult.LevelAchievement = 2;
+            else
+              viewKeyResult.LevelAchievement = 3;
+
+
+
+
+            view.KeyResults.Add(viewKeyResult);
+          }
+
+          list.Add(view);
+        }
+
+        list = list.Where(p => p.KeyResults != null).ToList();
+        list = list.Where(p => p.KeyResults.Count() > 0).ToList();
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public List<ViewListObjectiveEdit> GetObjectiveEditParticipant()
     {
       try

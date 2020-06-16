@@ -366,6 +366,18 @@ namespace Manager.Controllers
       return await Task.Run(() => service.GetObjectiveEditParticipant());
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getobjectiveeditparticipantrh")]
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditParticipantRH()
+    {
+      return await Task.Run(() => service.GetObjectiveEditParticipantRH());
+    }
+
 
     /// <summary>
     /// 
