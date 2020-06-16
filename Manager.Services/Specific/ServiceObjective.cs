@@ -375,13 +375,13 @@ namespace Manager.Services.Specific
         list = list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Date).Skip(skip).Take(count).ToList();
 
         var listreturn = new List<ViewListImpedimentsIniciatives>();
-        foreach(var item in listreturn)
+        foreach (var item in listreturn)
         {
           var view = new ViewListImpedimentsIniciatives();
           view._id = item._id;
           view._idPerson = item._idPerson;
           view.NamePerson = item.NamePerson;
-          view.Description  = item.Description;
+          view.Description = item.Description;
           view.Like = item.Like;
           view.Deslike = item.Deslike;
           view.Date = item.Date;
@@ -424,12 +424,12 @@ namespace Manager.Services.Specific
               var team = persons.Where(p => p.Manager?._id == par._idPerson).Select(p => p.GetViewListPhoto());
               foreach (var person in team)
               {
-                  keyresults.Add(item);
+                keyresults.Add(item);
               }
             }
             else
             {
-                keyresults.Add(item);
+              keyresults.Add(item);
             }
           }
         }
@@ -549,12 +549,13 @@ namespace Manager.Services.Specific
 
 
             var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
-            && p.Week == week ).ToList();
+            && p.Week == week).ToList();
 
             if (pendingcheckingkey.Count() > 0)
             {
+              var checkin = pendingcheckingkey.FirstOrDefault();
               viewKeyResult.PendingChecking = false;
-              viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
+              viewKeyResult._idPendingChecking = checkin._id;
               var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
@@ -562,6 +563,17 @@ namespace Manager.Services.Specific
                 viewKeyResult.LevelTrust = 1;
               else
                 viewKeyResult.LevelTrust = 2;
+
+              if (checkin.LevelTrust == 0)
+                viewKeyResult.PendingChecking = true;
+              else
+                viewKeyResult.PendingChecking = false;
+
+              if (checkin.Achievement == 0)
+                viewKeyResult.PendingCheckinAchievement = true;
+              else
+                viewKeyResult.PendingCheckinAchievement = false;
+
             }
             else
             {
@@ -645,7 +657,7 @@ namespace Manager.Services.Specific
             .Where(p => ids.Contains(p._idObjective));
 
           var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
-       
+
 
           view.Description = obj.Description;
           view.Detail = obj.Detail;

@@ -19,8 +19,6 @@ namespace Manager.Views.BusinessList
     public ViewListPersonPhoto Responsible { get; set; }
     public long QuantityImpediments { get; set; }
     public long QuantityIniciatives { get; set; }
-    public bool PendingCheckinTrust { get; set; }
-    public bool PendingCheckinAchievement { get; set; }
     public List<ViewListKeyResultsEdit> KeyResults { get; set; }
   }
 }

@@ -11,6 +11,9 @@ namespace Manager.Views.BusinessList
     public byte LevelAchievement { get; set; }
     public byte LevelTrust { get; set; }
     public bool PendingChecking { get; set; }
+    public bool PendingCheckinTrust { get; set; }
+    public bool PendingCheckinAchievement { get; set; }
+
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idPendingChecking { get; set; }
     public long QuantityImpediments { get; set; }
