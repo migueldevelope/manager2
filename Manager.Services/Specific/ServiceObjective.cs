@@ -1561,27 +1561,31 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = servicePendingCheckinObjective.GetNewVersion(p => p._idKeyResult == idkeyresult).Result;
+        var list = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == idkeyresult).Result;
 
-        foreach (var item in model.Impediments)
+        foreach (var model in list)
         {
-          if (item._id == idimpediment)
+          foreach (var item in model.Impediments)
           {
-            var view = new ViewCrudLike()
+            if (item._id == idimpediment)
             {
-              Date = DateTime.Now,
-              _idUser = _user._idUser
-            };
-            if (like)
-              item.Like.Add(view);
-            else
-              item.Deslike.Add(view);
+              var view = new ViewCrudLike()
+              {
+                Date = DateTime.Now,
+                _idUser = _user._idUser
+              };
+              if (like)
+                item.Like.Add(view);
+              else
+                item.Deslike.Add(view);
 
-            item.CountLike = item.Like.Count();
-            item.CountDeslike = item.Deslike.Count();
+              item.CountLike = item.Like.Count();
+              item.CountDeslike = item.Deslike.Count();
+            }
           }
+          var i = servicePendingCheckinObjective.Update(model, null);
+
         }
-        var i = servicePendingCheckinObjective.Update(model, null);
 
         return "like";
       }
@@ -1595,28 +1599,33 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = servicePendingCheckinObjective.GetNewVersion(p => p._idKeyResult == idkeyresult).Result;
+        var list = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == idkeyresult).Result;
 
-        foreach (var item in model.Iniciatives)
+        foreach(var model in list)
         {
-          if (item._id == idiniciatives)
+          foreach (var item in model.Iniciatives)
           {
-            var view = new ViewCrudLike()
+            if (item._id == idiniciatives)
             {
-              Date = DateTime.Now,
-              _idUser = _user._idUser
-            };
-            if (like)
-              item.Like.Add(view);
-            else
-              item.Deslike.Add(view);
+              var view = new ViewCrudLike()
+              {
+                Date = DateTime.Now,
+                _idUser = _user._idUser
+              };
+              if (like)
+                item.Like.Add(view);
+              else
+                item.Deslike.Add(view);
+            }
+
+            item.CountLike = item.Like.Count();
+            item.CountDeslike = item.Deslike.Count();
           }
-
-          item.CountLike = item.Like.Count();
-          item.CountDeslike = item.Deslike.Count();
+          var i = servicePendingCheckinObjective.Update(model, null);
         }
+        
 
-        var i = servicePendingCheckinObjective.Update(model, null);
+        
 
         return "like";
       }
