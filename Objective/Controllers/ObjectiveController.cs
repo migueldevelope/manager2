@@ -63,7 +63,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getimpedimentsiniciatives/{idkeyresult}")]
-    public async Task<List<ViewCrudImpedimentsIniciatives>> GetImpedimentsIniciatives(string idkeyresult, int count = 10, int page = 1, string filter = "")
+    public async Task<List<ViewListImpedimentsIniciatives>> GetImpedimentsIniciatives(string idkeyresult, int count = 10, int page = 1, string filter = "")
     {
       long total = 0;
       var result = service.GetImpedimentsIniciatives(idkeyresult, ref total, count, page, filter);

@@ -354,7 +354,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudImpedimentsIniciatives> GetImpedimentsIniciatives(string idkeyresult, ref long total, int count = 10, int page = 1, string filter = "")
+    public List<ViewListImpedimentsIniciatives> GetImpedimentsIniciatives(string idkeyresult, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -372,7 +372,30 @@ namespace Manager.Services.Specific
         var skip = count * (page - 1);
         total = list.Count();
 
-        return list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Date).Skip(skip).Take(count).ToList();
+        list = list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Date).Skip(skip).Take(count).ToList();
+
+        var listreturn = new List<ViewListImpedimentsIniciatives>();
+        foreach(var item in listreturn)
+        {
+          var view = new ViewListImpedimentsIniciatives();
+          view._id = item._id;
+          view._idPerson = item._idPerson;
+          view.NamePerson = item.NamePerson;
+          view.Description  = item.Description;
+          view.Like = item.Like;
+          view.Deslike = item.Deslike;
+          view.Date = item.Date;
+          view.TypeImpedimentsIniciatives = item.TypeImpedimentsIniciatives;
+          view.CountLike = item.CountLike;
+          view.CountDeslike = item.CountDeslike;
+          if (item.Like.Where(p => p._idUser == _user._idUser).Count() > 0)
+            view.SetLike = true;
+          if (item.Deslike.Where(p => p._idUser == _user._idUser).Count() > 0)
+            view.SetDeslike = true;
+
+          listreturn.Add(view);
+        }
+        return listreturn;
       }
       catch (Exception e)
       {
