@@ -861,7 +861,7 @@ namespace Manager.Services.Auth
           User = person.User
         };
         if (view.User != null)
-          view.User.PhotoUrl = serviceUser.GetNewVersion(p => p._id == view.User._id).Result.PhotoUrl;
+          view.User.PhotoUrl = serviceUser.GetNewVersion(p => p._id == view.User._id).Result?.PhotoUrl;
 
         return view;
       }

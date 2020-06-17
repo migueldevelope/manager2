@@ -317,6 +317,24 @@
             <param name="like"></param>
             <returns></returns>
         </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteLikeImpediment(System.String,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="idimpediment"></param>
+            <param name="idkeyresult"></param>
+            <param name="like"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Manager.Controllers.ObjectiveController.DeleteLikeIniciative(System.String,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="idiniciatives"></param>
+            <param name="idkeyresult"></param>
+            <param name="like"></param>
+            <returns></returns>
+        </member>
         <member name="M:Manager.Controllers.ObjectiveController.LikeIniciative(System.String,System.String,System.Boolean)">
             <summary>
             

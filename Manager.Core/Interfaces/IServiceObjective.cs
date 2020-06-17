@@ -76,5 +76,9 @@ namespace Manager.Core.Interfaces
     List<ViewListImpedimentsIniciatives> GetImpedimentsIniciatives(string idkeyresult, ref long total, int count = 10, int page = 1, string filter = "");
 
     List<ViewListObjectiveEdit> GetObjectiveEditResponsible(string idobjective);
+
+    string DeleteLikeIniciative(string idiniciatives, string idkeyresult, bool like);
+
+    string DeleteLikeImpediments(string idimpediments, string idkeyresult, bool like);
   }
 }
