@@ -1581,9 +1581,9 @@ namespace Manager.Services.Specific
                 {
                   if (lk._idUser == _user._idUser)
                   {
+                    item.Deslike.Remove(lk);
                     item.CountLike = item.Like.Count();
                     item.CountDeslike = item.Deslike.Count();
-                    item.Deslike.Remove(lk);
                     var x = servicePendingCheckinObjective.Update(model, null);
                     return "like";
                   }
@@ -1746,9 +1746,9 @@ namespace Manager.Services.Specific
                 {
                   if (lk._idUser == _user._idUser)
                   {
+                    item.Deslike.Remove(lk);
                     item.CountLike = item.Like.Count();
                     item.CountDeslike = item.Deslike.Count();
-                    item.Deslike.Remove(lk);
                     var x = servicePendingCheckinObjective.Update(model, null);
                     return "like";
                   }
