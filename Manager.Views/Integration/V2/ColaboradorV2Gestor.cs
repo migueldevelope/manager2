@@ -8,5 +8,6 @@ namespace Manager.Views.Integration.V2
     public string IdColaborador { get; set; }
     public ColaboradorV2Base Gestor { get; set; }
     public string IdGestor { get; set; }
+    public EnumTypeUser? TypeUserGestor { get; set; }
   }
 }

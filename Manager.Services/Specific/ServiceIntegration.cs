@@ -268,6 +268,7 @@ namespace Manager.Services.Specific
           }
           // Testar se o gestor existe mas não é do tipo gestor
           resultV2.IdGestor = personManager?._id;
+          resultV2.TypeUserGestor = personManager?.TypeUser;
           payrollEmployee._idContractManager = personManager?._id;
         }
         // Person contract

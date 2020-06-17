@@ -175,8 +175,11 @@ namespace IntegrationClient.Service
             }
             FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
           }
-          /*
           viewRetorno = personIntegration.PostV2Completo(colaborador);
+          GestoresV2.Find(p => p.Colaborador.Cpf == colaborador.Colaborador.Cpf && p.Colaborador.NomeEmpresa == colaborador.Colaborador.NomeEmpresa &&
+                               p.Colaborador.NomeEstabelecimento == colaborador.Colaborador.NomeEstabelecimento && p.Colaborador.Matricula == colaborador.Colaborador.Matricula).IdGestor = viewRetorno.IdGestor;
+          GestoresV2.Find(p => p.Colaborador.Cpf == colaborador.Colaborador.Cpf && p.Colaborador.NomeEmpresa == colaborador.Colaborador.NomeEmpresa &&
+                               p.Colaborador.NomeEstabelecimento == colaborador.Colaborador.NomeEstabelecimento && p.Colaborador.Matricula == colaborador.Colaborador.Matricula).TypeUserGestor = viewRetorno.TypeUserGestor;
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
             FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
@@ -194,7 +197,6 @@ namespace IntegrationClient.Service
             FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
           }
-          */
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
@@ -903,15 +905,14 @@ namespace IntegrationClient.Service
         for (int row = 2; row < finalRow+1; row++)
         {
           rowData = new List<string>();
-
           for (int collumn = 1; collumn < collumnCount; collumn++)
           {
             collumName = GetStandardExcelColumnName(collumn);
             workData = excelPln.Range[string.Format("{0}{1}", collumName, row)].Value;
-            if ((workData is int) && ((int)workData == -2146826246))
+            if (workData is int && (int)workData == -2146826246)
             {
               workData = null;
-            } ;
+            }
             rowData.Add(workData == null ? string.Empty : workData.ToString().Trim());
           }
           ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
