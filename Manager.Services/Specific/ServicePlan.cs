@@ -1785,66 +1785,56 @@ namespace Manager.Services.Specific
       try
       {
 
-        Plan planNew = new Plan();
-        Plan planUpdate = new Plan();
+        Plan planNew = new Plan()
+        {
+          _id = viewPlan[1]._id,
+          _idAccount = _user._idAccount,
+          Name = viewPlan[1].Name,
+          Description = viewPlan[1].Description,
+          Deadline = viewPlan[1].Deadline,
+          Skills = viewPlan[1].Skills,
+          DateInclude = viewPlan[1].DateInclude,
+          TypePlan = viewPlan[1].TypePlan,
+          SourcePlan = viewPlan[1].SourcePlan,
+          TypeAction = viewPlan[1].TypeAction,
+          StatusPlan = viewPlan[1].StatusPlan,
+          TextEnd = viewPlan[1].TextEnd,
+          TextEndManager = viewPlan[1].TextEndManager,
+          DateEnd = viewPlan[1].DateEnd,
+          Evaluation = viewPlan[1].Evaluation,
+          Result = viewPlan[1].Result,
+          StatusPlanApproved = EnumStatusPlanApproved.Open,
+          Status = viewPlan[1].Status,
+          NewAction = viewPlan[1].NewAction,
+          Attachments = viewPlan[1].Attachments
+        };
+        Plan planUpdate = new Plan()
+        {
+          _id = viewPlan[0]._id,
+          _idAccount = _user._idAccount,
+          Name = viewPlan[0].Name,
+          Description = viewPlan[0].Description,
+          Deadline = viewPlan[0].Deadline,
+          Skills = viewPlan[0].Skills,
+          DateInclude = viewPlan[0].DateInclude,
+          TypePlan = viewPlan[0].TypePlan,
+          SourcePlan = viewPlan[0].SourcePlan,
+          TypeAction = viewPlan[0].TypeAction,
+          StatusPlan = viewPlan[0].StatusPlan,
+          TextEnd = viewPlan[0].TextEnd,
+          TextEndManager = viewPlan[0].TextEndManager,
+          DateEnd = viewPlan[0].DateEnd,
+          Evaluation = viewPlan[0].Evaluation,
+          Result = viewPlan[0].Result,
+          StatusPlanApproved = viewPlan[0].StatusPlanApproved,
+          Status = viewPlan[0].Status,
+          NewAction = viewPlan[0].NewAction,
+          Attachments = viewPlan[0].Attachments
+        };
 
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
-        var count = 0;
-        foreach (var item in viewPlan)
-        {
-          if (count == 0)
-            planNew = new Plan()
-            {
-              _id = item._id,
-              _idAccount = _user._idAccount,
-              Name = item.Name,
-              Description = item.Description,
-              Deadline = item.Deadline,
-              Skills = item.Skills,
-              DateInclude = item.DateInclude,
-              TypePlan = item.TypePlan,
-              SourcePlan = item.SourcePlan,
-              TypeAction = item.TypeAction,
-              StatusPlan = item.StatusPlan,
-              TextEnd = item.TextEnd,
-              TextEndManager = item.TextEndManager,
-              DateEnd = item.DateEnd,
-              Evaluation = item.Evaluation,
-              Result = item.Result,
-              StatusPlanApproved = EnumStatusPlanApproved.Open,
-              Status = item.Status,
-              NewAction = item.NewAction,
-              Attachments = item.Attachments
-            };
-          else
-            planUpdate = new Plan()
-            {
-              _id = item._id,
-              _idAccount = _user._idAccount,
-              Name = item.Name,
-              Description = item.Description,
-              Deadline = item.Deadline,
-              Skills = item.Skills,
-              DateInclude = item.DateInclude,
-              TypePlan = item.TypePlan,
-              SourcePlan = item.SourcePlan,
-              TypeAction = item.TypeAction,
-              StatusPlan = item.StatusPlan,
-              TextEnd = item.TextEnd,
-              TextEndManager = item.TextEndManager,
-              DateEnd = item.DateEnd,
-              Evaluation = item.Evaluation,
-              Result = item.Result,
-              StatusPlanApproved = item.StatusPlanApproved,
-              Status = item.Status,
-              NewAction = item.NewAction,
-              Attachments = item.Attachments
-            };
-
-          count += 1;
-        }
 
         if (_user._idUser == person.User._id)
         {
