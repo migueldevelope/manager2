@@ -2,6 +2,7 @@
 using IntegrationClient.Service;
 using Manager.Views.Enumns;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace IntegrationClient
@@ -70,6 +71,11 @@ namespace IntegrationClient
     {
       try
       {
+        var before0 = GC.CollectionCount(0);
+        var before1 = GC.CollectionCount(1);
+        var before2 = GC.CollectionCount(2);
+        var sw = new Stopwatch();
+        sw.Start();
         ImportService import = new ImportService(Program.PersonLogin, serviceConfiguration, DateTime.Now);
         import.RefreshProgressBar += Import_RefreshProgressBar;
         switch (serviceConfiguration.Param.Version)
@@ -90,6 +96,13 @@ namespace IntegrationClient
           default:
             break;
         }
+        sw.Stop();
+        Console.WriteLine($"Time .: {sw.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Gen(0) .: {GC.CollectionCount(0) - before0}");
+        Console.WriteLine($"Gen(1) .: {GC.CollectionCount(1) - before1}");
+        Console.WriteLine($"Gen(2) .: {GC.CollectionCount(2) - before2}");
+        Console.WriteLine($"Memory .: {Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024} mb");
+
         if (import.Status == EnumStatusService.Error)
         {
           MessageBox.Show(import.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);

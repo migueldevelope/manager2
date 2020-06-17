@@ -98,6 +98,8 @@ namespace Manager.Core.Business.Integration
     public string _idOccupation { get; set; }
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idIntegrationOccupation { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _idContractManager { get; set; }
     // Identificação do estabelecimento
     public string EstablishmentKey() { return string.Format("{0};{1}", Company, Establishment); }
     // Identificação do cargo

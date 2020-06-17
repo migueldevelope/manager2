@@ -24,7 +24,7 @@ namespace IntegrationClient.Service
 
     #region Private V2
     private List<ColaboradorV2Completo> ColaboradoresV2;
-    private List<ColaboradorV2Base> GestoresV2;
+    private List<ColaboradorV2Gestor> GestoresV2;
     #endregion
 
     private readonly ViewPersonLogin Person;
@@ -175,6 +175,7 @@ namespace IntegrationClient.Service
             }
             FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
           }
+          /*
           viewRetorno = personIntegration.PostV2Completo(colaborador);
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
@@ -193,6 +194,7 @@ namespace IntegrationClient.Service
             FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
           }
+          */
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
@@ -204,11 +206,19 @@ namespace IntegrationClient.Service
         if (GestoresV2.Count > 0)
         {
           string result = string.Empty;
-          foreach (ColaboradorV2Base gestor in GestoresV2)
+          foreach (ColaboradorV2Gestor gestor in GestoresV2)
           {
-            result = personIntegration.PutV2PerfilGestor(gestor);
-            FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento,
-              gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
+            if (jsonLog)
+            {
+              if (!File.Exists(LogFileName.Replace(".log", "_gestor_api.log")))
+              {
+                FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_api.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+              }
+              FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_api.log"), JsonConvert.SerializeObject(gestor), EnumTypeLineOpportunityg.Register);
+            }
+            //result = personIntegration.PutV2PerfilGestor(gestor);
+            //FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento,
+            //  gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
             ProgressBarValue++;
             OnRefreshProgressBar(EventArgs.Empty);
           }
@@ -229,7 +239,7 @@ namespace IntegrationClient.Service
         FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
         if (full)
         {
-          ExecuteDemissionAbsenceV2();
+          //ExecuteDemissionAbsenceV2();
         }
       }
       catch (Exception ex)
@@ -543,7 +553,7 @@ namespace IntegrationClient.Service
         OnRefreshProgressBar(EventArgs.Empty);
         ApiMetadados apiMetadados = new ApiMetadados();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
-        GestoresV2 = new List<ColaboradorV2Base>();
+        GestoresV2 = new List<ColaboradorV2Gestor>();
         List<ViewIntegrationMetadadosV1> colaboradores;
         int offset = 0;
         int limit = 100;
@@ -560,14 +570,18 @@ namespace IntegrationClient.Service
           foreach (ViewIntegrationMetadadosV1 colaborador in colaboradores)
           {
             ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate, Person.IdAccount));
+            gestor = null;
             if (ColaboradoresV2[ColaboradoresV2.Count-1].Gestor != null)
             {
               gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
-              if (GestoresV2.FindIndex(p => p.Empresa == gestor.Empresa && p.Estabelecimento == gestor.Estabelecimento && p.Cpf == gestor.Cpf && p.Matricula == gestor.Matricula) == -1)
-              {
-                GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
-              }
             }
+            GestoresV2.Add(new ColaboradorV2Gestor()
+            {
+              Colaborador = ColaboradoresV2[ColaboradoresV2.Count - 1].Colaborador,
+              Gestor = gestor,
+              IdColaborador = null,
+              IdGestor = null
+            });
             register++;
           }
           offset += limit;
@@ -602,7 +616,7 @@ namespace IntegrationClient.Service
           throw new Exception("Não tem nenhum colaborador para integração.");
         }
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
-        GestoresV2 = new List<ColaboradorV2Base>();
+        GestoresV2 = new List<ColaboradorV2Gestor>();
         // Carregar Lista de Colaboradores
         bool validColumn = true;
         List<string> columnsValidV2 = new List<string>
@@ -633,14 +647,18 @@ namespace IntegrationClient.Service
           }
           ColaboradoresV2.Add(new ColaboradorV2Completo(row.ItemArray.Select(x => x.ToString()).ToList(),
             readData.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList(), service.Param.CultureDate));
+          gestor = null;
           if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
           {
             gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
-            if (GestoresV2.FindIndex(p => p.Empresa == gestor.Empresa && p.Estabelecimento == gestor.Estabelecimento && p.Cpf == gestor.Cpf && p.Matricula == gestor.Matricula) == -1)
-            {
-              GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
-            }
           }
+          GestoresV2.Add(new ColaboradorV2Gestor()
+          {
+            Colaborador = ColaboradoresV2[ColaboradoresV2.Count - 1].Colaborador,
+            Gestor = gestor,
+            IdColaborador = null,
+            IdGestor = null
+          });
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
@@ -852,7 +870,7 @@ namespace IntegrationClient.Service
         int collumnCount = excelApp.ActiveCell.Column + 1;
         _ = excelPln.Range["A1"].Select();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
-        GestoresV2 = new List<ColaboradorV2Base>();
+        GestoresV2 = new List<ColaboradorV2Gestor>();
         // Carregar Lista de Colaboradores
         List<string> columnsValidV2 = new List<string>
         {
@@ -897,14 +915,18 @@ namespace IntegrationClient.Service
             rowData.Add(workData == null ? string.Empty : workData.ToString().Trim());
           }
           ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
+          gestor = null;
           if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
           {
             gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
-            if (GestoresV2.FindIndex(p => p.Empresa == gestor.Empresa && p.Estabelecimento == gestor.Estabelecimento && p.Cpf == gestor.Cpf && p.Matricula == gestor.Matricula) == -1)
-            {
-              GestoresV2.Add(ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor);
-            }
           }
+          GestoresV2.Add(new ColaboradorV2Gestor()
+          {
+            Colaborador = ColaboradoresV2[ColaboradoresV2.Count - 1].Colaborador,
+            Gestor = gestor,
+            IdColaborador = null,
+            IdGestor = null
+          });
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }

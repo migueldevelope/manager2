@@ -267,6 +267,21 @@ namespace IntegrationClient
       item = item.Equals("SISTEMAS DE GESTÃO DE LABORATÓRIO") ? "SISTEMAS DE GESTÃO DE LABORATÓRIOS" : item;
       item = item.Equals("TECNOLOGIAS DA INFORMAÇÃO") ? "TECNOLOGIA DA INFORMAÇÃO" : item;
       item = item.Equals("TEORIA E TÉCNICAS") ? "TEORIA E TÉCNICA" : item;
+      item = item.Equals("ANÁLISE DE NEGÓCIO") ? "ANÁLISE DE NEGÓCIOS" : item;
+      item = item.Equals("ANÁLISE DOS RESULTADOS") ? "ANÁLISE DE RESULTADOS" : item;
+      item = item.Equals("ARQUITETURA DE SISTEMAS") ? "ARQUITETURAS DE SISTEMAS DE INFORMAÇÃO" : item;
+      item = item.Equals("GESTÃO DE CONHECIMENTO") ? "GESTÃO DO CONHECIMENTO" : item;
+      item = item.Equals("INDICADOR E DEMONSTRATIVOS GERENCIAIS") ? "INDICADORES E DEMONSTRATIVOS GERENCIAIS" : item;
+      item = item.Equals("INFORMÁTICA BÁSICA (PRECISA?)") ? "INFORMÁTICA BÁSICA" : item;
+      item = item.Equals("LEGISLAÇÃO CONDOMÍNIO") ? "LEGISLAÇÃO DE CONDOMÍNIO" : item;
+      item = item.Equals("LEGISLAÇÃO CONDOMÍNIOS") ? "LEGISLAÇÃO DE CONDOMÍNIO" : item;
+      item = item.Equals("LEGISLAÇÃO DE CONDOMÍNIOS") ? "LEGISLAÇÃO DE CONDOMÍNIO" : item;
+      item = item.Equals("LEI DO INQUILINATO") ? "LEGISLAÇÃO DO INQUILINATO" : item;
+      item = item.Equals("PADRÃO DE ATENDIMENTO GUARIDA") ? "PADRÕES DE ATENDIMENTO GUARIDA" : item;
+      item = item.Equals("VISÃO DO NEGÓCIO") ? "VISÃO DE NEGÓCIO" : item;
+      item = item.Equals("") ? "" : item;
+      item = item.Equals("") ? "" : item;
+      item = item.Equals("") ? "" : item;
       return item;
     }
     private string DictionarySchooling(string item)
@@ -333,7 +348,7 @@ namespace IntegrationClient
       string cellGroup = "H5";
       string cellColumnCheck = "A";
       // Responsabilidade
-      int responsibilityCellLine = 16;
+      int responsibilityCellLine = 15;
       string responsibilityCellColumn = "A";
       string responsibilityTextCheck = "ENTREGAS DO CARGO";
       // Técnicas
@@ -431,7 +446,7 @@ namespace IntegrationClient
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
-          if (work.Equals(hardSkillTextTypeCheck) || work.Equals("SKILLS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase))
+          if (work.Equals(hardSkillTextTypeCheck) || work.Equals("COMPETÊNCIAS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase))
           {
             break;
           }
