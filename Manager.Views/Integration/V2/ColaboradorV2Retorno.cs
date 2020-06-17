@@ -10,7 +10,7 @@ namespace Manager.Views.Integration.V2
     public string IdContract { get; set; }
     public string Situacao { get; set; }
     public string IdGestor { get; set; }
-    public EnumTypeUser? TypeUserGestor { get; set; }
+    public EnumTypeUser TypeUserGestor { get; set; }
     public List<string> Mensagem { get; set; }
   }
 }

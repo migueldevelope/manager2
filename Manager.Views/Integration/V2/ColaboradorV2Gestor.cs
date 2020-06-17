@@ -9,5 +9,6 @@ namespace Manager.Views.Integration.V2
     public ColaboradorV2Base Gestor { get; set; }
     public string IdGestor { get; set; }
     public EnumTypeUser? TypeUserGestor { get; set; }
+    public bool Erro { get; set; }
   }
 }
