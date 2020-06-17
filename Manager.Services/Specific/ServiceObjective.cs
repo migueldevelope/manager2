@@ -893,7 +893,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
-            
+
             if (pendingcheckingkey.Count() > 0)
             {
               viewKeyResult.QuantityImpediments = pendingcheckingkey.Sum(p => p.Impediments.Count());
@@ -957,7 +957,7 @@ namespace Manager.Services.Specific
             view.KeyResults.Add(viewKeyResult);
           }
 
-          view.QuantityImpediments = view.KeyResults.Sum(p =>p.QuantityImpediments);
+          view.QuantityImpediments = view.KeyResults.Sum(p => p.QuantityImpediments);
           view.QuantityIniciatives = view.KeyResults.Sum(p => p.QuantityIniciatives);
 
           list.Add(view);
@@ -1577,11 +1577,21 @@ namespace Manager.Services.Specific
               if (like)
               {
                 item.Like.Add(view);
-                foreach(var lk in item.Deslike)
+                foreach (var lk in item.Deslike)
                 {
-                  if(lk._idUser == _user._idUser)
+                  if (lk._idUser == _user._idUser)
+                  {
+                    item.CountLike = item.Like.Count();
+                    item.CountDeslike = item.Deslike.Count();
+                    var x = servicePendingCheckinObjective.Update(model, null);
                     item.Deslike.Remove(lk);
+                    return "like";
+                  }
                 }
+                item.CountLike = item.Like.Count();
+                item.CountDeslike = item.Deslike.Count();
+                var i = servicePendingCheckinObjective.Update(model, null);
+                return "like";
               }
               else
               {
@@ -1589,17 +1599,24 @@ namespace Manager.Services.Specific
                 foreach (var lk in item.Like)
                 {
                   if (lk._idUser == _user._idUser)
+                  {
                     item.Like.Remove(lk);
+                    item.CountLike = item.Like.Count();
+                    item.CountDeslike = item.Deslike.Count();
+                    var x = servicePendingCheckinObjective.Update(model, null);
+                    return "like";
+                  }
                 }
+                item.CountLike = item.Like.Count();
+                item.CountDeslike = item.Deslike.Count();
+                var i = servicePendingCheckinObjective.Update(model, null);
+                return "like";
               }
-                
 
-              item.CountLike = item.Like.Count();
-              item.CountDeslike = item.Deslike.Count();
             }
-          }
-          var i = servicePendingCheckinObjective.Update(model, null);
 
+
+          }
         }
 
         return "like";
@@ -1711,7 +1728,7 @@ namespace Manager.Services.Specific
       {
         var list = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == idkeyresult).Result;
 
-        foreach(var model in list)
+        foreach (var model in list)
         {
           foreach (var item in model.Iniciatives)
           {
@@ -1728,8 +1745,18 @@ namespace Manager.Services.Specific
                 foreach (var lk in item.Deslike)
                 {
                   if (lk._idUser == _user._idUser)
+                  {
+                    item.CountLike = item.Like.Count();
+                    item.CountDeslike = item.Deslike.Count();
+                    var x = servicePendingCheckinObjective.Update(model, null);
                     item.Deslike.Remove(lk);
+                    return "like";
+                  }
                 }
+                item.CountLike = item.Like.Count();
+                item.CountDeslike = item.Deslike.Count();
+                var i = servicePendingCheckinObjective.Update(model, null);
+                return "like";
               }
               else
               {
@@ -1737,20 +1764,25 @@ namespace Manager.Services.Specific
                 foreach (var lk in item.Like)
                 {
                   if (lk._idUser == _user._idUser)
+                  {
                     item.Like.Remove(lk);
+                    item.CountLike = item.Like.Count();
+                    item.CountDeslike = item.Deslike.Count();
+                    var x = servicePendingCheckinObjective.Update(model, null);
+                    return "like";
+                  }
                 }
+                item.CountLike = item.Like.Count();
+                item.CountDeslike = item.Deslike.Count();
+                var i = servicePendingCheckinObjective.Update(model, null);
+                return "like";
               }
-                
+
             }
 
-            item.CountLike = item.Like.Count();
-            item.CountDeslike = item.Deslike.Count();
-          }
-          var i = servicePendingCheckinObjective.Update(model, null);
-        }
-        
 
-        
+          }
+        }
 
         return "like";
       }
