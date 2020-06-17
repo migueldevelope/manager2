@@ -211,7 +211,7 @@ namespace IntegrationClient.Service
         FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
         if (full)
         {
-          //ExecuteDemissionAbsenceV2();
+          ExecuteDemissionAbsenceV2();
         }
       }
       catch (Exception ex)
