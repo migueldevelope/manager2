@@ -206,7 +206,7 @@ namespace Manager.Services.Specific
         if (keyresults.Count() > 0)
           view.AverageAchievement = keyresults.Average(p => p.Achievement);
         if (pendingchecking.Count() > 0)
-          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
 
         view.QtdKeyResults = keyresults.Count();
         if (view.AverageTrust <= 50)
@@ -240,7 +240,7 @@ namespace Manager.Services.Specific
         if (keyresults.Count() > 0)
           view.AverageAchievement = keyresults.Average(p => p.Achievement);
         if (pendingchecking.Count() > 0)
-          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
 
         view.QtdObjective = objective.Count();
         if (view.AverageTrust <= 50)
@@ -311,7 +311,7 @@ namespace Manager.Services.Specific
             view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
             view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
 
-            var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+            var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
             view.AverageTrust = trust;
             if (trust <= 50)
               view.LevelTrust = 0;
@@ -468,7 +468,7 @@ namespace Manager.Services.Specific
             view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
           if (pendingchecking.Count() > 0)
           {
-            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
           }
 
           if (view.AverageTrust <= 50)
@@ -514,7 +514,7 @@ namespace Manager.Services.Specific
             {
               viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
-              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
+              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
             }
 
             foreach (var item in viewKeyResult.ParticipantsAdd)
@@ -557,7 +557,7 @@ namespace Manager.Services.Specific
               var checkin = pendingcheckingkey.FirstOrDefault();
               viewKeyResult.PendingChecking = false;
               viewKeyResult._idPendingChecking = checkin._id;
-              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
               else if ((trustkey > 50) && (trustkey <= 75))
@@ -678,7 +678,7 @@ namespace Manager.Services.Specific
             view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
           if (pendingchecking.Count() > 0)
           {
-            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
           }
 
           if (view.AverageTrust <= 50)
@@ -724,7 +724,7 @@ namespace Manager.Services.Specific
             {
               viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
-              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
+              viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
             }
 
             foreach (var item in viewKeyResult.ParticipantsAdd)
@@ -766,7 +766,7 @@ namespace Manager.Services.Specific
             {
               viewKeyResult.PendingChecking = false;
               viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
-              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
               else if ((trustkey > 50) && (trustkey <= 75))
@@ -850,7 +850,7 @@ namespace Manager.Services.Specific
             view.AverageAchievement = keyresults.Average(p => p.Achievement);
           if (pendingchecking.Count() > 0)
           {
-            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
           }
 
           if (view.AverageTrust <= 50)
@@ -898,11 +898,11 @@ namespace Manager.Services.Specific
             {
               viewKeyResult.QuantityImpediments = pendingcheckingkey.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkey.Sum(p => p.Iniciatives.Count());
-              viewKeyResult.AverageTrust = pendingcheckingkeyweek.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString())); ;
+              viewKeyResult.AverageTrust = pendingcheckingkeyweek.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
 
               viewKeyResult.PendingChecking = false;
               viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
-              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : 100).ToString()));
+              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
               else if ((trustkey > 50) && (trustkey <= 75))
