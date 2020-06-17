@@ -591,6 +591,36 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idimpediment"></param>
+    /// <param name="idkeyresult"></param>
+    /// <param name="like"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletelikeimpediment/{idimpediment}/{idkeyresult}/{like}")]
+    public async Task<string> DeleteLikeImpediment(string idimpediment, string idkeyresult, bool like)
+    {
+      return await Task.Run(() => service.DeleteLikeImpediments(idimpediment, idkeyresult, like));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idiniciatives"></param>
+    /// <param name="idkeyresult"></param>
+    /// <param name="like"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpDelete]
+    [Route("deletelikeiniciative/{idiniciatives}/{idkeyresult}/{like}")]
+    public async Task<string> DeleteLikeIniciative(string idiniciatives, string idkeyresult, bool like)
+    {
+      return await Task.Run(() => service.DeleteLikeIniciative(idiniciatives, idkeyresult, like));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idiniciatives"></param>
     /// <param name="idkeyresult"></param>
     /// <param name="like"></param>

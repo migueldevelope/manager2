@@ -1575,9 +1575,24 @@ namespace Manager.Services.Specific
                 _idUser = _user._idUser
               };
               if (like)
+              {
                 item.Like.Add(view);
+                foreach(var lk in item.Deslike)
+                {
+                  if(lk._idUser == _user._idUser)
+                    item.Deslike.Remove(lk);
+                }
+              }
               else
+              {
                 item.Deslike.Add(view);
+                foreach (var lk in item.Like)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Like.Remove(lk);
+                }
+              }
+                
 
               item.CountLike = item.Like.Count();
               item.CountDeslike = item.Deslike.Count();
@@ -1594,6 +1609,101 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string DeleteLikeIniciative(string idiniciatives, string idkeyresult, bool like)
+    {
+      try
+      {
+        var list = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == idkeyresult).Result;
+
+        foreach (var model in list)
+        {
+          foreach (var item in model.Iniciatives)
+          {
+            if (item._id == idiniciatives)
+            {
+              if (like)
+              {
+                foreach (var lk in item.Like)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Like.Remove(lk);
+                }
+              }
+              else
+              {
+                foreach (var lk in item.Deslike)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Deslike.Remove(lk);
+                }
+              }
+
+            }
+
+            item.CountLike = item.Like.Count();
+            item.CountDeslike = item.Deslike.Count();
+          }
+          var i = servicePendingCheckinObjective.Update(model, null);
+        }
+
+
+
+
+        return "remove like";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public string DeleteLikeImpediments(string idimpediments, string idkeyresult, bool like)
+    {
+      try
+      {
+        var list = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == idkeyresult).Result;
+
+        foreach (var model in list)
+        {
+          foreach (var item in model.Impediments)
+          {
+            if (item._id == idimpediments)
+            {
+              if (like)
+              {
+                foreach (var lk in item.Like)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Like.Remove(lk);
+                }
+              }
+              else
+              {
+                foreach (var lk in item.Deslike)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Deslike.Remove(lk);
+                }
+              }
+
+            }
+
+            item.CountLike = item.Like.Count();
+            item.CountDeslike = item.Deslike.Count();
+          }
+          var i = servicePendingCheckinObjective.Update(model, null);
+        }
+
+        return "remove like";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public string LikeIniciative(string idiniciatives, string idkeyresult, bool like)
     {
@@ -1613,9 +1723,24 @@ namespace Manager.Services.Specific
                 _idUser = _user._idUser
               };
               if (like)
+              {
                 item.Like.Add(view);
+                foreach (var lk in item.Deslike)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Deslike.Remove(lk);
+                }
+              }
               else
+              {
                 item.Deslike.Add(view);
+                foreach (var lk in item.Like)
+                {
+                  if (lk._idUser == _user._idUser)
+                    item.Like.Remove(lk);
+                }
+              }
+                
             }
 
             item.CountLike = item.Like.Count();
