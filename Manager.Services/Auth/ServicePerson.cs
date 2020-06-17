@@ -1065,7 +1065,8 @@ namespace Manager.Services.Auth
       try
       {
         bool modifyManager = false;
-        var exists = serviceUser.CountFreeNewVersion(p => p._id != view.User._id && (p.Document == view.User.Document)).Result;
+        var exists = serviceUser.CountFreeNewVersion(p => p._id != view.User._id && (p.Document == view.User.Document)
+        && p.Status == EnumStatus.Enabled).Result;
         if (exists > 0)
           throw new Exception("existsdocument");
 
