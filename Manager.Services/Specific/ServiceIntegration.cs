@@ -272,6 +272,18 @@ namespace Manager.Services.Specific
             payrollEmployee.Messages.Add("Gestor indicado não encontrado!");
             return payrollEmployee;
           }
+          if (personManager.TypeUser != EnumTypeUser.Manager && personManager.TypeUser != EnumTypeUser.ManagerHR)
+          {
+            if (personManager.TypeUser == EnumTypeUser.Employee)
+            {
+              personManager.TypeUser = EnumTypeUser.Manager;
+            }
+            if (personManager.TypeUser == EnumTypeUser.HR)
+            {
+              personManager.TypeUser = EnumTypeUser.ManagerHR;
+            }
+            string updateManager = personService.Update(personManager);
+          }
           resultV2.IdGestor = personManager._id;
           resultV2.TypeUserGestor = personManager.TypeUser;
           payrollEmployee._idContractManager = personManager._id;
@@ -507,132 +519,6 @@ namespace Manager.Services.Specific
       catch (Exception ex)
       {
         resultV2.Mensagem.Add(ex.ToString());
-      }
-    }
-    private string PersonUpdateTypeUser(ColaboradorV2Base view)
-    {
-      try
-      {
-        IntegrationCompany integrationCompany = GetIntegrationCompany(view.Empresa, view.NomeEmpresa);
-        Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
-        IntegrationEstablishment integrationEstablishment = null;
-        Establishment establishment = null;
-        if (company == null)
-        {
-          return "Falta integração da empresa";
-        }
-        else
-        {
-          // Estabelecimento
-          integrationEstablishment = GetIntegrationEstablishment(view.Estabelecimento, view.NomeEstabelecimento, company._id);
-          establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
-          if (establishment == null)
-          {
-            return "Falta integração de estabelecimento";
-          }
-        }
-        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
-        ViewCrudPerson person = viewCrudIntegrationParameter.IntegrationKey switch
-        {
-          EnumIntegrationKey.CompanyEstablishment => personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
-                           && p.Establishment._id == establishment._id && p.Registration == view.Matricula).Result?.GetViewCrud(),
-          EnumIntegrationKey.Company => personService.GetNewVersion(p => p.User.Document == view.Cpf && p.Company._id == company._id
-                           && p.Registration == view.Matricula).Result?.GetViewCrud(),
-          EnumIntegrationKey.Document => personService.GetNewVersion(p => p.User.Document == view.Cpf).Result?.GetViewCrud(),
-          _ => throw new Exception("Tipo de integração de chaves inválida"),
-        };
-        if (person == null)
-        {
-          return "Gestor não encontrado";
-        }
-        switch (person.TypeUser)
-        {
-          case EnumTypeUser.Support:
-            return "Colaborador de suporte";
-          case EnumTypeUser.Administrator:
-            return "Colaborador é administrador";
-          case EnumTypeUser.Manager:
-            return "Colaborador já é gestor";
-          case EnumTypeUser.Employee:
-            person.TypeUser = EnumTypeUser.Manager;
-            string updatePerson = personService.Update(person);
-            return "Gestor atualizado";
-          case EnumTypeUser.Anonymous:
-            return "Colaborador anônimo";
-          case EnumTypeUser.HR:
-            return "Colaborador é de RH";
-          case EnumTypeUser.ManagerHR:
-            return "Colaborador é gestor de RH";
-          default:
-            return "Tipo de colaborador não encontrado";
-        }
-      }
-      catch (Exception ex)
-      {
-        throw ex;
-      }
-    }
-    private string PersonUpdateManager(ColaboradorV2Gestor view)
-    {
-      try
-      {
-        IntegrationCompany integrationCompany = GetIntegrationCompany(view.Colaborador.Empresa, view.Colaborador.NomeEmpresa);
-        Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
-        IntegrationEstablishment integrationEstablishment = null;
-        Establishment establishment = null;
-        if (company == null)
-        {
-          return "Falta integração da empresa";
-        }
-        else
-        {
-          // Estabelecimento
-          integrationEstablishment = GetIntegrationEstablishment(view.Colaborador.Estabelecimento, view.Colaborador.NomeEstabelecimento, company._id);
-          establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
-          if (establishment == null)
-          {
-            return "Falta integração de estabelecimento";
-          }
-        }
-        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
-        ViewCrudPerson person = viewCrudIntegrationParameter.IntegrationKey switch
-        {
-          EnumIntegrationKey.CompanyEstablishment => personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
-                           && p.Establishment._id == establishment._id && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud(),
-          EnumIntegrationKey.Company => personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf && p.Company._id == company._id
-                           && p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud(),
-          EnumIntegrationKey.Document => personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf).Result?.GetViewCrud(),
-          _ => throw new Exception("Tipo de integração de chaves inválida"),
-        };
-        if (person == null)
-        {
-          return "Gestor não encontrado";
-        }
-        switch (person.TypeUser)
-        {
-          case EnumTypeUser.Support:
-            return "Colaborador de suporte";
-          case EnumTypeUser.Administrator:
-            return "Colaborador é administrador";
-          case EnumTypeUser.Manager:
-            return "Colaborador já é gestor";
-          case EnumTypeUser.Employee:
-            person.TypeUser = EnumTypeUser.Manager;
-            string updatePerson = personService.Update(person);
-            return "Gestor atualizado";
-          case EnumTypeUser.Anonymous:
-            return "Colaborador anônimo";
-          case EnumTypeUser.HR:
-            return "Colaborador é de RH";
-          case EnumTypeUser.ManagerHR:
-            return "Colaborador é gestor de RH";
-          default:
-            return "Tipo de colaborador não encontrado";
-        }
-      }
-      catch (Exception ex)
-      {
-        throw ex;
       }
     }
     #endregion
@@ -2151,17 +2037,6 @@ namespace Manager.Services.Specific
       catch (Exception)
       {
         throw;
-      }
-    }
-    public string PerfilGestorV2(ColaboradorV2Base view)
-    {
-      try
-      {
-        return PersonUpdateTypeUser(view);
-      }
-      catch (Exception ex)
-      {
-        throw ex;
       }
     }
 

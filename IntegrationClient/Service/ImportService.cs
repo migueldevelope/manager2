@@ -24,7 +24,6 @@ namespace IntegrationClient.Service
 
     #region Private V2
     private List<ColaboradorV2Completo> ColaboradoresV2;
-    private List<ColaboradorV2Gestor> GestoresV2;
     #endregion
 
     private readonly ViewPersonLogin Person;
@@ -163,9 +162,8 @@ namespace IntegrationClient.Service
         ColaboradorV2Retorno viewRetorno;
         ProgressBarMaximun = ColaboradoresV2.Count;
         ProgressBarValue = 0;
-        ProgressMessage = "Atualizando colaboradores 2/3...";
+        ProgressMessage = "Atualizando colaboradores 2/2...";
         OnRefreshProgressBar(EventArgs.Empty);
-        ColaboradorV2Gestor gestorAux;
         foreach (ColaboradorV2Completo colaborador in ColaboradoresV2)
         {
           if (jsonLog)
@@ -177,14 +175,8 @@ namespace IntegrationClient.Service
             FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), JsonConvert.SerializeObject(colaborador), EnumTypeLineOpportunityg.Register);
           }
           viewRetorno = personIntegration.PostV2Completo(colaborador);
-          gestorAux = GestoresV2.Find(p => p.Colaborador.Cpf == colaborador.Colaborador.Cpf && p.Colaborador.NomeEmpresa == colaborador.Colaborador.NomeEmpresa &&
-                               p.Colaborador.NomeEstabelecimento == colaborador.Colaborador.NomeEstabelecimento && p.Colaborador.Matricula == colaborador.Colaborador.Matricula);
-          gestorAux.IdColaborador = viewRetorno.IdContract;
-          gestorAux.IdGestor = viewRetorno.IdGestor;
-          gestorAux.TypeUserGestor = viewRetorno.TypeUserGestor;
           if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
           {
-            gestorAux.Erro = true;
             FileClass.SaveLog(LogFileName.Replace(".log", "_waring.log"), string.Format("{0};{1};{2};{3};{4};{5}", colaborador.Colaborador.Cpf, colaborador.Nome, colaborador.Colaborador.NomeEmpresa,
               colaborador.Colaborador.NomeEstabelecimento, colaborador.Colaborador.Matricula, string.Join("/", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Warning);
             if (!File.Exists(LogFileName.Replace(".log", "_json.log")))
@@ -202,41 +194,6 @@ namespace IntegrationClient.Service
           }
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
-        }
-        ProgressBarMaximun = GestoresV2.Count;
-        ProgressBarValue = 0;
-        ProgressMessage = "Atualizando gestores 3/3...";
-        OnRefreshProgressBar(EventArgs.Empty);
-        // Atualização de gestores
-        if (GestoresV2.Count > 0)
-        {
-          string result = string.Empty;
-          string salvaCpf = string.Empty;
-          //foreach (ColaboradorV2Gestor gestor in GestoresV2.Where(w => w.IdColaborador != null && w.Gestor != null).OrderBy(o => o.Gestor.Cpf))
-          //{
-          //  if (jsonLog)
-          //  {
-          //    if (!File.Exists(LogFileName.Replace(".log", "_gestor_api.log")))
-          //    {
-          //      FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_api.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
-          //    }
-          //    FileClass.SaveLog(LogFileName.Replace(".log", "_gestor_api.log"), JsonConvert.SerializeObject(gestor), EnumTypeLineOpportunityg.Register);
-          //  }
-          //  if (gestor.TypeUserGestor != EnumTypeUser.Manager && gestor.TypeUserGestor != EnumTypeUser.ManagerHR)
-          //  {
-          //    result = personIntegration.PutV2PerfilGestor(gestor.Gestor);
-          //    FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Gestor.Cpf,
-          //      gestor.Gestor.NomeEmpresa, gestor.Gestor.NomeEstabelecimento, gestor.Gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
-          //  }
-          //  if (salvaCpf.Equals(gestor.Gestor.Cpf))
-          //  {
-
-          //  }
-          //  //FileClass.SaveLog(LogFileName.Replace(".log", "_gestor.log"), string.Format("{0};{1};{2};{3};{4}", gestor.Cpf, gestor.NomeEmpresa, gestor.NomeEstabelecimento,
-          //  //  gestor.Matricula, result), EnumTypeLineOpportunityg.Register);
-          //  ProgressBarValue++;
-          //  OnRefreshProgressBar(EventArgs.Empty);
-          //}
         }
         Status = EnumStatusService.Ok;
         Message = "Fim de integração!";
@@ -564,11 +521,10 @@ namespace IntegrationClient.Service
       {
         ProgressBarMaximun = 100;
         ProgressBarValue = 0;
-        ProgressMessage = "Carregando colaboradores 1/3...";
+        ProgressMessage = "Carregando colaboradores 1/2...";
         OnRefreshProgressBar(EventArgs.Empty);
         ApiMetadados apiMetadados = new ApiMetadados();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
-        GestoresV2 = new List<ColaboradorV2Gestor>();
         List<ViewIntegrationMetadadosV1> colaboradores;
         int offset = 0;
         int limit = 100;
@@ -590,14 +546,6 @@ namespace IntegrationClient.Service
             {
               gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
             }
-            GestoresV2.Add(new ColaboradorV2Gestor()
-            {
-              Colaborador = ColaboradoresV2[ColaboradoresV2.Count - 1].Colaborador,
-              Gestor = gestor,
-              IdColaborador = null,
-              IdGestor = null,
-              Erro = false
-            });
             register++;
           }
           offset += limit;
@@ -632,7 +580,6 @@ namespace IntegrationClient.Service
           throw new Exception("Não tem nenhum colaborador para integração.");
         }
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
-        GestoresV2 = new List<ColaboradorV2Gestor>();
         // Carregar Lista de Colaboradores
         bool validColumn = true;
         List<string> columnsValidV2 = new List<string>
@@ -645,7 +592,7 @@ namespace IntegrationClient.Service
         };
         ProgressBarMaximun = readData.Rows.Count;
         ProgressBarValue = 0;
-        ProgressMessage = "Carregando colaboradores 1/3...";
+        ProgressMessage = "Carregando colaboradores 1/2...";
         OnRefreshProgressBar(EventArgs.Empty);
         ColaboradorV2Base gestor;
         foreach (DataRow row in readData.Rows)
@@ -668,14 +615,6 @@ namespace IntegrationClient.Service
           {
             gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
           }
-          GestoresV2.Add(new ColaboradorV2Gestor()
-          {
-            Colaborador = ColaboradoresV2[ColaboradoresV2.Count - 1].Colaborador,
-            Gestor = gestor,
-            IdColaborador = null,
-            IdGestor = null,
-            Erro = false
-          });
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
@@ -716,7 +655,7 @@ namespace IntegrationClient.Service
         int finalRow = excelApp.ActiveCell.Row;
         ProgressBarMaximun = finalRow + 1;
         ProgressBarValue = 0;
-        ProgressMessage = "Carregando colaboradores 1/3...";
+        ProgressMessage = "Carregando colaboradores 1/2...";
         OnRefreshProgressBar(EventArgs.Empty);
 
         #region Reformatação da planilha AEL
@@ -887,7 +826,6 @@ namespace IntegrationClient.Service
         int collumnCount = excelApp.ActiveCell.Column + 1;
         _ = excelPln.Range["A1"].Select();
         ColaboradoresV2 = new List<ColaboradorV2Completo>();
-        GestoresV2 = new List<ColaboradorV2Gestor>();
         // Carregar Lista de Colaboradores
         List<string> columnsValidV2 = new List<string>
         {
@@ -936,14 +874,6 @@ namespace IntegrationClient.Service
           {
             gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
           }
-          GestoresV2.Add(new ColaboradorV2Gestor()
-          {
-            Colaborador = ColaboradoresV2[ColaboradoresV2.Count - 1].Colaborador,
-            Gestor = gestor,
-            IdColaborador = null,
-            IdGestor = null,
-            Erro = false
-          });
           ProgressBarValue++;
           OnRefreshProgressBar(EventArgs.Empty);
         }
