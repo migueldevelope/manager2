@@ -1583,8 +1583,8 @@ namespace Manager.Services.Specific
                   {
                     item.CountLike = item.Like.Count();
                     item.CountDeslike = item.Deslike.Count();
-                    var x = servicePendingCheckinObjective.Update(model, null);
                     item.Deslike.Remove(lk);
+                    var x = servicePendingCheckinObjective.Update(model, null);
                     return "like";
                   }
                 }
@@ -1748,8 +1748,8 @@ namespace Manager.Services.Specific
                   {
                     item.CountLike = item.Like.Count();
                     item.CountDeslike = item.Deslike.Count();
-                    var x = servicePendingCheckinObjective.Update(model, null);
                     item.Deslike.Remove(lk);
+                    var x = servicePendingCheckinObjective.Update(model, null);
                     return "like";
                   }
                 }
