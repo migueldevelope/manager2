@@ -1230,8 +1230,9 @@ namespace Manager.Services.Auth
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
         }
-        if (view.Manager != null && saveManager?._id != person.Manager?._id)
+        if (view.Manager == null && saveManager != null)
         {
+          // Zerou gestor
           personHistory = new PersonHistory()
           {
             Person = person.GetViewList(),
@@ -1244,6 +1245,41 @@ namespace Manager.Services.Auth
             NewValue = person.Manager?.Name
           };
           personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (view.Manager != null && saveManager == null)
+        {
+          // Informou gestor
+          personHistory = new PersonHistory()
+          {
+            Person = person.GetViewList(),
+            TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
+            TypeChange = EnumTypeHistoryChange.Manager,
+            Register = DateTime.UtcNow,
+            OldKey = saveManager?._id,
+            OldValue = saveManager?.Name,
+            NewKey = person.Manager?._id,
+            NewValue = person.Manager?.Name
+          };
+          personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+        }
+        if (view.Manager != null && saveManager != null)
+        {
+          // Trocou gestor
+          if (saveManager._id != person.Manager._id)
+          {
+            personHistory = new PersonHistory()
+            {
+              Person = person.GetViewList(),
+              TypeHistory = person.StatusUser == EnumStatusUser.Disabled ? EnumTypeHistory.Demission : EnumTypeHistory.Change,
+              TypeChange = EnumTypeHistoryChange.Manager,
+              Register = DateTime.UtcNow,
+              OldKey = saveManager?._id,
+              OldValue = saveManager?.Name,
+              NewKey = person.Manager?._id,
+              NewValue = person.Manager?.Name
+            };
+            personHistory = servicePersonHistory.InsertNewVersion(personHistory).Result;
+          }
         }
         if (saveTypeJourney != person.TypeJourney)
         {
