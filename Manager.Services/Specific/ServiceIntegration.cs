@@ -379,7 +379,10 @@ namespace Manager.Services.Specific
           {
             person.TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding;
           }
-          person.Manager = personManager == null ? null : new ViewBaseFields() { _id = personManager._id, Name = personManager.User.Name, Mail = personManager.User.Mail };
+          if (personManager != null)
+          {
+            person.Manager = personManager == null ? null : new ViewBaseFields() { _id = personManager._id, Name = personManager.User.Name, Mail = personManager.User.Mail };
+          }
           // User of person contract
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
           // Update
