@@ -404,7 +404,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListObjectiveEdit> GetObjectiveEditParticipantRH()
+    public List<ViewListObjectiveEdit> GetObjectiveEditParticipantRH(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -602,6 +602,14 @@ namespace Manager.Services.Specific
 
         list = list.Where(p => p.KeyResults != null).ToList();
         list = list.Where(p => p.KeyResults.Count() > 0).ToList();
+
+        total = list.Count();
+
+        var skip = count * (page - 1);
+        total = list.Count();
+
+        list = list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Description).Skip(skip).Take(count).ToList();
+
         return list;
       }
       catch (Exception e)

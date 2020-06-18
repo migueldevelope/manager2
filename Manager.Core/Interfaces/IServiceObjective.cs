@@ -71,7 +71,7 @@ namespace Manager.Core.Interfaces
     List<ViewListPersonPhoto> GetListEmployee();
 
     List<ViewListObjectiveEdit> GetObjectiveEditParticipant();
-    List<ViewListObjectiveEdit> GetObjectiveEditParticipantRH();
+    List<ViewListObjectiveEdit> GetObjectiveEditParticipantRH(ref long total, int count = 10, int page = 1, string filter = "");
 
     List<ViewListImpedimentsIniciatives> GetImpedimentsIniciatives(string idkeyresult, ref long total, int count = 10, int page = 1, string filter = "");
 

@@ -369,13 +369,19 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getobjectiveeditparticipantrh")]
-    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditParticipantRH()
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditParticipantRH(int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.GetObjectiveEditParticipantRH());
+      long total = 0;
+      var result = service.GetObjectiveEditParticipantRH(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
 
