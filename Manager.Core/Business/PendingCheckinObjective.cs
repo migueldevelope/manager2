@@ -27,6 +27,7 @@ namespace Manager.Core.Business
     public int Week { get; set; }
 
     public int Month { get; set; }
+    public byte Fortnight { get; set; }
     public ViewCrudPendingCheckinObjective GetViewCrud()
     {
       return new ViewCrudPendingCheckinObjective
@@ -43,8 +44,9 @@ namespace Manager.Core.Business
         QuantityResult = QuantityResult,
         QualityResult = QualityResult,
         Week = Week,
-        Month = Month
-      };
+        Month = Month,
+        Fortnight= Fortnight
+  };
     }
 
     public ViewListPendingCheckinObjective GetViewList()

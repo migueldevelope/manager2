@@ -18,6 +18,7 @@ namespace Manager.Views.BusinessCrud
     public DateTime? Date { get; set; }
     public int Week { get; set; }
     public int Month { get; set; }
+    public byte Fortnight { get; set; }
     public List<ViewCrudImpedimentsIniciatives> Impediments { get; set; }
     public List<ViewCrudImpedimentsIniciatives> Iniciatives { get; set; }
     public decimal Achievement { get; set; }

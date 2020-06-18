@@ -172,6 +172,8 @@ namespace Manager.Services.Specific
       {
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
 
         var view = new ViewListObjectiveParticipantCard();
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
@@ -201,7 +203,9 @@ namespace Manager.Services.Specific
 
         //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
 
-        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
+        //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result;
+
 
         if (keyresults.Count() > 0)
           view.AverageAchievement = keyresults.Average(p => p.Achievement);
@@ -230,12 +234,16 @@ namespace Manager.Services.Specific
       {
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
 
         var view = new ViewListObjectiveResponsibleCard();
         var objective = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
           .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson).Select(p => p._id);
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
-        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
+        //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
+
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result;
 
         if (keyresults.Count() > 0)
           view.AverageAchievement = keyresults.Average(p => p.Achievement);
@@ -291,6 +299,8 @@ namespace Manager.Services.Specific
         var list = new List<ViewListDetailResposibleObjective>();
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
 
         var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active
         && p.Description.Contains(filter))
@@ -302,7 +312,8 @@ namespace Manager.Services.Specific
         {
           var keyresults = serviceKeyResult.GetAllNewVersion(p => item._id == p.Objective._id).Result;
           var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
-          && p.Week == week && p._idObjective == item._id).Result;
+          && p._idObjective == item._id).Result;
+          //&& p.Week == week && p._idObjective == item._id).Result;
 
           var view = new ViewListDetailResposibleObjective();
 
@@ -412,6 +423,8 @@ namespace Manager.Services.Specific
 
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
 
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
@@ -447,7 +460,6 @@ namespace Manager.Services.Specific
           var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
             .Where(p => ids.Contains(p._idObjective));
 
-          var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
 
 
           view.Description = obj.Description;
@@ -466,9 +478,9 @@ namespace Manager.Services.Specific
 
           if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
             view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
-          if (pendingchecking.Count() > 0)
+          if (pendingcheckingprevious.Count() > 0)
           {
-            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
+            view.AverageTrust = pendingcheckingprevious.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
           }
 
           if (view.AverageTrust <= 50)
@@ -548,9 +560,14 @@ namespace Manager.Services.Specific
 
             }
 
+            List<PendingCheckinObjective> pendingcheckingkey = new List<PendingCheckinObjective>();
 
-            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
-            && p.Week == week).ToList();
+            if (viewKeyResult.TypeCheckin == EnumTypeCheckin.Weekly)
+              pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Week == week && p._idPerson == _user._idPerson).ToList();
+            else if (viewKeyResult.TypeCheckin == EnumTypeCheckin.Monthly)
+              pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p._idPerson == _user._idPerson).ToList();
+            else
+              pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p.Fortnight == fortnight && p._idPerson == _user._idPerson).ToList();
 
             if (pendingcheckingkey.Count() > 0)
             {
@@ -626,6 +643,9 @@ namespace Manager.Services.Specific
 
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
+
         //var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
         // .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson);
 
@@ -665,7 +685,7 @@ namespace Manager.Services.Specific
           var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result
             .Where(p => ids.Contains(p._idObjective));
 
-          var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
+          //var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
 
 
           view.Description = obj.Description;
@@ -684,9 +704,9 @@ namespace Manager.Services.Specific
 
           if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
             view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
-          if (pendingchecking.Count() > 0)
+          if (pendingcheckingprevious.Count() > 0)
           {
-            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
+            view.AverageTrust = pendingcheckingprevious.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
           }
 
           if (view.AverageTrust <= 50)
@@ -767,8 +787,14 @@ namespace Manager.Services.Specific
             }
 
 
-            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == viewKeyResult._id
-            && p.Week == week && p._idPerson == _user._idPerson).ToList();
+            List<PendingCheckinObjective> pendingcheckingkey = new List<PendingCheckinObjective>();
+
+            if (viewKeyResult.TypeCheckin == EnumTypeCheckin.Weekly)
+              pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Week == week && p._idPerson == _user._idPerson).ToList();
+            else if (viewKeyResult.TypeCheckin == EnumTypeCheckin.Monthly)
+              pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p._idPerson == _user._idPerson).ToList();
+            else
+              pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p.Fortnight == fortnight && p._idPerson == _user._idPerson).ToList();
 
             if (pendingcheckingkey.Count() > 0)
             {
@@ -825,6 +851,8 @@ namespace Manager.Services.Specific
 
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
         //var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
         // .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson);
 
@@ -844,7 +872,7 @@ namespace Manager.Services.Specific
 
           var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result
             .Where(p => ids.Contains(p._idObjective));
-          var pendingcheckingweek = pendingchecking.Where(p => p.Week == week).ToList();
+
 
           view.Description = obj.Description;
           view.Detail = obj.Detail;
@@ -881,8 +909,18 @@ namespace Manager.Services.Specific
 
           foreach (var kr in keyresults)
           {
-            var pendingcheckingkey = pendingcheckingweek.Where(p => p._idKeyResult == kr._id);
-            var pendingcheckingkeyweek = pendingcheckingweek.Where(p => p._idKeyResult == kr._id && p.Week == week);
+            var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == kr._id);
+
+
+            List<PendingCheckinObjective> pendingcheckingkeyweek = new List<PendingCheckinObjective>();
+
+            if (kr.TypeCheckin == EnumTypeCheckin.Weekly)
+              pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == kr._id && p.Week == week).ToList();
+            else if (kr.TypeCheckin == EnumTypeCheckin.Monthly)
+              pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == kr._id && p.Month == month).ToList();
+            else
+              pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == kr._id && p.Month == month && p.Fortnight == fortnight).ToList();
+
 
             var viewKeyResult = new ViewListKeyResultsEdit();
             viewKeyResult._id = kr._id;
@@ -1419,6 +1457,7 @@ namespace Manager.Services.Specific
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
+
         var model = servicePendingCheckinObjective.InsertNewVersion(
           new PendingCheckinObjective()
           {
@@ -1429,9 +1468,17 @@ namespace Manager.Services.Specific
             LevelTrust = view.LevelTrust,
             Date = DateTime.Now,
             Week = week,
+            Month = DateTime.Now.Month,
             Impediments = new List<ViewCrudImpedimentsIniciatives>(),
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
           }).Result;
+
+        if (DateTime.Now.Day >= 15)
+          model.Fortnight = 2;
+        else
+          model.Fortnight = 1;
+
+
         return model.GetViewCrud();
       }
       catch (Exception e)
