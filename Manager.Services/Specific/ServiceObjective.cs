@@ -438,12 +438,14 @@ namespace Manager.Services.Specific
               var team = persons.Where(p => p.Manager?._id == par._idPerson).Select(p => p.GetViewListPhoto());
               foreach (var person in team)
               {
-                keyresults.Add(item);
+                if (keyresults.Where(p => p._id == item._id).Count() == 0)
+                  keyresults.Add(item);
               }
             }
             else
             {
-              keyresults.Add(item);
+              if (keyresults.Where(p => p._id == item._id).Count() == 0)
+                keyresults.Add(item);
             }
           }
         }
@@ -662,13 +664,15 @@ namespace Manager.Services.Specific
               foreach (var person in team)
               {
                 if (person._id == _user._idPerson)
-                  keyresults.Add(item);
+                  if (keyresults.Where(p => p._id == item._id).Count() == 0)
+                    keyresults.Add(item);
               }
             }
             else
             {
               if (par._idPerson == _user._idPerson)
-                keyresults.Add(item);
+                if (keyresults.Where(p => p._id == item._id).Count() == 0)
+                  keyresults.Add(item);
             }
           }
         }
