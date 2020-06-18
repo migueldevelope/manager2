@@ -944,7 +944,8 @@ namespace Manager.Services.Specific
             {
               viewKeyResult.QuantityImpediments = pendingcheckingkey.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkey.Sum(p => p.Iniciatives.Count());
-              viewKeyResult.AverageTrust = pendingcheckingkeyweek.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
+              //viewKeyResult.AverageTrust = pendingcheckingkeyweek.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
+              viewKeyResult.AverageTrust = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
 
               viewKeyResult.PendingChecking = false;
               viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
