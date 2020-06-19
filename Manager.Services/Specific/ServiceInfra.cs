@@ -3488,8 +3488,8 @@ namespace Manager.Services.Specific
             };
             var schoolold = occupationOld.Schooling.Where(p => p._id == school._id).FirstOrDefault();
             if (schoolold != null)
-                schoolnew.Complement = schoolold.Complement;
-            
+              schoolnew.Complement = schoolold.Complement;
+
             occupation.Schooling.Add(schoolnew);
 
           }
@@ -4357,8 +4357,12 @@ namespace Manager.Services.Specific
     {
       try
       {
+
+        List<List<dynamic>> listremove = new List<List<dynamic>>();
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
         {
+
+
           item.Group = group.GetViewList();
           foreach (var school in group.Schooling)
           {
@@ -4374,8 +4378,11 @@ namespace Manager.Services.Specific
               if (group.Schooling.Where(p => p._id == schoolOccupation._id).Count() == 0)
               {
                 item.Schooling.Remove(schoolOccupation);
-                serviceOccupation.Update(item, null);
-                break;
+
+                List<dynamic> view = new List<dynamic>();
+                view[0] = item._id;
+                view[1] = schoolOccupation;
+                listremove.Add(view);
               }
             }
             if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
@@ -4387,6 +4394,20 @@ namespace Manager.Services.Specific
           serviceOccupation.Update(item, null);
           Task.Run(() => UpdateOccupationAll(item));
           Task.Run(() => UpdateOccupationLog(item));
+        }
+
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
+        {
+          foreach (var remove in listremove)
+          {
+            if (remove[0] == item._id)
+            {
+              item.Schooling.Remove(remove[1]);
+              serviceOccupation.Update(item, null);
+              Task.Run(() => UpdateOccupationAll(item));
+              Task.Run(() => UpdateOccupationLog(item));
+            }
+          }
         }
 
 
