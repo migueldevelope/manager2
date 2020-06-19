@@ -4370,6 +4370,12 @@ namespace Manager.Services.Specific
                 school.Order = schoolOccupation.Order;
               }
             }
+
+
+            if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
+            {
+              item.Schooling.Add(school.GetViewCrud());
+            }
           }
 
           serviceOccupation.Update(item, null);
