@@ -4369,15 +4369,21 @@ namespace Manager.Services.Specific
                 school.Name = schoolOccupation.Name;
                 school.Order = schoolOccupation.Order;
               }
+
+
+              if (group.Schooling.Where(p => p._id == schoolOccupation._id).Count() == 0)
+              {
+                group.Schooling.Remove(schoolOccupation);
+                serviceOccupation.Update(item, null);
+                break;
+              }
             }
-
-
             if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
             {
               item.Schooling.Add(school.GetViewCrud());
             }
-          }
 
+          }
           serviceOccupation.Update(item, null);
           Task.Run(() => UpdateOccupationAll(item));
           Task.Run(() => UpdateOccupationLog(item));
