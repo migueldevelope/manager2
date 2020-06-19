@@ -571,6 +571,10 @@ namespace Manager.Services.Specific
             else
               pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p.Fortnight == fortnight && p._idPerson == _user._idPerson).ToList();
 
+
+            viewKeyResult.PendingChecking = true;
+            viewKeyResult.PendingCheckinAchievement = true;
+
             if (pendingcheckingkey.Count() > 0)
             {
               var checkin = pendingcheckingkey.FirstOrDefault();
@@ -593,6 +597,8 @@ namespace Manager.Services.Specific
                 viewKeyResult.PendingCheckinAchievement = true;
               else
                 viewKeyResult.PendingCheckinAchievement = false;
+
+              
 
             }
             else
@@ -943,6 +949,9 @@ namespace Manager.Services.Specific
             viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
+
+            viewKeyResult.PendingChecking = true;
+            viewKeyResult.PendingCheckinAchievement = true;
 
             if (pendingcheckingkey.Count() > 0)
             {
