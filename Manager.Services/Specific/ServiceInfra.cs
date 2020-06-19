@@ -4373,7 +4373,7 @@ namespace Manager.Services.Specific
 
               if (group.Schooling.Where(p => p._id == schoolOccupation._id).Count() == 0)
               {
-                group.Schooling.Remove(schoolOccupation);
+                item.Schooling.Remove(schoolOccupation);
                 serviceOccupation.Update(item, null);
                 break;
               }
