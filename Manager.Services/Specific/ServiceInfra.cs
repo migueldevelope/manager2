@@ -4361,8 +4361,6 @@ namespace Manager.Services.Specific
         List<List<dynamic>> listremove = new List<List<dynamic>>();
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
         {
-
-
           item.Group = group.GetViewList();
           foreach (var school in group.Schooling)
           {
@@ -4374,23 +4372,28 @@ namespace Manager.Services.Specific
                 school.Order = schoolOccupation.Order;
               }
 
-
-              if (group.Schooling.Where(p => p._id == schoolOccupation._id).Count() == 0)
+              if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
               {
-                item.Schooling.Remove(schoolOccupation);
-
-                List<dynamic> view = new List<dynamic>();
-                view[0] = item._id;
-                view[1] = schoolOccupation;
-                listremove.Add(view);
+                item.Schooling.Add(school.GetViewCrud());
               }
+
             }
-            if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
+          }
+
+          foreach (var schoolOccupation in item.Schooling)
+          {
+            if (group.Schooling.Where(p => p._id == schoolOccupation._id).Count() == 0)
             {
-              item.Schooling.Add(school.GetViewCrud());
+              //item.Schooling.Remove(schoolOccupation);
+
+              List<dynamic> view = new List<dynamic>();
+              view.Add(item._id);
+              view.Add(schoolOccupation);
+              listremove.Add(view);
             }
 
           }
+
           serviceOccupation.Update(item, null);
           Task.Run(() => UpdateOccupationAll(item));
           Task.Run(() => UpdateOccupationLog(item));
@@ -4402,7 +4405,12 @@ namespace Manager.Services.Specific
           {
             if (remove[0] == item._id)
             {
-              item.Schooling.Remove(remove[1]);
+              var school = item.Schooling.Where(p => p._id == remove[1]._id).FirstOrDefault();
+              if(school != null)
+                item.Schooling.Remove(school);
+
+              //var con = item.Schooling.Count();
+
               serviceOccupation.Update(item, null);
               Task.Run(() => UpdateOccupationAll(item));
               Task.Run(() => UpdateOccupationLog(item));
@@ -4415,280 +4423,280 @@ namespace Manager.Services.Specific
         {
           item.Occupation._idGroup = group._id;
           item.Occupation.NameGroup = group.Name;
-
           servicePerson.Update(item, null);
         }
 
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async Task UpdateCboAll(Cbo Cbo)
-    {
-      try
-      {
-        foreach (var item in serviceOccupation.GetAllFreeNewVersion(p => p.Cbo._id == Cbo._id).Result)
-        {
-          item.Cbo = Cbo.GetViewList();
-          serviceOccupation.UpdateAccount(item, null);
-          Task.Run(() => UpdateOccupationAll(item));
-          Task.Run(() => UpdateOccupationLog(item));
-        }
 
       }
       catch (Exception e)
       {
         throw e;
       }
+}
+
+private async Task UpdateCboAll(Cbo Cbo)
+{
+  try
+  {
+    foreach (var item in serviceOccupation.GetAllFreeNewVersion(p => p.Cbo._id == Cbo._id).Result)
+    {
+      item.Cbo = Cbo.GetViewList();
+      serviceOccupation.UpdateAccount(item, null);
+      Task.Run(() => UpdateOccupationAll(item));
+      Task.Run(() => UpdateOccupationLog(item));
     }
 
-    private async Task UpdateOccupationAllCbo(Occupation occupation)
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
+
+private async Task UpdateOccupationAllCbo(Occupation occupation)
+{
+  try
+  {
+    foreach (var item in servicePerson.GetAllFreeNewVersion(p => p.Occupation._id == occupation._id).Result.ToList())
     {
-      try
+      item.Occupation = occupation.GetViewListResume();
+      servicePerson.UpdateAccount(item, null);
+    }
+
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
+
+private async Task UpdateOccupationAll(Occupation occupation)
+{
+  try
+  {
+    foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).Result)
+    {
+      item.Occupation = occupation.GetViewListResume();
+      servicePerson.Update(item, null);
+    }
+
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
+
+private async Task UpdateGroupOccupationAll(Group groupnew, Group groupold)
+{
+  try
+  {
+    foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == groupold._id).Result.ToList())
+    {
+      item.Group = groupnew.GetViewList();
+      serviceOccupation.Update(item, null);
+      Task.Run(() => UpdateOccupationAll(item));
+      Task.Run(() => UpdateOccupationLog(item));
+    }
+
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
+
+private async Task UpdateSphereAll(Sphere sphere, bool remove)
+{
+  //foreach (var item in axisService.GetAllNewVersion(p => p.Sphere._id == sphere._id).ToList())
+  //{
+  //  if (remove == true)
+  //    item.Sphere = null;
+  //  else
+  //    item.Sphere = sphere;
+
+  //  this.axisService.Update(item, null);
+  //}
+
+  foreach (var item in serviceGroup.GetAllNewVersion(p => p.Sphere._id == sphere._id).Result.ToList())
+  {
+    if (remove == true)
+      item.Sphere = null;
+    else
+      item.Sphere = sphere.GetViewList();
+
+    this.serviceGroup.Update(item, null);
+    Task.Run(() => UpdateGroupAll(item));
+    Task.Run(() => UpdateGroupLog(item));
+  }
+
+}
+
+private async Task UpdateAxisAll(Axis axis, bool remove)
+{
+  foreach (var item in serviceGroup.GetAllNewVersion(p => p.Axis._id == axis._id).Result.ToList())
+  {
+    if (remove == true)
+      item.Axis = null;
+    else
+      item.Axis = axis.GetViewList();
+
+    this.serviceGroup.Update(item, null);
+    Task.Run(() => UpdateGroupAll(item));
+    Task.Run(() => UpdateGroupLog(item));
+  }
+
+}
+
+private async Task UpdateAreaAll(Area area)
+{
+  try
+  {
+    //foreach (var item in occupationService.GetAllNewVersion(p => p.Area._id == area._id).ToList())
+    //{
+    //  item.Area = area;
+    //  this.occupationService.Update(item, null);
+    //  UpdateOccupationAll(item);
+    //}
+
+    foreach (var item in serviceProcessLevelOne.GetAllNewVersion().ToList())
+    {
+      if (item.Area._id == area._id)
       {
-        foreach (var item in servicePerson.GetAllFreeNewVersion(p => p.Occupation._id == occupation._id).Result.ToList())
+        item.Area.Name = area.Name;
+        serviceProcessLevelOne.Update(item, null);
+      }
+    }
+
+    foreach (var item in serviceProcessLevelTwo.GetAllNewVersion().ToList())
+    {
+      if (item.ProcessLevelOne.Area._id == area._id)
+      {
+        item.ProcessLevelOne.Area.Name = area.Name;
+        serviceProcessLevelTwo.Update(item, null);
+      }
+    }
+
+
+    //foreach (var item in occupationService.GetAllNewVersion().ToList())
+    //{
+    //  foreach (var ar in item.Areas)
+    //  {
+    //    if (ar != null)
+    //    {
+    //      if (ar._id == area._id)
+    //      {
+    //        item.Areas.Remove(ar);
+    //        item.Areas.Add(area);
+    //        item.ProcessLevelTwo.ProcessLevelOne.Area.Name = area.Name;
+    //        item.Area.Name = area.Name;
+    //        this.occupationService.Update(item, null);
+    //        UpdateOccupationAll(item);
+    //        break;
+    //      }
+    //    }
+    //  }
+    //}
+
+
+
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
+
+private async Task UpdateAreaProcessAll(Area area)
+{
+  try
+  {
+    foreach (var item in serviceOccupation.GetAllNewVersion().ToList())
+    {
+      foreach (var proc in item.Process)
+      {
+        if (proc.ProcessLevelOne != null)
         {
-          item.Occupation = occupation.GetViewListResume();
-          servicePerson.UpdateAccount(item, null);
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async Task UpdateOccupationAll(Occupation occupation)
-    {
-      try
-      {
-        foreach (var item in servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled & p.TypeUser != EnumTypeUser.Administrator & p.Occupation._id == occupation._id).Result)
-        {
-          item.Occupation = occupation.GetViewListResume();
-          servicePerson.Update(item, null);
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async Task UpdateGroupOccupationAll(Group groupnew, Group groupold)
-    {
-      try
-      {
-        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == groupold._id).Result.ToList())
-        {
-          item.Group = groupnew.GetViewList();
-          serviceOccupation.Update(item, null);
-          Task.Run(() => UpdateOccupationAll(item));
-          Task.Run(() => UpdateOccupationLog(item));
-        }
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async Task UpdateSphereAll(Sphere sphere, bool remove)
-    {
-      //foreach (var item in axisService.GetAllNewVersion(p => p.Sphere._id == sphere._id).ToList())
-      //{
-      //  if (remove == true)
-      //    item.Sphere = null;
-      //  else
-      //    item.Sphere = sphere;
-
-      //  this.axisService.Update(item, null);
-      //}
-
-      foreach (var item in serviceGroup.GetAllNewVersion(p => p.Sphere._id == sphere._id).Result.ToList())
-      {
-        if (remove == true)
-          item.Sphere = null;
-        else
-          item.Sphere = sphere.GetViewList();
-
-        this.serviceGroup.Update(item, null);
-        Task.Run(() => UpdateGroupAll(item));
-        Task.Run(() => UpdateGroupLog(item));
-      }
-
-    }
-
-    private async Task UpdateAxisAll(Axis axis, bool remove)
-    {
-      foreach (var item in serviceGroup.GetAllNewVersion(p => p.Axis._id == axis._id).Result.ToList())
-      {
-        if (remove == true)
-          item.Axis = null;
-        else
-          item.Axis = axis.GetViewList();
-
-        this.serviceGroup.Update(item, null);
-        Task.Run(() => UpdateGroupAll(item));
-        Task.Run(() => UpdateGroupLog(item));
-      }
-
-    }
-
-    private async Task UpdateAreaAll(Area area)
-    {
-      try
-      {
-        //foreach (var item in occupationService.GetAllNewVersion(p => p.Area._id == area._id).ToList())
-        //{
-        //  item.Area = area;
-        //  this.occupationService.Update(item, null);
-        //  UpdateOccupationAll(item);
-        //}
-
-        foreach (var item in serviceProcessLevelOne.GetAllNewVersion().ToList())
-        {
-          if (item.Area._id == area._id)
+          if (proc.ProcessLevelOne.Area != null)
           {
-            item.Area.Name = area.Name;
-            serviceProcessLevelOne.Update(item, null);
-          }
-        }
-
-        foreach (var item in serviceProcessLevelTwo.GetAllNewVersion().ToList())
-        {
-          if (item.ProcessLevelOne.Area._id == area._id)
-          {
-            item.ProcessLevelOne.Area.Name = area.Name;
-            serviceProcessLevelTwo.Update(item, null);
-          }
-        }
-
-
-        //foreach (var item in occupationService.GetAllNewVersion().ToList())
-        //{
-        //  foreach (var ar in item.Areas)
-        //  {
-        //    if (ar != null)
-        //    {
-        //      if (ar._id == area._id)
-        //      {
-        //        item.Areas.Remove(ar);
-        //        item.Areas.Add(area);
-        //        item.ProcessLevelTwo.ProcessLevelOne.Area.Name = area.Name;
-        //        item.Area.Name = area.Name;
-        //        this.occupationService.Update(item, null);
-        //        UpdateOccupationAll(item);
-        //        break;
-        //      }
-        //    }
-        //  }
-        //}
-
-
-
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async Task UpdateAreaProcessAll(Area area)
-    {
-      try
-      {
-        foreach (var item in serviceOccupation.GetAllNewVersion().ToList())
-        {
-          foreach (var proc in item.Process)
-          {
-            if (proc.ProcessLevelOne != null)
+            if (proc.ProcessLevelOne.Area._id == area._id)
             {
-              if (proc.ProcessLevelOne.Area != null)
-              {
-                if (proc.ProcessLevelOne.Area._id == area._id)
-                {
-                  proc.ProcessLevelOne.Area = area.GetViewList();
-                  this.serviceOccupation.Update(item, null);
-                  Task.Run(() => UpdateOccupationAll(item));
-                  Task.Run(() => UpdateOccupationLog(item));
-                }
-              }
-            }
-
-          }
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
-
-    private async Task UpdateProcessLevelTwoAll(string id)
-    {
-      try
-      {
-        var processLevelTwo = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
-
-        var list = serviceOccupation.GetAllNewVersion().ToList();
-
-        foreach (var item in list)
-        {
-          if (item.Process != null)
-          {
-            var process = item.Process.Where(p => p._id == id).ToList();
-            foreach (var proc in process)
-            {
-              if (proc._id == processLevelTwo._id)
-              {
-                item.Process.Remove(proc);
-                item.Process.Add(processLevelTwo.GetViewList());
-                this.serviceOccupation.Update(item, null);
-                Task.Run(() => UpdateOccupationAll(item));
-                Task.Run(() => UpdateOccupationLog(item));
-                break;
-              }
+              proc.ProcessLevelOne.Area = area.GetViewList();
+              this.serviceOccupation.Update(item, null);
+              Task.Run(() => UpdateOccupationAll(item));
+              Task.Run(() => UpdateOccupationLog(item));
             }
           }
         }
-      }
-      catch (Exception e)
-      {
-        throw e;
+
       }
     }
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
 
-    private async Task UpdateSchoolingAll(Schooling schooling)
+private async Task UpdateProcessLevelTwoAll(string id)
+{
+  try
+  {
+    var processLevelTwo = serviceProcessLevelTwo.GetAllNewVersion(p => p._id == id).Result.FirstOrDefault();
+
+    var list = serviceOccupation.GetAllNewVersion().ToList();
+
+    foreach (var item in list)
     {
-      try
+      if (item.Process != null)
       {
-        foreach (var item in serviceGroup.GetAllNewVersion().ToList())
+        var process = item.Process.Where(p => p._id == id).ToList();
+        foreach (var proc in process)
         {
-          foreach (var row in item.Schooling)
+          if (proc._id == processLevelTwo._id)
           {
-            if (row._id == schooling._id)
-            {
-              row.Name = schooling.Name;
-              row.Order = schooling.Order;
-            }
+            item.Process.Remove(proc);
+            item.Process.Add(processLevelTwo.GetViewList());
+            this.serviceOccupation.Update(item, null);
+            Task.Run(() => UpdateOccupationAll(item));
+            Task.Run(() => UpdateOccupationLog(item));
+            break;
           }
-          this.serviceGroup.Update(item, null);
-          Task.Run(() => UpdateGroupAll(item));
-          Task.Run(() => UpdateGroupLog(item));
         }
-
-      }
-      catch (Exception e)
-      {
-        throw e;
       }
     }
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
+
+private async Task UpdateSchoolingAll(Schooling schooling)
+{
+  try
+  {
+    foreach (var item in serviceGroup.GetAllNewVersion().ToList())
+    {
+      foreach (var row in item.Schooling)
+      {
+        if (row._id == schooling._id)
+        {
+          row.Name = schooling.Name;
+          row.Order = schooling.Order;
+        }
+      }
+      this.serviceGroup.Update(item, null);
+      Task.Run(() => UpdateGroupAll(item));
+      Task.Run(() => UpdateGroupLog(item));
+    }
+
+  }
+  catch (Exception e)
+  {
+    throw e;
+  }
+}
 
     #endregion
 
