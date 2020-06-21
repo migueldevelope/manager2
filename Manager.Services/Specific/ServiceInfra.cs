@@ -4357,7 +4357,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-
+        var notschooling = true;
         List<List<dynamic>> listremove = new List<List<dynamic>>();
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
         {
@@ -4374,6 +4374,7 @@ namespace Manager.Services.Specific
 
               if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
               {
+                notschooling = false;
                 item.Schooling.Add(school.GetViewCrud());
               }
 
@@ -4385,7 +4386,7 @@ namespace Manager.Services.Specific
             if (group.Schooling.Where(p => p._id == schoolOccupation._id).Count() == 0)
             {
               //item.Schooling.Remove(schoolOccupation);
-
+              notschooling = false;
               List<dynamic> view = new List<dynamic>();
               view.Add(item._id);
               view.Add(schoolOccupation);
@@ -4395,8 +4396,12 @@ namespace Manager.Services.Specific
           }
 
           serviceOccupation.Update(item, null);
-          Task.Run(() => UpdateOccupationAll(item));
-          Task.Run(() => UpdateOccupationLog(item));
+          if (notschooling)
+          {
+            Task.Run(() => UpdateOccupationAll(item));
+            Task.Run(() => UpdateOccupationLog(item));
+          }
+          
         }
 
         foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Group._id == group._id).Result.ToList())
@@ -4409,11 +4414,7 @@ namespace Manager.Services.Specific
               if(school != null)
                 item.Schooling.Remove(school);
 
-              //var con = item.Schooling.Count();
-
               serviceOccupation.Update(item, null);
-              Task.Run(() => UpdateOccupationAll(item));
-              Task.Run(() => UpdateOccupationLog(item));
             }
           }
         }
