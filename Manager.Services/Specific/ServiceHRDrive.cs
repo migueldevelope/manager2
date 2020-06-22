@@ -19,7 +19,6 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<HRDrive> serviceHRDrive;
     private readonly ServiceGeneric<Person> servicePerson;
-    private readonly ServiceGeneric<Attachments> serviceAttachment;
 
     #region Constructor
     public ServiceHRDrive(DataContext context) : base(context)

@@ -1408,7 +1408,7 @@ namespace Manager.Services.Specific
                 if (view.Workload.ToString().Contains(","))
                     view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
                 else
-                    view.Workload = view.Workload * 60;
+                    view.Workload *= 60;
 
                 view.Entity = AddEntity(view.Entity.Name);
                 serviceEventHistoric.Update(view, null).Wait();
@@ -1665,7 +1665,7 @@ namespace Manager.Services.Specific
                 if (view.Workload.ToString().Contains(","))
                     view.Workload = decimal.Parse(TimeSpan.Parse(view.Workload.ToString().Split(",")[0].PadLeft(2, '0') + ":" + view.Workload.ToString().Split(",")[1].PadRight(2, '0')).TotalMinutes.ToString());
                 else
-                    view.Workload = view.Workload * 60;
+                    view.Workload *= 60;
 
                 view.Entity = AddEntity(view.Entity.Name);
                 var model = serviceEventHistoricTemp.GetNewVersion(p => p._id == view._id).Result;
