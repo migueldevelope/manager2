@@ -4376,6 +4376,7 @@ namespace Manager.Services.Specific
               {
                 notschooling = false;
                 item.Schooling.Add(school.GetViewCrud());
+                break;
               }
 
             }
