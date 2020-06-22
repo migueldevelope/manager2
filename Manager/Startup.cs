@@ -106,12 +106,14 @@ namespace Manager
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
       IServiceOffBoarding serviceOffBoarding = new ServiceOffBoarding(_context);
       IServiceObjective serviceObjective = new ServiceObjective(_context);
+      IServiceElearningFluid serviceElearningFluid = new ServiceElearningFluid(_context);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       //audios
       serviceOnBoarding.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      services.AddSingleton(_ => serviceElearningFluid);
       services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceFeelingDay);
       services.AddSingleton(_ => serviceNewsletter);
