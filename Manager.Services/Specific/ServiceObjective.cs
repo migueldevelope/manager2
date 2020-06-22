@@ -598,7 +598,7 @@ namespace Manager.Services.Specific
               else
                 viewKeyResult.PendingCheckinAchievement = false;
 
-              
+
 
             }
             else
@@ -880,8 +880,10 @@ namespace Manager.Services.Specific
           var view = new ViewListObjectiveEdit();
           keyresults = keyresults.Where(p => p.Objective._id == obj._id).ToList();
 
-          var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
             .Where(p => ids.Contains(p._idObjective));
+
+          var pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson);
 
 
           view.Description = obj.Description;
@@ -894,9 +896,9 @@ namespace Manager.Services.Specific
 
           if (keyresults.Count() > 0)
             view.AverageAchievement = keyresults.Average(p => p.Achievement);
-          if (pendingchecking.Count() > 0)
+          if (pendingcheckingprevious.Count() > 0)
           {
-            view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
+            view.AverageTrust = pendingcheckingprevious.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
           }
 
           if (view.AverageTrust <= 50)
