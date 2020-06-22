@@ -758,8 +758,25 @@ namespace Manager.Services.Specific
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
             var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
 
+            viewKeyResult.PendingChecking = true;
+            viewKeyResult.PendingCheckinAchievement = true;
+
+            
             if (pendingcheckingkeyresult.Count() > 0)
             {
+              var checkinperson = pendingcheckingkeyresult.Where(p => p._idPerson == _user._idPerson).FirstOrDefault();
+              viewKeyResult.PendingCheckinAchievement = true;
+              viewKeyResult.PendingCheckinTrust = true;
+              if (checkinperson != null)
+              {
+                if (checkinperson.LevelTrust > 0)
+                  viewKeyResult.PendingCheckinTrust = false;
+
+                if (checkinperson.Achievement > 0)
+                  viewKeyResult.PendingCheckinAchievement = false;
+              }
+
+
               viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
               viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
