@@ -871,7 +871,7 @@ namespace Manager.Services.Specific
         var list = new List<ViewPersonsNotInfo>();
         int skip = (count * (page - 1));
 
-        var salaryscale = serviceSalaryScale.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result == 0 ? false : true;
+        var salaryscale = serviceSalaryScale.CountNewVersion(p => p.Status == EnumStatus.Enabled).Result != 0;
 
         var persons = servicePerson.GetAllNewVersion(p => p.TypeJourney != EnumTypeJourney.OutOfJourney
         && p.StatusUser != EnumStatusUser.Disabled && p.TypeUser != EnumTypeUser.Administrator
@@ -2344,9 +2344,11 @@ namespace Manager.Services.Specific
       try
       {
         var onboradings = serviceOnboarding.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        List<ViewChartStatus> result = new List<ViewChartStatus>();
-        result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
-        result.Add(new ViewChartStatus() { Status = "Não Realizado", Count = 0 });
+        List<ViewChartStatus> result = new List<ViewChartStatus>
+        {
+          new ViewChartStatus() { Status = "Realizado", Count = 0 },
+          new ViewChartStatus() { Status = "Não Realizado", Count = 0 }
+        };
 
         foreach (var item in persons)
         {
@@ -2414,9 +2416,11 @@ namespace Manager.Services.Specific
       try
       {
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        List<ViewChartStatus> result = new List<ViewChartStatus>();
-        result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
-        result.Add(new ViewChartStatus() { Status = "Não Realizado", Count = 0 });
+        List<ViewChartStatus> result = new List<ViewChartStatus>
+        {
+          new ViewChartStatus() { Status = "Realizado", Count = 0 },
+          new ViewChartStatus() { Status = "Não Realizado", Count = 0 }
+        };
 
         foreach (var item in persons)
         {
@@ -2490,9 +2494,11 @@ namespace Manager.Services.Specific
       {
         var checkpoints = serviceCheckpoint.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
-        List<ViewChartStatus> result = new List<ViewChartStatus>();
-        result.Add(new ViewChartStatus() { Status = "Realizado", Count = 0 });
-        result.Add(new ViewChartStatus() { Status = "Não Realizado", Count = 0 });
+        List<ViewChartStatus> result = new List<ViewChartStatus>
+        {
+          new ViewChartStatus() { Status = "Realizado", Count = 0 },
+          new ViewChartStatus() { Status = "Não Realizado", Count = 0 }
+        };
 
         foreach (var item in persons)
         {
@@ -2605,8 +2611,8 @@ namespace Manager.Services.Specific
           {
             result.Add(new
             {
-              Name = view.Recommendation.Name,
-              _id = view.Person._id
+              view.Recommendation.Name,
+              view.Person._id
             });
           }
 
@@ -2644,8 +2650,8 @@ namespace Manager.Services.Specific
           {
             result.Add(new
             {
-              Name = view.Person.Name,
-              _id = view.Recommendation._id
+              view.Person.Name,
+              view.Recommendation._id
             });
           }
 
@@ -2794,7 +2800,7 @@ namespace Manager.Services.Specific
             result.Add(new
             {
               Name = view.StatusCertification,
-              _id = view.Person._id
+              view.Person._id
             });
           }
 
@@ -2938,29 +2944,31 @@ namespace Manager.Services.Specific
 
           var persons = team.Select(p => p._id).ToList();
 
-          var view = new ViewListScheduleManager();
-          view.Manager = item.User?.Name;
-          view.QtdTeam = team.Count();
-          view.Occupation = item.Occupation?.Name;
-          view.Establishment = item.Establishment?.Name;
+          var view = new ViewListScheduleManager
+          {
+            Manager = item.User?.Name,
+            QtdTeam = team.Count(),
+            Occupation = item.Occupation?.Name,
+            Establishment = item.Establishment?.Name,
 
-          view.QtdOnboarding = serviceOnboarding.GetAllNewVersion(p => persons.Contains(p.Person._id)
-          && p.StatusOnBoarding == EnumStatusOnBoarding.End
-          && p.Person.TypeJourney != EnumTypeJourney.OnBoardingOccupation
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count();
+            QtdOnboarding = serviceOnboarding.GetAllNewVersion(p => persons.Contains(p.Person._id)
+            && p.StatusOnBoarding == EnumStatusOnBoarding.End
+            && p.Person.TypeJourney != EnumTypeJourney.OnBoardingOccupation
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count(),
 
-          view.QtdOnboardingOccupation = serviceOnboarding.GetAllNewVersion(p => persons.Contains(p.Person._id)
-          && p.StatusOnBoarding == EnumStatusOnBoarding.End
-          && p.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count();
+            QtdOnboardingOccupation = serviceOnboarding.GetAllNewVersion(p => persons.Contains(p.Person._id)
+            && p.StatusOnBoarding == EnumStatusOnBoarding.End
+            && p.Person.TypeJourney == EnumTypeJourney.OnBoardingOccupation
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count(),
 
-          view.QtdCheckpoint = serviceCheckpoint.GetAllNewVersion(p => persons.Contains(p.Person._id)
-          && p.StatusCheckpoint == EnumStatusCheckpoint.End
-          && p.DateEnd >= date.Begin && p.DateEnd <= date.End).Result.Count();
+            QtdCheckpoint = serviceCheckpoint.GetAllNewVersion(p => persons.Contains(p.Person._id)
+            && p.StatusCheckpoint == EnumStatusCheckpoint.End
+            && p.DateEnd >= date.Begin && p.DateEnd <= date.End).Result.Count(),
 
-          view.QtdMonitoring = serviceMonitoring.GetAllNewVersion(p => persons.Contains(p.Person._id)
-          && p.StatusMonitoring == EnumStatusMonitoring.End
-          && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count();
+            QtdMonitoring = serviceMonitoring.GetAllNewVersion(p => persons.Contains(p.Person._id)
+            && p.StatusMonitoring == EnumStatusMonitoring.End
+            && p.DateEndEnd >= date.Begin && p.DateEndEnd <= date.End).Result.Count()
+          };
 
           list.Add(view);
         }

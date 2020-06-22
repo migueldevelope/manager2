@@ -4388,9 +4388,11 @@ namespace Manager.Services.Specific
             {
               //item.Schooling.Remove(schoolOccupation);
               notschooling = false;
-              List<dynamic> view = new List<dynamic>();
-              view.Add(item._id);
-              view.Add(schoolOccupation);
+              List<dynamic> view = new List<dynamic>
+              {
+                item._id,
+                schoolOccupation
+              };
               listremove.Add(view);
             }
 
