@@ -34,11 +34,12 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Account> accountService;
     private readonly ServiceGeneric<Occupation> occupationService;
     private readonly ServiceGeneric<Group> groupService;
+    private readonly ServiceGeneric<Parameter> parameterService;
     private readonly ServiceGeneric<IntegrationSchooling> integrationSchoolingService;
     private readonly ServiceGeneric<IntegrationCompany> integrationCompanyService;
     private readonly ServiceGeneric<IntegrationEstablishment> integrationEstablishmentService;
     private readonly ServiceGeneric<IntegrationOccupation> integrationOccupationService;
-    private readonly ServiceGeneric<IntegrationParameter> parameterService;
+    private readonly ServiceGeneric<IntegrationParameter> integrationParameterService;
     private readonly ServiceGeneric<IntegrationPerson> integrationPersonService;
     private readonly IServiceLog logService;
     // Integração de Skills, Cargos e Mapas do ANALISA
@@ -63,11 +64,12 @@ namespace Manager.Services.Specific
         establishmentService = new ServiceGeneric<Establishment>(context);
         accountService = new ServiceGeneric<Account>(context);
         occupationService = new ServiceGeneric<Occupation>(context);
+        parameterService = new ServiceGeneric<Parameter>(context);
         integrationSchoolingService = new ServiceGeneric<IntegrationSchooling>(contextIntegration);
         integrationCompanyService = new ServiceGeneric<IntegrationCompany>(contextIntegration);
         integrationEstablishmentService = new ServiceGeneric<IntegrationEstablishment>(contextIntegration);
         integrationOccupationService = new ServiceGeneric<IntegrationOccupation>(contextIntegration);
-        parameterService = new ServiceGeneric<IntegrationParameter>(contextIntegration);
+        integrationParameterService = new ServiceGeneric<IntegrationParameter>(contextIntegration);
         integrationPersonService = new ServiceGeneric<IntegrationPerson>(contextIntegration);
         logService = new ServiceLog(context, contextLog);
         processLevelTwoService = new ServiceGeneric<ProcessLevelTwo>(context);
@@ -92,12 +94,13 @@ namespace Manager.Services.Specific
       accountService._user = _user;
       occupationService._user = _user;
       establishmentService._user = _user;
+      parameterService._user = _user;
       integrationSchoolingService._user = _user;
       integrationCompanyService._user = _user;
       integrationEstablishmentService._user = _user;
       integrationOccupationService._user = _user;
       integrationPersonService._user = _user;
-      parameterService._user = _user;
+      integrationParameterService._user = _user;
       processLevelTwoService._user = _user;
       skillService._user = _user;
       groupService._user = _user;
@@ -115,12 +118,13 @@ namespace Manager.Services.Specific
       accountService._user = user;
       occupationService._user = user;
       establishmentService._user = user;
+      parameterService._user = user;
       integrationSchoolingService._user = user;
       integrationCompanyService._user = user;
       integrationEstablishmentService._user = user;
       integrationOccupationService._user = user;
       integrationPersonService._user = user;
-      parameterService._user = user;
+      integrationParameterService._user = user;
       processLevelTwoService._user = user;
       skillService._user = user;
       groupService._user = user;
@@ -382,6 +386,15 @@ namespace Manager.Services.Specific
           if (personManager != null)
           {
             person.Manager = personManager == null ? null : new ViewBaseFields() { _id = personManager._id, Name = personManager.User.Name, Mail = personManager.User.Mail };
+          }
+          // Tipo de Jornada para demitidos
+          if (person.StatusUser == EnumStatusUser.Disabled)
+          {
+            Parameter parameter = parameterService.GetNewVersion(p => p.Key.Equals("showOffboardingProcess")).Result;
+            if (parameter != null && parameter.Equals("1"))
+            {
+              person.TypeJourney = EnumTypeJourney.OffBoarding;
+            }
           }
           // User of person contract
           person.User = userService.GetNewVersion(p => p._id == payrollEmployee._idUser).Result?.GetViewCrud();
@@ -1168,10 +1181,10 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
+        IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
         {
-          param = parameterService.InsertNewVersion(new IntegrationParameter()
+          param = integrationParameterService.InsertNewVersion(new IntegrationParameter()
           {
             Mode = EnumIntegrationMode.DataBase,
             Version = EnumIntegrationVersion.V1,
@@ -1214,7 +1227,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
+        IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
           throw new Exception("Parameter Integration not found!");
         param.Mode = view.Mode;
@@ -1232,7 +1245,7 @@ namespace Manager.Services.Specific
         param.MachineIdentity = view.MachineIdentity;
         param.ApiIdentification = view.ApiIdentification;
         param.ApiToken = view.ApiToken;
-        parameterService.Update(param, null).Wait();
+        integrationParameterService.Update(param, null).Wait();
         return new ViewCrudIntegrationParameter()
         {
           Mode = param.Mode,
@@ -1785,7 +1798,7 @@ namespace Manager.Services.Specific
         {
           view.Gestor = null;
         }
-        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
+        IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
         {
           resultV2.Mensagem.Add("Não existe parâmetro de integração.");
@@ -1914,7 +1927,7 @@ namespace Manager.Services.Specific
           Mensagem = new List<string>()
         };
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
-        IntegrationParameter param = parameterService.GetAllNewVersion().FirstOrDefault();
+        IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
         if (param == null)
         {
           resultV2.Mensagem.Add("Não existe parâmetro de integração.");
