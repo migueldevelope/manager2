@@ -1761,6 +1761,10 @@ namespace Manager.Services.Specific
 
     public ColaboradorV2Retorno IntegrationV2(ColaboradorV2Completo view)
     {
+      if (view == null)
+      {
+        throw new Exception("Conteúdo do corpo da requisição não reconhecido!");
+      }
       EnumSex sexo = EnumSex.Others;
       EnumStatusUser situacao = EnumStatusUser.Enabled;
       EnumActionIntegration acao = EnumActionIntegration.Change;
@@ -1789,6 +1793,12 @@ namespace Manager.Services.Specific
         view.GrauInstrucao = EmptyStringDefault(view.GrauInstrucao, view.NomeGrauInstrucao);
         view.NomeGrauInstrucao = CapitalizeName(view.NomeGrauInstrucao);
         view.CentroCusto = EmptyStringDefault(view.CentroCusto, view.NomeCentroCusto);
+        // Ajustar datas para UTC
+        view.DataAdmissao = TransformDateUtc(view.DataAdmissao);
+        view.DataNascimento = TransformDateUtc(view.DataNascimento);
+        view.DataTrocaCargo = TransformDateUtc(view.DataTrocaCargo);
+        view.DataTrocaCentroCusto = TransformDateUtc(view.DataTrocaCentroCusto);
+        view.DataUltimoReajuste = TransformDateUtc(view.DataUltimoReajuste);
         // Validação do Gestor
         if (view.Gestor != null && !string.IsNullOrEmpty(view.Gestor.Matricula))
         {
@@ -2198,6 +2208,27 @@ namespace Manager.Services.Specific
         return defaultValue;
       else
         return field;
+    }
+    private DateTime? TransformDateUtc(DateTime? date)
+    {
+      if (date == null)
+      {
+        return date;
+      }
+      DateTime dateReturn = (DateTime)date;
+      if (dateReturn.Hour < 3)
+      {
+        dateReturn = dateReturn.ToUniversalTime();
+      }
+      return dateReturn;
+    }
+    private DateTime TransformDateUtc(DateTime date)
+    {
+      if (date == DateTime.MinValue || date.Hour > 3)
+      {
+        return date;
+      }
+      return date.ToUniversalTime();
     }
     private void ValidEmptyDate(DateTime date, string message)
     {
