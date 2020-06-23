@@ -288,6 +288,18 @@ namespace Manager.Services.Specific
       }
     }
 
+    public void Test(DateTime? dateView)
+    {
+      try
+      {
+        DateTime dateBanco = (dateView == null) ? DateTime.Now : dateView.Value;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string UpdateForm(string idoffboadring, EnumStepOffBoarding step, ViewCrudFormOffBoarding view)
     {
       try
