@@ -4374,15 +4374,15 @@ namespace Manager.Services.Specific
                 school.Order = schoolOccupation.Order;
               }
 
-              if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
-              {
-                notschooling = false;
-                List<dynamic> view = new List<dynamic>();
-                view.Add(item._id);
-                view.Add(school.GetViewCrud());
-                listadd.Add(view);
-              }
+            }
 
+            if (item.Schooling.Where(p => p._id == school._id).Count() == 0)
+            {
+              notschooling = false;
+              List<dynamic> view = new List<dynamic>();
+              view.Add(item._id);
+              view.Add(school.GetViewCrud());
+              listadd.Add(view);
             }
           }
 
