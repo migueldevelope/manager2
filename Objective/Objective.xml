@@ -400,5 +400,16 @@
             <param name="app">Aplicação</param>
             <param name="env">Ambiente de hospedagem</param>
         </member>
+        <member name="T:Objective.Controllers.ValuesController">
+            <summary>
+            Controle para verficação de API ativa
+            </summary>
+        </member>
+        <member name="M:Objective.Controllers.ValuesController.Get">
+            <summary>
+            Método único para demonstração de API REST ativa
+            </summary>
+            <returns>String com a versão da API REST</returns>
+        </member>
     </members>
 </doc>

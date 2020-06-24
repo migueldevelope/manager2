@@ -1237,8 +1237,8 @@ namespace Manager.Services.Specific
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
         {
           var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
-          var diffresult = model.EndProgressGoal - model.Achievement;
-          model.Achievement = (diffresult / 100) * diffgoal;
+          var diffresult = model.EndProgressGoal - model.QuantityResult;
+          model.Achievement = (diffresult * 100) / diffgoal;
         }
         else if (model.TypeKeyResult == EnumTypeKeyResult.Binary)
         {
