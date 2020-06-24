@@ -142,6 +142,30 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+
+    public List<ViewCrudElearningFluidAnswer> UpdateQuestion(string idquestion, string idelearningfluid, string answer)
+    {
+      try
+      {
+        var model = serviceElearningFluid.GetNewVersion(p => p._id == idelearningfluid).Result;
+
+        foreach (var item in model.Questions)
+        {
+          if (idquestion == item._id)
+          {
+            item.Answer = answer;
+            serviceElearningFluid.Update(model, null).Wait();
+            return model.Questions;
+          }   
+        }
+        return model.Questions;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public ViewCrudElearningFluid Get(string id)
     {
       try

@@ -25,5 +25,6 @@ namespace Manager.Core.Interfaces
     List<ViewListElearningFluidQuestions> ListElearningFluidQuestions(ref long total, int count = 10, int page = 1, string filter = "");
     string ElearningVideo();
     string ElearningCertificate();
+    List<ViewCrudElearningFluidAnswer> UpdateQuestion(string idquestion, string idelearningfluid, string answer);
   }
 }
