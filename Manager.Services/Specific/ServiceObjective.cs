@@ -1242,10 +1242,22 @@ namespace Manager.Services.Specific
         }
         else if (model.TypeKeyResult == EnumTypeKeyResult.Binary)
         {
-          if(model.TypeBinary == EnumTypeBinary.Equal)
-          {
+          if ((model.TypeBinary == EnumTypeBinary.Equal) && (model.QuantityResult == model.QuantityGoal))
+            model.Achievement = 100;
+          else if ((model.TypeBinary == EnumTypeBinary.Bigger) && (model.QuantityResult > model.QuantityGoal))
+            model.Achievement = 100;
+          else if ((model.TypeBinary == EnumTypeBinary.BiggerEqual) && (model.QuantityResult >= model.QuantityGoal))
+            model.Achievement = 100;
+          else if ((model.TypeBinary == EnumTypeBinary.Smaller) && (model.QuantityResult < model.QuantityGoal))
+            model.Achievement = 100;
+          else if ((model.TypeBinary == EnumTypeBinary.SmallerEqual) && (model.QuantityResult <= model.QuantityGoal))
+            model.Achievement = 100;
+          else if ((model.TypeBinary == EnumTypeBinary.Different) && (model.QuantityResult != model.QuantityGoal))
+            model.Achievement = 100;
+          else
+            model.Achievement = 0;
 
-          }
+           
         }
         else
           model.Achievement = achievement;
