@@ -26,5 +26,6 @@ namespace Manager.Core.Interfaces
     string ElearningVideo();
     string ElearningCertificate();
     List<ViewCrudElearningFluidAnswer> UpdateQuestion(string idquestion, string idelearningfluid, string answer);
+    ViewCrudElearningFluid EndElearning(string id);
   }
 }

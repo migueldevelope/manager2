@@ -107,6 +107,35 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => Ok(service.Update(view)));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idquestion"></param>
+    /// <param name="idelearning"></param>
+    /// <param name="answer"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("updatequestion/{idquestion}/{idelearning}/{answer}")]
+    public async Task<IActionResult> UpdateQuestion(string idquestion, string idelearning, string answer)
+    {
+      return await Task.Run(() => Ok(service.UpdateQuestion(idquestion, idelearning, answer)));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("endelearning/{id}")]
+    public async Task<IActionResult> EndElearning(string id)
+    {
+      return await Task.Run(() => Ok(service.EndElearning(id)));
+    }
+
     /// <summary>
     /// Excluir uma empresa
     /// </summary>

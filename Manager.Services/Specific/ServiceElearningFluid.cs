@@ -112,6 +112,11 @@ namespace Manager.Services.Specific
 
         if (model == null)
           model = serviceElearningFluid.InsertNewVersion(Load()).Result;
+        else
+        {
+          model = Load();
+          var i = serviceElearningFluid.Update(model, null);
+        }
 
         return model.GetViewCrud();
       }
@@ -143,6 +148,34 @@ namespace Manager.Services.Specific
       }
     }
 
+    public ViewCrudElearningFluid EndElearning(string id)
+    {
+      try
+      {
+        var model = serviceElearningFluid.GetNewVersion(p => p._id == id).Result;
+        int count = 0;
+
+        foreach (var item in model.Questions)
+        {
+          if (item.Answer == item.Correct)
+            count += 1;
+        }
+        model.Score = count;
+        if (count >= 6)
+          model.StatusElearningFluid = EnumStatusElearningFluid.Approved;
+        else
+          model.StatusElearningFluid = EnumStatusElearningFluid.Disapproved;
+
+        serviceElearningFluid.Update(model, null).Wait();
+
+        return model.GetViewCrud();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public List<ViewCrudElearningFluidAnswer> UpdateQuestion(string idquestion, string idelearningfluid, string answer)
     {
@@ -157,7 +190,7 @@ namespace Manager.Services.Specific
             item.Answer = answer;
             serviceElearningFluid.Update(model, null).Wait();
             return model.Questions;
-          }   
+          }
         }
         return model.Questions;
       }
