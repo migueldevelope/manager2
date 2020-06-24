@@ -26,7 +26,7 @@ namespace Manager.Core.Business
     public bool Reached { get; set; }
     public EnumTypeCheckin TypeCheckin { get; set; }
     public EnumTypeBinary TypeBinary { get; set; }
-    public decimal Binary { get; set; }
+    //public decimal Binary { get; set; }
 
     public ViewCrudKeyResult GetViewCrud()
     {
@@ -45,7 +45,7 @@ namespace Manager.Core.Business
         Objective = Objective,
         TypeCheckin = TypeCheckin,
         TypeBinary = TypeBinary,
-        Binary = Binary,
+        //Binary = Binary,
         Achievement = Achievement,
         ParticipantsAdd = ParticipantsAdd,
         ParticipantsGet = ParticipantsGet

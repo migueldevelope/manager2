@@ -519,7 +519,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Objective = kr.Objective;
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
-            viewKeyResult.Binary = kr.Binary;
+            //viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
             var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
@@ -753,7 +753,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Objective = kr.Objective;
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
-            viewKeyResult.Binary = kr.Binary;
+            //viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
             var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
@@ -761,7 +761,7 @@ namespace Manager.Services.Specific
             viewKeyResult.PendingChecking = true;
             viewKeyResult.PendingCheckinAchievement = true;
 
-            
+
             if (pendingcheckingkeyresult.Count() > 0)
             {
               var checkinperson = pendingcheckingkeyresult.Where(p => p._idPerson == _user._idPerson).FirstOrDefault();
@@ -965,7 +965,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Objective = kr.Objective;
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
-            viewKeyResult.Binary = kr.Binary;
+            //viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
 
@@ -1232,13 +1232,31 @@ namespace Manager.Services.Specific
         model.QualityResult = view.Text;
         model.QuantityResult = result;
 
-        if ((model.TypeKeyResult == EnumTypeKeyResult.Progress) || (model.TypeKeyResult == EnumTypeKeyResult.Quantity))
+        if (model.TypeKeyResult == EnumTypeKeyResult.Quantity)
           model.Achievement = (model.QuantityResult / 100) * model.QuantityGoal;
+        else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
+        {
+          var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
+          var diffresult = model.EndProgressGoal - model.Achievement;
+          model.Achievement = (diffresult / 100) * diffgoal;
+        }
+        else if (model.TypeKeyResult == EnumTypeKeyResult.Binary)
+        {
+          if(model.TypeBinary == EnumTypeBinary.Equal)
+          {
+
+          }
+        }
         else
           model.Achievement = achievement;
 
         if (model.Achievement >= 100)
           model.Reached = true;
+
+        if (model.Achievement > 100)
+          model.Achievement = 100;
+        else if (model.Achievement < 0)
+          model.Achievement = 0;
 
         var objective = serviceObjective.GetNewVersion(p => p._id == model.Objective._id).Result;
 
@@ -1513,6 +1531,7 @@ namespace Manager.Services.Specific
             Date = DateTime.Now,
             Week = week,
             Month = DateTime.Now.Month,
+            TypePersonObjective = view.TypePersonObjective,
             Impediments = new List<ViewCrudImpedimentsIniciatives>(),
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
           }).Result;
@@ -1903,6 +1922,7 @@ namespace Manager.Services.Specific
         model.Date = DateTime.Now;
         model.Achievement = view.Achievement;
         model.QualityResult = view.QualityResult;
+        model.TypePersonObjective = view.TypePersonObjective;
 
         servicePendingCheckinObjective.Update(model, null).Wait();
         return model.GetViewCrud();
