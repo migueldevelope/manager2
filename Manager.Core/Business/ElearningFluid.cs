@@ -17,6 +17,8 @@ namespace Manager.Core.Business
     public DateTime? DateBegin { get; set; }
     public DateTime? DateEnd { get; set; }
     public decimal Score { get; set; }
+    public bool ElearningVideo { get; set; }
+    public bool ElearningCertificate { get; set; }
     public List<ViewCrudElearningFluidAnswer> Questions { get; set; }
     public EnumStatusElearningFluid StatusElearningFluid { get; set; }
 

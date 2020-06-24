@@ -60,6 +60,29 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => Ok(service.New(view)));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("elearningcertificate")]
+    public async Task<IActionResult> ElearningCertificate()
+    {
+      return await Task.Run(() => Ok(service.ElearningCertificate()));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("elearningvideo")]
+    public async Task<IActionResult> ElearningVideo()
+    {
+      return await Task.Run(() => Ok(service.ElearningVideo()));
+    }
+
     /// <summary>
     /// Retorar a empresa para manutenção
     /// </summary>

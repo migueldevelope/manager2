@@ -23,5 +23,7 @@ namespace Manager.Core.Interfaces
     ViewCrudElearningFluidQuestions GetElearningFluidQuestions(string id);
     string DeleteElearningFluidQuestions(string id);
     List<ViewListElearningFluidQuestions> ListElearningFluidQuestions(ref long total, int count = 10, int page = 1, string filter = "");
+    string ElearningVideo();
+    string ElearningCertificate();
   }
 }

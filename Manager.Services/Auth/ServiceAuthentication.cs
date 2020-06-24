@@ -36,6 +36,7 @@ namespace Manager.Services.Auth
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Newsletter> serviceNewsletter;
     private readonly ServiceGeneric<NewsletterRead> serviceNewsletterRead;
+    private readonly ServiceGeneric<ElearningFluid> serviceElearningFluid;
     private readonly IServicePerson serviceIPerson;
     private readonly string pathSignalr;
 
@@ -51,6 +52,7 @@ namespace Manager.Services.Auth
         serviceUser = new ServiceUser(context, contextLog);
         serviceDictionarySystem = new ServiceDictionarySystem(context);
         serviceParameter = new ServiceGeneric<Parameter>(context);
+        serviceElearningFluid = new ServiceGeneric<ElearningFluid>(context);
         serviceIPerson = new ServicePerson(context, contextLog, serviceControlQueue, _pathSignalr);
         serviceNewsletter = new ServiceGeneric<Newsletter>(context);
         serviceNewsletterRead = new ServiceGeneric<NewsletterRead>(context);
@@ -298,6 +300,8 @@ namespace Manager.Services.Auth
           FeelingProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "feelingProcess").Result?.Content,
           ShowOffboardingProcess = serviceParameter.GetFreeNewVersion(p => p._idAccount == user._idAccount && p.Key == "showOffboardingProcess").Result?.Content,
           DictionarySystem = serviceDictionarySystem.GetAllFreeNewVersion(p => p._idAccount == _user._idAccount).Result,
+          ElearningVideo = false,
+          ElearningCertificate = false
         };
         person.Contracts = servicePerson.GetAllFreeNewVersion(p => p.User._id == user._id && p.StatusUser != EnumStatusUser.Disabled).Result
           .Select(x => new ViewContract()
@@ -310,11 +314,19 @@ namespace Manager.Services.Auth
             Occupation = x.Occupation == null ? string.Empty : x.Occupation.Name
           }).ToList();
 
+        var elearningfluid = serviceElearningFluid.GetFreeNewVersion(p => p._idUser == person.IdUser).Result;
+        if (elearningfluid != null)
+        {
+          person.ElearningCertificate = elearningfluid.ElearningCertificate;
+          person.ElearningVideo = elearningfluid.ElearningVideo;
+
+        }
         var newsletter = serviceNewsletter.GetAllFreeNewVersion(p => p.Enabled == true).Result.Select(p => p._id).ToList();
         var newsletterread = serviceNewsletterRead.GetAllFreeNewVersion(p => p._idUser == person.IdUser).Result.Select(p => p._idNewsletter);
         foreach (var item in newsletter.Where(p => !newsletterread.Contains(p)).ToList())
         {
-          var i = serviceNewsletterRead.InsertNewVersion(new NewsletterRead(){
+          var i = serviceNewsletterRead.InsertNewVersion(new NewsletterRead()
+          {
             _idNewsletter = item,
             _idUser = person.IdUser,
             DontShow = false,

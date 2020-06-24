@@ -27,6 +27,8 @@ namespace Manager.Core.Views
     public string ShowOffboardingProcess { get; set; }
     public string FeelingProcess { get; set; }
     public bool ShowSalary { get; set; }
+    public bool ElearningVideo { get; set; }
+    public bool ElearningCertificate { get; set; }
 
   }
 }
