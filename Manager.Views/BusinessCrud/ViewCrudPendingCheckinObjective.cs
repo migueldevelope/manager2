@@ -24,6 +24,9 @@ namespace Manager.Views.BusinessCrud
     public decimal Achievement { get; set; }
     public decimal QuantityResult { get; set; }
     public string QualityResult { get; set; }
+    public decimal QuantityGoal { get; set; }
+    public string QualityGoal { get; set; }
+    public bool Lasted { get; set; }
     public EnumTypePersonObjective TypePersonObjective { get; set; }
 
 

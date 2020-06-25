@@ -24,7 +24,11 @@ namespace Manager.Core.Business
     public decimal Achievement { get; set; }
     public decimal QuantityResult { get; set; }
     public string QualityResult { get; set; }
+    public decimal QuantityGoal { get; set; }
+    public string QualityGoal { get; set; }
     public int Week { get; set; }
+
+    public bool Lasted { get; set; }
 
     public int Month { get; set; }
     public byte Fortnight { get; set; }
@@ -44,6 +48,9 @@ namespace Manager.Core.Business
         Achievement = Achievement,
         QuantityResult = QuantityResult,
         QualityResult = QualityResult,
+        QuantityGoal = QuantityGoal,
+        QualityGoal = QualityGoal,
+        Lasted = Lasted,
         Week = Week,
         Month = Month,
         Fortnight= Fortnight,

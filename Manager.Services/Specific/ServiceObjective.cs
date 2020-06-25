@@ -246,7 +246,17 @@ namespace Manager.Services.Specific
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result;
 
         if (keyresults.Count() > 0)
-          view.AverageAchievement = keyresults.Average(p => p.Achievement);
+        {
+          decimal totalweight = 0;
+          decimal totalachievment = 0;
+          foreach (var item in keyresults)
+          {
+            totalweight += item.Weight;
+            totalachievment += item.Achievement * item.Weight;
+          }
+          view.AverageAchievement = totalachievment / (totalweight == 0 ? 1 : totalweight);
+        }
+
         if (pendingchecking.Count() > 0)
           view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
 
@@ -336,16 +346,25 @@ namespace Manager.Services.Specific
 
           if (keyresults.Count() > 0)
           {
-            var achievement = keyresults.Average(p => p.Achievement);
+
+            if (keyresults.Count() > 0)
+            {
+              decimal totalweight = 0;
+              decimal totalachievment = 0;
+              foreach (var kr in keyresults)
+              {
+                totalweight += kr.Weight;
+                totalachievment += kr.Achievement * kr.Weight;
+              }
+              view.AverageAchievement = totalachievment / (totalweight == 0 ? 1 : totalweight);
+            }
 
 
-            view.AverageAchievement = achievement;
-
-            if (achievement <= 60)
+            if (view.AverageAchievement <= 60)
               view.LevelAchievement = 0;
-            else if ((achievement > 60) && (achievement <= 90))
+            else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
               view.LevelAchievement = 1;
-            else if ((achievement > 90) && (achievement <= 100))
+            else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
               view.LevelAchievement = 2;
             else
               view.LevelAchievement = 3;
@@ -478,8 +497,8 @@ namespace Manager.Services.Specific
           }
 
 
-          if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
-            view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
+          //if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
+          // view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
           if (pendingcheckingprevious.Count() > 0)
           {
             view.AverageTrust = pendingcheckingprevious.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
@@ -492,19 +511,17 @@ namespace Manager.Services.Specific
           else
             view.LevelTrust = 2;
 
-          if (view.AverageAchievement <= 60)
-            view.LevelAchievement = 0;
-          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
-            view.LevelAchievement = 1;
-          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
-            view.LevelAchievement = 2;
-          else
-            view.LevelAchievement = 3;
+
 
           view.KeyResults = new List<ViewListKeyResultsEdit>();
 
+          decimal totalweight = 0;
+          decimal totalachievment = 0;
           foreach (var kr in keyresults.Where(p => p.Objective._id == obj._id))
           {
+            totalweight += kr.Weight;
+            totalachievment += kr.Achievement * kr.Weight;
+
             var viewKeyResult = new ViewListKeyResultsEdit();
             viewKeyResult._id = kr._id;
             viewKeyResult.Name = kr.Name;
@@ -619,8 +636,19 @@ namespace Manager.Services.Specific
 
 
 
+
             view.KeyResults.Add(viewKeyResult);
           }
+
+          view.AverageAchievement = totalachievment / (totalweight == 0 ? 1 : totalweight);
+          if (view.AverageAchievement <= 60)
+            view.LevelAchievement = 0;
+          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
+            view.LevelAchievement = 1;
+          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
+            view.LevelAchievement = 2;
+          else
+            view.LevelAchievement = 3;
 
           list.Add(view);
         }
@@ -712,8 +740,8 @@ namespace Manager.Services.Specific
           }
 
 
-          if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
-            view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
+          //if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
+          //view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
           if (pendingcheckingprevious.Count() > 0)
           {
             view.AverageTrust = pendingcheckingprevious.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
@@ -726,19 +754,15 @@ namespace Manager.Services.Specific
           else
             view.LevelTrust = 2;
 
-          if (view.AverageAchievement <= 60)
-            view.LevelAchievement = 0;
-          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
-            view.LevelAchievement = 1;
-          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
-            view.LevelAchievement = 2;
-          else
-            view.LevelAchievement = 3;
 
           view.KeyResults = new List<ViewListKeyResultsEdit>();
-
+          decimal totalweight = 0;
+          decimal totalachievment = 0;
           foreach (var kr in keyresults.Where(p => p.Objective._id == obj._id))
           {
+            totalweight += kr.Weight;
+            totalachievment += kr.Achievement * kr.Weight;
+
             var viewKeyResult = new ViewListKeyResultsEdit();
             viewKeyResult._id = kr._id;
             viewKeyResult.Name = kr.Name;
@@ -856,6 +880,16 @@ namespace Manager.Services.Specific
             view.KeyResults.Add(viewKeyResult);
           }
 
+          view.AverageAchievement = totalachievment / (totalweight == 0 ? 1 : totalweight);
+          if (view.AverageAchievement <= 60)
+            view.LevelAchievement = 0;
+          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
+            view.LevelAchievement = 1;
+          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
+            view.LevelAchievement = 2;
+          else
+            view.LevelAchievement = 3;
+
           list.Add(view);
         }
 
@@ -925,21 +959,16 @@ namespace Manager.Services.Specific
           else
             view.LevelTrust = 2;
 
-          if (view.AverageAchievement <= 60)
-            view.LevelAchievement = 0;
-          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
-            view.LevelAchievement = 1;
-          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
-            view.LevelAchievement = 2;
-          else
-            view.LevelAchievement = 3;
-
           view.KeyResults = new List<ViewListKeyResultsEdit>();
+
+          decimal totalweight = 0;
+          decimal totalachievment = 0;
 
           foreach (var kr in keyresults)
           {
             var pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == kr._id);
-
+            totalweight += kr.Weight;
+            totalachievment += kr.Achievement * kr.Weight;
 
             List<PendingCheckinObjective> pendingcheckingkeyweek = new List<PendingCheckinObjective>();
 
@@ -1049,6 +1078,16 @@ namespace Manager.Services.Specific
 
           view.QuantityImpediments = view.KeyResults.Sum(p => p.QuantityImpediments);
           view.QuantityIniciatives = view.KeyResults.Sum(p => p.QuantityIniciatives);
+
+          view.AverageAchievement = totalachievment / (totalweight == 0 ? 1 : totalweight);
+          if (view.AverageAchievement <= 60)
+            view.LevelAchievement = 0;
+          else if ((view.AverageAchievement > 60) && (view.AverageAchievement <= 90))
+            view.LevelAchievement = 1;
+          else if ((view.AverageAchievement > 90) && (view.AverageAchievement <= 100))
+            view.LevelAchievement = 2;
+          else
+            view.LevelAchievement = 3;
 
           list.Add(view);
         }
@@ -1237,7 +1276,7 @@ namespace Manager.Services.Specific
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
         {
           var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
-          var diffresult = model.EndProgressGoal - model.QuantityResult;
+          var diffresult = model.QuantityResult - model.BeginProgressGoal;
           model.Achievement = (diffresult * 100) / diffgoal;
         }
         else if (model.TypeKeyResult == EnumTypeKeyResult.Binary)
@@ -1257,7 +1296,7 @@ namespace Manager.Services.Specific
           else
             model.Achievement = 0;
 
-           
+
         }
         else
           model.Achievement = achievement;
@@ -1531,6 +1570,7 @@ namespace Manager.Services.Specific
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
+        var keyresult = serviceKeyResult.GetNewVersion(p => p._id == view._idKeyResult).Result;
 
         var model = servicePendingCheckinObjective.InsertNewVersion(
           new PendingCheckinObjective()
@@ -1540,9 +1580,12 @@ namespace Manager.Services.Specific
             _idKeyResult = view._idKeyResult,
             _idPerson = view._idPerson,
             LevelTrust = view.LevelTrust,
+            QualityGoal = keyresult.QualityGoal,
+            QuantityGoal = keyresult.QuantityResult,
             Date = DateTime.Now,
             Week = week,
             Month = DateTime.Now.Month,
+            Lasted = true,
             TypePersonObjective = view.TypePersonObjective,
             Impediments = new List<ViewCrudImpedimentsIniciatives>(),
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
@@ -1553,6 +1596,14 @@ namespace Manager.Services.Specific
         else
           model.Fortnight = 1;
 
+
+        var old = servicePendingCheckinObjective.GetNewVersion(p => p.Lasted == true && p._idPerson == _user._idPerson
+        && p._idKeyResult == view._idKeyResult).Result;
+        if (old != null)
+        {
+          old.Lasted = false;
+          var x = servicePendingCheckinObjective.Update(old, null);
+        }
 
         return model.GetViewCrud();
       }
@@ -1934,6 +1985,7 @@ namespace Manager.Services.Specific
         model.Date = DateTime.Now;
         model.Achievement = view.Achievement;
         model.QualityResult = view.QualityResult;
+        model.QuantityResult = view.QuantityResult;
         model.TypePersonObjective = view.TypePersonObjective;
 
         servicePendingCheckinObjective.Update(model, null).Wait();
