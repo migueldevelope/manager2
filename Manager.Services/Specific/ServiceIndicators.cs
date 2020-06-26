@@ -25,6 +25,7 @@ namespace Manager.Services.Specific
   {
     private readonly ServiceGeneric<Monitoring> serviceMonitoring;
     private readonly ServiceGeneric<OnBoarding> serviceOnboarding;
+    private readonly ServiceGeneric<OffBoarding> serviceOffboarding;
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<Area> serviceArea;
     private readonly ServiceGeneric<Checkpoint> serviceCheckpoint;
@@ -55,6 +56,7 @@ namespace Manager.Services.Specific
       {
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceOnboarding = new ServiceGeneric<OnBoarding>(context);
+        serviceOffboarding = new ServiceGeneric<OffBoarding>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         servicePlan = new ServiceGeneric<Plan>(context);
         serviceMaturity = new ServiceGeneric<Maturity>(context);
@@ -89,6 +91,7 @@ namespace Manager.Services.Specific
       User(contextAccessor);
       servicePerson._user = _user;
       serviceOnboarding._user = _user;
+      serviceOffboarding._user = _user;
       serviceMonitoring._user = _user;
       servicePlan._user = _user;
       serviceLog._user = _user;
@@ -118,6 +121,8 @@ namespace Manager.Services.Specific
         //var maturity = serviceMaturity.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
         //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
+        var offboardings = serviceOffboarding.GetAllNewVersion(p => p.Step1.StatusFormOffBoarding == EnumStatusFormOffBoarding.End
+        || p.Step2.StatusFormOffBoarding == EnumStatusFormOffBoarding.End).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var plans = servicePlan.GetAllNewVersion(p => p.StatusPlan != EnumStatusPlan.NoRealized).Result;
         var recommendation = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
@@ -125,6 +130,7 @@ namespace Manager.Services.Specific
 
         plans = plans.Where(p => monitorings.Select(x => x._id).Contains(p._idMonitoring)).ToList();
 
+        view.OffBoardingRealized = offboardings.Count();
         view.MonitoringRealized = monitorings.Count();
         view.CertificationRealized = certification.Count();
         view.Recommendation = recommendation.Count();
@@ -386,12 +392,12 @@ namespace Manager.Services.Specific
         && p.Local == "Authentication").Result;
 
         var list = new List<ViewAccessAccountDay>();
-        foreach(var item in logs.Where(p=> p.DataLog >= DateTime.Now.AddDays(-15)))
+        foreach (var item in logs.Where(p => p.DataLog >= DateTime.Now.AddDays(-15)))
         {
           var day = item.DataLog.Value.ToString("dd/MM/yyyy");
           if (list.Where(p => p.Day == day).Count() > 0)
           {
-            foreach(var lst in list)
+            foreach (var lst in list)
             {
               if (lst.Day == day)
                 lst.Qtd += 1;
@@ -857,6 +863,54 @@ namespace Manager.Services.Specific
         }
 
         return list.OrderByDescending(p => p.Days).ToList();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewGetOffBoarding> GetOffBoarding(int count, int page, ref long total, string filter)
+    {
+      try
+      {
+        var list = new List<ViewGetOffBoarding>();
+        int skip = (count * (page - 1));
+
+        var offboardins = serviceOffboarding.GetAllNewVersion(p => p.Person.Name.Contains(filter) &&
+        (p.Step1.StatusFormOffBoarding == EnumStatusFormOffBoarding.End || p.Step2.StatusFormOffBoarding == EnumStatusFormOffBoarding.End)).Result;
+
+        foreach (var item in offboardins)
+        {
+          var view = new ViewGetOffBoarding();
+          view.Person = item.Person.Name;
+          view.Manager = item.Person.Manager;
+          //view.DateOff = item.Person.DateAdm;
+          view.DateRealized = (item.DateEndStep1 != null) ? item.DateEndStep1 : item.DateEndStep2;
+          var hrtotal = 0;
+          var managertotal = 0;
+          foreach(var qt in item.Step1.Questions)
+            hrtotal = qt.Mark == 1 ? 20 : qt.Mark == 2 ? 40 : qt.Mark == 3 ? 60 : qt.Mark == 4 ? 80 : qt.Mark == 5 ? 100 : 0;
+
+          foreach (var qt in item.Step2.Questions)
+            managertotal = qt.Mark == 1 ? 20 : qt.Mark == 2 ? 40 : qt.Mark == 3 ? 60 : qt.Mark == 4 ? 80 : qt.Mark == 5 ? 100 : 0;
+
+          foreach (var qt in item.Step2.QuestionsManager)
+            managertotal = qt.Mark == 1 ? 20 : qt.Mark == 2 ? 40 : qt.Mark == 3 ? 60 : qt.Mark == 4 ? 80 : qt.Mark == 5 ? 100 : 0;
+
+          view.ScoreHR = hrtotal / item.Step1.Questions.Count();
+          view.ScoreManager = managertotal / (item.Step2.Questions.Count()+ item.Step2.QuestionsManager.Count());
+
+          view.Diff = view.ScoreHR - view.ScoreManager;
+          if (view.Diff < 0)
+            view.Diff = view.Diff * -1;
+
+          list.Add(view);
+        }
+
+        total = list.Count();
+
+        return list.OrderBy(p => p.Person).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
