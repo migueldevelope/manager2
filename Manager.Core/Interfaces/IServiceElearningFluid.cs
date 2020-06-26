@@ -13,7 +13,7 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser user);
 
     string Delete(string id);
-    ViewCrudElearningFluid New(ViewCrudElearningFluid view);
+    ViewCrudElearningFluid New();
     ViewCrudElearningFluid Update(ViewCrudElearningFluid view);
     ViewCrudElearningFluid Get(string id);
     List<ViewListElearningFluid> List(ref long total, int count = 10, int page = 1, string filter = "");

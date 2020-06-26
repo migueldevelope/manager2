@@ -104,7 +104,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudElearningFluid New(ViewCrudElearningFluid view)
+    public ViewCrudElearningFluid New()
     {
       try
       {

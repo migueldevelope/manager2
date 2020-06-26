@@ -52,13 +52,12 @@ namespace Manager.Controllers
     /// <summary>
     /// Cadastrar uma nova empresa
     /// </summary>
-    /// <param name="view">Objeto de cadastro da empresa</param>
     /// <returns></returns>
     [HttpPost]
     [Route("new")]
-    public async Task<IActionResult> Post([FromBody]ViewCrudElearningFluid view)
+    public async Task<IActionResult> Post()
     {
-      return await Task.Run(() => Ok(service.New(view)));
+      return await Task.Run(() => Ok(service.New()));
     }
 
     /// <summary>
