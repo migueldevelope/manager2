@@ -23,5 +23,6 @@ namespace Manager.Core.Interfaces
     string ListOffBoarding(string id);
     string ListMonitoring(string id);
     string ListSalaryScale(string id);
+    string ListElearningFluid();
   }
 }

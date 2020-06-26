@@ -38,10 +38,10 @@ namespace Reports.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listpersons")]
-    public async Task<string> ListPersons()
+    [Route("listelearningfluid")]
+    public async Task<string> ListElearningFluid()
     {
-      return await Task.Run(() => service.ListPersons());
+      return await Task.Run(() => service.ListElearningFluid());
     }
 
     /// <summary>
