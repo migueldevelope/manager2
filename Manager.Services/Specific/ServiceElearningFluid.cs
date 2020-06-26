@@ -337,7 +337,7 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result;
-        var questions = serviceElearningFluidQuestions.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var questions = serviceElearningFluidQuestions.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var listseq = new int[8];
 
         var max = questions.Max(p => p.Sequence);
