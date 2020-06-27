@@ -109,12 +109,14 @@ namespace Manager.Services.Specific
       try
       {
         var model = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser).Result;
-
+        string id = model._id;
         if (model == null)
           model = serviceElearningFluid.InsertNewVersion(Load()).Result;
         else
         {
           model = Load();
+          model._id = id;
+          model._idAccount = _user._idAccount;
           var i = serviceElearningFluid.Update(model, null);
         }
 
