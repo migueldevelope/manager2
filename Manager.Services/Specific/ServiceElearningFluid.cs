@@ -168,6 +168,8 @@ namespace Manager.Services.Specific
         else
           model.StatusElearningFluid = EnumStatusElearningFluid.Disapproved;
 
+        model.DateEnd = DateTime.Now;
+
         serviceElearningFluid.Update(model, null).Wait();
 
         return model.GetViewCrud();
