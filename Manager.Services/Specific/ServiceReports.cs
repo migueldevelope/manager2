@@ -348,7 +348,7 @@ namespace Manager.Services.Specific
         if (ef == null)
           return "empty";
 
-        var account = serviceAccount.GetNewVersion(p => p._id == ef._idAccount).Result;
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == ef._idAccount).Result;
 
         var data = new ViewCertificateElearningFluid()
         {
