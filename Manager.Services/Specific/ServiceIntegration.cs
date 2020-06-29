@@ -379,9 +379,12 @@ namespace Manager.Services.Specific
           // Tipo de jornada: afastados aparecem fora de jornada
           person.TypeJourney = person.StatusUser == EnumStatusUser.Away ? EnumTypeJourney.OutOfJourney : person.TypeJourney;
           // Tipo de jornada: Ajustar o retorno do afastamento
-          if (person.TypeJourney == EnumTypeJourney.OutOfJourney && (person.StatusUser == EnumStatusUser.Enabled || person.StatusUser == EnumStatusUser.Vacation))
+          if (!_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f")) // Se não for o grupo Bertolini
           {
-            person.TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding;
+            if (person.TypeJourney == EnumTypeJourney.OutOfJourney && (person.StatusUser == EnumStatusUser.Enabled || person.StatusUser == EnumStatusUser.Vacation))
+            {
+              person.TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding;
+            }
           }
           if (personManager != null)
           {
