@@ -343,10 +343,12 @@ namespace Manager.Services.Specific
         var ef = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser
         && p.StatusElearningFluid == EnumStatusElearningFluid.Approved).Result;
 
-        var account = serviceAccount.GetNewVersion(p => p._id == ef._idAccount).Result;
+        
 
         if (ef == null)
           return "empty";
+
+        var account = serviceAccount.GetNewVersion(p => p._id == ef._idAccount).Result;
 
         var data = new ViewCertificateElearningFluid()
         {
