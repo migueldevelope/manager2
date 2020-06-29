@@ -1105,8 +1105,11 @@ namespace Manager.Services.Auth
 
         BaseFields manager = null;
         if (view.Manager != null)
+        {
+          manager = new BaseFields() { _id = view.Manager._id, Name = view.Manager.Name, Mail = view.Manager.Mail };
           modifyManager = true;
-        
+        }
+
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
           salaryScale = serviceSalaryScale.GetAllNewVersion(p => p._id == view.SalaryScales._idSalaryScale)
