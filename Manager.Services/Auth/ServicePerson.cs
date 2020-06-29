@@ -1103,10 +1103,8 @@ namespace Manager.Services.Auth
 
         }
 
-        BaseFields manager = null;
         if (view.Manager != null)
         {
-          manager = new BaseFields() { _id = view.Manager._id, Name = view.Manager.Name, Mail = view.Manager.Mail };
           modifyManager = true;
         }
 
@@ -1123,7 +1121,6 @@ namespace Manager.Services.Auth
         person.DateResignation = view.DateResignation;
         person.Establishment = view.Establishment;
         person.HolidayReturn = view.HolidayReturn;
-        person.Manager = manager;
         person.MotiveAside = view.MotiveAside;
         person.Occupation = view.Occupation;
         person.Registration = view.Registration;
@@ -1169,7 +1166,9 @@ namespace Manager.Services.Auth
         var x = servicePerson.Update(person, null);
 
         if (modifyManager)
-          manager = UpdateManager(person, view.Manager._id, person.Manager?._id);
+        {
+          BaseFields manager = UpdateManager(person, view.Manager._id, person.Manager?._id);
+        }
 
         #region Registrar os históricos da pessoa nova
         PersonHistory personHistory = null;
