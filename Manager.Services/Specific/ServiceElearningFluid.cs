@@ -357,6 +357,7 @@ namespace Manager.Services.Specific
         };
 
 
+        byte count = 0;
         for (var i = 1; i <= 8; i++)
         {
           int sequence = -1;
@@ -367,6 +368,9 @@ namespace Manager.Services.Specific
             if (listseq.Contains(sequence))
               sequence = -1;
           }
+
+          listseq[count] = (sequence);
+          count += 1;
 
           var item = questions.Where(p => p.Sequence == sequence).FirstOrDefault();
           var question = new ViewCrudElearningFluidAnswer()
