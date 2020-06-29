@@ -51,6 +51,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<Reports> serviceReport;
     private readonly ServiceGeneric<Event> serviceEvent;
+    private readonly ServiceGeneric<ElearningFluid> serviceElearningFluid;
     private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
     private readonly ServiceGeneric<Group> serviceGroup;
     private readonly ServiceGeneric<MyAwareness> serviceMyAwareness;
@@ -74,6 +75,7 @@ namespace Manager.Services.Specific
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
         serviceLog = new ServiceLog(context, contextLog);
         serviceGroup = new ServiceGeneric<Group>(context);
+        serviceElearningFluid = new ServiceGeneric<ElearningFluid>(context);
         serviceMailModel = new ServiceMailModel(context);
         serviceMail = new ServiceGeneric<MailLog>(contextLog);
         serviceWorkflow = new ServiceGeneric<Workflow>(context);
@@ -117,6 +119,7 @@ namespace Manager.Services.Specific
       serviceReport._user = _user;
       serviceCertification._user = _user;
       serviceCheckpoint._user = _user;
+      serviceElearningFluid._user = _user;
       serviceRecommendation._user = _user;
       serviceRecommendationPerson._user = _user;
       serviceParameter._user = _user;
@@ -144,6 +147,7 @@ namespace Manager.Services.Specific
       serviceWorkflow._user = _user;
       serviceMail._user = _user;
       serviceReport._user = _user;
+      serviceElearningFluid._user = _user;
       serviceCertification._user = _user;
       serviceCheckpoint._user = _user;
       serviceRecommendation._user = _user;
@@ -311,6 +315,59 @@ namespace Manager.Services.Specific
           Data = data,
           Name = "listpersons",
           _idReport = NewReport("listpersons"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ListElearningFluid()
+    {
+      try
+      {
+        var ef = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser
+        && p.StatusElearningFluid == EnumStatusElearningFluid.Approved).Result;
+
+        
+
+        if (ef == null)
+          return "empty";
+
+        var account = serviceAccount.GetFreeNewVersion(p => p._id == ef._idAccount).Result;
+
+        var data = new ViewCertificateElearningFluid()
+        {
+          Company = account.Name,
+          Person  = ef.Person.Name,
+          Date = ef.DateEnd,
+        };
+        var company = data.Company.ToUpper();
+        if (company.Length > 6)
+          company = company.Substring(0, 6);
+        var date = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+        data.Id = company + "_" + date; 
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listelearningfluid",
+          _idReport = NewReport("listelearningfluid"),
           _idAccount = _user._idAccount
         };
         SendMessageAsync(view);
@@ -583,8 +640,8 @@ namespace Manager.Services.Specific
                 NameEvent = events.Name,
                 NameCourse = events.Course?.Name,
                 Content = events.Content,
-                DateBegin = events.Begin,
-                DateEnd = events.End,
+                DateBegin = events.Begin.Value.ToString("dd/MM/yyyy"),
+                DateEnd = events.End.Value.ToString("dd/MM/yyyy"),
                 NameEntity = events.Entity?.Name,
                 NameParticipant = item.Name,
                 Workload = Math.Round(events.Workload / 60, 2),
@@ -604,8 +661,8 @@ namespace Manager.Services.Specific
             NameEvent = eventsHistoric.Name,
             NameCourse = eventsHistoric.Course?.Name,
             Content = "",
-            DateBegin = eventsHistoric.Begin,
-            DateEnd = eventsHistoric.End,
+            DateBegin = eventsHistoric.Begin.Value.ToString("dd/MM/yyyy"),
+            DateEnd = eventsHistoric.End.Value.ToString("dd/MM/yyyy"),
             NameEntity = eventsHistoric.Entity?.Name,
             NameParticipant = eventsHistoric.Person.Name,
             Workload = Math.Round(eventsHistoric.Workload / 60, 2),

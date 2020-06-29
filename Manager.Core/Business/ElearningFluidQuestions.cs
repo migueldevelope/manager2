@@ -13,7 +13,7 @@ namespace Manager.Core.Business
     public string ChoiceB { get; set; }
     public string ChoiceC { get; set; }
     public string Correct { get; set; }
-
+    public int Sequence { get; set; }
     public ViewCrudElearningFluidQuestions GetViewCrud()
     {
       return new ViewCrudElearningFluidQuestions()

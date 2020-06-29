@@ -203,6 +203,25 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getoffBoarding")]
+    public async Task<IEnumerable<ViewGetOffBoarding>> GetOffBoarding(int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.GetOffBoarding(count, page, ref total, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="filters"></param>
     /// <param name="count"></param>
     /// <param name="page"></param>

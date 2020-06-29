@@ -13,7 +13,7 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser user);
 
     string Delete(string id);
-    ViewCrudElearningFluid New(ViewCrudElearningFluid view);
+    ViewCrudElearningFluid New();
     ViewCrudElearningFluid Update(ViewCrudElearningFluid view);
     ViewCrudElearningFluid Get(string id);
     List<ViewListElearningFluid> List(ref long total, int count = 10, int page = 1, string filter = "");
@@ -23,5 +23,9 @@ namespace Manager.Core.Interfaces
     ViewCrudElearningFluidQuestions GetElearningFluidQuestions(string id);
     string DeleteElearningFluidQuestions(string id);
     List<ViewListElearningFluidQuestions> ListElearningFluidQuestions(ref long total, int count = 10, int page = 1, string filter = "");
+    string ElearningVideo();
+    string ElearningCertificate();
+    List<ViewCrudElearningFluidAnswer> UpdateQuestion(string idquestion, string idelearningfluid, string answer);
+    ViewCrudElearningFluid EndElearning(string id);
   }
 }

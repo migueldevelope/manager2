@@ -2,6 +2,6 @@
 {
   public enum EnumTypeKeyResult:byte
   {
-    Quantity = 0, Quality = 1, Progress = 2
+    Quantity = 0, Quality = 1, Progress = 2, Binary = 3
   }
 }

@@ -53,6 +53,43 @@ namespace Manager.Services.Specific
     #endregion
 
     #region ElearningFluid
+
+    public string ElearningVideo()
+    {
+      try
+      {
+        var item = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser).Result;
+        if (item == null)
+          item = serviceElearningFluid.InsertNewVersion(Load()).Result;
+
+        item.ElearningVideo = true;
+        serviceElearningFluid.Update(item, null).Wait();
+        return "ElearningFluid video!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ElearningCertificate()
+    {
+      try
+      {
+        var item = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser).Result;
+        if (item == null)
+          item = serviceElearningFluid.InsertNewVersion(Load()).Result;
+
+        item.ElearningCertificate = true;
+        serviceElearningFluid.Update(item, null).Wait();
+        return "ElearningFluid certificate!";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     public string Delete(string id)
     {
       try
@@ -67,14 +104,21 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public ViewCrudElearningFluid New(ViewCrudElearningFluid view)
+    public ViewCrudElearningFluid New()
     {
       try
       {
         var model = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser).Result;
-
+        string id = model._id;
         if (model == null)
           model = serviceElearningFluid.InsertNewVersion(Load()).Result;
+        else
+        {
+          model = Load();
+          model._id = id;
+          model._idAccount = _user._idAccount;
+          var i = serviceElearningFluid.Update(model, null);
+        }
 
         return model.GetViewCrud();
       }
@@ -99,6 +143,58 @@ namespace Manager.Services.Specific
         serviceElearningFluid.Update(model, null).Wait();
 
         return model.GetViewCrud();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public ViewCrudElearningFluid EndElearning(string id)
+    {
+      try
+      {
+        var model = serviceElearningFluid.GetNewVersion(p => p._id == id).Result;
+        int count = 0;
+
+        foreach (var item in model.Questions)
+        {
+          if (item.Answer == item.Correct)
+            count += 1;
+        }
+        model.Score = count;
+        if (count >= 6)
+          model.StatusElearningFluid = EnumStatusElearningFluid.Approved;
+        else
+          model.StatusElearningFluid = EnumStatusElearningFluid.Disapproved;
+
+        serviceElearningFluid.Update(model, null).Wait();
+
+        return model.GetViewCrud();
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+    public List<ViewCrudElearningFluidAnswer> UpdateQuestion(string idquestion, string idelearningfluid, string answer)
+    {
+      try
+      {
+        var model = serviceElearningFluid.GetNewVersion(p => p._id == idelearningfluid).Result;
+
+        foreach (var item in model.Questions)
+        {
+          if (idquestion == item._id)
+          {
+            item.Answer = answer;
+            serviceElearningFluid.Update(model, null).Wait();
+            return model.Questions;
+          }
+        }
+        return model.Questions;
       }
       catch (Exception e)
       {
@@ -142,9 +238,9 @@ namespace Manager.Services.Specific
     {
       try
       {
-        ElearningFluidQuestions item = serviceElearningFluidQuestions.GetNewVersion(p => p._id == id).Result;
+        ElearningFluidQuestions item = serviceElearningFluidQuestions.GetFreeNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
-        serviceElearningFluidQuestions.Update(item, null).Wait();
+        serviceElearningFluidQuestions.UpdateAccount(item, null).Wait();
         return "ElearningFluidQuestions deleted!";
       }
       catch (Exception e)
@@ -156,8 +252,13 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var sequence = 1;
 
-        var model = serviceElearningFluidQuestions.InsertNewVersion(
+        var max = serviceElearningFluidQuestions.GetAllFreeNewVersion(p => p.Theme != "").Result;
+        if (max.Count() > 0)
+          sequence = max.Max(p => p.Sequence) + 1;
+
+        var model =
           new ElearningFluidQuestions()
           {
             _id = view._id,
@@ -166,8 +267,11 @@ namespace Manager.Services.Specific
             ChoiceA = view.ChoiceA,
             ChoiceB = view.ChoiceB,
             ChoiceC = view.ChoiceC,
-            Correct = view.Correct
-          }).Result;
+            Correct = view.Correct,
+            Sequence = sequence
+          };
+
+        model = serviceElearningFluidQuestions.InsertFreeNewVersion(model).Result;
 
         return model.GetViewCrud();
       }
@@ -180,7 +284,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var model = serviceElearningFluidQuestions.GetNewVersion(p => p._id == view._id).Result;
+        var model = serviceElearningFluidQuestions.GetFreeNewVersion(p => p._id == view._id).Result;
         model.Theme = view.Theme;
         model.Question = view.Question;
         model.ChoiceA = view.ChoiceA;
@@ -188,7 +292,7 @@ namespace Manager.Services.Specific
         model.ChoiceC = view.ChoiceC;
         model.Correct = view.Correct;
 
-        serviceElearningFluidQuestions.Update(model, null).Wait();
+        serviceElearningFluidQuestions.UpdateAccount(model, null).Wait();
         return model.GetViewCrud();
       }
       catch (Exception e)
@@ -200,7 +304,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        return serviceElearningFluidQuestions.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+        return serviceElearningFluidQuestions.GetFreeNewVersion(p => p._id == id).Result.GetViewCrud();
       }
       catch (Exception e)
       {
@@ -212,13 +316,13 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListElearningFluidQuestions> detail = serviceElearningFluidQuestions.GetAllNewVersion(p => p.Question.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Question").Result
+        List<ViewListElearningFluidQuestions> detail = serviceElearningFluidQuestions.GetAllFreeNewVersion(p => p.Question.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Question").Result
           .Select(p => new ViewListElearningFluidQuestions
           {
             _id = p._id,
             Question = p.Question
           }).ToList();
-        total = serviceElearningFluidQuestions.CountNewVersion(p => p.Question.ToUpper().Contains(filter.ToUpper())).Result;
+        total = serviceElearningFluidQuestions.CountFreeNewVersion(p => p.Question.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
       }
       catch (Exception e)
@@ -235,7 +339,10 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result;
-        var questions = serviceElearningFluidQuestions.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var questions = serviceElearningFluidQuestions.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var listseq = new int[8];
+
+        var max = questions.Max(p => p.Sequence);
 
         var view = new ElearningFluid()
         {
@@ -243,12 +350,25 @@ namespace Manager.Services.Specific
           Person = person.GetViewListBase(),
           DateBegin = DateTime.Now,
           Score = 0,
+          ElearningCertificate = false,
+          ElearningVideo = false,
           StatusElearningFluid = EnumStatusElearningFluid.Open,
           Questions = new List<ViewCrudElearningFluidAnswer>()
         };
 
-        foreach (var item in questions)
+
+        for (var i = 1; i <= 8; i++)
         {
+          int sequence = -1;
+          while (sequence == -1)
+          {
+            var randNum = new Random();
+            sequence = randNum.Next(1, max);
+            if (listseq.Contains(sequence))
+              sequence = -1;
+          }
+
+          var item = questions.Where(p => p.Sequence == sequence).FirstOrDefault();
           var question = new ViewCrudElearningFluidAnswer()
           {
             Theme = item.Theme,

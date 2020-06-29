@@ -9,5 +9,6 @@
     public long Plans { get; set; }
     public long CertificationRealized { get; set; }
     public long Recommendation { get; set; }
+    public long OffBoardingRealized { get; set; }
   }
 }

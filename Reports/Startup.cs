@@ -79,9 +79,11 @@ namespace Reports
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceOffBoarding serviceOffBoarding = new ServiceOffBoarding(_context);
       IServiceObjective serviceObjective = new ServiceObjective(_context);
+      IServiceElearningFluid serviceElearningFluid = new ServiceElearningFluid(_context);
 
       serviceReports.RegisterOnMessageHandlerAndReceiveMesssages();
 
+      services.AddSingleton(_ => serviceElearningFluid);
       services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceOffBoarding);
       services.AddSingleton(_ => serviceOnBoarding);

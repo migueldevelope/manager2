@@ -2,6 +2,6 @@
 {
   public enum EnumStatusElearningFluid : byte
   {
-    Open = 0, End = 1
+    Open = 0, Approved = 1, Disapproved
   }
 }
