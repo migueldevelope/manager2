@@ -523,7 +523,7 @@ namespace Manager.Services.Specific
         {
           // Apenas mudar de cargo se mudou na folha de pagamento em relação a última carga
           person.DateResignation = view.DataDemissao;
-          //person.StatusUser = EnumStatusUser.Disabled;
+          person.StatusUser = EnumStatusUser.Disabled;
           string updatePerson = personService.Update(person);
           resultV2.IdContract = person._id;
           resultV2.IdUser = person.User._id;
