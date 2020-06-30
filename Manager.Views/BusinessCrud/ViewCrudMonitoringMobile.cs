@@ -5,13 +5,14 @@ using System.Collections.Generic;
 
 namespace Manager.Views.BusinessCrud
 {
-    public class ViewCrudMonitoringMobile : _ViewCrud
-    {
-        public ViewListPersonInfo Person { get; set; }
-        public string CommentsEnd { get; set; }
-        public string CommentsManager { get; set; }
-        public string CommentsPerson { get; set; }
-        public List<ViewListItensMobile> Items { get; set; }
-        public EnumStatusMonitoring StatusMonitoring { get; set; }
-    }
+  public class ViewCrudMonitoringMobile : _ViewCrud
+  {
+    public ViewListPersonInfo Person { get; set; }
+    public string CommentsEnd { get; set; }
+    public string CommentsManager { get; set; }
+    public string CommentsPerson { get; set; }
+    public string CommentWarning { get; set; }
+    public List<ViewListItensMobile> Items { get; set; }
+    public EnumStatusMonitoring StatusMonitoring { get; set; }
+  }
 }
