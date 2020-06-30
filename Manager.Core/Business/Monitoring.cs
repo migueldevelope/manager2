@@ -25,6 +25,9 @@ namespace Manager.Core.Business
     public string CommentsEnd { get; set; }
     public string CommentWarning { get; set; }
     public List<MonitoringSkills> SkillsCompany { get; set; }
+
+    public List<MonitoringSkills> SkillsGroup { get; set; }
+    public List<MonitoringSkills> SkillsOccupation { get; set; }
     public List<MonitoringSchooling> Schoolings { get; set; }
     public List<MonitoringActivities> Activities { get; set; }
     public EnumStatusMonitoring StatusMonitoring { get; set; }

@@ -224,6 +224,35 @@ namespace Manager.Services.Specific
             return "Update comment altered!";
           }
         }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceMonitoring.Update(monitoring, null).Wait();
+            return "Update comment altered!";
+          }
+        }
+
+        foreach (var item in monitoring.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            if (userComment == EnumUserComment.Manager)
+              item.StatusViewManager = EnumStatusView.View;
+            else
+              item.StatusViewPerson = EnumStatusView.View;
+
+            serviceMonitoring.Update(monitoring, null).Wait();
+            return "Update comment altered!";
+          }
+        }
+
         return "Comment not found!";
       }
       catch (Exception e)
@@ -281,6 +310,38 @@ namespace Manager.Services.Specific
             }
           }
         }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceMonitoring.Update(monitoring, null).Wait();
+                return "Delete comment!";
+              }
+            }
+          }
+        }
+
+        foreach (var item in monitoring.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == idcomments)
+              {
+                item.Comments.Remove(comment);
+                serviceMonitoring.Update(monitoring, null).Wait();
+                return "Delete comment!";
+              }
+            }
+          }
+        }
         return "Delete comment not found!";
       }
       catch (Exception e)
@@ -298,6 +359,10 @@ namespace Manager.Services.Specific
           + monitoring.Schoolings.Where(p => p.StatusViewManager == EnumStatusView.None
           & p.Comments != null && p.Comments.Count() > 0).Count()
           + monitoring.SkillsCompany.Where(p => p.StatusViewManager == EnumStatusView.None
+          & p.Comments != null && p.Comments.Count() > 0).Count()
+          + monitoring.SkillsGroup.Where(p => p.StatusViewManager == EnumStatusView.None
+          & p.Comments != null && p.Comments.Count() > 0).Count()
+          + monitoring.SkillsOccupation.Where(p => p.StatusViewManager == EnumStatusView.None
           & p.Comments != null && p.Comments.Count() > 0).Count();
 
         if (count > 0)
@@ -397,6 +462,72 @@ namespace Manager.Services.Specific
         if (plan.SourcePlan == EnumSourcePlan.Skill)
         {
           foreach (var item in monitoring.SkillsCompany)
+          {
+            if (item._id == iditem)
+            {
+              if (item.Plans == null)
+                item.Plans = new List<ViewCrudPlan>();
+
+              item.Plans.Add(new ViewCrudPlan()
+              {
+                _id = newPlan._id,
+                Name = newPlan.Name,
+                Description = newPlan.Description,
+                Deadline = newPlan.Deadline,
+                Skills = newPlan.Skills,
+                SourcePlan = newPlan.SourcePlan,
+                TypePlan = newPlan.TypePlan
+              });
+              serviceMonitoring.Update(monitoring, null).Wait();
+              return item.Plans.Select(p => new ViewCrudPlan()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Description = p.Description,
+                Deadline = p.Deadline,
+                Skills = p.Skills,
+                SourcePlan = p.SourcePlan,
+                TypePlan = p.TypePlan
+              }).ToList();
+            }
+          }
+        }
+        if (plan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsGroup)
+          {
+            if (item._id == iditem)
+            {
+              if (item.Plans == null)
+                item.Plans = new List<ViewCrudPlan>();
+
+              item.Plans.Add(new ViewCrudPlan()
+              {
+                _id = newPlan._id,
+                Name = newPlan.Name,
+                Description = newPlan.Description,
+                Deadline = newPlan.Deadline,
+                Skills = newPlan.Skills,
+                SourcePlan = newPlan.SourcePlan,
+                TypePlan = newPlan.TypePlan
+              });
+              serviceMonitoring.Update(monitoring, null).Wait();
+              return item.Plans.Select(p => new ViewCrudPlan()
+              {
+                _id = p._id,
+                Name = p.Name,
+                Description = p.Description,
+                Deadline = p.Deadline,
+                Skills = p.Skills,
+                SourcePlan = p.SourcePlan,
+                TypePlan = p.TypePlan
+              }).ToList();
+            }
+          }
+        }
+        if (plan.SourcePlan == EnumSourcePlan.SkillOccupation)
+        {
+          foreach (var item in monitoring.SkillsOccupation)
           {
             if (item._id == iditem)
             {
@@ -655,6 +786,46 @@ namespace Manager.Services.Specific
             }
           }
         }
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsGroup)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return "remove";
+                }
+              }
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillOccupation)
+        {
+          foreach (var item in monitoring.SkillsOccupation)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return "remove";
+                }
+              }
+            }
+          }
+        }
         serviceMonitoring.Update(monitoring, null).Wait();
         return null;
       }
@@ -873,6 +1044,44 @@ namespace Manager.Services.Specific
             Praise = p.Praise,
             Plans = p.Plans
           }).ToList(),
+          SkillsGroup = monitoring.SkillsGroup?.Select(p => new ViewCrudMonitoringSkills()
+          {
+            _id = p._id,
+            Comments = p.Comments?.Select(x => new ViewCrudComment()
+            {
+              _id = x._id,
+              Comments = x.Comments,
+              Date = x.Date,
+              StatusView = x.StatusView,
+              UserComment = x.UserComment,
+              SpeechLink = x.SpeechLink,
+              TotalTime = x.TotalTime
+            }).ToList(),
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Skill = p.Skill,
+            Praise = p.Praise,
+            Plans = p.Plans
+          }).ToList(),
+          SkillsOccupation = monitoring.SkillsOccupation?.Select(p => new ViewCrudMonitoringSkills()
+          {
+            _id = p._id,
+            Comments = p.Comments?.Select(x => new ViewCrudComment()
+            {
+              _id = x._id,
+              Comments = x.Comments,
+              Date = x.Date,
+              StatusView = x.StatusView,
+              UserComment = x.UserComment,
+              SpeechLink = x.SpeechLink,
+              TotalTime = x.TotalTime
+            }).ToList(),
+            StatusViewManager = p.StatusViewManager,
+            StatusViewPerson = p.StatusViewPerson,
+            Skill = p.Skill,
+            Praise = p.Praise,
+            Plans = p.Plans
+          }).ToList(),
           Schoolings = monitoring.Schoolings?.Select(p => new ViewCrudMonitoringSchooling()
           {
             _id = p._id,
@@ -967,6 +1176,76 @@ namespace Manager.Services.Specific
         };
 
         foreach (var item in monitoring.SkillsCompany)
+        {
+          var result = new ViewListItensMobile()
+          {
+            _id = item._id,
+            Comments = item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              CommentsSpeech = p.CommentsSpeech,
+              Date = p.Date,
+              SpeechLink = p.SpeechLink,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment,
+              TotalTime = p.TotalTime
+            }).ToList(),
+            CommentsManager = item.CommentsManager,
+            CommentsPerson = item.CommentsPerson,
+            StatusViewManager = item.StatusViewManager,
+            StatusViewPerson = item.StatusViewPerson,
+            Praise = item.Praise,
+            Plans = item.Plans
+          };
+          var detail = new ViewListItensDetailMobile()
+          {
+            _id = item.Skill._id,
+            Name = item.Skill.Name,
+            Concept = item.Skill.Concept,
+            TypeItem = EnumTypeItem.SkillCompany
+          };
+          result.Item = detail;
+
+          view.Items.Add(result);
+        }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          var result = new ViewListItensMobile()
+          {
+            _id = item._id,
+            Comments = item.Comments?.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              CommentsSpeech = p.CommentsSpeech,
+              Date = p.Date,
+              SpeechLink = p.SpeechLink,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment,
+              TotalTime = p.TotalTime
+            }).ToList(),
+            CommentsManager = item.CommentsManager,
+            CommentsPerson = item.CommentsPerson,
+            StatusViewManager = item.StatusViewManager,
+            StatusViewPerson = item.StatusViewPerson,
+            Praise = item.Praise,
+            Plans = item.Plans
+          };
+          var detail = new ViewListItensDetailMobile()
+          {
+            _id = item.Skill._id,
+            Name = item.Skill.Name,
+            Concept = item.Skill.Concept,
+            TypeItem = EnumTypeItem.SkillCompany
+          };
+          result.Item = detail;
+
+          view.Items.Add(result);
+        }
+
+        foreach (var item in monitoring.SkillsOccupation)
         {
           var result = new ViewListItensMobile()
           {
@@ -1228,7 +1507,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public ViewListMonitoring NewMonitoring(string idperson,string plataform)
+    public ViewListMonitoring NewMonitoring(string idperson, string plataform)
     {
       try
       {
@@ -1295,6 +1574,25 @@ namespace Manager.Services.Specific
             countpraise.Add(item.Praise);
 
         };
+
+        foreach (var row in monitoring.SkillsGroup)
+        {
+          var item = view.SkillsGroup.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
+          row.Praise = item.Praise;
+          if (item.Praise != null)
+            countpraise.Add(item.Praise);
+
+        };
+
+        foreach (var row in monitoring.SkillsCompany)
+        {
+          var item = view.SkillsCompany.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
+          row.Praise = item.Praise;
+          if (item.Praise != null)
+            countpraise.Add(item.Praise);
+
+        };
+
         foreach (var row in monitoring.Schoolings)
         {
           var item = view.Schoolings.Where(p => p.Schooling._id == row.Schooling._id).FirstOrDefault();
@@ -1344,6 +1642,8 @@ namespace Manager.Services.Specific
             Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + person.User.Name, person));
             if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.SkillsGroup.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.SkillsOccupation.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
             {
               Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + person.User.Name + " foi elogiado pelo gestor", person));
@@ -1418,6 +1718,8 @@ namespace Manager.Services.Specific
             Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Monitoring realizado do colaborador " + person.User.Name, person));
             if ((monitoring.Activities.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.SkillsCompany.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.SkillsGroup.Where(p => p.Praise != null).Count() > 0)
+              || (monitoring.SkillsOccupation.Where(p => p.Praise != null).Count() > 0)
               || (monitoring.Schoolings.Where(p => p.Praise != null).Count() > 0))
             {
               Task.Run(() => serviceLogMessages.NewLogMessage("Monitoring", " Colaborador " + person.User.Name + " foi elogiado pelo gestor", person));
@@ -1555,7 +1857,7 @@ namespace Manager.Services.Specific
           SpeechLink = link,
           TotalTime = totalimte
         };
-        AddComments(idmonitoring, iditem, view,plataform);
+        AddComments(idmonitoring, iditem, view, plataform);
         return "ok";
       }
       catch (Exception e)
@@ -1718,6 +2020,95 @@ namespace Manager.Services.Specific
             }).ToList();
           }
         }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+            item.Comments.Add(
+             new ListComments()
+             {
+               _id = comments._id = ObjectId.GenerateNewId().ToString(),
+               Comments = comments.Comments,
+               Date = comments.Date,
+               StatusView = comments.StatusView,
+               UserComment = comments.UserComment,
+               SpeechLink = comments.SpeechLink,
+               TotalTime = comments.TotalTime
+             });
+
+            serviceMonitoring.Update(monitoring, null).Wait();
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
+            return item.Comments.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              Date = p.Date,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment,
+              SpeechLink = p.SpeechLink,
+              TotalTime = p.TotalTime
+            }).ToList();
+          }
+        }
+
+        foreach (var item in monitoring.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments == null)
+              item.Comments = new List<ListComments>();
+
+            if (comments.UserComment == EnumUserComment.Person)
+            {
+              item.StatusViewManager = EnumStatusView.None;
+              item.StatusViewPerson = EnumStatusView.View;
+            }
+            else
+            {
+              item.StatusViewManager = EnumStatusView.View;
+              item.StatusViewPerson = EnumStatusView.None;
+            }
+            item.Comments.Add(
+             new ListComments()
+             {
+               _id = comments._id = ObjectId.GenerateNewId().ToString(),
+               Comments = comments.Comments,
+               Date = comments.Date,
+               StatusView = comments.StatusView,
+               UserComment = comments.UserComment,
+               SpeechLink = comments.SpeechLink,
+               TotalTime = comments.TotalTime
+             });
+
+            serviceMonitoring.Update(monitoring, null).Wait();
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
+            return item.Comments.Select(p => new ViewCrudComment()
+            {
+              _id = p._id,
+              Comments = p.Comments,
+              Date = p.Date,
+              StatusView = p.StatusView,
+              UserComment = p.UserComment,
+              SpeechLink = p.SpeechLink,
+              TotalTime = p.TotalTime
+            }).ToList();
+          }
+        }
+
         return null;
       }
       catch (Exception e)
@@ -1773,6 +2164,29 @@ namespace Manager.Services.Specific
 
 
         foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            item.Praise = text.Text;
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
+            serviceMonitoring.Update(monitoring, null).Wait();
+
+            return text.Text;
+          }
+        }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            item.Praise = text.Text;
+            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
+            serviceMonitoring.Update(monitoring, null).Wait();
+
+            return text.Text;
+          }
+        }
+        foreach (var item in monitoring.SkillsOccupation)
         {
           if (item._id == iditem)
           {
@@ -1872,6 +2286,58 @@ namespace Manager.Services.Specific
             }
           }
         }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceMonitoring.Update(monitoring, null).Wait();
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment
+                }).ToList();
+              }
+            }
+          }
+        }
+
+        foreach (var item in monitoring.SkillsOccupation)
+        {
+          if (item._id == iditem)
+          {
+            foreach (var comment in item.Comments)
+            {
+              if (comment._id == comments._id)
+              {
+                comment.StatusView = comments.StatusView;
+                comment.Comments = comments.Comments;
+                comment.Date = comment.Date;
+
+                serviceMonitoring.Update(monitoring, null).Wait();
+                return item.Comments.Select(p => new ViewCrudComment()
+                {
+                  _id = p._id,
+                  Comments = p.Comments,
+                  Date = p.Date,
+                  StatusView = p.StatusView,
+                  UserComment = p.UserComment
+                }).ToList();
+              }
+            }
+          }
+        }
         return null;
       }
       catch (Exception e)
@@ -1941,6 +2407,40 @@ namespace Manager.Services.Specific
         }
 
         foreach (var item in monitoring.SkillsCompany)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment,
+                SpeechLink = p.SpeechLink
+              }).ToList();
+          }
+        }
+
+        foreach (var item in monitoring.SkillsGroup)
+        {
+          if (item._id == iditem)
+          {
+            if (item.Comments != null)
+              return item.Comments.Select(p => new ViewCrudComment()
+              {
+                _id = p._id,
+                Comments = p.Comments,
+                Date = p.Date,
+                StatusView = p.StatusView,
+                UserComment = p.UserComment,
+                SpeechLink = p.SpeechLink
+              }).ToList();
+          }
+        }
+
+        foreach (var item in monitoring.SkillsOccupation)
         {
           if (item._id == iditem)
           {
@@ -2067,6 +2567,58 @@ namespace Manager.Services.Specific
             }
 
             foreach (var item in monitoring.SkillsCompany)
+            {
+              view = new ViewExportMonitoringComments();
+              view.NameManager = monitoring.Person.Manager;
+              view.NamePerson = monitoring.Person.Name;
+              view.NameItem = item.Skill.Name;
+              view.CommentsManager = monitoring.CommentsManager;
+              view.CommentsPerson = monitoring.CommentsPerson;
+              view.CommentsEnd = monitoring.CommentsEnd;
+
+              if (item.Comments != null)
+                foreach (var comm in item.Comments)
+                {
+                  view.Date = comm.Date;
+                  view.Comments = comm.Comments;
+                }
+              view.Praise = item.Praise;
+              if (view.Praise == string.Empty)
+                view.Praise = null;
+              if (view.Comments == string.Empty)
+                view.Comments = null;
+
+              if ((view.Praise != null) || (view.Comments != null))
+                result.Add(view);
+            }
+
+            foreach (var item in monitoring.SkillsGroup)
+            {
+              view = new ViewExportMonitoringComments();
+              view.NameManager = monitoring.Person.Manager;
+              view.NamePerson = monitoring.Person.Name;
+              view.NameItem = item.Skill.Name;
+              view.CommentsManager = monitoring.CommentsManager;
+              view.CommentsPerson = monitoring.CommentsPerson;
+              view.CommentsEnd = monitoring.CommentsEnd;
+
+              if (item.Comments != null)
+                foreach (var comm in item.Comments)
+                {
+                  view.Date = comm.Date;
+                  view.Comments = comm.Comments;
+                }
+              view.Praise = item.Praise;
+              if (view.Praise == string.Empty)
+                view.Praise = null;
+              if (view.Comments == string.Empty)
+                view.Comments = null;
+
+              if ((view.Praise != null) || (view.Comments != null))
+                result.Add(view);
+            }
+
+            foreach (var item in monitoring.SkillsOccupation)
             {
               view = new ViewExportMonitoringComments();
               view.NameManager = monitoring.Person.Manager;
@@ -2290,6 +2842,19 @@ namespace Manager.Services.Specific
         foreach (var item in company.Skills)
         {
           monitoring.SkillsCompany.Add(new MonitoringSkills() { Skill = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
+        }
+
+
+        monitoring.SkillsGroup = new List<MonitoringSkills>();
+        foreach (var item in group.Skills)
+        {
+          monitoring.SkillsGroup.Add(new MonitoringSkills() { Skill = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
+        }
+
+        monitoring.SkillsOccupation = new List<MonitoringSkills>();
+        foreach (var item in occupation.Skills)
+        {
+          monitoring.SkillsOccupation.Add(new MonitoringSkills() { Skill = item, _id = ObjectId.GenerateNewId().ToString(), Plans = new List<ViewCrudPlan>(), Comments = new List<ListComments>() });
         }
 
         monitoring.Activities = new List<MonitoringActivities>();

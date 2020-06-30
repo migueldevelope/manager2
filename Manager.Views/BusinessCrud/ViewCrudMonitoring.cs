@@ -14,6 +14,8 @@ namespace Manager.Views.BusinessCrud
     public string CommentWarning { get; set; }
     public string CommentsPerson { get; set; }
     public List<ViewCrudMonitoringSkills> SkillsCompany { get; set; }
+    public List<ViewCrudMonitoringSkills> SkillsGroup { get; set; }
+    public List<ViewCrudMonitoringSkills> SkillsOccupation { get; set; }
     public List<ViewCrudMonitoringSchooling> Schoolings { get; set; }
     public List<ViewCrudMonitoringActivities> Activities { get; set; }
     public EnumStatusMonitoring StatusMonitoring { get; set; }
