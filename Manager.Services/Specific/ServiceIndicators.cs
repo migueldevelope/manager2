@@ -889,7 +889,7 @@ namespace Manager.Services.Specific
           view.DateRealized = (item.DateEndStep1 != null) ? item.DateEndStep1 : item.DateEndStep2;
           var hrtotal = 0;
           var managertotal = 0;
-          foreach(var qt in item.Step1.Questions)
+          foreach (var qt in item.Step1.Questions)
             hrtotal = qt.Mark == 1 ? 20 : qt.Mark == 2 ? 40 : qt.Mark == 3 ? 60 : qt.Mark == 4 ? 80 : qt.Mark == 5 ? 100 : 0;
 
           foreach (var qt in item.Step2.Questions)
@@ -898,8 +898,10 @@ namespace Manager.Services.Specific
           foreach (var qt in item.Step2.QuestionsManager)
             managertotal = qt.Mark == 1 ? 20 : qt.Mark == 2 ? 40 : qt.Mark == 3 ? 60 : qt.Mark == 4 ? 80 : qt.Mark == 5 ? 100 : 0;
 
-          view.ScoreHR = hrtotal / item.Step1.Questions.Count();
-          view.ScoreManager = managertotal / (item.Step2.Questions.Count()+ item.Step2.QuestionsManager.Count());
+          if (item.Step1.Questions.Count() > 0)
+            view.ScoreHR = hrtotal / item.Step1.Questions.Count();
+          if ((item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count()) > 0)
+            view.ScoreManager = managertotal / (item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count());
 
           view.Diff = view.ScoreHR - view.ScoreManager;
           if (view.Diff < 0)
