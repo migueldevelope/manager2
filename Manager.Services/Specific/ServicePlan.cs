@@ -279,6 +279,120 @@ namespace Manager.Services.Specific
             item.Plans = listSchoolings;
           }
         }
+        else if (viewPlan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsGroup)
+          {
+            var listSkillsGroup = new List<ViewCrudPlan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == viewPlan._id)
+              {
+                Task.Run(() => UpdatePlan(viewPlan, person));
+                listSkillsGroup.Add(new ViewCrudPlan()
+                {
+                  _id = viewPlan._id,
+                  Name = viewPlan.Name,
+                  Description = viewPlan.Description,
+                  Deadline = viewPlan.Deadline,
+                  Skills = viewPlan.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = viewPlan.SourcePlan,
+                  TypePlan = viewPlan.TypePlan
+                });
+              }
+              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
+              {
+                if (viewPlan.NewAction == EnumNewAction.Yes)
+                  plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+
+                var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
+                upPlan.Description = plan.Description;
+                upPlan.Deadline = plan.Deadline;
+                upPlan.Skills = plan.Skills;
+                upPlan.TypePlan = plan.TypePlan;
+                upPlan.SourcePlan = plan.SourcePlan;
+                upPlan.StatusPlan = plan.StatusPlan;
+                upPlan.StatusPlanApproved = plan.StatusPlanApproved;
+                upPlan.TypeAction = plan.TypeAction;
+                upPlan.Attachments = plan.Attachments;
+                upPlan.NewAction = plan.NewAction;
+                upPlan.TextEnd = plan.TextEnd;
+                upPlan.TextEndManager = plan.TextEndManager;
+                upPlan.Evaluation = plan.Evaluation;
+
+                Task.Run(() => UpdatePlan(upPlan, person));
+                listSkillsGroup.Add(plan);
+              }
+              else
+                listSkillsGroup.Add(plan);
+
+            }
+            item.Plans = listSkillsGroup;
+          }
+        }
+        else if (viewPlan.SourcePlan == EnumSourcePlan.SkillOccupation)
+        {
+          foreach (var item in monitoring.SkillsOccupation)
+          {
+            var listSkillOccupation = new List<ViewCrudPlan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == viewPlan._id)
+              {
+                Task.Run(() => UpdatePlan(viewPlan, person));
+                listSkillOccupation.Add(new ViewCrudPlan()
+                {
+                  _id = viewPlan._id,
+                  Name = viewPlan.Name,
+                  Description = viewPlan.Description,
+                  Deadline = viewPlan.Deadline,
+                  Skills = viewPlan.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = viewPlan.SourcePlan,
+                  TypePlan = viewPlan.TypePlan
+                });
+              }
+              else if ((plan.StatusPlanApproved == EnumStatusPlanApproved.Invisible) & (viewPlan.NewAction == EnumNewAction.Yes))
+              {
+                if (viewPlan.NewAction == EnumNewAction.Yes)
+                  plan.StatusPlanApproved = EnumStatusPlanApproved.Open;
+
+                var upPlan = servicePlan.GetAllNewVersion(p => p._id == plan._id).Result.FirstOrDefault();
+                upPlan.Description = plan.Description;
+                upPlan.Deadline = plan.Deadline;
+                upPlan.Skills = plan.Skills;
+                upPlan.TypePlan = plan.TypePlan;
+                upPlan.SourcePlan = plan.SourcePlan;
+                upPlan.StatusPlan = plan.StatusPlan;
+                upPlan.StatusPlanApproved = plan.StatusPlanApproved;
+                upPlan.TypeAction = plan.TypeAction;
+                upPlan.Attachments = plan.Attachments;
+                upPlan.NewAction = plan.NewAction;
+                upPlan.TextEnd = plan.TextEnd;
+                upPlan.TextEndManager = plan.TextEndManager;
+                upPlan.Evaluation = plan.Evaluation;
+
+                Task.Run(() => UpdatePlan(upPlan, person));
+                listSkillOccupation.Add(plan);
+              }
+              else
+                listSkillOccupation.Add(plan);
+
+            }
+            item.Plans = listSkillOccupation;
+          }
+        }
         else
         {
           foreach (var item in monitoring.SkillsCompany)
@@ -501,6 +615,89 @@ namespace Manager.Services.Specific
               }
               else
                 listSchooling.Add(new ViewCrudPlan()
+                {
+                  _id = plan._id,
+                  Name = plan.Name,
+                  Description = plan.Description,
+                  Deadline = plan.Deadline,
+                  Skills = plan.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = plan.SourcePlan,
+                  TypePlan = plan.TypePlan
+                });
+            }
+          }
+        }
+        else if (viewPlan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsGroup)
+          {
+            var listSkillsGroup = new List<ViewCrudPlan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == planOld._id)
+              {
+                AddPlan(viewPlan, person, monitoring._id, item._id);
+                planOld._idMonitoring = idmonitoring;
+                planOld._idItem = item._id;
+                planOld.Person = person.GetViewListBaseManager();
+                Task.Run(() => UpdatePlan(planOld, person));
+                listSkillsGroup.Add(new ViewCrudPlan()
+                {
+                  _id = planOld._id,
+                  Name = planOld.Name,
+                  Description = planOld.Description,
+                  Deadline = planOld.Deadline,
+                  Skills = planOld.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = planOld.SourcePlan,
+                  Attachments = planOld.Attachments,
+                  Evaluation = byte.Parse(planOld.Evaluation.ToString()),
+                  NewAction = planOld.NewAction,
+                  StatusPlanApproved = planOld.StatusPlanApproved,
+                  TextEnd = planOld.TextEnd,
+                  TextEndManager = planOld.TextEndManager,
+                  TypeAction = planOld.TypeAction,
+                  StatusPlan = planOld.StatusPlan,
+                  TypePlan = planOld.TypePlan
+                });
+                listSkillsGroup.Add(new ViewCrudPlan()
+                {
+                  _id = viewPlan._id,
+                  Name = viewPlan.Name,
+                  Description = viewPlan.Description,
+                  Deadline = viewPlan.Deadline,
+                  Skills = viewPlan.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = viewPlan.SourcePlan,
+                  Attachments = viewPlan.Attachments,
+                  Evaluation = byte.Parse(viewPlan.Evaluation.ToString()),
+                  NewAction = viewPlan.NewAction,
+                  StatusPlanApproved = viewPlan.StatusPlanApproved,
+                  TextEnd = viewPlan.TextEnd,
+                  TextEndManager = viewPlan.TextEndManager,
+                  TypeAction = viewPlan.TypeAction,
+                  StatusPlan = viewPlan.StatusPlan,
+                  TypePlan = viewPlan.TypePlan
+                });
+              }
+              else
+                listSkillsGroup.Add(new ViewCrudPlan()
                 {
                   _id = plan._id,
                   Name = plan.Name,
@@ -888,6 +1085,38 @@ namespace Manager.Services.Specific
         }
 
         foreach (var plan in monitoring.SkillsCompany)
+        {
+          foreach (var res in plan.Plans)
+          {
+            if (res._id == idplan)
+            {
+              if (res.Attachments == null)
+              {
+                res.Attachments = new List<ViewCrudAttachmentField>();
+              }
+              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              Task.Run(() => UpdatePlan(idmonitoring, res));
+            }
+          }
+        }
+
+        foreach (var plan in monitoring.SkillsGroup)
+        {
+          foreach (var res in plan.Plans)
+          {
+            if (res._id == idplan)
+            {
+              if (res.Attachments == null)
+              {
+                res.Attachments = new List<ViewCrudAttachmentField>();
+              }
+              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              Task.Run(() => UpdatePlan(idmonitoring, res));
+            }
+          }
+        }
+
+        foreach (var plan in monitoring.SkillsOccupation)
         {
           foreach (var res in plan.Plans)
           {
@@ -1373,6 +1602,34 @@ namespace Manager.Services.Specific
           }
         }
 
+        if (plan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          try
+          {
+            view.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsGroup.Where(
+           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
+           p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillOccupation)
+        {
+          try
+          {
+            view.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsOccupation.Where(
+           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
+           p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
 
         if (plan.SourcePlan == EnumSourcePlan.Schooling)
         {
@@ -1612,6 +1869,77 @@ namespace Manager.Services.Specific
             item.Plans = listSchoolings;
           }
         }
+
+        else if (viewPlan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsGroup)
+          {
+            var listSkillsGroup = new List<ViewCrudPlan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplanold)
+              {
+                AddPlan(viewPlan, person, monitoring._id, item._id);
+                listSkillsGroup.Add(plan);
+                listSkillsGroup.Add(new ViewCrudPlan()
+                {
+                  _id = viewPlan._id,
+                  Name = viewPlan.Name,
+                  Description = viewPlan.Description,
+                  Deadline = viewPlan.Deadline,
+                  Skills = viewPlan.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = viewPlan.SourcePlan,
+                  TypePlan = viewPlan.TypePlan
+                });
+              }
+              else
+                listSkillsGroup.Add(plan);
+            }
+            item.Plans = listSkillsGroup;
+          }
+        }
+
+        else if (viewPlan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsOccupation)
+          {
+            var listSkillsOccupation = new List<ViewCrudPlan>();
+            foreach (var plan in item.Plans)
+            {
+              if (plan._id == idplanold)
+              {
+                AddPlan(viewPlan, person, monitoring._id, item._id);
+                listSkillsOccupation.Add(plan);
+                listSkillsOccupation.Add(new ViewCrudPlan()
+                {
+                  _id = viewPlan._id,
+                  Name = viewPlan.Name,
+                  Description = viewPlan.Description,
+                  Deadline = viewPlan.Deadline,
+                  Skills = viewPlan.Skills?.Select(x => new ViewListSkill()
+                  {
+                    _id = x._id,
+                    Name = x.Name,
+                    Concept = x.Concept,
+                    TypeSkill = x.TypeSkill
+                  }).ToList(),
+                  SourcePlan = viewPlan.SourcePlan,
+                  TypePlan = viewPlan.TypePlan
+                });
+              }
+              else
+                listSkillsOccupation.Add(plan);
+            }
+            item.Plans = listSkillsOccupation;
+          }
+        }
+
         else
         {
           foreach (var item in monitoring.SkillsCompany)
@@ -1920,6 +2248,34 @@ namespace Manager.Services.Specific
           try
           {
             resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsCompany.Where(
+           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
+           p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          try
+          {
+            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsGroup.Where(
+           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
+           p._id != plan._id).FirstOrDefault();
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillOccupation)
+        {
+          try
+          {
+            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsOccupation.Where(
            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
            p._id != plan._id).FirstOrDefault();
           }
