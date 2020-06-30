@@ -1584,7 +1584,7 @@ namespace Manager.Services.Specific
 
         };
 
-        foreach (var row in monitoring.SkillsCompany)
+        foreach (var row in monitoring.SkillsOccupation)
         {
           var item = view.SkillsCompany.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
           row.Praise = item.Praise;
@@ -1755,14 +1755,16 @@ namespace Manager.Services.Specific
       try
       {
         var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        var group = serviceGroup.GetNewVersion(p => p._id == person.Occupation._idGroup).Result;
 
+        var skillscompany = serviceCompany.GetAllNewVersion(p => p._id == group.Company._id).Result.FirstOrDefault().Skills;
         var skills = serviceOccupation.GetAllNewVersion(p => p._id == person.Occupation._id).Result.FirstOrDefault().Skills;
         var skillsgroup = serviceGroup.GetAllNewVersion(p => p._id == person.Occupation._idGroup).Result.FirstOrDefault().Skills;
         var list = skillsgroup;
         foreach (var item in skills)
-        {
           list.Add(item);
-        }
+        foreach (var item in skillscompany)
+          list.Add(item);
 
         return list.OrderBy(p => p.Name).ToList();
       }
