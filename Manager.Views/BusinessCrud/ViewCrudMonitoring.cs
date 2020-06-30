@@ -11,6 +11,7 @@ namespace Manager.Views.BusinessCrud
     public ViewListPersonInfo Person { get; set; }
     public string CommentsEnd { get; set; }
     public string CommentsManager { get; set; }
+    public string CommentWarning { get; set; }
     public string CommentsPerson { get; set; }
     public List<ViewCrudMonitoringSkills> SkillsCompany { get; set; }
     public List<ViewCrudMonitoringSchooling> Schoolings { get; set; }

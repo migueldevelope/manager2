@@ -853,6 +853,7 @@ namespace Manager.Services.Specific
           CommentsPerson = monitoring.CommentsPerson,
           CommentsEnd = monitoring.CommentsEnd,
           CommentsManager = monitoring.CommentsManager,
+          CommentWarning = monitoring.CommentWarning,
           SkillsCompany = monitoring.SkillsCompany?.Select(p => new ViewCrudMonitoringSkills()
           {
             _id = p._id,
@@ -958,6 +959,7 @@ namespace Manager.Services.Specific
           Person = monitoring.Person,
           CommentsPerson = monitoring.CommentsPerson,
           CommentsEnd = monitoring.CommentsEnd,
+          CommentWarning = monitoring.CommentWarning,
           CommentsManager = monitoring.CommentsManager,
           Items = new List<ViewListItensMobile>(),
           StatusMonitoring = monitoring.StatusMonitoring
@@ -1283,6 +1285,7 @@ namespace Manager.Services.Specific
         monitoring.CommentsEnd = view.CommentsEnd;
         monitoring.CommentsPerson = view.CommentsPerson;
         monitoring.CommentsManager = view.CommentsManager;
+        monitoring.CommentWarning = view.CommentWarning;
 
         foreach (var row in monitoring.SkillsCompany)
         {

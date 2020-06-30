@@ -23,6 +23,7 @@ namespace Manager.Core.Business
     public string CommentsPerson { get; set; }
     public string CommentsManager { get; set; }
     public string CommentsEnd { get; set; }
+    public string CommentWarning { get; set; }
     public List<MonitoringSkills> SkillsCompany { get; set; }
     public List<MonitoringSchooling> Schoolings { get; set; }
     public List<MonitoringActivities> Activities { get; set; }
