@@ -350,6 +350,8 @@ namespace Manager.Services.Specific
 
         var account = serviceAccount.GetFreeNewVersion(p => p._id == ef._idAccount).Result;
 
+        var list = new List<ViewCertificateElearningFluid>();
+
         var data = new ViewCertificateElearningFluid()
         {
           Company = account.Name,
@@ -361,11 +363,13 @@ namespace Manager.Services.Specific
           company = company.Substring(0, 6);
         var date = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-        data.Id = company + "_" + date; 
+        data.Id = company + "_" + date;
+
+        list.Add(data);
 
         var view = new ViewReport()
         {
-          Data = data,
+          Data = list,
           Name = "listelearningfluid",
           _idReport = NewReport("listelearningfluid"),
           _idAccount = _user._idAccount
