@@ -1586,7 +1586,7 @@ namespace Manager.Services.Specific
 
         foreach (var row in monitoring.SkillsOccupation)
         {
-          var item = view.SkillsCompany.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
+          var item = view.SkillsOccupation.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
           row.Praise = item.Praise;
           if (item.Praise != null)
             countpraise.Add(item.Praise);
