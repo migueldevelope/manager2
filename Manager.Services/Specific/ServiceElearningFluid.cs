@@ -110,13 +110,18 @@ namespace Manager.Services.Specific
       {
         var model = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser).Result;
         string id = model._id;
+        
         if (model == null)
           model = serviceElearningFluid.InsertNewVersion(Load()).Result;
         else
         {
+          bool certificate = model.ElearningCertificate;
+          bool video = model.ElearningVideo;
           model = Load();
           model._id = id;
           model._idAccount = _user._idAccount;
+          model.ElearningCertificate = certificate;
+          model.ElearningVideo = video;
           var i = serviceElearningFluid.Update(model, null);
         }
 
