@@ -708,6 +708,67 @@ namespace Manager.Services.Specific
             }
           }
         }
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillGroup)
+        {
+          foreach (var item in monitoring.SkillsGroup)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(new ViewCrudPlan()
+                  {
+                    _id = plan._id,
+                    Name = plan.Name,
+                    Description = plan.Description,
+                    Deadline = plan.Deadline,
+                    Skills = plan.Skills,
+                    SourcePlan = plan.SourcePlan,
+                    TypePlan = plan.TypePlan
+                  });
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return item.Plans;
+                }
+              }
+            }
+          }
+        }
+
+        if (plan.SourcePlan == EnumSourcePlan.SkillOccupation)
+        {
+          foreach (var item in monitoring.SkillsOccupation)
+          {
+            if (item._id == iditem)
+            {
+              foreach (var row in item.Plans)
+              {
+                if (row._id == plan._id)
+                {
+                  item.Plans.Remove(row);
+                  item.Plans.Add(new ViewCrudPlan()
+                  {
+                    _id = plan._id,
+                    Name = plan.Name,
+                    Description = plan.Description,
+                    Deadline = plan.Deadline,
+                    Skills = plan.Skills,
+                    SourcePlan = plan.SourcePlan,
+                    TypePlan = plan.TypePlan
+                  });
+                  UpdatePlan(plan);
+                  serviceMonitoring.Update(monitoring, null).Wait();
+                  return item.Plans;
+                }
+              }
+            }
+          }
+        }
+
         serviceMonitoring.Update(monitoring, null).Wait();
         return null;
       }
