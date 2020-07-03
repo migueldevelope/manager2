@@ -1636,6 +1636,7 @@ namespace Manager.Services.Specific
 
         };
 
+        
         foreach (var row in monitoring.SkillsGroup)
         {
           var item = view.SkillsGroup.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();

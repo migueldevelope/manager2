@@ -901,8 +901,11 @@ namespace Manager.Services.Specific
           if (item.Step1.Questions.Count() > 0)
             view.ScoreHR = hrtotal / item.Step1.Questions.Count();
 
-          if ((item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count()) > 0)
-            view.ScoreManager = managertotal / (item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count());
+          if (item.Step2.Questions.Count() > 0)
+          view.ScoreManager = managertotal / (item.Step2.Questions.Count());
+
+          //if ((item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count()) > 0)
+          //view.ScoreManager = managertotal / (item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count());
 
           view.Diff = view.ScoreHR - view.ScoreManager;
           if (view.Diff < 0)

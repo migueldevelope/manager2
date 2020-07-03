@@ -104,13 +104,31 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string GetCertificate()
+    {
+      try
+      {
+        var ef = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser
+          && p.StatusElearningFluid == EnumStatusElearningFluid.Approved).Result;
+
+        if (ef == null)
+          return "empty";
+        else
+          return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
     public ViewCrudElearningFluid New()
     {
       try
       {
         var model = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser).Result;
         string id = model._id;
-        
+
         if (model == null)
           model = serviceElearningFluid.InsertNewVersion(Load()).Result;
         else

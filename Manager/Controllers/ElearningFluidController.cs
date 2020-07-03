@@ -94,6 +94,19 @@ namespace Manager.Controllers
     {
       return await Task.Run(() => service.Get(id));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("getcertificate")]
+    public async Task<string> GetCertificate()
+    {
+      return await Task.Run(() => service.GetCertificate());
+    }
+    
     /// <summary>
     /// Alterar a empresa
     /// </summary>
