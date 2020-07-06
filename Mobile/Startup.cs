@@ -102,10 +102,11 @@ namespace Mobile
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
+
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
       IServiceFeelingDay serviceFeelingDay = new ServiceFeelingDay(_context);
       IServiceObjective serviceObjective = new ServiceObjective(_context);
+      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog, serviceObjective);
 
       services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceFeelingDay);
@@ -169,14 +170,14 @@ namespace Mobile
         {
           OnAuthenticationFailed = context =>
           {
-          Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-          return Task.CompletedTask;
-        },
+            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+            return Task.CompletedTask;
+          },
           OnTokenValidated = context =>
           {
-          Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
-          return Task.CompletedTask;
-        }
+            Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+            return Task.CompletedTask;
+          }
         };
       });
       services.AddCors(options =>
@@ -202,11 +203,11 @@ namespace Mobile
 {
   c.SwaggerDoc("v1",
             new Microsoft.OpenApi.Models.OpenApiInfo
-        {
-          Title = "Mobile - Fluid",
-          Version = "v1",
-          Description = "Sistema de carreiras fluidas",
-        });
+            {
+              Title = "Mobile - Fluid",
+              Version = "v1",
+              Description = "Sistema de carreiras fluidas",
+            });
   string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
   string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
   string caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");

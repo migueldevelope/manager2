@@ -25,7 +25,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
     //private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
-   private readonly ServiceObjective serviceObjective;
+    private readonly IServiceObjective serviceObjective;
     private readonly ServiceGeneric<Maturity> serviceMaturity;
     private readonly ServiceGeneric<Schooling> serviceSchooling;
     private readonly ServiceLog serviceLog;
@@ -39,7 +39,7 @@ namespace Manager.Services.Specific
 
 
     #region Constructor
-    public ServiceMeritocracy(DataContext context, DataContext contextLog, ServiceObjective _serviceObjective) : base(context)
+    public ServiceMeritocracy(DataContext context, DataContext contextLog, IServiceObjective _serviceObjective) : base(context)
     {
       try
       {
@@ -75,7 +75,6 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceSalaryScaleScore._user = _user;
       serviceOccupation._user = _user;
-      serviceObjective._user = _user;
       serviceObjective.SetUser(_user);
       serviceMaturity._user = _user;
       serviceLog.SetUser(_user);
@@ -97,7 +96,6 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = user;
       serviceSalaryScaleScore._user = user;
       serviceOccupation._user = user;
-      serviceObjective._user = user;
       serviceObjective.SetUser(user);
       serviceMaturity._user = user;
       serviceLog.SetUser(_user);
@@ -379,7 +377,7 @@ namespace Manager.Services.Specific
         meritocracy.WeightCompanyDate = companyDateWeight;
         meritocracy.WeightOccupationDate = occupationDateWeight;
         meritocracy.WeightMaturity = maturityWeight;
-        
+
         if (maturity != null)
         {
           meritocracy.QtdMonitoring = maturity.CountMonitoring;
@@ -450,7 +448,7 @@ namespace Manager.Services.Specific
         if (point == 0)
           return 0;
 
-        decimal perc = (level/100);
+        decimal perc = (level / 100);
         var result = decimal.Parse((perc * point).ToString());
         return result;
       }

@@ -102,11 +102,12 @@ namespace Manager
       IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer, serviceControlQueue);
       IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
       IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog);
+      
       IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
       IServiceOffBoarding serviceOffBoarding = new ServiceOffBoarding(_context);
       IServiceObjective serviceObjective = new ServiceObjective(_context);
       IServiceElearningFluid serviceElearningFluid = new ServiceElearningFluid(_context);
+      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog, serviceObjective);
 
       serviceControlQueue.RegisterOnMessageHandlerAndReceiveMesssages();
       //audios
