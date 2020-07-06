@@ -29,6 +29,8 @@ namespace Manager.Core.Views
     public bool ShowSalary { get; set; }
     public bool ElearningVideo { get; set; }
     public bool ElearningCertificate { get; set; }
+    public string ShowElearningEmeu { get; set; }
+    
 
   }
 }
