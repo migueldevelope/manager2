@@ -136,6 +136,25 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idperson"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listrecommendationpersonidsend/{idperson}")]
+    public async Task<List<ViewListRecommendationPersonId>> ListRecommendationPersonIdSend(string idperson, int count = 10, int page = 1, string filter = "")
+    {
+      long total = 0;
+      var result = service.ListRecommendationPersonIdSend(idperson, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
     /// Listar reconhecimento de pessoas
     /// </summary>
     /// <param name="count">Quantidade de registros</param>

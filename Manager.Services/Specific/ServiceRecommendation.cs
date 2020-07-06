@@ -328,6 +328,30 @@ namespace Manager.Services.Specific
       }
     }
 
+    public List<ViewListRecommendationPersonId> ListRecommendationPersonIdSend(string idperson, ref long total, int count = 10, int page = 1, string filter = "")
+    {
+      try
+      {
+        List<ViewListRecommendationPersonId> detail = serviceRecommendationPerson.GetAllNewVersion(p => p._idColleague == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
+          .Select(p => new ViewListRecommendationPersonId
+          {
+            _id = p._id,
+            Image = p.Recommendation.Image,
+            NameRecommendation = p.Recommendation.Name,
+            Content = p.Content,
+            Comments = p.Comments,
+            Read = p.Read
+          }).ToList();
+        total = serviceRecommendationPerson.CountNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
+        return detail;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public List<ViewListRecommendationPerson> ListRecommendationPerson(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
