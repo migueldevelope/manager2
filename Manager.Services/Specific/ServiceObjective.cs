@@ -276,6 +276,56 @@ namespace Manager.Services.Specific
       }
     }
 
+
+    public ViewListObjectiveResponsibleCard GetResponsibleCard(string id)
+    {
+      try
+      {
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
+        var month = DateTime.Now.Month;
+
+        var view = new ViewListObjectiveResponsibleCard();
+        var objective = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+          .Where(p => p.Editors.Where(x => x._id == id).Count() > 0 || p.Responsible._id == id).Select(p => p._id);
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
+        //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == id).Result;
+
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == id).Result;
+
+        if (keyresults.Count() > 0)
+        {
+          decimal totalweight = 0;
+          decimal totalachievment = 0;
+          foreach (var item in keyresults)
+          {
+            totalweight += item.Weight;
+            totalachievment += item.Achievement * item.Weight;
+          }
+          view.AverageAchievement = totalachievment / (totalweight == 0 ? 1 : totalweight);
+        }
+
+        if (pendingchecking.Count() > 0)
+          view.AverageTrust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
+
+        view.QtdObjective = objective.Count();
+        if (view.AverageTrust <= 50)
+          view.LevelTrust = 0;
+        else if ((view.AverageTrust > 50) && (view.AverageTrust <= 75))
+          view.LevelTrust = 1;
+        else
+          view.LevelTrust = 2;
+
+        return view;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
     public List<ViewListPersonPhoto> GetListManager()
     {
       try

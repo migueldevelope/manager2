@@ -80,5 +80,6 @@ namespace Manager.Core.Interfaces
     string DeleteLikeIniciative(string idiniciatives, string idkeyresult, bool like);
 
     string DeleteLikeImpediments(string idimpediments, string idkeyresult, bool like);
+    ViewListObjectiveResponsibleCard GetResponsibleCard(string id);
   }
 }

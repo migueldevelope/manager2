@@ -24,7 +24,8 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Occupation> serviceOccupation;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleScore> serviceSalaryScaleScore;
-    private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
+    //private readonly ServiceGeneric<GoalsPersonControl> serviceGoalsPersonControl;
+   private readonly ServiceObjective serviceObjective;
     private readonly ServiceGeneric<Maturity> serviceMaturity;
     private readonly ServiceGeneric<Schooling> serviceSchooling;
     private readonly ServiceLog serviceLog;
@@ -38,7 +39,7 @@ namespace Manager.Services.Specific
 
 
     #region Constructor
-    public ServiceMeritocracy(DataContext context, DataContext contextLog) : base(context)
+    public ServiceMeritocracy(DataContext context, DataContext contextLog, ServiceObjective _serviceObjective) : base(context)
     {
       try
       {
@@ -48,7 +49,7 @@ namespace Manager.Services.Specific
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSalaryScaleScore = new ServiceGeneric<SalaryScaleScore>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
-        serviceGoalsPersonControl = new ServiceGeneric<GoalsPersonControl>(context);
+        serviceObjective = _serviceObjective;
         serviceMaturity = new ServiceGeneric<Maturity>(context);
         serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);
@@ -74,7 +75,8 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = _user;
       serviceSalaryScaleScore._user = _user;
       serviceOccupation._user = _user;
-      serviceGoalsPersonControl._user = _user;
+      serviceObjective._user = _user;
+      serviceObjective.SetUser(_user);
       serviceMaturity._user = _user;
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
@@ -95,7 +97,8 @@ namespace Manager.Services.Specific
       serviceSalaryScale._user = user;
       serviceSalaryScaleScore._user = user;
       serviceOccupation._user = user;
-      serviceGoalsPersonControl._user = user;
+      serviceObjective._user = user;
+      serviceObjective.SetUser(user);
       serviceMaturity._user = user;
       serviceLog.SetUser(_user);
       serviceLogMessages.SetUser(_user);
@@ -303,7 +306,6 @@ namespace Manager.Services.Specific
         byte companyDateWeight = 0;
         byte occupationDateWeight = 0;
         byte maturityWeight = 0;
-        EnumMeritocracyGoals goalsWeight = EnumMeritocracyGoals.NotReach;
 
         if (person.User.Schooling != null)
         {
@@ -362,19 +364,6 @@ namespace Manager.Services.Specific
         }
 
 
-        //goals
-        var goals = serviceGoalsPersonControl.GetAllNewVersion(p => p.Person._id == person._id & p.StatusGoalsPerson == EnumStatusGoalsPerson.End).Result.LastOrDefault();
-        if (goals != null)
-        {
-          if (goals.AchievementEnd == 0)
-            goalsWeight = EnumMeritocracyGoals.NotReach;
-          else if (goals.AchievementEnd < 100)
-            goalsWeight = EnumMeritocracyGoals.Partial;
-          else if ((goals.AchievementEnd >= 100) & (goals.AchievementEnd < 120))
-            goalsWeight = EnumMeritocracyGoals.Reached;
-          else
-            goalsWeight = EnumMeritocracyGoals.Best;
-        }
 
         //maturity
         var maturity = serviceMaturity.GetAllNewVersion(p => p._idPerson == person._id).Result.FirstOrDefault();
@@ -390,7 +379,7 @@ namespace Manager.Services.Specific
         meritocracy.WeightCompanyDate = companyDateWeight;
         meritocracy.WeightOccupationDate = occupationDateWeight;
         meritocracy.WeightMaturity = maturityWeight;
-        meritocracy.WeightGoals = goalsWeight;
+        
         if (maturity != null)
         {
           meritocracy.QtdMonitoring = maturity.CountMonitoring;
@@ -454,16 +443,36 @@ namespace Manager.Services.Specific
       }
     }
 
+    private decimal ResultLevelObjective(decimal level, decimal point)
+    {
+      try
+      {
+        if (point == 0)
+          return 0;
+
+        decimal perc = (level/100);
+        var result = decimal.Parse((perc * point).ToString());
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private void EndMath(Meritocracy meritocracy)
     {
       try
       {
+        var responbile = serviceObjective.GetResponsibleCard(meritocracy.Person._id);
+
         var score = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
         decimal percMaturity = ResultLevel(meritocracy.WeightMaturity, score.WeightMaturity);
         decimal percSchooling = ResultLevel(meritocracy.WeightSchooling, score.WeightSchooling);
         decimal percCompanyDate = ResultLevel(meritocracy.WeightCompanyDate, score.WeightCompanyDate);
         decimal percOccupationDate = ResultLevel(meritocracy.WeightOccupationDate, score.WeightOccupationDate);
-        decimal percGoals = meritocracy.WeightGoals == EnumMeritocracyGoals.NotReach ? 80 : meritocracy.WeightGoals == EnumMeritocracyGoals.Reached ? 100 : 120;
+        //decimal percGoals = meritocracy.WeightGoals == EnumMeritocracyGoals.NotReach ? 80 : meritocracy.WeightGoals == EnumMeritocracyGoals.Reached ? 100 : 120;
+        decimal percGoals = ResultLevelObjective(responbile.AverageAchievement, score.PercentGoals);
         decimal percActivitie = ResultLevel(meritocracy.WeightActivitiesExcellence, score.WeightActivitiesExcellence);
 
 
