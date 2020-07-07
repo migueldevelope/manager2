@@ -75,6 +75,45 @@ namespace IntegrationServer.InfraController
         });
       }
     }
+
+    /// <summary>
+    /// Alteração do gestor de colaborador
+    /// </summary>
+    /// <param name="view">Objeto de alteração do gestor do colaborador</param>
+    /// <response code="200">Informações sobre o gestor do colaborador</response>
+    /// <response code="400">Problemas no gestor do colaborador</response>
+    /// <returns>Objeto de retorno da integração </returns>
+    [Authorize]
+    [HttpPut]
+    [Route("v2/gestor")]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ColaboradorV2Retorno), StatusCodes.Status200OK)]
+    public ObjectResult GestorV2([FromBody] ColaboradorV2Gestor view)
+    {
+      {
+        try
+        {
+          ColaboradorV2Retorno result = service.IntegrationV2(view);
+          if (result.Situacao=="Erro")
+          {
+            return BadRequest(result);
+          }
+          else
+          {
+            return Ok(result);
+          }
+        }
+        catch (Exception e)
+        {
+          return BadRequest(new ColaboradorV2Retorno()
+          {
+            Mensagem = new List<string> { e.Message },
+            Situacao = "Erro"
+          });
+        }
+      }
+    }
+
     /// <summary>
     /// Consulta última posição de integração do colaborador
     /// </summary>

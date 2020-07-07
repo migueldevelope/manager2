@@ -2017,6 +2017,162 @@ namespace Manager.Services.Specific
         throw;
       }
     }
+    public ColaboradorV2Retorno IntegrationV2(ColaboradorV2Gestor view)
+    {
+      try
+      {
+        resultV2 = new ColaboradorV2Retorno
+        {
+          Situacao = "Ok",
+          Mensagem = new List<string>()
+        };
+        if (view == null)
+        {
+          throw new Exception("Objeto não reconhecido.");
+        }
+        // Validação de campos especiais colaborador
+        view.Colaborador = ValidKeyEmployee(view.Colaborador, " ");
+        // Validação de campos especiais gestor
+        view.Gestor = ValidKeyEmployee(view.Gestor, " do gestor ");
+        if (resultV2.Mensagem.Count != 0)
+        {
+          return resultV2;
+        }
+        // Validar se o usuário do colaborador existe
+        ViewCrudUser user = userService.GetNewVersion(p => p.Document == view.Colaborador.Cpf).Result?.GetViewCrud();
+        if (user == null)
+        {
+          resultV2.Mensagem.Add("Colaborador não existe como usuário.");
+        }
+        // Validar se o usuário do colaborador gestor
+        ViewCrudUser userManager = userService.GetNewVersion(p => p.Document == view.Gestor.Cpf).Result?.GetViewCrud();
+        if (userManager == null)
+        {
+          resultV2.Mensagem.Add("Gestor não existe como usuário.");
+        }
+        if (resultV2.Mensagem.Count != 0)
+        {
+          resultV2.Situacao = "Erro";
+          return resultV2;
+        }
+        //////////////// Contrato do colaborador
+        // Company
+        IntegrationCompany integrationCompany = GetIntegrationCompany(view.Colaborador.Empresa, view.Colaborador.NomeEmpresa);
+        Company company = companyService.GetNewVersion(p => p._id == integrationCompany.IdCompany).Result;
+        if (company == null)
+        {
+          resultV2.Mensagem.Add("Falta integração da empresa");
+          resultV2.Mensagem.Add("Falta integração de estabelecimento");
+        }
+        // Establishment
+        IntegrationEstablishment integrationEstablishment = GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento(), view.Colaborador.NomeEstabelecimento, company._id);
+        Establishment establishment = establishmentService.GetNewVersion(p => p._id == integrationEstablishment.IdEstablishment).Result;
+        if (establishment == null)
+        {
+          resultV2.Mensagem.Add("Falta integração de estabelecimento");
+        }
+        // Type key person contract
+        ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();
+        // Person contract
+        ViewCrudPerson person = null;
+        switch (viewCrudIntegrationParameter.IntegrationKey)
+        {
+          case EnumIntegrationKey.CompanyEstablishment:
+            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf &&
+                                                 p.Company._id == company._id &&
+                                                 p.Establishment._id == establishment._id &&
+                                                 p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Company:
+            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf &&
+                                                 p.Company._id == company._id &&
+                                                 p.Registration == view.Colaborador.Matricula).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Document:
+            person = personService.GetNewVersion(p => p.User.Document == view.Colaborador.Cpf).Result?.GetViewCrud();
+            break;
+          default:
+            resultV2.Mensagem.Add("Tipo de integração de chaves inválida");
+            break;
+        }
+        //////////////// Contrato do gestor
+        // Company
+        IntegrationCompany integrationCompanyManager = GetIntegrationCompany(view.Gestor.Empresa, view.Gestor.NomeEmpresa);
+        Company companyManager = companyService.GetNewVersion(p => p._id == integrationCompanyManager.IdCompany).Result;
+        if (companyManager == null)
+        {
+          resultV2.Mensagem.Add("Falta integração da empresa do gestor");
+          resultV2.Mensagem.Add("Falta integração de estabelecimento do gestor");
+        }
+        // Establishment
+        IntegrationEstablishment integrationEstablishmentManager = GetIntegrationEstablishment(view.Gestor.ChaveEstabelecimento(), view.Gestor.NomeEstabelecimento, company._id);
+        Establishment establishmentManager = establishmentService.GetNewVersion(p => p._id == integrationEstablishmentManager.IdEstablishment).Result;
+        if (establishmentManager == null)
+        {
+          resultV2.Mensagem.Add("Falta integração de estabelecimento do gestor");
+        }
+        // Person contract
+        ViewCrudPerson personManager = null;
+        switch (viewCrudIntegrationParameter.IntegrationKey)
+        {
+          case EnumIntegrationKey.CompanyEstablishment:
+            personManager = personService.GetNewVersion(p => p.User.Document == view.Gestor.Cpf &&
+                                                 p.Company._id == company._id &&
+                                                 p.Establishment._id == establishment._id &&
+                                                 p.Registration == view.Gestor.Matricula).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Company:
+            personManager = personService.GetNewVersion(p => p.User.Document == view.Gestor.Cpf &&
+                                                 p.Company._id == company._id &&
+                                                 p.Registration == view.Gestor.Matricula).Result?.GetViewCrud();
+            break;
+          case EnumIntegrationKey.Document:
+            personManager = personService.GetNewVersion(p => p.User.Document == view.Gestor.Cpf).Result?.GetViewCrud();
+            break;
+          default:
+            resultV2.Mensagem.Add("Tipo de integração de chaves inválida");
+            break;
+        }
+        if (person == null)
+        {
+          resultV2.Mensagem.Add("Colaborador não tem contrato ativo");
+        }
+        if (personManager == null)
+        {
+          resultV2.Mensagem.Add("Gestor não tem contrato ativo");
+        }
+        if (resultV2.Mensagem.Count != 0)
+        {
+          resultV2.Situacao = "Erro";
+          return resultV2;
+        }
+        // Atualizar typo do gestor
+        if (personManager.TypeUser != EnumTypeUser.Manager && personManager.TypeUser != EnumTypeUser.ManagerHR)
+        {
+          if (personManager.TypeUser == EnumTypeUser.Employee)
+          {
+            personManager.TypeUser = EnumTypeUser.Manager;
+          }
+          if (personManager.TypeUser == EnumTypeUser.HR)
+          {
+            personManager.TypeUser = EnumTypeUser.ManagerHR;
+          }
+          personService.Update(personManager);
+        }
+        // Atualizar o gestor do colaborador
+        person.Manager = new ViewBaseFields() { _id = personManager._id, Name = personManager.User.Name, Mail = personManager.User.Mail };
+        personService.Update(person);
+        resultV2.IdUser = person.User._id;
+        resultV2.IdContract = person._id;
+        resultV2.IdGestor = personManager._id;
+        resultV2.Mensagem.Add("Gestor do colaborador atualizado!");
+        return resultV2;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     public ColaboradorV2 GetV2(ColaboradorV2Base view)
     {
       try

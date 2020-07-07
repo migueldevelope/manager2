@@ -70,6 +70,7 @@ namespace Manager.Core.Interfaces
 
     #region Colaborador V2
     ColaboradorV2Retorno IntegrationV2(ColaboradorV2Completo view);
+    ColaboradorV2Retorno IntegrationV2(ColaboradorV2Gestor view);
     ColaboradorV2Retorno IntegrationV2(ColaboradorV2Demissao view);
     ColaboradorV2 GetV2(ColaboradorV2Base view);
     ColaboradorV2 GetV2(string id);
