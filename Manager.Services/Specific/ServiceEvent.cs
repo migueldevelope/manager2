@@ -369,8 +369,8 @@ namespace Manager.Services.Specific
                 Name = item.User.Name,
                 Document = item.User.Document,
                 Registration = item.Registration,
-                            //Person = item.GetViewList(),
-                            Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
+                //Person = item.GetViewList(),
+                Cbo = item.Occupation == null ? null : (item.Occupation.Cbo == null) ? null : new ViewListCbo()
                 {
                   _id = item.Occupation.Cbo._id,
                   Name = item.Occupation.Cbo.Name,
@@ -655,10 +655,11 @@ namespace Manager.Services.Specific
         if (eventsfull.Count() > 0)
         {
           var lastcode = eventsfull.LastOrDefault().Code;
-          if (regex.IsMatch(lastcode))
-            codeseq = long.Parse(lastcode) + 1;
+          if (lastcode != null)
+            if (regex.IsMatch(lastcode))
+              codeseq = long.Parse(lastcode) + 1;
         }
-          
+
 
         var events = new Event()
         {
