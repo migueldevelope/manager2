@@ -528,7 +528,7 @@ namespace Manager.Services.Specific
         {
           var view = new ViewListObjectiveEdit();
 
-          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Lasted == true).Result
             .Where(p => ids.Contains(p._idObjective));
 
 
@@ -640,6 +640,7 @@ namespace Manager.Services.Specific
 
 
             viewKeyResult.PendingChecking = true;
+            viewKeyResult.PendingCheckinTrust = true;
             viewKeyResult.PendingCheckinAchievement = true;
 
             if (pendingcheckingkey.Count() > 0)
@@ -770,7 +771,7 @@ namespace Manager.Services.Specific
         {
           var view = new ViewListObjectiveEdit();
 
-          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Lasted == true).Result
             .Where(p => ids.Contains(p._idObjective));
 
           //var pendingchecking = pendingcheckingprevious.Where(p => p.Week == week).ToList();
@@ -833,12 +834,20 @@ namespace Manager.Services.Specific
             var pendingcheckingkeyresult = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id);
 
             viewKeyResult.PendingChecking = true;
+            viewKeyResult.PendingCheckinTrust = true;
             viewKeyResult.PendingCheckinAchievement = true;
 
 
             if (pendingcheckingkeyresult.Count() > 0)
             {
-              var checkinperson = pendingcheckingkeyresult.Where(p => p._idPerson == _user._idPerson).FirstOrDefault();
+              PendingCheckinObjective checkinperson = null;
+              if (viewKeyResult.TypeCheckin == EnumTypeCheckin.Weekly)
+                checkinperson = pendingcheckingkeyresult.Where(p => p._idKeyResult == viewKeyResult._id && p.Week == week && p._idPerson == _user._idPerson).FirstOrDefault();
+              else if (viewKeyResult.TypeCheckin == EnumTypeCheckin.Monthly)
+                checkinperson = pendingcheckingkeyresult.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p._idPerson == _user._idPerson).FirstOrDefault();
+              else
+                checkinperson = pendingcheckingkeyresult.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p.Fortnight == fortnight && p._idPerson == _user._idPerson).FirstOrDefault();
+
               viewKeyResult.PendingCheckinAchievement = true;
               viewKeyResult.PendingCheckinTrust = true;
               if (checkinperson != null)
@@ -853,6 +862,7 @@ namespace Manager.Services.Specific
 
               viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
+
               viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
             }
 
@@ -981,7 +991,7 @@ namespace Manager.Services.Specific
           var view = new ViewListObjectiveEdit();
           keyresults = keyresults.Where(p => p.Objective._id == obj._id).ToList();
 
-          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Lasted == true).Result
             .Where(p => ids.Contains(p._idObjective));
 
           var pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson);
@@ -1049,6 +1059,7 @@ namespace Manager.Services.Specific
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
 
             viewKeyResult.PendingChecking = true;
+            viewKeyResult.PendingCheckinTrust = true;
             viewKeyResult.PendingCheckinAchievement = true;
 
             if (pendingcheckingkey.Count() > 0)
