@@ -835,7 +835,7 @@ namespace Manager.Services.Specific
 
             viewKeyResult.PendingChecking = true;
             viewKeyResult.PendingCheckinTrust = true;
-            viewKeyResult.PendingCheckinAchievement = true;
+            viewKeyResult.PendingCheckinAchievement = false;
 
 
             if (pendingcheckingkeyresult.Count() > 0)
@@ -848,17 +848,25 @@ namespace Manager.Services.Specific
               else
                 checkinperson = pendingcheckingkeyresult.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p.Fortnight == fortnight && p._idPerson == _user._idPerson).FirstOrDefault();
 
-              viewKeyResult.PendingCheckinAchievement = true;
+              //viewKeyResult.PendingCheckinAchievement = true;
               viewKeyResult.PendingCheckinTrust = true;
               if (checkinperson != null)
               {
                 if (checkinperson.LevelTrust > 0)
                   viewKeyResult.PendingCheckinTrust = false;
 
-                if (checkinperson.Achievement > 0)
-                  viewKeyResult.PendingCheckinAchievement = false;
+                //if (checkinperson.Achievement > 0)
+                //  viewKeyResult.PendingCheckinAchievement = false;
               }
-
+              viewKeyResult.PendingChecking = false;
+              viewKeyResult._idPendingChecking = pendingcheckingkeyresult.FirstOrDefault()._id;
+              var trustkey = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
+              if (trustkey <= 50)
+                viewKeyResult.LevelTrust = 0;
+              else if ((trustkey > 50) && (trustkey <= 75))
+                viewKeyResult.LevelTrust = 1;
+              else
+                viewKeyResult.LevelTrust = 2;
 
               viewKeyResult.QuantityImpediments = pendingcheckingkeyresult.Sum(p => p.Impediments.Count());
               viewKeyResult.QuantityIniciatives = pendingcheckingkeyresult.Sum(p => p.Iniciatives.Count());
@@ -907,22 +915,14 @@ namespace Manager.Services.Specific
             else
               pendingcheckingkey = pendingcheckingprevious.Where(p => p._idKeyResult == viewKeyResult._id && p.Month == month && p.Fortnight == fortnight && p._idPerson == _user._idPerson).ToList();
 
-            if (pendingcheckingkey.Count() > 0)
-            {
-              viewKeyResult.PendingChecking = false;
-              viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
-              var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
-              if (trustkey <= 50)
-                viewKeyResult.LevelTrust = 0;
-              else if ((trustkey > 50) && (trustkey <= 75))
-                viewKeyResult.LevelTrust = 1;
-              else
-                viewKeyResult.LevelTrust = 2;
-            }
-            else
-            {
-              viewKeyResult.PendingChecking = true;
-            }
+            //if (pendingcheckingkey.Count() == 0)
+            //{
+         
+            //}
+            //else
+            //{
+            //  viewKeyResult.PendingChecking = true;
+            //}
 
             viewKeyResult.Achievement = kr.Achievement;
             if (viewKeyResult.Achievement <= 60)
