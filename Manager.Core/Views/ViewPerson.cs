@@ -30,7 +30,5 @@ namespace Manager.Core.Views
     public bool ElearningVideo { get; set; }
     public bool ElearningCertificate { get; set; }
     public string ShowElearningEmeu { get; set; }
-    
-
   }
 }

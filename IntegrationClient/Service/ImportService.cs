@@ -439,7 +439,7 @@ namespace IntegrationClient.Service
         OnRefreshProgressBar(EventArgs.Empty);
         ColaboradorV2Demissao demissao;
         ColaboradorV2Retorno viewRetorno;
-        ColaboradorV2Completo view;
+        ColaboradorV2Completo view = null;
         bool fired = false;
         foreach (ColaboradorV2Ativo colaborador in colaboradores)
         {
@@ -485,7 +485,7 @@ namespace IntegrationClient.Service
             }
             else
             {
-              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2}", colaborador.Cpf, colaborador.Matricula, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3}", colaborador.Cpf, colaborador.Matricula, view.Nome, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
             }
           }
           ProgressBarValue++;

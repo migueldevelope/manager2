@@ -45,8 +45,7 @@ namespace Manager.Controllers
     /// <param name="view">Objeto para nova conta</param>
     /// <returns></returns>
     [HttpPost]
-    [Route("new")]
-    public async Task<IActionResult> Post([FromBody]ViewNewAccount view)
+    public async Task<IActionResult> Post([FromBody] ViewNewAccount view)
     {
       try
       {
@@ -64,8 +63,9 @@ namespace Manager.Controllers
     /// <param name="view">Objeto para conta</param>
     /// /// <param name="id">id para conta</param>
     /// <returns></returns>
+    [Authorize]
     [HttpPut]
-    [Route("update/{id}")]
+    [Route("{id}")]
     public async Task<IActionResult> Put([FromBody]ViewCrudAccount view, string id)
     {
       return await Task.Run(() => Ok(service.UpdateAccount(view, id)));
@@ -77,7 +77,7 @@ namespace Manager.Controllers
     /// <returns>Lista de contas ativas</returns>
     [Authorize]
     [HttpGet]
-    [Route("get/{id}")]
+    [Route("{id}")]
     public async Task<ViewCrudAccount> Get(string id)
     {
       return await Task.Run(() => service.GetAccount(id));
