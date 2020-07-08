@@ -332,7 +332,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListRecommendationPersonId> detail = serviceRecommendationPerson.GetAllNewVersion(p => p._idColleague == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
+        var person = servicePerson.GetNewVersion(p => p._id == idperson).Result;
+        List<ViewListRecommendationPersonId> detail = serviceRecommendationPerson.GetAllNewVersion(p => p._idColleague == person.User._id && p.Person.Name.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Person.Name").Result
           .Select(p => new ViewListRecommendationPersonId
           {
             _id = p._id,
