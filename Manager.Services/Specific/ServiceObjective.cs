@@ -1322,7 +1322,7 @@ namespace Manager.Services.Specific
         model.QuantityResult = result;
 
         if (model.TypeKeyResult == EnumTypeKeyResult.Quantity)
-          model.Achievement = (model.QuantityResult / 100) * model.QuantityGoal;
+          model.Achievement = (model.QuantityResult * 100) / model.QuantityGoal;
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
         {
           var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
