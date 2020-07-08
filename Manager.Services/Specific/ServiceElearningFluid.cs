@@ -416,7 +416,18 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        var person = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result;
+        return new ElearningFluid()
+        {
+          _idUser = _user._idUser,
+          Person = person.GetViewListBase(),
+          DateBegin = DateTime.Now,
+          Score = 0,
+          ElearningCertificate = false,
+          ElearningVideo = false,
+          StatusElearningFluid = EnumStatusElearningFluid.Open,
+          Questions = new List<ViewCrudElearningFluidAnswer>()
+        };
       }
     }
 
