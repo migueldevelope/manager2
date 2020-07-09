@@ -7,5 +7,6 @@ namespace Manager.Views.BusinessCrud
   {
     [BsonRepresentation(BsonType.ObjectId)]
     public string _id { get; set; }
+    public long _change { get; set; }
   }
 }

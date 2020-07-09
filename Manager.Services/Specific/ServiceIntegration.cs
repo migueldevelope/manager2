@@ -2063,6 +2063,8 @@ namespace Manager.Services.Specific
         {
           resultV2.Mensagem.Add("Falta integração da empresa");
           resultV2.Mensagem.Add("Falta integração de estabelecimento");
+          resultV2.Situacao = "Erro";
+          return resultV2;
         }
         // Establishment
         IntegrationEstablishment integrationEstablishment = GetIntegrationEstablishment(view.Colaborador.ChaveEstabelecimento(), view.Colaborador.NomeEstabelecimento, company._id);
@@ -2070,6 +2072,8 @@ namespace Manager.Services.Specific
         if (establishment == null)
         {
           resultV2.Mensagem.Add("Falta integração de estabelecimento");
+          resultV2.Situacao = "Erro";
+          return resultV2;
         }
         // Type key person contract
         ViewCrudIntegrationParameter viewCrudIntegrationParameter = GetIntegrationParameter();

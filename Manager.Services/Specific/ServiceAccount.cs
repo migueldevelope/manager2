@@ -73,7 +73,7 @@ namespace Manager.Services.Specific
     }
     #endregion
 
-    #region New account
+    #region Account
     public string NewAccount(ViewNewAccount view)
     {
       try
@@ -134,7 +134,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public string UpdateAccount(ViewCrudAccount view, string id)
     {
       try
@@ -152,9 +151,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    #endregion
-
-    #region List Account
     public List<ViewListAccount> GetAccountList(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
@@ -168,7 +164,6 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-
     public ViewCrudAccount GetAccount(string id)
     {
       try

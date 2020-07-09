@@ -8,6 +8,10 @@ namespace Manager.Core.BaseV2
   {
     [BsonRepresentation(BsonType.ObjectId)]
     public string _idAccount { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _includedPerson { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string _alteredPerson { get; set; }
   }
 #pragma warning restore IDE1006 // Estilos de Nomenclatura
 }

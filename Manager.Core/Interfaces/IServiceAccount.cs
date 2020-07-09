@@ -14,10 +14,10 @@ namespace Manager.Core.Interfaces
     void SetUser(BaseUser _user);
     string NewAccount(ViewNewAccount view);
     ViewCrudAccount GetAccount(string id);
-    List<ViewListAccount> GetAccountList( ref long total, int count = 10, int page = 1, string filter = "");
+    string UpdateAccount(ViewCrudAccount view, string id);
+    List<ViewListAccount> GetAccountList(ref long total, int count = 10, int page = 1, string filter = "");
     ViewPerson AlterAccount(string idaccount);
     ViewPerson AlterAccountPerson(string idperson);
     string SynchronizeParameters();
-    string UpdateAccount(ViewCrudAccount view, string id);
   }
 }

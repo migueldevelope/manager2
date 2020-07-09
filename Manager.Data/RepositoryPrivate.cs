@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Manager.Data
 {
-  public class RepositoryPublic<T> where T : BasePublic
+  public class RepositoryPrivate<T> where T : BasePrivate
   {
     private readonly IMongoCollection<T> mongoCollection;
     private BaseUserV2 baseUserV2;
 
     #region Contructor
-    public RepositoryPublic(DataContext context)
+    public RepositoryPrivate(DataContext context)
     {
       try
       {
@@ -29,7 +29,7 @@ namespace Manager.Data
         throw;
       }
     }
-    public virtual void SetUser(IHttpContextAccessor contextAccessor)
+    public void SetUser(IHttpContextAccessor contextAccessor)
     {
       baseUserV2 = new BaseUserV2() { _idAccount = null, _idPerson = null, _idUser = null };
       foreach (Claim ci in contextAccessor.HttpContext.User.Claims)
@@ -60,10 +60,6 @@ namespace Manager.Data
         }
       }
     }
-    public virtual void SetUser(BaseUserV2 baseUser)
-    {
-      baseUserV2 = baseUser;
-    }
     public BaseUserV2 GetUser()
     {
       return baseUserV2;
@@ -80,16 +76,11 @@ namespace Manager.Data
         entity._disabled = false;
         entity._included = DateTime.UtcNow;
         entity._altered = entity._included;
-        if (baseUserV2._idUser == null)
-        {
-          entity._includedUser = entity._id;
-          entity._alteredUser = entity._id;
-        }
-        else
-        {
-          entity._includedUser = baseUserV2._idUser;
-          entity._alteredUser = baseUserV2._idUser;
-        }
+        entity._includedUser = baseUserV2._idUser;
+        entity._alteredUser = baseUserV2._idUser;
+        entity._includedPerson = baseUserV2._idPerson;
+        entity._alteredPerson = baseUserV2._idPerson;
+        entity._idAccount = baseUserV2._idAccount;
         entity._change = 0;
         await mongoCollection.InsertOneAsync(entity);
         return entity;
@@ -103,9 +94,11 @@ namespace Manager.Data
     {
       try
       {
-        T entity = await mongoCollection.FindAsync(
-          Builders<T>.Filter.And(filter, Builders<T>.Filter.Eq(f => f._disabled, false)))
-          .Result.FirstOrDefaultAsync();
+        T entity = await mongoCollection.FindAsync(Builders<T>.Filter.And(filter,
+              Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+              Builders<T>.Filter.Eq(f => f._disabled, false)
+            )
+          ).Result.FirstOrDefaultAsync();
         if (entity == null)
         {
           throw new Exception(string.Format("{0} not found!", typeof(T).Name));
@@ -121,12 +114,14 @@ namespace Manager.Data
     {
       try
       {
-        return await mongoCollection.FindAsync(Builders<T>.Filter.And(filter, Builders<T>.Filter.Eq(f => f._disabled, false)),
+        return await mongoCollection.FindAsync(Builders<T>.Filter.And(filter,
+            Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+            Builders<T>.Filter.Eq(f => f._disabled, false)
+          ),
           new FindOptions<T>
           {
             Collation = new Collation("en", strength: CollationStrength.Primary)
-          })
-          .Result.ToListAsync();
+          }).Result.ToListAsync();
       }
       catch (Exception)
       {
@@ -141,7 +136,9 @@ namespace Manager.Data
         // TODO: ver split de campos para ordem
         string[] fieldName = sort.Split(' ');
         int order = fieldName.Count() == 1 ? 1 : fieldName[1].ToUpper().Equals("DESC") ? -1 : 1;
-        return await mongoCollection.FindAsync(Builders<T>.Filter.And(filter, Builders<T>.Filter.Eq(f => f._disabled, false)),
+        return await mongoCollection.FindAsync(Builders<T>.Filter.And(filter,
+                                               Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+                                               Builders<T>.Filter.Eq(f => f._disabled, false)),
          new FindOptions<T>
          {
            Collation = _caseInsensitiveCollation,
@@ -161,7 +158,9 @@ namespace Manager.Data
         Collation _caseInsensitiveCollation = new Collation("en", strength: CollationStrength.Primary);
         string[] fieldName = sort.Split(' ');
         int order = fieldName.Count() == 1 ? 1 : fieldName[1].ToUpper().Equals("DESC") ? -1 : 1;
-        return await mongoCollection.FindAsync(Builders<T>.Filter.And(filter, Builders<T>.Filter.Eq(f => f._disabled, false)),
+        return await mongoCollection.FindAsync(Builders<T>.Filter.And(filter,
+                                               Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+                                               Builders<T>.Filter.Eq(f => f._disabled, false)),
           new FindOptions<T>
           {
             Collation = _caseInsensitiveCollation,
@@ -210,8 +209,9 @@ namespace Manager.Data
         entity._change++;
         entity._altered = DateTime.UtcNow;
         entity._alteredUser = baseUserV2._idUser;
+        entity._alteredPerson = baseUserV2._idPerson;
         entity = await mongoCollection.FindOneAndReplaceAsync(
-          p => p._id == entity._id && p._disabled == false && p._change == _change,
+          p => p._idAccount == baseUserV2._idAccount && p._id == entity._id && p._disabled == false && p._change == _change,
           entity);
         if (entity == null)
         {
@@ -232,11 +232,13 @@ namespace Manager.Data
         UpdateDefinition<T> update = Builders<T>.Update.Inc("_change", 1)
                                         .Set("_disabled", true)
                                         .Set("_altered", DateTime.UtcNow)
-                                        .Set("_alteredUser", baseUserV2._idUser);
+                                        .Set("_alteredUser", baseUserV2._idUser)
+                                        .Set("_alteredPerson", baseUserV2._idPerson);
         T result = await mongoCollection.FindOneAndUpdateAsync(
           Builders<T>.Filter.And(Builders<T>.Filter.Eq(f => f._id, _id),
-                                  Builders<T>.Filter.Eq(f => f._disabled, false),
-                                  Builders<T>.Filter.Eq(f => f._change, _change)),
+                                 Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+                                 Builders<T>.Filter.Eq(f => f._disabled, false),
+                                 Builders<T>.Filter.Eq(f => f._change, _change)),
           update,
           new FindOneAndUpdateOptions<T> { ReturnDocument = ReturnDocument.After });
         // Teste para o controle de alteração
@@ -257,9 +259,11 @@ namespace Manager.Data
       {
         DeleteResult result = await mongoCollection.DeleteOneAsync(
           Builders<T>.Filter.And(Builders<T>.Filter.Eq(f => f._id, _id),
-                                  Builders<T>.Filter.Eq(f => f._disabled, false),
-                                  Builders<T>.Filter.Eq(f => f._change, _change))
-          );
+                                 Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+                                 Builders<T>.Filter.Eq(f => f._disabled, false),
+                                 Builders<T>.Filter.Eq(f => f._change, _change)
+          )
+        );
         // Teste para o controle de alteração
         if (result.DeletedCount == 0)
         {
@@ -277,7 +281,9 @@ namespace Manager.Data
       try
       {
         return await mongoCollection.
-          CountDocumentsAsync(Builders<T>.Filter.And(filter,Builders<T>.Filter.Eq(f => f._disabled, false)));
+          CountDocumentsAsync(Builders<T>.Filter.And(filter,
+                              Builders<T>.Filter.Eq(f => f._idAccount, baseUserV2._idAccount),
+                              Builders<T>.Filter.Eq(f => f._disabled, false)));
       }
       catch
       {
@@ -288,3 +294,4 @@ namespace Manager.Data
 
   }
 }
+
