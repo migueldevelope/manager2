@@ -1633,6 +1633,14 @@ namespace Manager.Services.Specific
 
         var keyresult = serviceKeyResult.GetNewVersion(p => p._id == view._idKeyResult).Result;
 
+        var old = servicePendingCheckinObjective.GetNewVersion(p => p.Lasted == true && p._idPerson == _user._idPerson
+        && p._idKeyResult == view._idKeyResult).Result;
+        if (old != null)
+        {
+          old.Lasted = false;
+          var x = servicePendingCheckinObjective.Update(old, null);
+        }
+
         var model = servicePendingCheckinObjective.InsertNewVersion(
           new PendingCheckinObjective()
           {
@@ -1658,13 +1666,6 @@ namespace Manager.Services.Specific
           model.Fortnight = 1;
 
 
-        var old = servicePendingCheckinObjective.GetNewVersion(p => p.Lasted == true && p._idPerson == _user._idPerson
-        && p._idKeyResult == view._idKeyResult).Result;
-        if (old != null)
-        {
-          old.Lasted = false;
-          var x = servicePendingCheckinObjective.Update(old, null);
-        }
 
         return model.GetViewCrud();
       }
