@@ -1073,6 +1073,8 @@ namespace Manager.Services.Specific
               viewKeyResult.PendingCheckinTrust = true;
               if (checkinperson != null)
               {
+                viewKeyResult.PendingChecking = false;
+                viewKeyResult._idPendingChecking = checkinperson._id;
                 if (checkinperson.LevelTrust > 0)
                   viewKeyResult.PendingCheckinTrust = false;
 
@@ -1080,8 +1082,7 @@ namespace Manager.Services.Specific
                   viewKeyResult.PendingCheckinAchievement = false;
               }
 
-              viewKeyResult.PendingChecking = false;
-              viewKeyResult._idPendingChecking = pendingcheckingkey.FirstOrDefault()._id;
+              
               var trustkey = pendingcheckingkey.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
