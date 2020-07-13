@@ -852,14 +852,14 @@ namespace Manager.Services.Specific
               viewKeyResult.PendingCheckinTrust = true;
               if (checkinperson != null)
               {
+                viewKeyResult._idPendingChecking = checkinperson._id;
                 if (checkinperson.LevelTrust > 0)
                   viewKeyResult.PendingCheckinTrust = false;
 
                 //if (checkinperson.Achievement > 0)
                 //  viewKeyResult.PendingCheckinAchievement = false;
               }
-              viewKeyResult.PendingChecking = false;
-              viewKeyResult._idPendingChecking = pendingcheckingkeyresult.FirstOrDefault()._id;
+              
               var trustkey = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
               if (trustkey <= 50)
                 viewKeyResult.LevelTrust = 0;
