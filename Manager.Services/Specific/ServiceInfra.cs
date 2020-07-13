@@ -4013,18 +4013,18 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOpportunityLine> ListOpportunityLine(string idcompany)
+    public List<ViewListOpportunityLineExport> ListOpportunityLine(string idcompany)
     {
       try
       {
-        List<Occupation> occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
-        List<ViewListOpportunityLine> list = new List<ViewListOpportunityLine>();
+        var occupations = serviceOccupation.GetAllNewVersion(p => p.Group.Company._id == idcompany).Result;
+        var list = new List<ViewListOpportunityLine>();
         foreach (var item in occupations)
         {
           Group group = serviceGroup.GetNewVersion(p => p._id == item.Group._id).Result;
           foreach (var proc in item.Process)
           {
-            ViewListOpportunityLine view = new ViewListOpportunityLine
+            var view = new ViewListOpportunityLine
             {
               Occupation = item.Name,
               Group = item.Group.Name,
@@ -4042,7 +4042,17 @@ namespace Manager.Services.Specific
         }
         return list.OrderBy(p => p.Area).ThenBy(p => p.TypeShepre).ThenBy(p => p.TypeAxis)
           .ThenBy(p => p.LineGroup).ThenBy(p => p.ProcessLevelOne)
-          .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation).ToList();
+          .ThenBy(p => p.ProcessLevelTwo).ThenBy(p => p.Occupation)
+          .Select(p => new ViewListOpportunityLineExport()
+          {
+            Occupation = p.Occupation,
+            Group = p.Group,
+            Sphere = p.Shepre,
+            Axis = p.Axis,
+            ProcessLevelOne = p.ProcessLevelOne,
+            Area = p.Area,
+            ProcessLevelTwo = p.ProcessLevelTwo
+          }).ToList();
       }
       catch (Exception e)
       {
