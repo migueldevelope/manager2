@@ -303,7 +303,7 @@ namespace Manager.Services.Specific
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
 
-        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active).Result
+        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result
           .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson).Select(p => p._id);
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
         //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
@@ -355,7 +355,7 @@ namespace Manager.Services.Specific
 
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow &&
+        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow &&
         p.StausObjective == EnumStausObjective.Active).Result
           .Where(p => p.Editors.Where(x => x._id == id).Count() > 0 || p.Responsible._id == id).Select(p => p._id);
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
@@ -435,7 +435,7 @@ namespace Manager.Services.Specific
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
         var objectives = serviceObjective.GetAllNewVersion(p =>
-        p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active
+        p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active
         && p.Description.Contains(filter))
         .Result.Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
         || p.Responsible._id == _user._idPerson).ToList();
@@ -602,7 +602,7 @@ namespace Manager.Services.Specific
 
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active).Result
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result
          .Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
@@ -848,7 +848,7 @@ namespace Manager.Services.Specific
 
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active).Result
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result
          .Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
