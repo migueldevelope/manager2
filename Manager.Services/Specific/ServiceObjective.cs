@@ -402,6 +402,9 @@ namespace Manager.Services.Specific
               view.LevelTrust = 2;
           }
           view.Description = item.Description;
+          view.Detail = item.Detail;
+          view.StartDate = item.StartDate;
+          view.EndDate = item.EndDate;
           view._id = item._id;
 
           if (keyresults.Count() > 0)
