@@ -287,8 +287,12 @@ namespace IntegrationClient
       item = item.Equals("IMOBILIAR") ? "SISTEMA IMOBILIAR" : item;
       item = item.Equals("BUSINESS INTELLIGENCE") ? "SOFTWARE DE BI" : item;
       item = item.Equals("TECNICAS DE NEGOCIAÇÃO/VENDAS") ? "TECNICAS DE NEGOCIAÇÃO" : item;
-      item = item.Equals("") ? "" : item;
-      item = item.Equals("") ? "" : item;
+      item = item.Equals("ÁREAS DE CONHECIMENTO ESCOLAS / CURSO") ? "ÁREAS DE CONHECIMENTO DA SUA ESCOLA / CURSO" : item;
+      item = item.Equals("INGLES BÁSICO") ? "INGLÊS BÁSICO" : item;
+      item = item.Equals("INGLES INTERMEDIÁRIO") ? "INGLÊS INTERMEDIÁRIO" : item;
+      item = item.Equals("INGLÊS INTERMEDIÀRIO") ? "INGLÊS INTERMEDIÁRIO" : item;
+      item = item.Equals("INGLES TÉCNICO") ? "INGLÊS TÉCNICO" : item;
+      item = item.Equals("REDE") ? "REDES" : item;
       item = item.Equals("") ? "" : item;
       return item;
     }
@@ -356,7 +360,7 @@ namespace IntegrationClient
       string cellGroup = "H5";
       string cellColumnCheck = "A";
       // Responsabilidade
-      int responsibilityCellLine = 15;
+      int responsibilityCellLine = 16;
       string responsibilityCellColumn = "A";
       string responsibilityTextCheck = "ENTREGAS DO CARGO";
       // Técnicas
@@ -425,7 +429,11 @@ namespace IntegrationClient
         viewOccupation.Name = excelPln.Range[cellName].Value.ToString().Trim();
         if (!string.IsNullOrEmpty(cellNameComplement))
         {
-          viewOccupation.Description = excelPln.Range[cellNameComplement].Value ?? string.Empty;
+          viewOccupation.Description = string.Format(" - {0}", excelPln.Range[cellNameComplement].Value ?? string.Empty);
+          if (viewOccupation.Description.Equals(" - "))
+          {
+            viewOccupation.Description = string.Empty;
+          }
         }
         viewOccupation.NameGroup = DictionaryGroup(excelPln.Range[cellGroup].Value.ToString());
 
@@ -454,7 +462,8 @@ namespace IntegrationClient
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
-          if (work.Equals(hardSkillTextTypeCheck) || work.Equals("COMPETÊNCIAS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase))
+          if (work.Equals(hardSkillTextTypeCheck) || work.Equals("COMPETÊNCIAS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase)
+            || work.Equals("SKILLS ESPECÍFICAS", StringComparison.InvariantCultureIgnoreCase))
           {
             break;
           }
