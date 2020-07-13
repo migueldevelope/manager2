@@ -371,16 +371,18 @@ namespace Manager.Services.Specific
         foreach (var item in objectives)
         {
           var keyresults = serviceKeyResult.GetAllNewVersion(p => item._id == p.Objective._id).Result;
-          var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
           && p._idObjective == item._id).Result;
+          var pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson
+          && p._idObjective == item._id).ToList();
           //&& p.Week == week && p._idObjective == item._id).Result;
 
           var view = new ViewListDetailResposibleObjective();
 
           if (pendingchecking.Count() > 0)
           {
-            view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
-            view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
+            view.Impediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
+            view.Iniciatives = pendingcheckingprevious.Sum(p => p.Iniciatives.Count());
 
             var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
             view.AverageTrust = trust;
@@ -996,10 +998,11 @@ namespace Manager.Services.Specific
           var view = new ViewListObjectiveEdit();
           keyresults = keyresults.Where(p => p.Objective._id == obj._id).ToList();
 
-          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Lasted == true).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
             .Where(p => ids.Contains(p._idObjective));
 
-          var pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson);
+          var pendingchecking = pendingcheckingprevious.Where(p => p.Lasted == true);
+          pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson);
 
 
           view.Description = obj.Description;
@@ -1035,10 +1038,10 @@ namespace Manager.Services.Specific
             totalweight += kr.Weight;
             totalachievment += kr.Achievement * kr.Weight;
             var viewKeyResult = new ViewListKeyResultsEdit();
-            if (pendingcheckingkey.Count() > 0)
+            if (pendingcheckingprevious.Where(p => p._idKeyResult == kr._id).Count() > 0)
             {
-              viewKeyResult.QuantityImpediments = pendingcheckingkey.Sum(p => p.Impediments.Count());
-              viewKeyResult.QuantityIniciatives = pendingcheckingkey.Sum(p => p.Iniciatives.Count());
+              viewKeyResult.QuantityImpediments = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id).Sum(p => p.Impediments.Count());
+              viewKeyResult.QuantityIniciatives = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id).Sum(p => p.Iniciatives.Count());
             }
             List<PendingCheckinObjective> pendingcheckingkeyweek = new List<PendingCheckinObjective>();
 
