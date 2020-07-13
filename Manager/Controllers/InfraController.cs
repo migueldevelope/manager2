@@ -669,7 +669,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("listopportunityline/{idcompany}")]
-    public async Task<List<ViewListOpportunityLine>> ListOpportunityLine(string idcompany)
+    public async Task<List<ViewListOpportunityLineExport>> ListOpportunityLine(string idcompany)
     {
       return await Task.Run(() => service.ListOpportunityLine(idcompany));
     }

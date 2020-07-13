@@ -124,7 +124,7 @@ namespace Manager.Core.Interfaces
     string UpdateCbo(ViewCrudCbo view);
     ViewCrudProcessLevelOne GetListProcessLevelOneById(string id);
     List<ViewOccupationListEdit> ListOccupationsEdit(string idcompany, ref long total, string filter, int count, int page, string filterGroup);
-    List<ViewListOpportunityLine> ListOpportunityLine(string idcompany);
+    List<ViewListOpportunityLineExport> ListOpportunityLine(string idcompany);
     List<ViewListInfraSphere> GetLineOpportunity(string idarea, ref long total, string filter, int count, int page);
     ViewMapOccupation GetMapOccupationLog(ViewFilterDateOne date, string id);
     List<ViewListOccupationLog> ListOccupationLog(ref long total, string id, int count, int page);
