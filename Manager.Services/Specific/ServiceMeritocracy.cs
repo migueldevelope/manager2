@@ -463,6 +463,9 @@ namespace Manager.Services.Specific
       try
       {
         var responbile = serviceObjective.GetResponsibleCard(meritocracy.Person._id);
+        var participant = serviceObjective.GetParticipantCard(meritocracy.Person._id);
+
+        var avgobj = (responbile.AverageAchievement + participant.AverageAchievement) / 2;
 
         var score = serviceMeritocracyScore.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.FirstOrDefault();
         decimal percMaturity = ResultLevel(meritocracy.WeightMaturity, score.WeightMaturity);
@@ -470,7 +473,7 @@ namespace Manager.Services.Specific
         decimal percCompanyDate = ResultLevel(meritocracy.WeightCompanyDate, score.WeightCompanyDate);
         decimal percOccupationDate = ResultLevel(meritocracy.WeightOccupationDate, score.WeightOccupationDate);
         //decimal percGoals = meritocracy.WeightGoals == EnumMeritocracyGoals.NotReach ? 80 : meritocracy.WeightGoals == EnumMeritocracyGoals.Reached ? 100 : 120;
-        decimal percGoals = ResultLevelObjective(responbile.AverageAchievement, score.PercentGoals);
+        decimal percGoals = ResultLevelObjective(avgobj, score.PercentGoals);
         decimal percActivitie = ResultLevel(meritocracy.WeightActivitiesExcellence, score.WeightActivitiesExcellence);
 
 

@@ -40,6 +40,8 @@ namespace Manager.Core.Interfaces
 
     ViewListObjectiveParticipantCard GetParticipantCard();
 
+    ViewListObjectiveParticipantCard GetParticipantCard(string idperson);
+
     ViewListObjectiveResponsibleCard GetResponsibleCard();
 
     List<ViewListDetailResposibleObjective> GetDetailResposibleObjective(ref long total, int count = 10, int page = 1, string filter = "");
