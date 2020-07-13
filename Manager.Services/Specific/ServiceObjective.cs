@@ -287,7 +287,11 @@ namespace Manager.Services.Specific
         var month = DateTime.Now.Month;
 
         var view = new ViewListObjectiveResponsibleCard();
-        var objective = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow &&
+        p.StausObjective == EnumStausObjective.Active).Result
           .Where(p => p.Editors.Where(x => x._id == id).Count() > 0 || p.Responsible._id == id).Select(p => p._id);
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
         //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == id).Result;
@@ -362,7 +366,11 @@ namespace Manager.Services.Specific
         byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
         var month = DateTime.Now.Month;
 
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        var objectives = serviceObjective.GetAllNewVersion(p =>
+        p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active
         && p.Description.Contains(filter))
         .Result.Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0
         || p.Responsible._id == _user._idPerson).ToList();
@@ -371,16 +379,18 @@ namespace Manager.Services.Specific
         foreach (var item in objectives)
         {
           var keyresults = serviceKeyResult.GetAllNewVersion(p => item._id == p.Objective._id).Result;
-          var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
           && p._idObjective == item._id).Result;
+          var pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson
+          && p._idObjective == item._id).ToList();
           //&& p.Week == week && p._idObjective == item._id).Result;
 
           var view = new ViewListDetailResposibleObjective();
 
           if (pendingchecking.Count() > 0)
           {
-            view.Impediments = pendingchecking.Sum(p => p.Impediments.Count());
-            view.Iniciatives = pendingchecking.Sum(p => p.Iniciatives.Count());
+            view.Impediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
+            view.Iniciatives = pendingcheckingprevious.Sum(p => p.Iniciatives.Count());
 
             var trust = pendingchecking.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString()));
             view.AverageTrust = trust;
@@ -392,6 +402,9 @@ namespace Manager.Services.Specific
               view.LevelTrust = 2;
           }
           view.Description = item.Description;
+          view.Detail = item.Detail;
+          view.StartDate = item.StartDate;
+          view.EndDate = item.EndDate;
           view._id = item._id;
 
           if (keyresults.Count() > 0)
@@ -521,7 +534,10 @@ namespace Manager.Services.Specific
 
         var ids = keyresults.Select(p => p.Objective._id).ToList();
 
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active).Result
          .Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
@@ -764,7 +780,10 @@ namespace Manager.Services.Specific
 
         var ids = keyresults.Select(p => p.Objective._id).ToList();
 
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
+
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate >= datenow && p.EndDate <= datenow && p.StausObjective == EnumStausObjective.Active).Result
          .Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
@@ -773,7 +792,7 @@ namespace Manager.Services.Specific
 
           var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
             .Where(p => ids.Contains(p._idObjective));
-          
+
           if (pendingcheckingprevious.Count() > 0)
           {
             view.QuantityImpediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
@@ -794,7 +813,7 @@ namespace Manager.Services.Specific
           view._id = obj._id;
           view.Editors = obj.Editors;
           view.Responsible = obj.Responsible;
-   
+
 
           //if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
           //view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
@@ -996,10 +1015,11 @@ namespace Manager.Services.Specific
           var view = new ViewListObjectiveEdit();
           keyresults = keyresults.Where(p => p.Objective._id == obj._id).ToList();
 
-          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Lasted == true).Result
+          var pendingcheckingprevious = servicePendingCheckinObjective.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
             .Where(p => ids.Contains(p._idObjective));
 
-          var pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson);
+          var pendingchecking = pendingcheckingprevious.Where(p => p.Lasted == true);
+          pendingchecking = pendingcheckingprevious.Where(p => p._idPerson == _user._idPerson);
 
 
           view.Description = obj.Description;
@@ -1035,10 +1055,10 @@ namespace Manager.Services.Specific
             totalweight += kr.Weight;
             totalachievment += kr.Achievement * kr.Weight;
             var viewKeyResult = new ViewListKeyResultsEdit();
-            if (pendingcheckingkey.Count() > 0)
+            if (pendingcheckingprevious.Where(p => p._idKeyResult == kr._id).Count() > 0)
             {
-              viewKeyResult.QuantityImpediments = pendingcheckingkey.Sum(p => p.Impediments.Count());
-              viewKeyResult.QuantityIniciatives = pendingcheckingkey.Sum(p => p.Iniciatives.Count());
+              viewKeyResult.QuantityImpediments = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id).Sum(p => p.Impediments.Count());
+              viewKeyResult.QuantityIniciatives = pendingcheckingprevious.Where(p => p._idKeyResult == kr._id).Sum(p => p.Iniciatives.Count());
             }
             List<PendingCheckinObjective> pendingcheckingkeyweek = new List<PendingCheckinObjective>();
 
@@ -1050,7 +1070,7 @@ namespace Manager.Services.Specific
               pendingcheckingkey = pendingchecking.Where(p => p._idKeyResult == kr._id && p.Month == month && p.Fortnight == fortnight).ToList();
 
 
-            
+
             viewKeyResult._id = kr._id;
             viewKeyResult.Name = kr.Name;
             viewKeyResult.TypeKeyResult = kr.TypeKeyResult;
