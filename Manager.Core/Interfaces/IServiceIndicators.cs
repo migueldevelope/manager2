@@ -20,7 +20,7 @@ namespace Manager.Core.Interfaces
     List<ViewTagsCloud> ListTagsCloudCompany(string idmanager, string idperson);
     List<ViewTagsCloud> ListTagsCloudPerson(string idperson);
     List<ViewTagsCloud> ListTagsCloudCompanyPerson(string idperson);
-    List<ViewTagsCloudFull> ListTagsCloudFull(string idmanager, string idperson)
+    List<ViewTagsCloudFull> ListTagsCloudFull(string idmanager, string idperson);
     //string[] ExportStatusOnboarding(ref  long total,  string filter, int count, int page);
 
     IEnumerable<ViewChartOnboarding> ChartOnboarding(List<ViewListIdIndicators> persons);
