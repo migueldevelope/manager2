@@ -136,9 +136,17 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPut]
     [Route("update")]
-    public string Update([FromBody] ViewCrudPerson view)
+    public ObjectResult Update([FromBody] ViewCrudPerson view)
     {
-      return service.Update(view);
+      try
+      {
+
+        return Ok(service.Update(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
     }
 
     /// <summary>
