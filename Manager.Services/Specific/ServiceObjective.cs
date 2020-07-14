@@ -623,8 +623,8 @@ namespace Manager.Services.Specific
           view.Responsible = obj.Responsible;
           if (pendingcheckingprevious.Count() > 0)
           {
-            view.QuantityImpediments = pendingcheckingprevious.Sum(p => p.Impediments.Count());
-            view.QuantityIniciatives = pendingcheckingprevious.Sum(p => p.Iniciatives.Count());
+            view.QuantityImpediments = pendingcheckingprevious.Where(p => p._idObjective == view._id).Sum(p => p.Impediments.Count());
+            view.QuantityIniciatives = pendingcheckingprevious.Where(p => p._idObjective == view._id).Sum(p => p.Iniciatives.Count());
           }
 
 
