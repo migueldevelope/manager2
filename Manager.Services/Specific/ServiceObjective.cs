@@ -208,7 +208,6 @@ namespace Manager.Services.Specific
 
         //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
 
-        //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
         && p.Lasted == true && objective.Contains(p._idObjective)).Result;
 
