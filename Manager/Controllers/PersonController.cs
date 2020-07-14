@@ -116,9 +116,17 @@ namespace Manager.Controllers
     [Authorize]
     [HttpPost]
     [Route("new")]
-    public async Task<ViewCrudPerson> New([FromBody] ViewCrudPerson view)
+    public ObjectResult New([FromBody] ViewCrudPerson view)
     {
-      return await Task.Run(() => service.New(view));
+      try
+      {
+
+        return Ok(service.New(view));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
     }
     /// <summary>
     /// Alterar uma pessoa
