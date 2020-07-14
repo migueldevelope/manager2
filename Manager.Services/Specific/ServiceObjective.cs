@@ -176,7 +176,12 @@ namespace Manager.Services.Specific
         var month = DateTime.Now.Month;
 
         var view = new ViewListObjectiveParticipantCard();
-        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+
+        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result.Select(p => p._id);
+        
+        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled
+         && objective.Contains(p.Objective._id)).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var keyresults = new List<KeyResult>();
 
@@ -204,7 +209,8 @@ namespace Manager.Services.Specific
         //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
 
         //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
-        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result;
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
+        && p.Lasted == true && objective.Contains(p._idObjective)).Result;
 
 
         if (keyresults.Count() > 0)
@@ -312,7 +318,8 @@ namespace Manager.Services.Specific
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
         //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == _user._idPerson).Result;
 
-        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson).Result;
+        var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
+        && p.Lasted == true && objective.Contains(p._idObjective)).Result;
 
         if (keyresults.Count() > 0)
         {
