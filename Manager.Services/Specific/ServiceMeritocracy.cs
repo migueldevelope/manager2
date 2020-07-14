@@ -473,7 +473,7 @@ namespace Manager.Services.Specific
         decimal percCompanyDate = ResultLevel(meritocracy.WeightCompanyDate, score.WeightCompanyDate);
         decimal percOccupationDate = ResultLevel(meritocracy.WeightOccupationDate, score.WeightOccupationDate);
         //decimal percGoals = meritocracy.WeightGoals == EnumMeritocracyGoals.NotReach ? 80 : meritocracy.WeightGoals == EnumMeritocracyGoals.Reached ? 100 : 120;
-        decimal percGoals = ResultLevelObjective(avgobj, score.Weigh%tGoals);
+        decimal percGoals = ResultLevelObjective(avgobj, score.WeightGoals);
         decimal percActivitie = ResultLevel(meritocracy.WeightActivitiesExcellence, score.WeightActivitiesExcellence);
 
 
