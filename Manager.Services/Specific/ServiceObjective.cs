@@ -236,9 +236,13 @@ namespace Manager.Services.Specific
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
         var month = DateTime.Now.Month;
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
         var view = new ViewListObjectiveParticipantCard();
-        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
+        var objective = serviceObjective.GetAllNewVersion(p => datenow >= p.EndDate).Result.Select(p => p._id);
+        var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled
+        && objective.Contains(p.Objective._id)).Result;
+
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var keyresults = new List<KeyResult>();
 
@@ -355,8 +359,7 @@ namespace Manager.Services.Specific
 
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow &&
-        p.StausObjective == EnumStausObjective.Active).Result
+        var objective = serviceObjective.GetAllNewVersion(p => datenow >= p.EndDate).Result
           .Where(p => p.Editors.Where(x => x._id == id).Count() > 0 || p.Responsible._id == id).Select(p => p._id);
         var keyresults = serviceKeyResult.GetAllNewVersion(p => objective.Contains(p.Objective._id)).Result;
         //var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p.Week == week && p._idPerson == id).Result;
