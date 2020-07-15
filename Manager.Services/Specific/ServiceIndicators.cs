@@ -902,7 +902,7 @@ namespace Manager.Services.Specific
             view.ScoreHR = hrtotal / item.Step1.Questions.Count();
 
           if (item.Step2.Questions.Count() > 0)
-          view.ScoreManager = managertotal / (item.Step2.Questions.Count());
+            view.ScoreManager = managertotal / (item.Step2.Questions.Count());
 
           //if ((item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count()) > 0)
           //view.ScoreManager = managertotal / (item.Step2.Questions.Count() + item.Step2.QuestionsManager.Count());
@@ -1952,20 +1952,36 @@ namespace Manager.Services.Specific
             {
               foreach (var view in skill.Skills)
               {
-                //continuar aqui
-                listResult.Add(new ViewTagsCloudFull() { text = view.Name,
-                  
-                });
+                listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#0ac79f" });
               }
             }
+          }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#5c0ac7" });
+          }
+
+          foreach (var row in item.SkillsGroup)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0a91c7" });
+          }
+
+          foreach (var row in item.SkillsOccupation)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
           }
         }
 
 
-        var result = listResult.GroupBy(x => x.text)
+        var result = listResult.GroupBy(x => new { x.text, x.color })
             .Select(x => new ViewTagsCloudFull()
             {
-              text = x.Key,
+              text = x.Key.text,
+              color = x.Key.color,
               weight = x.Count()
             }).ToList();
 

@@ -357,6 +357,19 @@ namespace Indicators.Controllers
       return await Task.Run(() => service.ListTagsCloudCompany(idmanager, idperson));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="idperson"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listtagscloudfull/{idmanager}")]
+    public async Task<List<ViewTagsCloudFull>> ListTagsCloudFull(string idmanager, string idperson = "")
+    {
+      return await Task.Run(() => service.ListTagsCloudFull(idmanager, idperson));
+    }
 
     /// <summary>
     /// 
