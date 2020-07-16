@@ -1823,7 +1823,7 @@ namespace Manager.Services.Specific
             DateLastOccupation = p.DateLastOccupation,
             Mail = p.User?.Mail,
             Manager = p.Manager?.Name,
-            OccupationName = p.Occupation?.Name + (p.Occupation.Description == null ? "" : p.Occupation.Description),
+            OccupationName = p.Occupation?.Name + (p.Occupation?.Description == null ? "" : p.Occupation?.Description),
             TypeJourney = p.TypeJourney.ToString(),
             TypeUser = p.TypeUser.ToString(),
           }).ToList();
@@ -1952,7 +1952,7 @@ namespace Manager.Services.Specific
             {
               foreach (var view in skill.Skills)
               {
-                listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#0ac79f" });
+                listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#c7750a" });
               }
             }
           }
@@ -1960,8 +1960,7 @@ namespace Manager.Services.Specific
           foreach (var row in item.SkillsCompany)
           {
             if (row.Plans.Count() > 0)
-              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
-            //listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#5c0ac7" });
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0ac79f" });
 
           }
 
@@ -1969,7 +1968,6 @@ namespace Manager.Services.Specific
           {
             if (row.Plans.Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
-            //listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0a91c7" });
           }
 
           foreach (var row in item.SkillsOccupation)
