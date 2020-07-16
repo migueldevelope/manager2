@@ -1823,7 +1823,7 @@ namespace Manager.Services.Specific
             DateLastOccupation = p.DateLastOccupation,
             Mail = p.User?.Mail,
             Manager = p.Manager?.Name,
-            OccupationName = p.Occupation?.Name,
+            OccupationName = p.Occupation?.Name + (p.Occupation.Description == null ? "" : p.Occupation.Description),
             TypeJourney = p.TypeJourney.ToString(),
             TypeUser = p.TypeUser.ToString(),
           }).ToList();

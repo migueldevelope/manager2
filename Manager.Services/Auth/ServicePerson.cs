@@ -671,6 +671,7 @@ namespace Manager.Services.Auth
                 TypeJourney = x.TypeJourney,
                 TypeUser = x.TypeUser,
                 Occupation = x.Occupation?.Name,
+                Description = x.Occupation?.Description,
                 Manager = x.Manager?.Name,
                 StatusFormOffBoardingStep1 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step1.StatusFormOffBoarding,
                 StatusFormOffBoardingStep2 = offboardings.Where(p => p.Person._id == x._id).FirstOrDefault() == null ? EnumStatusFormOffBoarding.Open : offboardings.Where(p => p.Person._id == x._id).FirstOrDefault().Step2.StatusFormOffBoarding,
