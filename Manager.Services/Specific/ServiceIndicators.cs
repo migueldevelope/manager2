@@ -1960,13 +1960,16 @@ namespace Manager.Services.Specific
           foreach (var row in item.SkillsCompany)
           {
             if (row.Plans.Count() > 0)
-              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#5c0ac7" });
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
+            //listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#5c0ac7" });
+
           }
 
           foreach (var row in item.SkillsGroup)
           {
             if (row.Plans.Count() > 0)
-              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0a91c7" });
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
+            //listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0a91c7" });
           }
 
           foreach (var row in item.SkillsOccupation)
