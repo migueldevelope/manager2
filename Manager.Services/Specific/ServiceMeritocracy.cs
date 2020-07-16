@@ -476,7 +476,7 @@ namespace Manager.Services.Specific
         decimal percGoals = ResultLevelObjective(avgobj, score.WeightGoals);
         decimal percActivitie = ResultLevel(meritocracy.WeightActivitiesExcellence, score.WeightActivitiesExcellence);
 
-
+        meritocracy.WeightGoals = percGoals;
         meritocracy.PercentCompanyDate = percCompanyDate;
         meritocracy.PercentOccupationDate = percOccupationDate;
         meritocracy.PercentSchooling = percSchooling;

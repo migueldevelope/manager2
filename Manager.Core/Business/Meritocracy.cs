@@ -22,7 +22,7 @@ namespace Manager.Core.Business
         public byte WeightSchooling { get; set; }
         public byte WeightMaturity { get; set; }
         public decimal WeightActivitiesExcellence { get; set; }
-        public EnumMeritocracyGoals WeightGoals { get; set; }
+        public decimal WeightGoals { get; set; }
 
         public long QtdMonitoring { get; set; }
         public long QtdPraise { get; set; }

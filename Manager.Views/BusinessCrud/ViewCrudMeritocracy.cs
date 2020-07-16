@@ -15,7 +15,7 @@ namespace Manager.Views.BusinessCrud
         public byte WeightSchooling { get; set; }
         public byte WeightMaturity { get; set; }
         public decimal WeightActivitiesExcellence { get; set; }
-        public EnumMeritocracyGoals WeightGoals { get; set; }
+        public decimal WeightGoals { get; set; }
 
         public bool ValidCompanyDate { get; set; }
         public bool ValidOccupationDate { get; set; }
