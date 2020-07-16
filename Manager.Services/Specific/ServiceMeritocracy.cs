@@ -476,7 +476,18 @@ namespace Manager.Services.Specific
         decimal percGoals = ResultLevelObjective(avgobj, score.WeightGoals);
         decimal percActivitie = ResultLevel(meritocracy.WeightActivitiesExcellence, score.WeightActivitiesExcellence);
 
-        meritocracy.WeightGoals = percGoals;
+        if (percGoals < 40)
+          meritocracy.WeightGoals = 1;
+        else if ((percGoals >= 40) && (percGoals < 60))
+          meritocracy.WeightGoals = 2;
+        else if ((percGoals >= 60) && (percGoals < 90))
+          meritocracy.WeightGoals = 3;
+        else if ((percGoals >= 90) && (percGoals < 100))
+          meritocracy.WeightGoals = 4;
+        else
+          meritocracy.WeightGoals = 5;
+
+
         meritocracy.PercentCompanyDate = percCompanyDate;
         meritocracy.PercentOccupationDate = percOccupationDate;
         meritocracy.PercentSchooling = percSchooling;
