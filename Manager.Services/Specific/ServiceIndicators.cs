@@ -119,6 +119,7 @@ namespace Manager.Services.Specific
       {
         var view = new ViewDashboard();
         //var maturity = serviceMaturity.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
         //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var offboardings = serviceOffboarding.GetAllNewVersion(p => p.Step1.StatusFormOffBoarding == EnumStatusFormOffBoarding.End
