@@ -1927,16 +1927,30 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewTagsCloudFull> ListTagsCloudFull(string idmanager, string idperson)
+    public List<ViewTagsCloudFull> ListTagsCloudFull(ViewFilterManagerAndDate filters, string idmanager, string idperson)
     {
       try
       {
-        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
-      
+        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        && p.DateEndEnd >= filters.Date.Begin && p.DateEndEnd <= filters.Date.End).Result.ToList();
+
         if (idperson != "")
           list = list.Where(p => p.Person._id == idperson).ToList();
 
-        if(idmanager != "")
+
+        if (filters.Managers.Count() > 0)
+        {
+          foreach (var item in list)
+          {
+            foreach (var manager in filters.Managers)
+            {
+              if (manager._id == item.Person._idManager)
+                item.Status = EnumStatus.Disabled;
+            }
+          }
+        }
+
+        if (idmanager != "")
         {
           var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
           foreach (var item in list)
@@ -1945,8 +1959,9 @@ namespace Manager.Services.Specific
               list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
           }
 
-          list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
         }
+
+        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
         var listResult = new List<ViewTagsCloudFull>();
         foreach (var item in list)

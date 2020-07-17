@@ -362,13 +362,14 @@ namespace Indicators.Controllers
     /// </summary>
     /// <param name="idmanager"></param>
     /// <param name="idperson"></param>
+    /// <param name="filters"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet]
+    [HttpPost]
     [Route("listtagscloudfull")]
-    public async Task<List<ViewTagsCloudFull>> ListTagsCloudFull(string idmanager = "", string idperson = "")
+    public async Task<List<ViewTagsCloudFull>> ListTagsCloudFull([FromBody] ViewFilterManagerAndDate filters, string idmanager = "", string idperson = "")
     {
-      return await Task.Run(() => service.ListTagsCloudFull(idmanager, idperson));
+      return await Task.Run(() => service.ListTagsCloudFull(filters,idmanager, idperson));
     }
 
     /// <summary>
