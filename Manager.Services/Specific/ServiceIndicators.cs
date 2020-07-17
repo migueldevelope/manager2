@@ -1710,6 +1710,25 @@ namespace Manager.Services.Specific
               }
             }
           }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+
+          }
+
+          foreach (var row in item.SkillsGroup)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
+
+          foreach (var row in item.SkillsOccupation)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
         }
 
         total = listResult.Count();
