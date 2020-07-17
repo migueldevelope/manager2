@@ -119,6 +119,7 @@ namespace Manager.Services.Specific
       {
         var view = new ViewDashboard();
         //var maturity = serviceMaturity.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+
         var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
         //var onboardings = serviceOnboarding.GetAllNewVersion(p => p.StatusOnBoarding != EnumStatusOnBoarding.End).Result;
         var offboardings = serviceOffboarding.GetAllNewVersion(p => p.Step1.StatusFormOffBoarding == EnumStatusFormOffBoarding.End
@@ -1931,17 +1932,21 @@ namespace Manager.Services.Specific
       try
       {
         var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
-        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
-
+      
         if (idperson != "")
           list = list.Where(p => p.Person._id == idperson).ToList();
 
-        foreach (var item in list)
+        if(idmanager != "")
         {
-          if (persons.Where(p => p == item.Person?._id).Count() == 0)
-            list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+          var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
+          foreach (var item in list)
+          {
+            if (persons.Where(p => p == item.Person?._id).Count() == 0)
+              list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+          }
+
+          list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
         }
-        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
         var listResult = new List<ViewTagsCloudFull>();
         foreach (var item in list)
@@ -1993,6 +1998,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
 
 
     public List<ViewTagsCloud> ListTagsCloud(string idmanager, string idperson)
