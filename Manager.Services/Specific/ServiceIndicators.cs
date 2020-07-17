@@ -1639,6 +1639,25 @@ namespace Manager.Services.Specific
             if (row.Plans.Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = item.Activities.FirstOrDefault()?.Activities?.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+
+          }
+
+          foreach (var row in item.SkillsGroup)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
+
+          foreach (var row in item.SkillsOccupation)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
         }
 
         total = listResult.Count();
@@ -1948,7 +1967,7 @@ namespace Manager.Services.Specific
           list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
         }
 
-        
+
 
         var listResult = new List<ViewTagsCloudFull>();
         foreach (var item in list)
