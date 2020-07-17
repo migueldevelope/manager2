@@ -588,7 +588,7 @@ namespace Manager.Services.Auth
           {
             Name = item.User.Name,
             _idPerson = item._id,
-            Occupation = item.Occupation?.Name,
+            Occupation = item.Occupation?.Name + (item.Occupation?.Description == null ? "" : item.Occupation?.Description),
             DataAdm = item.User.DateAdm,
             Photo = item.User.PhotoUrl,
             Feeling = feelings.Where(p => p._idUser == item.User._id).FirstOrDefault()?.Feeling
@@ -1465,7 +1465,7 @@ namespace Manager.Services.Auth
           {
             Name = item.User?.Name,
             DataAdm = item.User?.DateAdm,
-            Occupation = item.Occupation?.Name,
+            Occupation = item.Occupation?.Name + (item.Occupation?.Description == null ? "" : item.Occupation?.Description),
             _idPerson = item._id,
             Photo = item.User.PhotoUrl,
             Feeling = feelings.Where(p => p._idUser == item.User._id).FirstOrDefault()?.Feeling

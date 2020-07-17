@@ -117,7 +117,7 @@ namespace Manager.Core.Business
         Name = User.Name,
         TypeJourney = TypeJourney,
         OccupationId = Occupation?._id,
-        Occupation = Occupation?.Name,
+        Occupation = Occupation?.Name + (Occupation?.Description == null ? "" : Occupation?.Description),
         _idManager = Manager?._id,
         Manager = Manager?.Name,
         DateAdm = User?.DateAdm,
