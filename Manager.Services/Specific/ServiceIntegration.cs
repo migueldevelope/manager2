@@ -2221,7 +2221,8 @@ namespace Manager.Services.Specific
           Cpf = x.User.Document,
           Chaves = integrationEstablishments.FindAll(e => e._idCompany == x.Company._id && e.IdEstablishment == x.Establishment._id).ToList()
               .Select(y => y.Key).ToList(),
-          Matricula = x.Registration
+          Matricula = x.Registration,
+          Nome = x.User.Name
         }).ToList();
       }
       catch (Exception)

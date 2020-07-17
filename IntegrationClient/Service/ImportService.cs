@@ -485,7 +485,7 @@ namespace IntegrationClient.Service
             }
             else
             {
-              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3}", colaborador.Cpf, colaborador.Matricula, view.Nome, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
+              FileClass.SaveLog(LogFileName, string.Format("{0};{1};{2};{3}", colaborador.Cpf, colaborador.Matricula, colaborador.Nome, string.Join(";", viewRetorno.Mensagem)), EnumTypeLineOpportunityg.Information);
             }
           }
           ProgressBarValue++;

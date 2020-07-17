@@ -10,5 +10,6 @@ namespace Manager.Views.Integration.V2
     // Contrato
     public List<string> Chaves { get; set; }
     public string Matricula { get; set; }
+    public string Nome { get; set; }
   }
 }
