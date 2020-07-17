@@ -365,8 +365,8 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
-    [Route("listtagscloudfull/{idmanager}")]
-    public async Task<List<ViewTagsCloudFull>> ListTagsCloudFull(string idmanager, string idperson = "")
+    [Route("listtagscloudfull}")]
+    public async Task<List<ViewTagsCloudFull>> ListTagsCloudFull(string idmanager = "", string idperson = "")
     {
       return await Task.Run(() => service.ListTagsCloudFull(idmanager, idperson));
     }
