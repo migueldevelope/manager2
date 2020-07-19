@@ -1639,6 +1639,25 @@ namespace Manager.Services.Specific
             if (row.Plans.Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = item.Activities.FirstOrDefault()?.Activities?.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+
+          }
+
+          foreach (var row in item.SkillsGroup)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
+
+          foreach (var row in item.SkillsOccupation)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
         }
 
         total = listResult.Count();
@@ -1690,6 +1709,25 @@ namespace Manager.Services.Specific
                 listResult.Add(new ViewTagsCloudPerson() { Item = row.Activities.Name, Text = view.Name, Person = item.Person?.Name });
               }
             }
+          }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+
+          }
+
+          foreach (var row in item.SkillsGroup)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
+          }
+
+          foreach (var row in item.SkillsOccupation)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
         }
 
@@ -1932,11 +1970,11 @@ namespace Manager.Services.Specific
       try
       {
         var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.ToList();
-      
+
         if (idperson != "")
           list = list.Where(p => p.Person._id == idperson).ToList();
 
-        if(idmanager != "")
+        if (idmanager != "")
         {
           var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
           foreach (var item in list)
@@ -1947,6 +1985,95 @@ namespace Manager.Services.Specific
 
           list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
         }
+
+
+
+        var listResult = new List<ViewTagsCloudFull>();
+        foreach (var item in list)
+        {
+          foreach (var row in item.Activities)
+          {
+            foreach (var skill in row.Plans)
+            {
+              foreach (var view in skill.Skills)
+              {
+                listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#c7750a" });
+              }
+            }
+          }
+
+          foreach (var row in item.SkillsCompany)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0ac79f" });
+
+          }
+
+          foreach (var row in item.SkillsGroup)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
+          }
+
+          foreach (var row in item.SkillsOccupation)
+          {
+            if (row.Plans.Count() > 0)
+              listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
+          }
+        }
+
+
+        var result = listResult.GroupBy(x => new { x.text, x.color })
+            .Select(x => new ViewTagsCloudFull()
+            {
+              text = x.Key.text,
+              color = x.Key.color,
+              weight = x.Count()
+            }).ToList();
+
+        return result;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public List<ViewTagsCloudFull> ListTagsCloudFullRH(ViewFilterManagerAndDate filters, string idmanager, string idperson)
+    {
+      try
+      {
+        var list = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End
+        && p.DateEndEnd >= filters.Date.Begin && p.DateEndEnd <= filters.Date.End).Result.ToList();
+
+        if (idperson != "")
+          list = list.Where(p => p.Person._id == idperson).ToList();
+
+
+        if (filters.Managers.Count() > 0)
+        {
+          foreach (var item in list)
+          {
+            foreach (var manager in filters.Managers)
+            {
+              if (manager._id == item.Person._idManager)
+                item.Status = EnumStatus.Disabled;
+            }
+          }
+        }
+
+        if (idmanager != "")
+        {
+          var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager).Result.Select(p => p._id).ToList();
+          foreach (var item in list)
+          {
+            if (persons.Where(p => p == item.Person?._id).Count() == 0)
+              list.Where(p => p._id == item._id).FirstOrDefault().Status = EnumStatus.Disabled;
+          }
+
+        }
+
+        list = list.Where(p => p.Status == EnumStatus.Enabled).ToList();
 
         var listResult = new List<ViewTagsCloudFull>();
         foreach (var item in list)

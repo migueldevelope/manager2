@@ -374,6 +374,21 @@ namespace Indicators.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="idmanager"></param>
+    /// <param name="idperson"></param>
+    /// <param name="filters"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("listtagscloudfullrh")]
+    public async Task<List<ViewTagsCloudFull>> ListTagsCloudFullRH([FromBody] ViewFilterManagerAndDate filters, string idmanager = "", string idperson = "")
+    {
+      return await Task.Run(() => service.ListTagsCloudFullRH(filters, idmanager, idperson));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
