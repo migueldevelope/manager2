@@ -211,7 +211,7 @@ namespace IntegrationClient.Service
         FileClass.SaveLog(LogFileName, string.Format("Finalizando o processo de integração."), EnumTypeLineOpportunityg.Information);
         if (full)
         {
-          ExecuteDemissionAbsenceV2();
+          ExecuteDemissionAbsenceV2(jsonLog);
         }
       }
       catch (Exception ex)
@@ -416,7 +416,7 @@ namespace IntegrationClient.Service
         throw ex;
       }
     }
-    public void ExecuteDemissionAbsenceV2()
+    public void ExecuteDemissionAbsenceV2(bool jsonLog)
     {
       try
       {
@@ -474,6 +474,14 @@ namespace IntegrationClient.Service
               _id = colaborador._id,
               DataDemissao = DateTime.UtcNow
             };
+            if (jsonLog)
+            {
+              if (!File.Exists(LogFileName.Replace(".log", "_api.log")))
+              {
+                FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), string.Format("Token: {0}", Person.Token), EnumTypeLineOpportunityg.Register);
+              }
+              FileClass.SaveLog(LogFileName.Replace(".log", "_api.log"), JsonConvert.SerializeObject(demissao), EnumTypeLineOpportunityg.Register);
+            }
             viewRetorno = personIntegration.PutV2Demissao(demissao);
             if (string.IsNullOrEmpty(viewRetorno.IdUser) || string.IsNullOrEmpty(viewRetorno.IdContract))
             {

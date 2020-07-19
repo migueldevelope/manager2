@@ -1983,7 +1983,7 @@ namespace Manager.Services.Specific
             payrollEmployee = payrollEmployees.FirstOrDefault();
             payrollEmployee.Action = EnumActionIntegration.Demission;
             payrollEmployee.DateRegister = DateTime.Now.Date;
-            //payrollEmployee.StatusUser = EnumStatusUser.Disabled;
+            payrollEmployee.StatusUser = EnumStatusUser.Disabled;
             payrollEmployee.DemissionDate = view.DataDemissao;
           }
           else
@@ -1993,7 +1993,7 @@ namespace Manager.Services.Specific
             payrollEmployee.DateRegister = DateTime.Now.Date;
             payrollEmployee._idPrevious = payrollEmployeePrevious._id;
             payrollEmployee._id = null;
-            //payrollEmployee.StatusUser = EnumStatusUser.Disabled;
+            payrollEmployee.StatusUser = EnumStatusUser.Disabled;
             payrollEmployee.DemissionDate = view.DataDemissao;
             payrollEmployee = payrollEmployeeService.InsertNewVersion(payrollEmployee).Result;
           }
