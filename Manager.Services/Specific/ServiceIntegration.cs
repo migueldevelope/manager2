@@ -2727,7 +2727,7 @@ namespace Manager.Services.Specific
       {
         return !estabelecimentos.Contains(estabelecimento);
       }
-      return true;
+      return false;
     }
     #endregion
 
