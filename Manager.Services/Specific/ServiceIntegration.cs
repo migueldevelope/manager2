@@ -1817,7 +1817,7 @@ namespace Manager.Services.Specific
           return resultV2;
         }
         // Clean Employee especial (REDE MARISTA)
-        if (_user._idAccount.Equals(""))
+        if (_user._idAccount.Equals("5b7c752468e3f81bb876dcdb"))
         {
           // Estabelecimentos participantes
           string[] estabelecimentos = new string[] { "1001", "1006", "1011", "1016", "1019", "1020", "1021", "1027", "1035", "1045", "1047", "1049",
