@@ -1811,15 +1811,44 @@ namespace Manager.Services.Specific
         {
           view.Gestor = null;
         }
-        IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
-        if (param == null)
-        {
-          resultV2.Mensagem.Add("Não existe parâmetro de integração.");
-        }
         // Fim da validação de dados
         if (resultV2.Mensagem.Count != 0)
         {
           return resultV2;
+        }
+        // Clean Employee especial (REDE MARISTA)
+        if (_user._idAccount.Equals(""))
+        {
+          // Estabelecimentos participantes
+          string[] estabelecimentos = new string[] { "1001", "1006", "1011", "1016", "1019", "1020", "1021", "1027", "1035", "1045", "1047", "1049",
+                                   "1050", "1052", "1057", "1058", "1059", "1060", "1061", "1063", "1064", "1068", "1073", "1074",
+                                   "1075", "1088", "1089", "2001", "2002", "2003", "2005", "2006", "2007", "2008", "2010", "2013",
+                                   "2015", "2016", "2020", "2021", "2027", "2028", "2029", "2201", "2701", "2902", "4705", "4748",
+                                   "4767", "4768", "4772", "4901", "5258", "5706", "5708", "5710", "5713", "5901" ,"6107", "6513",
+                                   "7302", "7305", "9997", "9998" };
+          if ( !estabelecimentos.Contains(view.Colaborador.Estabelecimento) )
+          {
+            resultV2.Mensagem.Add(string.Format("Estabelecimento {0} não participante.", view.Colaborador.Estabelecimento));
+            return resultV2;
+          }
+          // Chamar função de Cargos Participantes
+          if ( RetirarCargoMarista(view.NomeCargo) )
+          {
+            resultV2.Mensagem.Add(string.Format("Cargo {0} não participante.", view.NomeCargo));
+            return resultV2;
+          }
+          // Filtrar estabelecimento e professores
+          if (RetirarCargoProfessorMarista(view.Colaborador.Estabelecimento, view.NomeCargo))
+          {
+            resultV2.Mensagem.Add(string.Format("Cargo {0} não participante no estabelecimento {1}.", view.NomeCargo, view.Colaborador.Estabelecimento));
+            return resultV2;
+          }
+        }
+        //
+        IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
+        if (param == null)
+        {
+          resultV2.Mensagem.Add("Não existe parâmetro de integração.");
         }
         // Atualização da base de dados
         List<PayrollEmployee> payrollEmployees = new List<PayrollEmployee>();
@@ -2467,6 +2496,238 @@ namespace Manager.Services.Specific
 
         throw;
       }
+    }
+    #endregion
+
+    #region Filtros da Rede Marista
+    private bool RetirarCargoMarista(string nomeCargo)
+    {
+      string[] cargos = new string[]
+      {
+        "Agente de Pastoral",
+        "Analista Administrativo",
+        "Analista Administrativo Escolar",
+        "Analista Administrativo Social",
+        "Analista Contábil",
+        "Analista de Administração de Pessoas",
+        "Analista de BI",
+        "Analista de Compras",
+        "Analista de Comunicação",
+        "Analista de Comunicação e Marketing",
+        "Analista de Comunicação e Relacionamento",
+        "Analista de Controladoria",
+        "Analista de Desenvolvimento Organizacion",
+        "Analista de Infraestrutura",
+        "Analista de Inteligência Competitiva",
+        "Analista de Negócios",
+        "Analista de Obras",
+        "Analista de Patrimônio",
+        "Analista de Pessoal",
+        "Analista de Projetos",
+        "Analista de Recursos Humanos",
+        "Analista de Relacionamento",
+        "Analista de Secretaria Escolar",
+        "Analista de Serviços",
+        "Analista de Suprimentos",
+        "Analista de Tecnologias Educacionais",
+        "Analista de Tesouraria",
+        "Analista Financeiro",
+        "Analista Fiscal",
+        "Assessor Administrativo",
+        "Assessor de Áreas do Conhecimento",
+        "Assessor de Atend. Ed. Especializado",
+        "Assessor de Desenvolvimento Organizacion",
+        "Assessor de Inclusão Escolar",
+        "Assessor de Pastoral",
+        "Assessor de Projetos",
+        "Assessor Educacional",
+        "Assessor Jurídico",
+        "Assessor Pedagógico",
+        "Assistente  Comunicação e Relacionamento",
+        "Assistente Administrativo",
+        "Assistente Administrativo Escolar",
+        "Assistente Administrativo Social",
+        "Assistente de Administração de Pessoas",
+        "Assistente de Atividades Complementares",
+        "Assistente de Biblioteca",
+        "Assistente de Comunicação",
+        "Assistente de Contabilidade",
+        "Assistente de Convivência",
+        "Assistente de Coordenação de Turno",
+        "Assistente de Coordenação Pedagógica",
+        "Assistente de Coordenação Turno",
+        "Assistente de Manutenção",
+        "Assistente de Pastoral",
+        "Assistente de Patrimônio",
+        "Assistente de Pessoal",
+        "Assistente de Produção",
+        "Assistente de Projetos",
+        "Assistente de Recondicionamento",
+        "Assistente de Recursos Humanos",
+        "Assistente de Relacionamento",
+        "Assistente de Secretaria",
+        "Assistente de Serviços Centrais",
+        "Assistente de Serviços de Apoio",
+        "Assistente de Tecnologia da Informação",
+        "Assistente de Tecnologia Educacional",
+        "Assistente de Tesouraria",
+        "Assistente Educacional",
+        "Assistente Financeiro",
+        "Assistente Fiscal",
+        "Assistente Jurídico",
+        "Assistente Pedagógico",
+        "Assistente Secretaria Escolar",
+        "Assistente Social",
+        "Auxiliar Administrativo",
+        "Auxiliar de Administração Escolar",
+        "Auxiliar de Atendimento",
+        "Auxiliar de Biblioteca",
+        "Auxiliar de Bibliotéca",
+        "Auxiliar de Comunicação",
+        "Auxiliar de Cozinha",
+        "Auxiliar de Manutenção",
+        "Auxiliar de Material Esportivo",
+        "Auxiliar de Pessoal",
+        "Auxiliar de Produção",
+        "Auxiliar de Recondicionamento",
+        "Auxiliar de Serviços Gerais",
+        "Auxiliar Serviços Gerais",
+        "Bibliotecario",
+        "Bibliotecário",
+        "Coord. Administrativo da Gerência",
+        "Coordenação de Gestão de Pessoas",
+        "Coordenador Administrativo",
+        "Coordenador Administrativo Escolar",
+        "Coordenador Asses Planejamento e Control",
+        "Coordenador da Assessoria Jurídica",
+        "Coordenador de Atividades Complementares",
+        "Coordenador de Biblioteca",
+        "Coordenador de Comun. e Relacionamento",
+        "Coordenador de Comunicação e Marketing",
+        "Coordenador de Controle e Finanças",
+        "Coordenador de Infraestrutura",
+        "Coordenador de Pastoral",
+        "Coordenador de Projetos",
+        "Coordenador de Serviços Centrais",
+        "Coordenador de Tecnol. da Informação",
+        "Coordenador de Turno",
+        "Coordenador de Unidade",
+        "Coordenador de Unidade Social",
+        "Coordenador Educacional",
+        "Coordenador Educacional da Ger. Social",
+        "Coordenador Geral",
+        "Coordenador Pastoral",
+        "Coordenador Pedagogico",
+        "Coordenador Pedagógico",
+        "Coordenador Pedagógico de Projetos",
+        "Coordenador Pedagógico Social",
+        "Diretor Administrativo",
+        "Diretor de Colégio",
+        "Diretor Geral",
+        "Educador Social",
+        "Educador Social AEE",
+        "Encarregado Administrativo",
+        "Encarregado de Cozinha",
+        "Encarregado de Limpeza",
+        "Encarregado de Manut. e Serviços Gerais",
+        "Encarregado de Manutenção",
+        "Encarregado de Manutenção e Serv. Gerais",
+        "Encarregado de Serviços Centrais",
+        "Encarregado de Serviços Gerais",
+        "Enfermeiro",
+        "Fonoaudiólogo",
+        "Gerente Educacional",
+        "Instrutor de Aprendizagem",
+        "Instrutor de Aprendizagem - T. Integral",
+        "Monitor de Aprendizagem - T. Integral",
+        "Monitor de Aprendizagem - T. Regular",
+        "Monitor de Laboratório",
+        "Monitor de Laboratório de Ciências",
+        "Monitor de Tecnologias Educacionais",
+        "Operador de Impressão",
+        "Operador de Suporte",
+        "Orientador Educacional",
+        "Porteiro",
+        "Professor Curso Técnico",
+        "Professor de Atend. Ed. Especializado",
+        "Professor de Educação Infantil",
+        "Professor de Ens Fund Finais - EJA",
+        "Professor de Ens Fundamental - EJA",
+        "Professor de Ensino Fund. - Finais",
+        "Professor de Ensino Fund. - Iniciais",
+        "Professor de Ensino Médio",
+        "Professor de Ensino Médio - EJA",
+        "Professor de Treino",
+        "Professor Ensino Fundamental",
+        "Professor Extraclasse",
+        "Profissional de Apoio Escolar",
+        "Psicólogo",
+        "Psicólogo em Geral",
+        "Psicólogo Social",
+        "Recepcionista",
+        "Revisor de Textos",
+        "Secretário",
+        "Secretário da Direção",
+        "Secretário de Direção",
+        "Secretário de Escola",
+        "Secretário Escolar",
+        "Superintendente Executivo",
+        "Supervisor Administrativo",
+        "Supervisor Contábil",
+        "Supervisor de Administração de Pessoas",
+        "Supervisor de Aplicações de TI",
+        "Supervisor de Biblioteca",
+        "Supervisor de Compras",
+        "Supervisor de Comunicação",
+        "Supervisor de Desenv. Organizacional",
+        "Supervisor de Faturamento e Cobrança",
+        "Supervisor de Infraestrutura",
+        "Supervisor de Pastoral",
+        "Supervisor de Projeto e Obras",
+        "Supervisor de Serviços",
+        "Supervisor de Tecnologias Educacionais",
+        "Supervisor Educacional",
+        "Supervisor Financeiro",
+        "Supervisor Pedagógico",
+        "Técnico de Enfermagem",
+        "Técnico em Manut de Equip Eletrônicos",
+        "Telefonista",
+        "Vice-Diretor",
+        "Vice-Diretor Administrativo",
+        "Vice-Diretor de Colégio",
+        "Vice-Diretor Educacional",
+        "Vice-Diretor Geral",
+        "Vigia",
+        "Zelador"
+      };
+      return !cargos.Contains(nomeCargo);
+    }
+    private bool RetirarCargoProfessorMarista(string estabelecimento, string nomeCargo)
+    {
+      string[] cargos = new string[]
+      {
+        "Professor Curso Técnico",
+        "Professor de Atend. Ed. Especializado",
+        "Professor de Educação Infantil",
+        "Professor de Ens Fund Finais - EJA",
+        "Professor de Ens Fundamental - EJA",
+        "Professor de Ensino Fund. - Finais",
+        "Professor de Ensino Fund. - Iniciais",
+        "Professor de Ensino Médio",
+        "Professor de Ensino Médio - EJA",
+        "Professor de Treino",
+        "Professor Ensino Fundamental",
+        "Professor Extraclasse"
+      };
+      string[] estabelecimentos = new string[]
+      {
+        "1016", "1088"
+      };
+      if (cargos.Contains(nomeCargo))
+      {
+        return !estabelecimentos.Contains(estabelecimento);
+      }
+      return true;
     }
     #endregion
 
