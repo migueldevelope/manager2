@@ -293,6 +293,7 @@ namespace IntegrationClient
       item = item.Equals("INGLÊS INTERMEDIÀRIO") ? "INGLÊS INTERMEDIÁRIO" : item;
       item = item.Equals("INGLES TÉCNICO") ? "INGLÊS TÉCNICO" : item;
       item = item.Equals("REDE") ? "REDES" : item;
+      item = item.Equals("FERRAMENTA DE GESTÃO DE PESSOAS") ? "FERRAMENTAS DE GESTÃO DE PESSOAS" : item;
       item = item.Equals("") ? "" : item;
       return item;
     }
@@ -360,20 +361,20 @@ namespace IntegrationClient
       string cellGroup = "H5";
       string cellColumnCheck = "A";
       // Responsabilidade
-      int responsibilityCellLine = 16;
+      int responsibilityCellLine = 9;
       string responsibilityCellColumn = "A";
       string responsibilityTextCheck = "ENTREGAS DO CARGO";
       // Técnicas
-      string hardSkillTextCheck = "COMPETÊNCIAS TÉCNICAS";
       string softSkillTextCheck = "COMPETÊNCIAS COMPORTAMENTAIS";
-      string hardSkillTextTypeCheck = "ESPECÍFICAS DO CARGO";
+      string hardSkillTextCheck = "COMPETÊNCIAS ESPECÍFICAS";
       string hardSkillCellColumn = "B";
       // Formação
-      string formationTextCheck = "FORMAÇÃO ESCOLAR / ACADÊMICA";
+      string formationColumnCheck = "C";
+      string formationTextCheck = "ESCOLARIDADE";
       string formationCellColumn = "C";
-      string formationCellColumnComplement = "F";
+      string formationCellColumnComplement = "E";
       // Requisitos
-      string requirementTextCheck = "REQUISITOS ESPECÍFICOS (PARA CONTRATAÇÃO)";
+      string requirementTextCheck = "PRÉ REQUESITOS PARA CONTRATAÇÃO";
       string requirement;
       // Linha de controle de leitura
       int line = 0;
@@ -406,6 +407,12 @@ namespace IntegrationClient
         viewOccupation.Area = file.Replace(txtPst.Text, string.Empty).Split('\\')[0].Replace(" = ", " | ");
         viewOccupation.Process = file.Replace(txtPst.Text, string.Empty).Split('\\')[1].Replace(" = ", " | ");
         viewOccupation.SubProcess = file.Replace(txtPst.Text, string.Empty).Split('\\')[2].Replace(" = ", " | ");
+      }
+      else
+      {
+        viewOccupation.Area = "Integração com Folha de Pagamento";
+        viewOccupation.Process = "Integração";
+        viewOccupation.SubProcess = "Integração";
       }
       try
       {
@@ -462,7 +469,7 @@ namespace IntegrationClient
         while (true)
         {
           work = CellValue(cellColumnCheck, line).ToUpper();
-          if (work.Equals(hardSkillTextTypeCheck) || work.Equals("COMPETÊNCIAS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase)
+          if (work.Equals(hardSkillTextCheck) || work.Equals("COMPETÊNCIAS ESPECÍFICAS",StringComparison.InvariantCultureIgnoreCase)
             || work.Equals("SKILLS ESPECÍFICAS", StringComparison.InvariantCultureIgnoreCase))
           {
             break;
@@ -476,13 +483,13 @@ namespace IntegrationClient
         // Carregar as competências técnicas
         while (true)
         {
-          work = CellValue(cellColumnCheck, line).ToUpper();
+          work = CellValue(formationColumnCheck, line).ToUpper();
           if (work.Equals(formationTextCheck))
           {
             break;
           }
           work = CellValue(hardSkillCellColumn, line);
-          if (!string.IsNullOrEmpty(work))
+          if (!string.IsNullOrEmpty(work) && !work.Equals("NOME DA COMPETÊNCIA") && !work.Equals("COMPETÊNCIA"))
           {
             viewOccupation.Skills.Add(DictionarySkill(work));
           }
@@ -491,7 +498,7 @@ namespace IntegrationClient
         // Encontrar a formação
         while (true)
         {
-          work = CellValue(cellColumnCheck, line).ToUpper();
+          work = CellValue(formationColumnCheck, line).ToUpper();
           if (work.Equals(formationTextCheck))
           {
             break;
@@ -508,7 +515,7 @@ namespace IntegrationClient
             break;
           }
           work = CellValue(formationCellColumn, line);
-          if (!string.IsNullOrEmpty(work))
+          if (!string.IsNullOrEmpty(work) && !work.Equals("ESCOLARIDADE"))
           {
             viewOccupation.Schooling.Add(DictionarySchooling(work));
             viewOccupation.SchoolingComplement.Add(CellValue(formationCellColumnComplement, line));
