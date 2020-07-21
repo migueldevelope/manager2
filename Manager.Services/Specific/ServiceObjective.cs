@@ -2191,7 +2191,9 @@ namespace Manager.Services.Specific
           view.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
           {
             Date = p.Date,
-            Achievement = p.Achievement
+            Achievement = p.Achievement,
+            QuanlityResult = p.QualityResult,
+            QuantityResult = p.QuantityResult
           }).ToList();
 
         return view;

@@ -6,5 +6,7 @@ namespace Manager.Views.BusinessList
   {
     public DateTime? Date { get; set; }
     public decimal Achievement { get; set; }
+    public decimal QuantityResult {get;set;}
+    public string QuanlityResult { get; set; }
   }
 }
