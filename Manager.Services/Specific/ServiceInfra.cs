@@ -3780,6 +3780,7 @@ namespace Manager.Services.Specific
         {
           _id = occupation._id,
           Name = occupation.Name,
+          Description = occupation.Description,
           SpecificRequirements = occupation.SpecificRequirements,
           Company = new ViewListCompany() { _id = company._id, Name = company.Name },
           Group = group.GetViewList(),
@@ -3932,6 +3933,7 @@ namespace Manager.Services.Specific
         {
           _id = occupation._id,
           Name = occupation.Name,
+          Description = occupation.Description,
           SpecificRequirements = occupation.SpecificRequirements,
           Company = company == null ? null : new ViewListCompany() { _id = company._id, Name = company.Name },
           Group = group?.GetViewList(),

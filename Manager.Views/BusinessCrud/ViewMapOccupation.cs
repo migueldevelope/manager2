@@ -5,6 +5,7 @@ namespace Manager.Views.BusinessCrud
 {
   public class ViewMapOccupation : _ViewCrudBase
   {
+    public string Description { get; set; }
     public List<ViewListProcessLevelTwo> Process { get; set; }
     public string SpecificRequirements { get; set; }
     public List<ViewListActivitie> Activities { get; set; }
