@@ -1,4 +1,5 @@
-﻿using Manager.Views.Enumns;
+﻿using Manager.Views.BusinessList;
+using Manager.Views.Enumns;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -28,6 +29,8 @@ namespace Manager.Views.BusinessCrud
     public string QualityGoal { get; set; }
     public bool Lasted { get; set; }
     public EnumTypePersonObjective TypePersonObjective { get; set; }
+    public List<ViewListHistoryLevelTrust> HistoryLevelTrust { get; set; }
+    public List<ViewListHistoryAchievement> HistoryAchievement { get; set; }
 
 
   }
