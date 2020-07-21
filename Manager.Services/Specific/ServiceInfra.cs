@@ -2523,7 +2523,7 @@ namespace Manager.Services.Specific
                 list.Add(new ViewGetOccupation()
                 {
                   _idOccupation = item._id,
-                  NameOccupation = item.Name,
+                  Description = item.Description,
                   _idProcessLevelTwo = proc._id,
                   _idGroup = item.Group._id
                 });

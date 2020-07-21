@@ -2,6 +2,7 @@
 {
   public class ViewGetOccupation
   {
+    public string Description { get; set; }
     public string _idOccupation { get; set; }
     public string NameOccupation { get; set; }
     public string _idProcessLevelTwo { get; set; }
