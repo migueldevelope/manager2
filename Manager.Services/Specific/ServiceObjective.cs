@@ -179,7 +179,7 @@ namespace Manager.Services.Specific
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
         var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result.Select(p => p._id);
-        
+
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled
          && objective.Contains(p.Objective._id)).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
@@ -2168,11 +2168,33 @@ namespace Manager.Services.Specific
       try
       {
         var view = servicePendingCheckinObjective.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+
+        var historys = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == view._idKeyResult).Result;
+
         var objective = serviceObjective.GetNewVersion(p => p._id == view._idObjective).Result;
         if ((objective.Responsible._id == _user._idPerson) || (objective.Editors.Where(p => p._id == _user._idPerson).Count() > 0))
           view.TypePersonObjective = EnumTypePersonObjective.Responsible;
         else
           view.TypePersonObjective = EnumTypePersonObjective.Participant;
+
+        var histleveltrust = historys.Where(p => p.LevelTrust > 0);
+        var hisachievement = historys.Where(p => p.Achievement > 0);
+
+        if (histleveltrust.Count() > 0)
+          view.HistoryLevelTrust = histleveltrust.Select(p => new ViewListHistoryLevelTrust()
+          {
+            Date = p.Date,
+            LevelTrust = p.LevelTrust
+          }).ToList();
+
+        if (hisachievement.Count() > 0)
+          view.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
+          {
+            Date = p.Date,
+            Achievement = p.Achievement,
+            QuanlityResult = p.QualityResult,
+            QuantityResult = p.QuantityResult
+          }).ToList();
 
         return view;
       }

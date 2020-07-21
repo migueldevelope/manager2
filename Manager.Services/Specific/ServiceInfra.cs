@@ -2523,6 +2523,7 @@ namespace Manager.Services.Specific
                 list.Add(new ViewGetOccupation()
                 {
                   _idOccupation = item._id,
+                  Description = item.Description,
                   NameOccupation = item.Name,
                   _idProcessLevelTwo = proc._id,
                   _idGroup = item.Group._id
@@ -3780,6 +3781,7 @@ namespace Manager.Services.Specific
         {
           _id = occupation._id,
           Name = occupation.Name,
+          Description = occupation.Description,
           SpecificRequirements = occupation.SpecificRequirements,
           Company = new ViewListCompany() { _id = company._id, Name = company.Name },
           Group = group.GetViewList(),
@@ -3932,6 +3934,7 @@ namespace Manager.Services.Specific
         {
           _id = occupation._id,
           Name = occupation.Name,
+          Description = occupation.Description,
           SpecificRequirements = occupation.SpecificRequirements,
           Company = company == null ? null : new ViewListCompany() { _id = company._id, Name = company.Name },
           Group = group?.GetViewList(),

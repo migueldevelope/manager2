@@ -54,7 +54,9 @@ namespace Manager.Core.Business
         Week = Week,
         Month = Month,
         Fortnight= Fortnight,
-        TypePersonObjective = TypePersonObjective
+        TypePersonObjective = TypePersonObjective,
+        HistoryAchievement = new List<ViewListHistoryAchievement>(),
+        HistoryLevelTrust = new List<ViewListHistoryLevelTrust>()
   };
     }
 
