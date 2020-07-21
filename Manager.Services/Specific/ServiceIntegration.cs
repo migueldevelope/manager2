@@ -170,7 +170,10 @@ namespace Manager.Services.Specific
         {
           user.Name = payrollEmployee.Name;
           user.Document = payrollEmployee.Document;
-          user.Mail = payrollEmployee.Mail;
+          if (!string.IsNullOrEmpty(payrollEmployee.Mail))
+          {
+            user.Mail = payrollEmployee.Mail;
+          }
           user.Phone = payrollEmployee.CellNumber;
           user.DateAdm = payrollEmployee.AdmissionDate;
           user.DateBirth = payrollEmployee.BirthDate;
@@ -1819,6 +1822,12 @@ namespace Manager.Services.Specific
         // Clean Employee especial (REDE MARISTA)
         if (_user._idAccount.Equals("5b7c752468e3f81bb876dcdb"))
         {
+          // Chamar função de Cargos Participantes
+          if (string.IsNullOrEmpty(view.NomeCargo))
+          {
+            resultV2.Mensagem.Add("Nome do cargo não informado!");
+            return resultV2;
+          }
           // Estabelecimentos participantes
           string[] estabelecimentos = new string[] { "1001", "1006", "1011", "1016", "1019", "1020", "1021", "1027", "1035", "1045", "1047", "1049",
                                    "1050", "1052", "1057", "1058", "1059", "1060", "1061", "1063", "1064", "1068", "1073", "1074",

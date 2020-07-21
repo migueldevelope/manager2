@@ -98,7 +98,7 @@ namespace Manager.Views.Integration.V2
             Matricula = FieldString(list, title, "matricula_chefe", null)
           };
         }
-        if (Gestor.Cpf == null || Gestor.Matricula == null)
+        if (Gestor.Cpf == null || Gestor.Matricula == null || Gestor.Cpf.Equals("00000000000"))
         {
           Gestor = null;
         }
