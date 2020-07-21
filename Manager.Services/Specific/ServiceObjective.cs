@@ -1305,6 +1305,7 @@ namespace Manager.Services.Specific
             Weight = view.Weight,
             Reached = false,
             ParticipantsAdd = view.ParticipantsAdd,
+            TypeCheckin = view.TypeCheckin,
             Objective = objective.GetViewList()
           }).Result;
 
@@ -1366,6 +1367,7 @@ namespace Manager.Services.Specific
         model.Description = view.Description;
         model.Weight = view.Weight;
         model.ParticipantsAdd = view.ParticipantsAdd;
+        model.TypeCheckin = view.TypeCheckin;
 
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == model.Objective._id).Result;
         var reached = true;
