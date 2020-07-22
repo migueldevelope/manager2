@@ -1748,6 +1748,11 @@ namespace Manager.Services.Specific
           var x = servicePendingCheckinObjective.Update(old, null);
         }
 
+        if (DateTime.Now.Day >= 15)
+          view.Fortnight = 2;
+        else
+          view.Fortnight = 1;
+
         var model = servicePendingCheckinObjective.InsertNewVersion(
           new PendingCheckinObjective()
           {
@@ -1767,10 +1772,7 @@ namespace Manager.Services.Specific
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
           }).Result;
 
-        if (DateTime.Now.Day >= 15)
-          model.Fortnight = 2;
-        else
-          model.Fortnight = 1;
+   
 
 
 
