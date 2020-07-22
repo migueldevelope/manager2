@@ -2164,15 +2164,16 @@ namespace Manager.Services.Specific
         var histleveltrust = historys.Where(p => p.LevelTrust > 0);
         var hisachievement = historys.Where(p => p.Achievement > 0);
 
+        var result = model.GetViewCrud();
         if (histleveltrust.Count() > 0)
-          view.HistoryLevelTrust = histleveltrust.Select(p => new ViewListHistoryLevelTrust()
+          result.HistoryLevelTrust = histleveltrust.Select(p => new ViewListHistoryLevelTrust()
           {
             Date = p.Date,
             LevelTrust = p.LevelTrust
           }).ToList();
 
         if (hisachievement.Count() > 0)
-          view.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
+          result.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
           {
             Date = p.Date,
             Achievement = p.Achievement,
@@ -2181,7 +2182,7 @@ namespace Manager.Services.Specific
           }).ToList();
 
         servicePendingCheckinObjective.Update(model, null).Wait();
-        return model.GetViewCrud();
+        return result;
       }
       catch (Exception e)
       {
