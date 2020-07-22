@@ -2149,6 +2149,8 @@ namespace Manager.Services.Specific
       try
       {
         var model = servicePendingCheckinObjective.GetNewVersion(p => p._id == view._id).Result;
+        var historys = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == model._idKeyResult).Result;
+
         model._idObjective = view._idObjective;
         model._idKeyResult = view._idKeyResult;
         model._idPerson = view._idPerson;
@@ -2158,6 +2160,25 @@ namespace Manager.Services.Specific
         model.QualityResult = view.QualityResult;
         model.QuantityResult = view.QuantityResult;
         model.TypePersonObjective = view.TypePersonObjective;
+
+        var histleveltrust = historys.Where(p => p.LevelTrust > 0);
+        var hisachievement = historys.Where(p => p.Achievement > 0);
+
+        if (histleveltrust.Count() > 0)
+          view.HistoryLevelTrust = histleveltrust.Select(p => new ViewListHistoryLevelTrust()
+          {
+            Date = p.Date,
+            LevelTrust = p.LevelTrust
+          }).ToList();
+
+        if (hisachievement.Count() > 0)
+          view.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
+          {
+            Date = p.Date,
+            Achievement = p.Achievement,
+            QuanlityResult = p.QualityResult,
+            QuantityResult = p.QuantityResult
+          }).ToList();
 
         servicePendingCheckinObjective.Update(model, null).Wait();
         return model.GetViewCrud();
