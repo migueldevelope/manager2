@@ -332,6 +332,7 @@ namespace IntegrationClient
       item = item.Equals("ENSINO SUPERIOR IMCOMPLETO") ? "ENSINO SUPERIOR INCOMPLETO" : item;
       item = item.Equals("MESTRADO E/OU DOUTORADO.") ? "PÓS GRADUAÇÃO COMPLETA" : item;
       item = item.Equals("ENSINO SUPERIOR COMPLETO/ DOUTORADO") ? "PÓS GRADUAÇÃO COMPLETA" : item;
+      item = item.Equals("ENSINO SUPERIOR EM CURSO") ? "ENSINO SUPERIOR INCOMPLETO" : item;
       return item;
     }
     private string DictionaryGroup(string item)

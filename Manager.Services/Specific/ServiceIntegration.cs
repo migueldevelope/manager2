@@ -1805,6 +1805,7 @@ namespace Manager.Services.Specific
         view.DataTrocaCargo = TransformDateUtc(view.DataTrocaCargo);
         view.DataTrocaCentroCusto = TransformDateUtc(view.DataTrocaCentroCusto);
         view.DataUltimoReajuste = TransformDateUtc(view.DataUltimoReajuste);
+        view.DataDemissao = null;
         // Validação do Gestor
         if (view.Gestor != null && !string.IsNullOrEmpty(view.Gestor.Matricula))
         {
