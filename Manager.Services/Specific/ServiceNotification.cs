@@ -485,7 +485,11 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var parameter = serviceParameter.GetNewVersion(p => p.Key == "monitoringmanagerdeadline").Result;
+
         int daysMonitoring = -90;
+        if (parameter.Content != "")
+          daysMonitoring = int.Parse(parameter.Content);
 
         List<ManagerWorkNotification> listManager = new List<ManagerWorkNotification>();
         // Monitoring

@@ -1305,6 +1305,7 @@ namespace Manager.Services.Specific
             Weight = view.Weight,
             Reached = false,
             ParticipantsAdd = view.ParticipantsAdd,
+            TypeCheckin = view.TypeCheckin,
             Objective = objective.GetViewList()
           }).Result;
 
@@ -1366,6 +1367,7 @@ namespace Manager.Services.Specific
         model.Description = view.Description;
         model.Weight = view.Weight;
         model.ParticipantsAdd = view.ParticipantsAdd;
+        model.TypeCheckin = view.TypeCheckin;
 
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Objective._id == model.Objective._id).Result;
         var reached = true;
@@ -1746,6 +1748,11 @@ namespace Manager.Services.Specific
           var x = servicePendingCheckinObjective.Update(old, null);
         }
 
+        if (DateTime.Now.Day >= 15)
+          view.Fortnight = 2;
+        else
+          view.Fortnight = 1;
+
         var model = servicePendingCheckinObjective.InsertNewVersion(
           new PendingCheckinObjective()
           {
@@ -1765,10 +1772,7 @@ namespace Manager.Services.Specific
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
           }).Result;
 
-        if (DateTime.Now.Day >= 15)
-          model.Fortnight = 2;
-        else
-          model.Fortnight = 1;
+   
 
 
 
@@ -2145,6 +2149,8 @@ namespace Manager.Services.Specific
       try
       {
         var model = servicePendingCheckinObjective.GetNewVersion(p => p._id == view._id).Result;
+        var historys = servicePendingCheckinObjective.GetAllNewVersion(p => p._idKeyResult == model._idKeyResult).Result;
+
         model._idObjective = view._idObjective;
         model._idKeyResult = view._idKeyResult;
         model._idPerson = view._idPerson;
@@ -2155,8 +2161,28 @@ namespace Manager.Services.Specific
         model.QuantityResult = view.QuantityResult;
         model.TypePersonObjective = view.TypePersonObjective;
 
+        var histleveltrust = historys.Where(p => p.LevelTrust > 0);
+        var hisachievement = historys.Where(p => p.Achievement > 0);
+
+        var result = model.GetViewCrud();
+        if (histleveltrust.Count() > 0)
+          result.HistoryLevelTrust = histleveltrust.Select(p => new ViewListHistoryLevelTrust()
+          {
+            Date = p.Date,
+            LevelTrust = p.LevelTrust
+          }).ToList();
+
+        if (hisachievement.Count() > 0)
+          result.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
+          {
+            Date = p.Date,
+            Achievement = p.Achievement,
+            QuanlityResult = p.QualityResult,
+            QuantityResult = p.QuantityResult
+          }).ToList();
+
         servicePendingCheckinObjective.Update(model, null).Wait();
-        return model.GetViewCrud();
+        return result;
       }
       catch (Exception e)
       {
