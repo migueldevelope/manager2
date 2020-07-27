@@ -1885,10 +1885,14 @@ namespace Manager.Services.Specific
         long onboardings = 0;
         long monitorings = 0;
         long workflows = 0;
+        long plans = 0;
         foreach (var item in persons)
         {
+          plans += servicePlan.CountNewVersion(p => p.Person._id == item._id & p.StatusPlan == EnumStatusPlan.Open).Result;
+
           var countonboardings = serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & (p.StatusOnBoarding == EnumStatusOnBoarding.WaitManager || p.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager)).Result;
           var countmonitorings = serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & (p.StatusMonitoring == EnumStatusMonitoring.WaitManager || p.StatusMonitoring == EnumStatusMonitoring.InProgressManager)).Result;
+
           if ((item.TypeJourney == EnumTypeJourney.OnBoarding) || (item.TypeJourney == EnumTypeJourney.OnBoardingOccupation))
             onboardings += countonboardings;
 
@@ -1913,6 +1917,7 @@ namespace Manager.Services.Specific
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Monitoring, Qtd = monitorings, Total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.OnBoarding, Qtd = onboardings, Total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Workflow, Qtd = workflows, Total = totalqtd });
+        result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Plan, Qtd = workflows, Total = totalqtd });
 
         return result.OrderBy(p => p.Type).ToList();
       }
