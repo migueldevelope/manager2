@@ -48,14 +48,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        List<ViewListMailModel> detail = serviceMailModel.GetAllNewVersion(p => p.Subject.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Subject").Result
-          .Select(p => new ViewListMailModel()
-          {
-            _id = p._id,
-            Name = p.Name,
-            StatusMail = p.StatusMail,
-            Subject = p.Subject
-          }).ToList();
+        List<ViewListMailModel> detail = serviceMailModel.GetAllNewVersion(p => p.Subject.ToUpper().Contains(filter.ToUpper()), count, count * (page - 1), "Subject").Result.Select(p => p.GetViewList()).ToList();
 
         total = serviceMailModel.CountNewVersion(p => p.Subject.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -69,13 +62,16 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MailModel mailModel = new MailModel()
+        var mailModel = new MailModel()
         {
           Name = view.Name,
           Link = view.Link,
           Message = view.Message,
           StatusMail = view.StatusMail,
-          Subject = view.Subject
+          Subject = view.Subject,
+          TypeFrequence = view.TypeFrequence,
+          Weekly = view.Weekly,
+          Day = view.Day
         };
         serviceMailModel.InsertNewVersion(mailModel).Wait();
         return "Mail model added!";
@@ -89,13 +85,17 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MailModel mailModel = serviceMailModel.GetNewVersion(p => p._id == view._id).Result;
+        var mailModel = serviceMailModel.GetNewVersion(p => p._id == view._id).Result;
         // Não atualizar o nome e o link
         //mailModel.Name = view.Name;
         //mailModel.Link = view.Link;
         mailModel.Message = view.Message;
         mailModel.StatusMail = view.StatusMail;
         mailModel.Subject = view.Subject;
+        mailModel.TypeFrequence = view.TypeFrequence;
+        mailModel.Weekly = view.Weekly;
+        mailModel.Day = view.Day;
+
         serviceMailModel.Update(mailModel, null).Wait();
         return "Mail model altered!";
       }
@@ -108,7 +108,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        MailModel item = serviceMailModel.GetNewVersion(p => p._id == id).Result;
+        var item = serviceMailModel.GetNewVersion(p => p._id == id).Result;
         item.Status = EnumStatus.Disabled;
         serviceMailModel.Update(item, null).Wait();
         return "Mail model deleted!";
@@ -122,16 +122,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var mailModel = serviceMailModel.GetNewVersion(p => p._id == id).Result;
-        return new ViewCrudMailModel()
-        {
-          _id = mailModel._id,
-          Name = mailModel.Name,
-          StatusMail = mailModel.StatusMail,
-          Subject = mailModel.Subject,
-          Message = mailModel.Message,
-          Link = mailModel.Link
-        };
+        var view = serviceMailModel.GetNewVersion(p => p._id == id).Result.GetViewCrud();
+        return view;
       }
       catch (Exception e)
       {
