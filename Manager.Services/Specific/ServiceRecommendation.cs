@@ -241,17 +241,18 @@ namespace Manager.Services.Specific
       {
         var personsend = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result;
 
-        var verifyperson = serviceRecommendationPerson.GetNewVersion(p => p.Person._id == view.Person._id
-        & p.Recommendation._id == view.Recommendation._id & p._idColleague == _user._idUser).Result;
-        if (verifyperson != null)
-          return "already recommendation to person";
+        //var verifyperson = serviceRecommendationPerson.GetNewVersion(p => p.Person._id == view.Person._id
+        //& p.Recommendation._id == view.Recommendation._id & p._idColleague == _user._idUser).Result;
+        //if (verifyperson != null)
+          //return "already recommendation to person";
 
         DateTime dateStart = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Date.Month + "-01");
         DateTime dateEnd = dateStart.AddMonths(1).AddDays(-1);
 
         var verifycount = serviceRecommendationPerson.CountNewVersion(p => p._idColleague == _user._idUser
          && p.Date >= dateStart && p.Date < dateEnd).Result;
-        if (verifycount == 3)
+        //if (verifycount == 3)
+        if (verifycount == 5)
           return "many recommendation month";
 
         var person = servicePerson.GetNewVersion(p => p._id == view.Person._id).Result;
