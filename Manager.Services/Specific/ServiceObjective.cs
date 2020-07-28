@@ -1772,7 +1772,7 @@ namespace Manager.Services.Specific
             Iniciatives = new List<ViewCrudImpedimentsIniciatives>(),
           }).Result;
 
-   
+
 
 
 
@@ -2211,7 +2211,7 @@ namespace Manager.Services.Specific
           {
             Date = p.Date,
             LevelTrust = p.LevelTrust
-          }).ToList();
+          }).OrderByDescending(p => p.Date).ToList();
 
         if (hisachievement.Count() > 0)
           view.HistoryAchievement = hisachievement.Select(p => new ViewListHistoryAchievement()
@@ -2220,7 +2220,7 @@ namespace Manager.Services.Specific
             Achievement = p.Achievement,
             QuanlityResult = p.QualityResult,
             QuantityResult = p.QuantityResult
-          }).ToList();
+          }).OrderByDescending(p => p.Date).ToList();
 
         return view;
       }
