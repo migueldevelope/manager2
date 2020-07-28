@@ -2139,7 +2139,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        if (serviceProcessLevelOne.CountFreeNewVersion(p => p.Area._id == idarea).Result > 0)
+        if (serviceProcessLevelOne.CountNewVersion(p => p.Area._id == idarea).Result > 0)
           return "erro_exists_nivelone";
 
         var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
