@@ -2145,7 +2145,7 @@ namespace Manager.Services.Specific
         var area = serviceArea.GetAllNewVersion(p => p._id == idarea).Result.FirstOrDefault();
 
 
-        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Process.Exists(i => i.ProcessLevelOne.Area._id == area._id)).Result.ToList())
+        foreach (var item in serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result.Where(p => p.Process.Exists(i => i.ProcessLevelOne.Area._id == area._id)).ToList())
         {
           return "error_exists_register";
         }
