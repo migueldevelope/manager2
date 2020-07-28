@@ -44,6 +44,7 @@ namespace Manager.Core.Business
         TypeFrequence = TypeFrequence,
         Day = Day,
         Link = Link,
+        Message = Message,
         Weekly = Weekly
       };
     }
