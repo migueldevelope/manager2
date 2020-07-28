@@ -92,6 +92,7 @@ namespace Manager.Services.Specific
         mailModel.Message = view.Message;
         mailModel.StatusMail = view.StatusMail;
         mailModel.Subject = view.Subject;
+        mailModel.Link = view.Link;
         mailModel.TypeFrequence = view.TypeFrequence;
         mailModel.Weekly = view.Weekly;
         mailModel.Day = view.Day;
