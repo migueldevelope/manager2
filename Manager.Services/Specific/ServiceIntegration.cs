@@ -1847,12 +1847,6 @@ namespace Manager.Services.Specific
             resultV2.Mensagem.Add(string.Format("Cargo {0} não participante.", view.NomeCargo));
             return resultV2;
           }
-          // Filtrar estabelecimento e professores
-          if (RetirarCargoProfessorMarista(view.Colaborador.Estabelecimento, view.NomeCargo))
-          {
-            resultV2.Mensagem.Add(string.Format("Cargo {0} não participante no estabelecimento {1}.", view.NomeCargo, view.Colaborador.Estabelecimento));
-            return resultV2;
-          }
         }
         //
         IntegrationParameter param = integrationParameterService.GetAllNewVersion().FirstOrDefault();
@@ -2711,33 +2705,6 @@ namespace Manager.Services.Specific
         "Zelador"
       };
       return !cargos.Contains(nomeCargo);
-    }
-    private bool RetirarCargoProfessorMarista(string estabelecimento, string nomeCargo)
-    {
-      string[] cargos = new string[]
-      {
-        "Professor Curso Técnico",
-        "Professor de Atend. Ed. Especializado",
-        "Professor de Educação Infantil",
-        "Professor de Ens Fund Finais - EJA",
-        "Professor de Ens Fundamental - EJA",
-        "Professor de Ensino Fund. - Finais",
-        "Professor de Ensino Fund. - Iniciais",
-        "Professor de Ensino Médio",
-        "Professor de Ensino Médio - EJA",
-        "Professor de Treino",
-        "Professor Ensino Fundamental",
-        "Professor Extraclasse"
-      };
-      string[] estabelecimentos = new string[]
-      {
-        "1016", "1088"
-      };
-      if (cargos.Contains(nomeCargo))
-      {
-        return !estabelecimentos.Contains(estabelecimento);
-      }
-      return false;
     }
     #endregion
 
