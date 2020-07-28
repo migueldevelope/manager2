@@ -1,4 +1,5 @@
 ﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessCrud
 {
@@ -11,6 +12,7 @@ namespace Manager.Views.BusinessCrud
     public EnumTypeFrequence TypeFrequence { get; set; }
     public EnumStatus StatusMail { get; set; }
     public byte Day { get; set; }
-    public byte Weekly { get; set; }
+    public DayOfWeek Weekly { get; set; }
+    public EnumTypeMailModel TypeMailModel { get; set; }
   }
 }

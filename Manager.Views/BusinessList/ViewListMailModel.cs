@@ -1,4 +1,5 @@
 ﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessList
 {
@@ -9,6 +10,7 @@ namespace Manager.Views.BusinessList
     public EnumStatus StatusMail { get; set; }
     public EnumTypeFrequence TypeFrequence { get; set; }
     public byte Day { get; set; }
-    public byte Weekly { get; set; }
+    public DayOfWeek Weekly { get; set; }
+    public EnumTypeMailModel TypeMailModel { get; set; }
   }
 }

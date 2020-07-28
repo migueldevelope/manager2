@@ -71,7 +71,8 @@ namespace Manager.Services.Specific
           Subject = view.Subject,
           TypeFrequence = view.TypeFrequence,
           Weekly = view.Weekly,
-          Day = view.Day
+          Day = view.Day,
+          TypeMailModel = view.TypeMailModel
         };
         serviceMailModel.InsertNewVersion(mailModel).Wait();
         return "Mail model added!";
@@ -96,6 +97,7 @@ namespace Manager.Services.Specific
         mailModel.TypeFrequence = view.TypeFrequence;
         mailModel.Weekly = view.Weekly;
         mailModel.Day = view.Day;
+        mailModel.TypeMailModel = view.TypeMailModel;
 
         serviceMailModel.Update(mailModel, null).Wait();
         return "Mail model altered!";

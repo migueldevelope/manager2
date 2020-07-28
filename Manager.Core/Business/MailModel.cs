@@ -2,6 +2,7 @@
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Core.Business
 {
@@ -17,7 +18,8 @@ namespace Manager.Core.Business
     public EnumStatus StatusMail { get; set; }
     public EnumTypeFrequence TypeFrequence { get; set; }
     public byte Day { get; set; }
-    public byte Weekly { get; set; }
+    public DayOfWeek Weekly { get; set; }
+    public EnumTypeMailModel TypeMailModel { get; set; }
     public ViewListMailModel GetViewList()
     {
       return new ViewListMailModel()
@@ -29,7 +31,8 @@ namespace Manager.Core.Business
         TypeFrequence = TypeFrequence,
         Day = Day,
         Link = Link,
-        Weekly = Weekly
+        Weekly = Weekly,
+        TypeMailModel = TypeMailModel
       };
     }
 
@@ -45,7 +48,8 @@ namespace Manager.Core.Business
         Day = Day,
         Link = Link,
         Message = Message,
-        Weekly = Weekly
+        Weekly = Weekly,
+        TypeMailModel = TypeMailModel
       };
     }
   }
