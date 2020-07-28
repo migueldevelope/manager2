@@ -28,6 +28,7 @@ namespace Manager.Core.Business
         Subject = Subject,
         TypeFrequence = TypeFrequence,
         Day = Day,
+        Link = Link,
         Weekly = Weekly
       };
     }
@@ -42,6 +43,8 @@ namespace Manager.Core.Business
         Subject = Subject,
         TypeFrequence = TypeFrequence,
         Day = Day,
+        Link = Link,
+        Message = Message,
         Weekly = Weekly
       };
     }
