@@ -485,6 +485,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+        //{DAYS}
         var parameter = serviceParameter.GetNewVersion(p => p.Key == "monitoringmanagerdeadline").Result;
 
         int daysMonitoring = -90;
@@ -578,6 +579,7 @@ namespace Manager.Services.Specific
       try
       {
         Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+        var parameter = serviceParameter.GetNewVersion(p => p.Key == "monitoringmanagerdeadline").Result;
 
         //searsh model mail database
         MailModel model = serviceMailModel.MonitoringManagerDeadline(path);
@@ -594,7 +596,7 @@ namespace Manager.Services.Specific
 
           if (!string.IsNullOrEmpty(list))
           {
-            list = string.Concat("Colaboradores sem <strong>feedback hà mais de 90 dias</strong>:<br>", list, "<br>");
+            list = string.Concat("Colaboradores sem <strong>feedback hà mais de " + parameter.Content + "dias</strong>:<br>", list, "<br>");
           }
           body = body.Replace("{LIST1}", list);
 
@@ -640,6 +642,9 @@ namespace Manager.Services.Specific
     {
       try
       {
+        //{DAYS}
+        var parameter = serviceParameter.GetNewVersion(p => p.Key == "monitoringmanagerdeadline").Result;
+
         //searsh model mail database
         MailModel model = serviceMailModel.MonitoringDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
@@ -647,7 +652,7 @@ namespace Manager.Services.Specific
         foreach (var item in listPerson)
         {
           string body = model.Message.Replace("{Link}", model.Link)
-                                      .Replace("{Person}", item.User.Name);
+                                      .Replace("{Person}", item.User.Name).Replace("{DAYS}",parameter.Content);
 
           MailLog sendMail = new MailLog
           {

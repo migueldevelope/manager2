@@ -707,7 +707,7 @@ namespace Manager.Services.Specific
         {
           Status = EnumStatus.Enabled,
           Message = string.Concat("Olá <strong>{Manager}</strong>,<br><br>",
-                                  "Identificamos que alguns colaboradores da sua equipe estão na Jornada de Monitoramento | Monitoring, porém não tiveram interação com você há mais de 90 dias.<br><br>",
+                                  "Identificamos que alguns colaboradores da sua equipe estão na Jornada de Monitoramento | Monitoring, porém não tiveram interação com você há mais de {DAYS} dias.<br><br>",
                                   "Para que os movimentos de carreira sejam mais fluidos e o engajamento da sua equipe seja cada vez maior, não perca tempo,... dá uma passada lá na plataforma e retome suas conversas e combinações!<br><br>",
                                   "{LIST1}",
                                   "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
@@ -745,7 +745,7 @@ namespace Manager.Services.Specific
         {
           Status = EnumStatus.Enabled,
           Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>",
-                                  "Identificamos que você está na Jordana de Monitoramento | Monitoring, mas não teve nenhuma interação com seu gestor há mais de 90 dias.<br><br>",
+                                  "Identificamos que você está na Jordana de Monitoramento | Monitoring, mas não teve nenhuma interação com seu gestor há mais de {DAYS} dias.<br><br>",
                                   "Seja protagonista de sua carreira e retome agora mesmo o seu monitoramento! <br><br>",
                                   "Faça isso agora! Acesse a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
                                   "#VamosSerMaisFluidos<br>"),
