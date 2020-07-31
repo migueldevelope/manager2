@@ -169,11 +169,152 @@ namespace Manager.Services.Specific
     {
       try
       {
-        OnboardingAdmission(sendTest);
-        OnboardingManagerDeadline(sendTest);
-        //CheckpointManagerDeadline(sendTest);
-        MonitoringManagerDeadline(sendTest);
-        PlanManagerDeadline(sendTest);
+        MailModel modelOnboardingAdmission = serviceMailModel.OnboardingAdmission(path);
+        MailModel modelOnboardingManagerDeadline = serviceMailModel.OnboardingManagerDeadline(path);
+        MailModel modelMonitoringManagerDeadline = serviceMailModel.MonitoringManagerDeadline(path);
+        MailModel modelPlanManagerDeadline = serviceMailModel.PlanManagerDeadline(path);
+        Log logOnboardingAdmission = null;
+        Log logOnboardingManagerDeadline = null;
+        Log logMonitoringManagerDeadline = null;
+        Log logPlanManagerDeadline = null;
+
+        //OnboardingAdmission
+        if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Daily)
+        {
+          logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Day == DateTime.Now.Day).FirstOrDefault();
+        }
+        else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.DayOfWeek == modelOnboardingAdmission.Weekly)
+            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.DayOfWeek == DateTime.Now.DayOfWeek
+            && p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
+        }
+        else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.Day == modelOnboardingAdmission.Day)
+            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
+        }
+
+        if ((logOnboardingAdmission == null) && (modelOnboardingAdmission.StatusMail == EnumStatus.Enabled))
+        {
+          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
+          ViewLog log = new ViewLog
+          {
+            Description = "Service Notification",
+            _idPerson = null,
+            Local = "ManagerMessagesOnboardingAdmission"
+          };
+          OnboardingAdmission(sendTest, modelOnboardingAdmission);
+        }
+
+
+        //OnboardingManagerDeadline
+        if (modelOnboardingManagerDeadline.TypeFrequence == EnumTypeFrequence.Daily)
+        {
+          logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.Where(p => p.DataLog.Value.Day == DateTime.Now.Day).FirstOrDefault();
+        }
+        else if (modelOnboardingManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.DayOfWeek == modelOnboardingAdmission.Weekly)
+            logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.Where(p => p.DataLog.Value.DayOfWeek == DateTime.Now.DayOfWeek
+            && p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.FirstOrDefault();
+        }
+        else if (modelOnboardingManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.Day == modelOnboardingAdmission.Day)
+            logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.FirstOrDefault();
+        }
+
+        if ((logOnboardingManagerDeadline == null) && (modelOnboardingManagerDeadline.StatusMail == EnumStatus.Enabled))
+        {
+          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
+          ViewLog log = new ViewLog
+          {
+            Description = "Service Notification",
+            _idPerson = null,
+            Local = "ManagerMessagesOnboardingManagerDeadline"
+          };
+          //OnboardingManagerDeadline(sendTest, modelOnboardingAdmission);
+          OnboardingManagerDeadline(sendTest, modelOnboardingManagerDeadline);
+        }
+
+
+        //MonitoringManagerDeadline
+        if (modelMonitoringManagerDeadline.TypeFrequence == EnumTypeFrequence.Daily)
+        {
+          logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.Where(p => p.DataLog.Value.Day == DateTime.Now.Day).FirstOrDefault();
+        }
+        else if (modelMonitoringManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.DayOfWeek == modelOnboardingAdmission.Weekly)
+            logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.Where(p => p.DataLog.Value.DayOfWeek == DateTime.Now.DayOfWeek
+            && p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.FirstOrDefault();
+        }
+        else if (modelMonitoringManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.Day == modelOnboardingAdmission.Day)
+            logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.FirstOrDefault();
+        }
+
+        if ((logMonitoringManagerDeadline == null) && (modelMonitoringManagerDeadline.StatusMail == EnumStatus.Enabled))
+        {
+          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
+          ViewLog log = new ViewLog
+          {
+            Description = "Service Notification",
+            _idPerson = null,
+            Local = "ManagerMessagesMonitoringManagerDeadline"
+          };
+          MonitoringManagerDeadline(sendTest, modelMonitoringManagerDeadline);
+        }
+
+
+        //PlanManagerDeadline
+        if (modelPlanManagerDeadline.TypeFrequence == EnumTypeFrequence.Daily)
+        {
+          logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.Where(p => p.DataLog.Value.Day == DateTime.Now.Day).FirstOrDefault();
+        }
+        else if (modelPlanManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.DayOfWeek == modelOnboardingAdmission.Weekly)
+            logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.Where(p => p.DataLog.Value.DayOfWeek == DateTime.Now.DayOfWeek
+            && p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.FirstOrDefault();
+        }
+        else if (modelPlanManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        {
+          if (DateTime.Now.Day == modelOnboardingAdmission.Day)
+            logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+          else
+            logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.FirstOrDefault();
+        }
+
+        if ((logPlanManagerDeadline == null) && (modelPlanManagerDeadline.StatusMail == EnumStatus.Enabled))
+        {
+          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
+          ViewLog log = new ViewLog
+          {
+            Description = "Service Notification",
+            _idPerson = null,
+            Local = "ManagerMessagesPlanManagerDeadline"
+          };
+
+          PlanManagerDeadline(sendTest, modelPlanManagerDeadline);
+        }
+
       }
       catch (Exception)
       {
@@ -481,7 +622,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Monitoring
-    private void MonitoringManagerDeadline(bool sendTest)
+    private void MonitoringManagerDeadline(bool sendTest, MailModel model)
     {
       try
       {
@@ -566,7 +707,7 @@ namespace Manager.Services.Specific
               listPerson.Add(item.Person);
 
           if (listPerson.Count > 0)
-            MailMonitoringDeadline(listPerson, sendTest);
+            MailMonitoringDeadline(listPerson, sendTest, model);
         }
       }
       catch (Exception)
@@ -638,21 +779,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void MailMonitoringDeadline(List<Person> listPerson, bool sendTest)
+    private void MailMonitoringDeadline(List<Person> listPerson, bool sendTest, MailModel model)
     {
       try
       {
         //{DAYS}
         var parameter = serviceParameter.GetNewVersion(p => p.Key == "monitoringmanagerdeadline").Result;
 
-        //searsh model mail database
-        MailModel model = serviceMailModel.MonitoringDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
+
         foreach (var item in listPerson)
         {
           string body = model.Message.Replace("{Link}", model.Link)
-                                      .Replace("{Person}", item.User.Name).Replace("{DAYS}",parameter.Content);
+                                      .Replace("{Person}", item.User.Name).Replace("{DAYS}", parameter.Content);
 
           MailLog sendMail = new MailLog
           {
@@ -687,7 +827,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Onboarding
-    private void OnboardingAdmission(bool sendTest)
+    private void OnboardingAdmission(bool sendTest, MailModel model)
     {
       try
       {
@@ -704,7 +844,7 @@ namespace Manager.Services.Specific
           view = serviceLogMessages.NewNotExist(view);
           if (view != null)
             if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-              MailOnboardingAdmission(item, sendTest);
+              MailOnboardingAdmission(item, sendTest, model);
         }
       }
       catch (Exception)
@@ -712,14 +852,12 @@ namespace Manager.Services.Specific
 
       }
     }
-    private void MailOnboardingAdmission(Person person, bool sendTest)
+    private void MailOnboardingAdmission(Person person, bool sendTest, MailModel model)
     {
       try
       {
         //searsh model mail database
-        MailModel model = serviceMailModel.OnboardingAdmission(path);
-        if (model.StatusMail == EnumStatus.Disabled)
-          return;
+
 
         string body = model.Message.Replace("{Person}", person.User.Name)
                                    .Replace("{Link}", model.Link)
@@ -755,7 +893,7 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    private void OnboardingManagerDeadline(bool sendTest)
+    private void OnboardingManagerDeadline(bool sendTest, MailModel model)
     {
       try
       {
@@ -883,7 +1021,7 @@ namespace Manager.Services.Specific
           managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
           managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          MailOnboardingManagerDeadline(listManagerNotification, sendTest);
+          MailOnboardingManagerDeadline(listManagerNotification, sendTest, model);
         }
       }
       catch (Exception)
@@ -892,7 +1030,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void OnboardingManagerDeadlineV2(bool sendTest)
+    private void OnboardingManagerDeadlineV2(bool sendTest, MailModel model)
     {
       try
       {
@@ -1036,7 +1174,7 @@ namespace Manager.Services.Specific
           managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
           managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          MailOnboardingManagerDeadline(listManagerNotification, sendTest);
+          MailOnboardingManagerDeadline(listManagerNotification, sendTest, model);
         }
       }
       catch (Exception)
@@ -1045,14 +1183,12 @@ namespace Manager.Services.Specific
       }
     }
 
-    private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
+    private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest, MailModel model)
     {
       try
       {
         Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
 
-        //searsh model mail database
-        MailModel model = serviceMailModel.OnboardingManagerDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
         foreach (var item in listManager)
@@ -1141,7 +1277,7 @@ namespace Manager.Services.Specific
     #endregion
 
     #region Plan Action
-    private void PlanManagerDeadline(bool sendTest)
+    private void PlanManagerDeadline(bool sendTest, MailModel model)
     {
       try
       {
@@ -1222,7 +1358,7 @@ namespace Manager.Services.Specific
           managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.Person.User.Name).ToList();
           managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.Person.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          MailPlanManagerDeadline(listManagerNotification, sendTest);
+          MailPlanManagerDeadline(listManagerNotification, sendTest, model);
           // Enviar para o colaborador
           List<PlanNotification> listNotification = new List<PlanNotification>();
           listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Manager.Name).ToList();
@@ -1327,16 +1463,16 @@ namespace Manager.Services.Specific
       }
       return result;
     }
-    private void MailPlanManagerDeadline(List<PlanManagerNotification> listManager, bool sendTest)
+    private void MailPlanManagerDeadline(List<PlanManagerNotification> listManager, bool sendTest, MailModel model)
     {
       try
       {
         Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
 
         //searsh model mail database
-        MailModel model = serviceMailModel.PlanManagerDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
+
         foreach (var item in listManager)
         {
           string body = model.Message.Replace("{Link}", model.Link)
