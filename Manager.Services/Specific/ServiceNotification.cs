@@ -208,6 +208,7 @@ namespace Manager.Services.Specific
             _idPerson = null,
             Local = "ManagerMessagesOnboardingAdmission"
           };
+          serviceLog.NewLogService(log);
           OnboardingAdmission(sendTest, modelOnboardingAdmission);
         }
 
@@ -242,6 +243,7 @@ namespace Manager.Services.Specific
             _idPerson = null,
             Local = "ManagerMessagesOnboardingManagerDeadline"
           };
+          serviceLog.NewLogService(log);
           //OnboardingManagerDeadline(sendTest, modelOnboardingAdmission);
           OnboardingManagerDeadline(sendTest, modelOnboardingManagerDeadline);
         }
@@ -277,6 +279,7 @@ namespace Manager.Services.Specific
             _idPerson = null,
             Local = "ManagerMessagesMonitoringManagerDeadline"
           };
+          serviceLog.NewLogService(log);
           MonitoringManagerDeadline(sendTest, modelMonitoringManagerDeadline);
         }
 
@@ -311,7 +314,7 @@ namespace Manager.Services.Specific
             _idPerson = null,
             Local = "ManagerMessagesPlanManagerDeadline"
           };
-
+          serviceLog.NewLogService(log);
           PlanManagerDeadline(sendTest, modelPlanManagerDeadline);
         }
 
