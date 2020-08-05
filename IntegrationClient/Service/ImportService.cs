@@ -769,7 +769,8 @@ namespace IntegrationClient.Service
             {
               string mailWork = excelPln.Range[string.Format("L{0}", row)].Value;
               if (mailWork.Trim().ToLower().Equals("atestado") || mailWork.Trim().ToLower().Equals("auxilio") 
-                || mailWork.Trim().ToLower().Equals("seguro") || mailWork.Trim().ToLower().Equals("suspensão"))
+                || mailWork.Trim().ToLower().Equals("seguro") || mailWork.Trim().ToLower().Equals("suspensão")
+                || mailWork.Trim().ToLower().Equals("licença"))
               {
                 excelPln.Range[string.Format("L{0}", row)].Value = "Afastado";
               }

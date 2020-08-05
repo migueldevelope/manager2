@@ -2413,17 +2413,29 @@ namespace Manager.Services.Specific
         return date;
       }
       DateTime dateReturn = (DateTime)date;
-      if (dateReturn.Hour < 3)
+      if (dateReturn.Hour < 12)
       {
-        dateReturn = dateReturn.ToUniversalTime();
+        dateReturn = dateReturn.AddHours(12 - dateReturn.Hour);
       }
-      return dateReturn;
+      else
+      {
+        dateReturn = dateReturn.AddHours((dateReturn.Hour-12)*-1);
+      }
+      return dateReturn.ToUniversalTime();
     }
     private DateTime TransformDateUtc(DateTime date)
     {
-      if (date == DateTime.MinValue || date.Hour > 3)
+      if (date == DateTime.MinValue)
       {
         return date;
+      }
+      if (date.Hour < 12)
+      {
+        date = date.AddHours(12 - date.Hour);
+      }
+      else
+      {
+        date = date.AddHours((date.Hour - 12) * -1);
       }
       return date.ToUniversalTime();
     }
