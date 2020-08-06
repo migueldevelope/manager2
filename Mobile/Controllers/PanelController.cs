@@ -35,6 +35,7 @@ namespace Mobile.Controllers
     private readonly IServicePerson servicePerson;
     private readonly IServiceUser serviceUser;
     private readonly IServiceFeelingDay serviceFeelingDay;
+    private readonly IServiceTermsOfService serviceTermsOfService;
     private readonly DataContext context;
     private readonly string blobKey;
 
@@ -49,7 +50,8 @@ namespace Mobile.Controllers
     /// <param name="_serviceFeelingDay">Serviço do Emocionometro</param>
     /// <param name="contextAccessor">Token de segurança</param>
     public PanelController(IServiceOnBoarding _serviceOnborading, IServiceIndicators _serviceIndicators,
-      IServiceUser _serviceUser, IServicePerson _servicePerson, IServiceFeelingDay _serviceFeelingDay, IHttpContextAccessor contextAccessor) : base(contextAccessor)
+      IServiceUser _serviceUser, IServicePerson _servicePerson, IServiceFeelingDay _serviceFeelingDay,
+      IServiceTermsOfService _serviceTermsOfService , IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       Config conn = XmlConnection.ReadVariablesSystem();
       context = new DataContext(conn.Server, conn.DataBase);
@@ -61,11 +63,13 @@ namespace Mobile.Controllers
       servicePerson = _servicePerson;
       serviceUser = _serviceUser;
       serviceFeelingDay = _serviceFeelingDay;
+      serviceTermsOfService = _serviceTermsOfService;
       serviceOnborading.SetUser(contextAccessor);
       serviceIndicators.SetUser(contextAccessor);
       servicePerson.SetUser(contextAccessor);
       serviceUser.SetUser(contextAccessor);
       serviceFeelingDay.SetUser(contextAccessor);
+      serviceTermsOfService.SetUser(contextAccessor);
     }
     #endregion
 
@@ -96,6 +100,32 @@ namespace Mobile.Controllers
     {
       return await Task.Run(() => Ok(serviceFeelingDay.New(feeling, "mobile")));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="iduser"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("checktermofservice/{iduser}")]
+    public async Task<IActionResult> CheckTermOfService(string iduser)
+    {
+      serviceUser.CheckTermOfService(iduser);
+      return await Task.Run(() => Ok());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("getterm")]
+    public async Task<IActionResult> GetTerm( )
+    {
+      return await Task.Run(() => Ok(serviceTermsOfService.GetTerm()));
+    }
+
+
 
     /// <summary>
     /// 
