@@ -567,7 +567,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
                 {
@@ -746,7 +746,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -799,7 +799,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
                 {
@@ -870,7 +870,7 @@ namespace Manager.Services.Specific
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = sendTest ?
             new List<MailLogAddress>()
               {
@@ -1241,7 +1241,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1548,7 +1548,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1650,7 +1650,7 @@ namespace Manager.Services.Specific
 
           MailLog sendMail = new MailLog
           {
-            From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
             To = sendTest ?
               new List<MailLogAddress>()
               {
@@ -1692,7 +1692,7 @@ namespace Manager.Services.Specific
 
         MailLog sendMail = new MailLog
         {
-          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Sucesso do Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Sucesso do Cliente | Fluid"),
           To = sendTest ?
             new List<MailLogAddress>()
             {

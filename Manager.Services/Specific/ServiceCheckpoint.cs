@@ -650,7 +650,7 @@ namespace Manager.Services.Specific
         }
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -687,7 +687,7 @@ namespace Manager.Services.Specific
         }
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -721,7 +721,7 @@ namespace Manager.Services.Specific
         };
         var sendMail = new MailLog
         {
-          From = new MailLogAddress("sucessocliente@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
           To = listMail,
           Priority = EnumPriorityMail.Low,
           _idPerson = person._id,
@@ -783,7 +783,7 @@ namespace Manager.Services.Specific
             Name = "E-mail do RH para enviar aviso de Decisão de Efetivação | Checkpoint",
             Key = "mailcheckpoint",
             Help = "Informe um e-mail, ou vários e-mails separados por ponto-e-virgula, para enviar os avisos.",
-            Content = "sucessocliente@fluidstate.com.br",
+            Content = "suporte@fluidstate.com.br",
             Status = EnumStatus.Enabled
           }).Result.Content;
         else
