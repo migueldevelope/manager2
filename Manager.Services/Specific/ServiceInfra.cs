@@ -3111,26 +3111,32 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListOccupationView> GetOccupations()
+    public List<ViewListOccupationExport> GetOccupations()
     {
       try
       {
         var list = serviceOccupation.GetAllNewVersion().OrderBy(p => p.Name).ToList();
-        List<ViewListOccupationView> result = new List<ViewListOccupationView>();
+        List<ViewListOccupationExport> result = new List<ViewListOccupationExport>();
         foreach (var item in list)
         {
           foreach (var proc in item.Process)
           {
-            result.Add(new ViewListOccupationView()
+            result.Add(new ViewListOccupationExport()
             {
               _id = item._id,
-              Name = item.Name,
+              NameCargo = item.Name,
+              Description = item.Description,
               NameGroup = item.Group.Name,
+              NameSphere = item.Group.Sphere.Name,
+              NameAxis = item.Group.Axis.Name,
               NameArea = proc.ProcessLevelOne.Area.Name,
-              Description = item.Description
+              NameProcess = proc.ProcessLevelOne.Name,
+              NameSubProcess = proc.Name,
+              StatusActivites = item.Activities.Count() == 0 ? "Não Ok" : "Ok",
+              StatusSkill = item.Skills.Count() == 0 ? "Não Ok" : "Ok",
+              StatusSchooling = item.Schooling.Where(x => x.Complement != null).Count() == 0 ? "Sem complemento" : "Com complemento"
             });
           }
-
         }
         return result;
       }

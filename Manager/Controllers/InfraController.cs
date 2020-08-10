@@ -693,7 +693,7 @@ namespace Manager.Controllers
     [Authorize]
     [HttpGet]
     [Route("getoccupations")]
-    public async Task<List<ViewListOccupationView>> GetOccupations()
+    public async Task<List<ViewListOccupationExport>> GetOccupations()
     {
       return await Task.Run(() => service.GetOccupations());
     }

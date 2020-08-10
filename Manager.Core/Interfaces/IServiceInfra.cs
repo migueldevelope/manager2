@@ -33,7 +33,7 @@ namespace Manager.Core.Interfaces
     string AddOccupationActivitiesList(List<ViewCrudOccupationActivities> list);
     ViewCrudOccupation GetOccupation(string idcompany, string filterName);
     List<ViewListGroup> GetGroups();
-    List<ViewListOccupationView> GetOccupations();
+    List<ViewListOccupationExport> GetOccupations();
     ViewCrudTextDefault GetTextDefault(string idcompany, string name);
     ViewCrudTextDefault GetTextDefault(string id);
     List<ViewListTextDefault> ListTextDefault(string idcompany);
