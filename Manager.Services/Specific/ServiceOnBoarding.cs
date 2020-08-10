@@ -2228,7 +2228,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var person = servicePerson.GetFreeNewVersion(p => p.User.Mail == "suporte@jmsoft.com.br").Result;
+        var person = servicePerson.GetFreeNewVersion(p => p.User.Mail == "suporte@fluidstate.com.br").Result;
         var body = "";
         var sendMail = new MailLog
         {

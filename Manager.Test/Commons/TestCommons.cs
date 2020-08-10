@@ -93,7 +93,7 @@ namespace Manager.Test.Commons
           DocumentCTPF = null,
           DocumentID = null,
           ForeignForgotPassword = null,
-          Mail = "suporte@jmsoft.com.br",
+          Mail = "suporte@fluidstate.com.br",
           Nickname = null,
           Password = "DB64C0254298CED993D41EAB7BAD2037",
           Phone = null,
@@ -136,7 +136,7 @@ namespace Manager.Test.Commons
         baseUser = new BaseUser()
         {
           NameAccount = "Analisa",
-          Mail = "suporte@jmsoft.com.br",
+          Mail = "suporte@fluidstate.com.br",
           NamePerson = "Analisa",
           _idAccount = "5b6c4f47d9090156f08775aa",
           _idPerson = "5b6c4f56d9090156f08775ac",
@@ -218,7 +218,7 @@ namespace Manager.Test.Commons
         parameter = new Parameter()
         {
           _idAccount = "5b6c4f47d9090156f08775aa",
-          Content = "suporte@jmsoft.com.br",
+          Content = "suporte@fluidstate.com.br",
           Help = "Informar um e-mail",
           Key = "mailcheckpoint",
           Name = "E-mail do RH para enviar aviso do Checkpoint",
