@@ -3132,9 +3132,9 @@ namespace Manager.Services.Specific
               NameArea = proc.ProcessLevelOne.Area.Name,
               NameProcess = proc.ProcessLevelOne.Name,
               NameSubProcess = proc.Name,
-              StatusActivites = item.Activities.Count() == 0 ? "Não Ok" : "Ok",
-              StatusSkill = item.Skills.Count() == 0 ? "Não Ok" : "Ok",
-              StatusSchooling = item.Schooling.Where(x => x.Complement != null).Count() == 0 ? "Sem complemento" : "Com complemento"
+              StatusActivites = item.Activities.Count() == 0 ? "Sem Entregas" : "Ok",
+              StatusSkill = item.Skills.Count() == 0 ? "Sem Competências Específicas" : "Ok",
+              StatusSchooling = item.Schooling.Where(x => x.Complement != null).Count() == 0 ? "Sem complementos" : "Ok"
             });
           }
         }
