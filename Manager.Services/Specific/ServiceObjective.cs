@@ -606,11 +606,12 @@ namespace Manager.Services.Specific
         foreach (var item in keyresultsprevious)
         {
           var obj = listobjectives.Where(p => p._id == item.Objective._id).FirstOrDefault();
-          foreach (var par in obj.Participants)
-          {
-            if (par._id == _user._idPerson)
-              keyresults.Add(item);
-          }
+          if (obj != null)
+            foreach (var par in obj.Participants)
+            {
+              if (par._id == _user._idPerson)
+                keyresults.Add(item);
+            }
 
           foreach (var par in item.ParticipantsAdd)
           {
@@ -856,11 +857,12 @@ namespace Manager.Services.Specific
         foreach (var item in keyresultsprevious)
         {
           var obj = listobjectives.Where(p => p._id == item.Objective._id).FirstOrDefault();
-          foreach (var par in obj.Participants)
-          {
-            if (par._id == _user._idPerson)
-              keyresults.Add(item);
-          }
+          if (obj != null)
+            foreach (var par in obj.Participants)
+            {
+              if (par._id == _user._idPerson)
+                keyresults.Add(item);
+            }
 
           foreach (var par in item.ParticipantsAdd)
           {
