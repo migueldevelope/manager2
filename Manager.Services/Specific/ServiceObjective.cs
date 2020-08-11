@@ -83,6 +83,9 @@ namespace Manager.Services.Specific
         if (view.Editors == null)
           view.Editors = new List<ViewListPersonPhoto>();
 
+        if (view.Participants == null)
+          view.Participants = new List<ViewListPersonPhoto>();
+
         var model = serviceObjective.InsertNewVersion(new Objective()
         {
           _id = view._id,
@@ -94,6 +97,7 @@ namespace Manager.Services.Specific
           Dimension = view.Dimension,
           Responsible = view.Responsible,
           Editors = view.Editors,
+          Participants = view.Participants,
           Reached = false,
         }).Result;
 
@@ -119,6 +123,8 @@ namespace Manager.Services.Specific
         model.StausObjective = view.StausObjective;
         model.Dimension = view.Dimension;
         model.Responsible = view.Responsible;
+        model.Participants = view.Participants;
+
         if (model.Editors == null)
           model.Editors = view.Editors;
         else
@@ -178,10 +184,10 @@ namespace Manager.Services.Specific
         var view = new ViewListObjectiveParticipantCard();
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
-        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result.Select(p => p._id);
+        var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result;
 
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled
-         && objective.Contains(p.Objective._id)).Result;
+         && objective.Select(p => p._id).Contains(p.Objective._id)).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var keyresults = new List<KeyResult>();
 
@@ -204,12 +210,21 @@ namespace Manager.Services.Specific
                 keyresults.Add(item);
             }
           }
+
+          foreach (var obj in objective)
+          {
+            foreach (var par in obj.Participants)
+            {
+              if (par._id == _user._idPerson)
+                keyresults.Add(item);
+            }
+          }
         }
 
         //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
 
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
-        && p.Lasted == true && objective.Contains(p._idObjective)).Result;
+        && p.Lasted == true && objective.Select(p => p._id).Contains(p._idObjective)).Result;
 
 
         if (keyresults.Count() > 0)
@@ -581,12 +596,21 @@ namespace Manager.Services.Specific
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
         var month = DateTime.Now.Month;
-
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
+        var listobjectives = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result;
+
         var keyresults = new List<KeyResult>();
         foreach (var item in keyresultsprevious)
         {
+          var obj = listobjectives.Where(p => p._id == item.Objective._id).FirstOrDefault();
+          foreach (var par in obj.Participants)
+          {
+            if (par._id == _user._idPerson)
+              keyresults.Add(item);
+          }
+
           foreach (var par in item.ParticipantsAdd)
           {
             if (par.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
@@ -608,11 +632,7 @@ namespace Manager.Services.Specific
 
         var ids = keyresults.Select(p => p.Objective._id).ToList();
 
-
-        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
-
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result
-         .Where(p => ids.Contains(p._id));
+        var objectives = listobjectives.Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
         {
@@ -824,15 +844,23 @@ namespace Manager.Services.Specific
         var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         byte fortnight = DateTime.Now.Day >= 15 ? byte.Parse("2") : byte.Parse("1");
         var month = DateTime.Now.Month;
-
         //var objectives = serviceObjective.GetAllNewVersion(p => p.StausObjective == EnumStausObjective.Active).Result
         // .Where(p => p.Editors.Where(x => x._id == _user._idPerson).Count() > 0 || p.Responsible._id == _user._idPerson);
-
+        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        var listobjectives = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result;
+
         var keyresults = new List<KeyResult>();
         foreach (var item in keyresultsprevious)
         {
+          var obj = listobjectives.Where(p => p._id == item.Objective._id).FirstOrDefault();
+          foreach (var par in obj.Participants)
+          {
+            if (par._id == _user._idPerson)
+              keyresults.Add(item);
+          }
+
           foreach (var par in item.ParticipantsAdd)
           {
             if (par.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
@@ -855,12 +883,7 @@ namespace Manager.Services.Specific
         }
 
         var ids = keyresults.Select(p => p.Objective._id).ToList();
-
-
-        var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
-
-        var objectives = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result
-         .Where(p => ids.Contains(p._id));
+        var objectives = listobjectives.Where(p => ids.Contains(p._id));
 
         foreach (var obj in objectives)
         {

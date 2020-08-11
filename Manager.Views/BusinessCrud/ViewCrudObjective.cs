@@ -15,5 +15,6 @@ namespace Manager.Views.BusinessCrud
     public ViewCrudDimension Dimension { get; set; }
     public ViewListPersonPhoto Responsible { get; set; }
     public List<ViewListPersonPhoto> Editors { get; set; }
+    public List<ViewListPersonPhoto> Participants { get; set; }
   }
 }
