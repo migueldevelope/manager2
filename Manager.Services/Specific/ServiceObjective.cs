@@ -712,6 +712,19 @@ namespace Manager.Services.Specific
               viewKeyResult.AverageTrust = pendingcheckingkeyresult.Average(p => decimal.Parse((p.LevelTrust == EnumLevelTrust.Low ? 0 : p.LevelTrust == EnumLevelTrust.Medium ? 50 : p.LevelTrust == EnumLevelTrust.Hight ? 100 : 0).ToString())); ;
             }
 
+            if (obj != null)
+              foreach (var par in obj.Participants)
+              {
+                if (par._id == _user._idPerson)
+                  viewKeyResult.ParticipantsGet.Add(new ViewListPersonPhotoKeyResult()
+                  {
+                    Name = par.Name,
+                    Photo = par.Photo,
+                    _id = par._id,
+                    TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+                  });
+              }
+
             foreach (var item in viewKeyResult.ParticipantsAdd)
             {
               if (item.TypeParticipantKeyResult == EnumTypeParticipantKeyResult.Team)
@@ -740,7 +753,6 @@ namespace Manager.Services.Specific
                   })
                   .FirstOrDefault());
               }
-
             }
 
             List<PendingCheckinObjective> pendingcheckingkey = new List<PendingCheckinObjective>();
@@ -917,6 +929,7 @@ namespace Manager.Services.Specific
           view.Responsible = obj.Responsible;
 
 
+
           //if (keyresults.Where(p => p.Objective._id == obj._id).Count() > 0)
           //view.AverageAchievement = keyresults.Where(p => p.Objective._id == obj._id).Average(p => p.Achievement);
           if (pendingcheckingprevious.Count() > 0)
@@ -965,6 +978,19 @@ namespace Manager.Services.Specific
             viewKeyResult.PendingCheckinTrust = true;
             viewKeyResult.PendingCheckinAchievement = false;
 
+
+            if (obj != null)
+              foreach (var par in obj.Participants)
+              {
+                if (par._id == _user._idPerson)
+                  viewKeyResult.ParticipantsGet.Add(new ViewListPersonPhotoKeyResult()
+                  {
+                    Name = par.Name,
+                    Photo = par.Photo,
+                    _id = par._id,
+                    TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+                  });
+              }
 
             if (pendingcheckingkeyresult.Count() > 0)
             {
