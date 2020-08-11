@@ -1231,6 +1231,20 @@ namespace Manager.Services.Specific
             viewKeyResult.PendingCheckinTrust = true;
             viewKeyResult.PendingCheckinAchievement = true;
 
+            //var obj = listobjectives.Where(p => p._id == kr.Objective._id).FirstOrDefault();
+            if (obj != null)
+              foreach (var par in obj.Participants)
+              {
+                if (par._id == _user._idPerson)
+                  viewKeyResult.ParticipantsGet.Add(new ViewListPersonPhotoKeyResult()
+                  {
+                    Name = par.Name,
+                    Photo = par.Photo,
+                    _id = par._id,
+                    TypeParticipantKeyResult = EnumTypeParticipantKeyResult.Single
+                  });
+              }
+
             if (pendingcheckingkey.Count() > 0)
             {
               //viewKeyResult.QuantityImpediments = pendingcheckingkey.Sum(p => p.Impediments.Count());
