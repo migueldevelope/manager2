@@ -674,6 +674,8 @@ namespace Manager.Services.Specific
             viewKeyResult.Description = kr.Description;
             viewKeyResult.Weight = kr.Weight;
             viewKeyResult.Objective = kr.Objective;
+            viewKeyResult.QualityResult = kr.QualityResult;
+            viewKeyResult.QuantityResult = kr.QuantityResult;
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
             //viewKeyResult.Binary = kr.Binary;
@@ -926,6 +928,8 @@ namespace Manager.Services.Specific
             viewKeyResult.Objective = kr.Objective;
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
+            viewKeyResult.QualityResult = kr.QualityResult;
+            viewKeyResult.QuantityResult = kr.QuantityResult;
             //viewKeyResult.Binary = kr.Binary;
             viewKeyResult.ParticipantsAdd = kr.ParticipantsAdd;
             viewKeyResult.ParticipantsGet = new List<ViewListPersonPhotoKeyResult>();
@@ -951,6 +955,7 @@ namespace Manager.Services.Specific
               if (checkinperson != null)
               {
                 viewKeyResult._idPendingChecking = checkinperson._id;
+
                 if (checkinperson.LevelTrust > 0)
                   viewKeyResult.PendingCheckinTrust = false;
 
@@ -1053,6 +1058,7 @@ namespace Manager.Services.Specific
 
         list = list.Where(p => p.KeyResults != null).ToList();
         list = list.Where(p => p.KeyResults.Count() > 0).ToList();
+        
         return list;
       }
       catch (Exception e)
@@ -1156,6 +1162,8 @@ namespace Manager.Services.Specific
             viewKeyResult.Description = kr.Description;
             viewKeyResult.Weight = kr.Weight;
             viewKeyResult.Objective = kr.Objective;
+            viewKeyResult.QualityResult = kr.QualityResult;
+            viewKeyResult.QuantityResult = kr.QuantityResult;
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
             //viewKeyResult.Binary = kr.Binary;

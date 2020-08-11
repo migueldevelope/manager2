@@ -10,6 +10,8 @@ namespace Manager.Views.BusinessList
   {
     public byte LevelAchievement { get; set; }
     public byte LevelTrust { get; set; }
+    public decimal QuantityResult { get; set; }
+    public string QualityResult { get; set; }
     public bool PendingChecking { get; set; }
     public bool PendingCheckinTrust { get; set; }
     public bool PendingCheckinAchievement { get; set; }

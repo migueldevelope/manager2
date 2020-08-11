@@ -2108,6 +2108,19 @@ namespace Manager.Services.Specific
       }
     }
 
+    //public class ObjTest { public int campo { get; set; } }
+
+    //public void test()
+    //{
+    //  var list = new List<ObjTest>();
+    //  list.Add(new ObjTest() { campo = 1 });
+    //  var itens = new int[3] { 1, 2, 3 };
+    //  //in
+    //  list.Where(p => !itens.Contains(p.campo));
+    //  //not in
+    //  list.Where(p => itens.Contains(p.campo));
+    //}
+
     public string NewUpdatePlan(string idmonitoring, List<ViewCrudNewPlanUp> viewPlan)
     {
       try
@@ -2162,6 +2175,7 @@ namespace Manager.Services.Specific
 
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+
 
 
         if (_user._idUser == person.User._id)
