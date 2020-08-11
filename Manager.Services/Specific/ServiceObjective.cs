@@ -1481,7 +1481,6 @@ namespace Manager.Services.Specific
           else
             model.Achievement = 0;
 
-
         }
         else
           model.Achievement = achievement;
@@ -1489,8 +1488,8 @@ namespace Manager.Services.Specific
         if (model.Achievement >= 100)
           model.Reached = true;
 
-        if (model.Achievement > 100)
-          model.Achievement = 100;
+        if (model.Achievement > 110)
+          model.Achievement = 110;
         else if (model.Achievement < 0)
           model.Achievement = 0;
 
