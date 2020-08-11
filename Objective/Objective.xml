@@ -190,10 +190,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditParticipant">
+        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditParticipant(System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
             <returns></returns>
         </member>
         <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditParticipantRH(System.Int32,System.Int32,System.String)">
@@ -205,11 +208,14 @@
             <param name="filter"></param>
             <returns></returns>
         </member>
-        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditResponsible(System.String)">
+        <member name="M:Manager.Controllers.ObjectiveController.GetObjectiveEditResponsible(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             
             </summary>
             <param name="idobjective"></param>
+            <param name="count"></param>
+            <param name="page"></param>
+            <param name="filter"></param>
             <returns></returns>
         </member>
         <member name="M:Manager.Controllers.ObjectiveController.GetListManager">

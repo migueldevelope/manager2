@@ -185,9 +185,10 @@ namespace Manager.Services.Specific
         var datenow = DateTime.Parse(DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " 00:00");
 
         var objective = serviceObjective.GetAllNewVersion(p => p.StartDate <= datenow && p.EndDate >= datenow && p.StausObjective == EnumStausObjective.Active).Result;
+        var idsobjective = objective.Select(p => p._id);
 
         var keyresultsprevious = serviceKeyResult.GetAllNewVersion(p => p.Status != EnumStatus.Disabled
-         && objective.Select(p => p._id).Contains(p.Objective._id)).Result;
+         && idsobjective.Contains(p.Objective._id)).Result;
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         var keyresults = new List<KeyResult>();
 
@@ -224,7 +225,7 @@ namespace Manager.Services.Specific
         //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
 
         var pendingchecking = servicePendingCheckinObjective.GetAllNewVersion(p => p._idPerson == _user._idPerson
-        && p.Lasted == true && objective.Select(p => p._id).Contains(p._idObjective)).Result;
+        && p.Lasted == true && idsobjective.Contains(p._idObjective)).Result;
 
 
         if (keyresults.Count() > 0)
