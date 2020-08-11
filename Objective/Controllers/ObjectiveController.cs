@@ -357,13 +357,19 @@ namespace Manager.Controllers
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getobjectiveeditparticipant")]
-    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditParticipant()
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditParticipant(int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.GetObjectiveEditParticipant());
+      long total = 0;
+      var result = service.GetObjectiveEditParticipant(ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>
@@ -389,13 +395,19 @@ namespace Manager.Controllers
     /// 
     /// </summary>
     /// <param name="idobjective"></param>
+    /// <param name="count"></param>
+    /// <param name="page"></param>
+    /// <param name="filter"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("getobjectiveeditresponsible/{idobjective}")]
-    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditResponsible(string idobjective)
+    public async Task<List<ViewListObjectiveEdit>> GetObjectiveEditResponsible(string idobjective, int count = 10, int page = 1, string filter = "")
     {
-      return await Task.Run(() => service.GetObjectiveEditResponsible(idobjective));
+      long total = 0;
+      var result = service.GetObjectiveEditResponsible(idobjective, ref total, count, page, filter);
+      Response.Headers.Add("x-total-count", total.ToString());
+      return await Task.Run(() => result);
     }
 
     /// <summary>

@@ -814,7 +814,7 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewListObjectiveEdit> GetObjectiveEditParticipant()
+    public List<ViewListObjectiveEdit> GetObjectiveEditParticipant(ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1058,7 +1058,12 @@ namespace Manager.Services.Specific
 
         list = list.Where(p => p.KeyResults != null).ToList();
         list = list.Where(p => p.KeyResults.Count() > 0).ToList();
-        
+
+        var skip = count * (page - 1);
+        total = list.Count();
+
+        list = list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Description).Skip(skip).Take(count).ToList();
+
         return list;
       }
       catch (Exception e)
@@ -1068,7 +1073,7 @@ namespace Manager.Services.Specific
     }
 
 
-    public List<ViewListObjectiveEdit> GetObjectiveEditResponsible(string idobjective)
+    public List<ViewListObjectiveEdit> GetObjectiveEditResponsible(string idobjective, ref long total, int count = 10, int page = 1, string filter = "")
     {
       try
       {
@@ -1266,6 +1271,10 @@ namespace Manager.Services.Specific
           list.Add(view);
         }
 
+        var skip = count * (page - 1);
+        total = list.Count();
+
+        list = list.Where(p => p.Description.Contains(filter)).OrderBy(p => p.Description).Skip(skip).Take(count).ToList();
 
         return list;
       }
