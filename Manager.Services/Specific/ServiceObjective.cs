@@ -11,6 +11,7 @@ using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<KeyResult> serviceKeyResult;
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<PendingCheckinObjective> servicePendingCheckinObjective;
+    private readonly ServiceExcel serviceExcel;
 
     #region Constructor
     public ServiceObjective(DataContext context) : base(context)
@@ -33,6 +35,7 @@ namespace Manager.Services.Specific
         serviceObjective = new ServiceGeneric<Objective>(context);
         serviceKeyResult = new ServiceGeneric<KeyResult>(context);
         servicePerson = new ServiceGeneric<Person>(context);
+        serviceExcel = new ServiceExcel();
         servicePendingCheckinObjective = new ServiceGeneric<PendingCheckinObjective>(context);
       }
       catch (Exception e)
@@ -1523,7 +1526,7 @@ namespace Manager.Services.Specific
         model.QuantityResult = result;
 
         if (model.TypeKeyResult == EnumTypeKeyResult.Quantity)
-          model.Achievement = (model.QuantityResult * 100) / model.QuantityGoal;
+          model.Achievement = (model.QuantityResult * 100) / ((model.QuantityGoal == 0) ? 1 : model.QuantityGoal);
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
         {
           var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
@@ -2329,6 +2332,45 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public string ImportObjectiveModel1(Stream stream)
+    {
+      try
+      {
+        var list = serviceExcel.ImportObjectiveModel1(stream);
+        var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        foreach (var item in list)
+        {
+          var keyresult = keyresults.Where(p => p.Name == item.Name).FirstOrDefault();
+          if (keyresult != null)
+          {
+            var checkin = NewPendingCheckinObjective(new ViewCrudPendingCheckinObjective()
+            {
+              _idKeyResult = keyresult._id,
+              _idObjective = keyresult.Objective._id,
+              _idPerson = _user._idPerson
+            });
+
+            var viewtext = new ViewText() { Text = "" };
+            if (item.Type == EnumTypeKeyResult.Quantity)
+            {
+               UpdateResultKeyResult(keyresult._id, checkin._id, 0, decimal.Parse(item.Result), viewtext);
+            }
+            else
+            {
+              viewtext.Text = item.Result;
+              UpdateResultKeyResult(keyresult._id, checkin._id, decimal.Parse(item.Achievment.Replace("%", "")), 0, viewtext);
+            }
+          }
+        }
+        return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
   }

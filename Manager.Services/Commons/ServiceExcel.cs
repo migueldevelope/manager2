@@ -1,4 +1,5 @@
 ﻿using Manager.Views.BusinessView;
+using Manager.Views.Enumns;
 using MongoDB.Bson;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -442,6 +443,68 @@ namespace Manager.Services.Commons
       {
         throw e;
       }
+    }
+
+    #endregion
+
+    #region Objective 
+
+    public List<ViewImportObjectiveModel1> ImportObjectiveModel1(Stream stream)
+    //public List<ViewImportObjectiveModel1> ImportObjectiveModel1()
+    {
+      //string fullPath = @"c:/jms/CargaCheckin.xlsx";
+      //var stream = new FileStream(fullPath, FileMode.Open);
+      try
+      {
+        ISheet sheet;
+
+        stream.Position = 0;
+        XSSFWorkbook hssfwb = new XSSFWorkbook(stream); //This will read 2007 Excel format  
+        sheet = hssfwb.GetSheetAt(0); //get first sheet from workbook   
+
+        var list = new List<ViewImportObjectiveModel1>();
+
+        long count = CountLines(sheet);
+        
+        IRow headerRow = sheet.GetRow(0); //Get Header Row
+        int cellCount = headerRow.LastCellNum;
+
+        for (int i = 1; i < count; i++) //Read Excel File
+        {
+          IRow row = sheet.GetRow(i);
+          if (row == null) continue;
+          if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+
+          //int numworkload; bool isNumworkload = int.TryParse(workload, out numworkload);
+          //if (isNumworkload)
+          //  workloads[i - 2] = int.Parse(workload);
+          //else
+          //  throw new Exception("not_numeric_workload");
+          var view = new ViewImportObjectiveModel1()
+          {
+            Name = row.GetCell(0).ToString(),
+            Goal = row.GetCell(3).ToString(),
+            Result = row.GetCell(2).ToString(),
+            Achievment= row.GetCell(4).ToString()
+          };
+          if (view.Goal == "") view.Goal = "0";
+          if (view.Result == "") view.Result = "0";
+
+          if (row.GetCell(5).ToString() == "Qualitativo")
+            view.Type = EnumTypeKeyResult.Quality;
+          else
+            view.Type = EnumTypeKeyResult.Quantity;
+
+          list.Add(view);
+        }
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+
+
     }
 
     #endregion

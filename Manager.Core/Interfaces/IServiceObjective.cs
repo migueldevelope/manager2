@@ -3,6 +3,7 @@ using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Manager.Core.Interfaces
@@ -83,5 +84,8 @@ namespace Manager.Core.Interfaces
 
     string DeleteLikeImpediments(string idimpediments, string idkeyresult, bool like);
     ViewListObjectiveResponsibleCard GetResponsibleCard(string id);
+
+    string ImportObjectiveModel1(Stream stream);
+
   }
 }
