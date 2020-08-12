@@ -212,15 +212,15 @@ namespace Manager.Services.Specific
             }
           }
 
-          foreach (var obj in objective)
-          {
+          var obj = objective.Where(p => p._id == item.Objective._id).FirstOrDefault();
+          if (obj != null)
             foreach (var par in obj.Participants)
             {
               if (par._id == _user._idPerson)
                 keyresults.Add(item);
             }
-          }
         }
+
 
         //keyresults = keyresults.Where(p => p.ParticipantsGet.Where(x => x._id == _user._idPerson).Count() > 0).ToList();
 
