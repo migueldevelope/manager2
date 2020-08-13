@@ -1214,7 +1214,7 @@ namespace Manager.Services.Specific
             viewKeyResult._id = kr._id;
             viewKeyResult.Name = kr.Name;
             viewKeyResult.TypeKeyResult = kr.TypeKeyResult;
-            viewKeyResult.QuantityGoal = kr.QuantityGoal;
+            viewKeyResult.QuantityGoal = Math.Round(kr.QuantityGoal,2);
             viewKeyResult.QualityGoal = kr.QualityGoal;
             viewKeyResult.BeginProgressGoal = kr.BeginProgressGoal;
             viewKeyResult.EndProgressGoal = kr.EndProgressGoal;
@@ -1223,7 +1223,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Weight = kr.Weight;
             viewKeyResult.Objective = kr.Objective;
             viewKeyResult.QualityResult = kr.QualityResult;
-            viewKeyResult.QuantityResult = kr.QuantityResult;
+            viewKeyResult.QuantityResult = Math.Round(kr.QuantityResult,2);
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
             //viewKeyResult.Binary = kr.Binary;
