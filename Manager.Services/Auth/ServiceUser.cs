@@ -90,6 +90,22 @@ namespace Manager.Services.Auth
 
     #region User
 
+    public string AlterPassHR(string iduser)
+    {
+      try
+      {
+        var user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
+        user.ChangePassword = EnumChangePassword.AccessFirst;
+        var i = serviceUser.Update(user, null);
+
+        return "alterpass";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public string Delete(string iduser)
     {
