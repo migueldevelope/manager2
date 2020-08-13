@@ -1526,7 +1526,13 @@ namespace Manager.Services.Specific
         model.QuantityResult = result;
 
         if (model.TypeKeyResult == EnumTypeKeyResult.Quantity)
-          model.Achievement = (model.QuantityResult * 100) / ((model.QuantityGoal == 0) ? 1 : model.QuantityGoal);
+        {
+          if(model.Sense == EnumSense.BiggerBetter)
+            model.Achievement = (model.QuantityResult * 100) / ((model.QuantityGoal == 0) ? 1 : model.QuantityGoal);
+          else
+            model.Achievement = (model.QuantityGoal * 100) / ((model.QuantityResult == 0) ? 1 : model.QuantityResult);
+        }
+          
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
         {
           var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
