@@ -1531,8 +1531,11 @@ namespace Manager.Services.Specific
             model.Achievement = (model.QuantityResult * 100) / ((model.QuantityGoal == 0) ? 1 : model.QuantityGoal);
           else
           {
-            if (model.QuantityResult == model.QuantityGoal)
-              model.Achievement = 100;
+            if (model.QuantityResult == 0)
+            {
+              if(model.QuantityResult <= model.QuantityGoal)
+                model.Achievement = 100;
+            }
             else
               model.Achievement = (model.QuantityGoal * 100) / ((model.QuantityResult == 0) ? 1 : model.QuantityResult);
           }
