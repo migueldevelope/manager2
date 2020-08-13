@@ -2341,7 +2341,7 @@ namespace Manager.Services.Specific
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
-          var listkeyresult = keyresults.Where(p => p.Name == item.Name).ToList();
+          var listkeyresult = keyresults.Where(p => p.Name.Trim() == item.Name.Trim()).ToList();
           foreach(var keyresult in listkeyresult)
           {
             if (keyresult != null)
