@@ -469,9 +469,19 @@ namespace Manager.Services.Commons
         IRow headerRow = sheet.GetRow(0); //Get Header Row
         int cellCount = headerRow.LastCellNum;
 
+        IRow row = sheet.GetRow(0);
+        DateTime datenow = DateTime.Now;
+        try
+        {
+          datenow = DateTime.Parse(row.GetCell(8).ToString());
+        }
+        catch (Exception)
+        {
+        }
+
         for (int i = 1; i < count; i++) //Read Excel File
         {
-          IRow row = sheet.GetRow(i);
+          row = sheet.GetRow(i);
           if (row == null) continue;
           if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
 
@@ -480,12 +490,23 @@ namespace Manager.Services.Commons
           //  workloads[i - 2] = int.Parse(workload);
           //else
           //  throw new Exception("not_numeric_workload");
+          decimal achievment = 0;
+          try
+          {
+            achievment = decimal.Parse(row.GetCell(4).ToString().Replace("%", "")) * 100;
+          }
+          catch (Exception)
+          {
+
+          }
+
           var view = new ViewImportObjectiveModel1()
           {
             Name = row.GetCell(0).ToString(),
             Goal = row.GetCell(3).ToString(),
             Result = row.GetCell(2).ToString(),
-            Achievment= row.GetCell(4).ToString()
+            Achievment = achievment.ToString(),
+            Date = datenow
           };
           if (view.Goal == "") view.Goal = "0";
           if (view.Result == "") view.Result = "0";

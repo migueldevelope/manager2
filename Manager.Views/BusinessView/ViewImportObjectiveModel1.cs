@@ -1,4 +1,5 @@
 ﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessView
 {
@@ -9,6 +10,6 @@ namespace Manager.Views.BusinessView
     public string Goal { get; set; }
     public string Achievment { get; set; }
     public EnumTypeKeyResult Type { get; set; }
-
+    public DateTime? Date { get; set; }
   }
 }

@@ -1821,7 +1821,11 @@ namespace Manager.Services.Specific
       try
       {
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
-        var week = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        var datenow = DateTime.Now;
+        if (view.Date != null)
+          datenow = view.Date.Value;
+
+        var week = calendar.GetWeekOfYear(datenow, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
         var keyresult = serviceKeyResult.GetNewVersion(p => p._id == view._idKeyResult).Result;
 
@@ -1833,7 +1837,7 @@ namespace Manager.Services.Specific
           var x = servicePendingCheckinObjective.Update(old, null);
         }
 
-        if (DateTime.Now.Day >= 15)
+        if (datenow.Day >= 15)
           view.Fortnight = 2;
         else
           view.Fortnight = 1;
@@ -1848,9 +1852,9 @@ namespace Manager.Services.Specific
             LevelTrust = view.LevelTrust,
             QualityGoal = keyresult.QualityGoal,
             QuantityGoal = keyresult.QuantityResult,
-            Date = DateTime.Now,
+            Date = datenow,
             Week = week,
-            Month = DateTime.Now.Month,
+            Month = datenow.Month,
             Lasted = true,
             TypePersonObjective = view.TypePersonObjective,
             Impediments = new List<ViewCrudImpedimentsIniciatives>(),
@@ -2350,7 +2354,8 @@ namespace Manager.Services.Specific
               {
                 _idKeyResult = keyresult._id,
                 _idObjective = keyresult.Objective._id,
-                _idPerson = _user._idPerson
+                _idPerson = _user._idPerson,
+                Date = item.Date
               });
 
               var viewtext = new ViewText() { Text = "" };
