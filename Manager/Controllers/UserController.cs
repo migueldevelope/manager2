@@ -66,7 +66,7 @@ namespace Manager.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [Route("delete/{id}")]
+    [Route("alterpasshr/{id}")]
     public async Task<string> AlterPassHR(string id)
     {
       var result = service.AlterPassHR(id);
