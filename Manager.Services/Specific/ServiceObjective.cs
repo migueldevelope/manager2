@@ -2341,25 +2341,28 @@ namespace Manager.Services.Specific
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
-          var keyresult = keyresults.Where(p => p.Name == item.Name).FirstOrDefault();
-          if (keyresult != null)
+          var listkeyresult = keyresults.Where(p => p.Name == item.Name).ToList();
+          foreach(var keyresult in listkeyresult)
           {
-            var checkin = NewPendingCheckinObjective(new ViewCrudPendingCheckinObjective()
+            if (keyresult != null)
             {
-              _idKeyResult = keyresult._id,
-              _idObjective = keyresult.Objective._id,
-              _idPerson = _user._idPerson
-            });
+              var checkin = NewPendingCheckinObjective(new ViewCrudPendingCheckinObjective()
+              {
+                _idKeyResult = keyresult._id,
+                _idObjective = keyresult.Objective._id,
+                _idPerson = _user._idPerson
+              });
 
-            var viewtext = new ViewText() { Text = "" };
-            if (item.Type == EnumTypeKeyResult.Quantity)
-            {
-               UpdateResultKeyResult(keyresult._id, checkin._id, 0, decimal.Parse(item.Result), viewtext);
-            }
-            else
-            {
-              viewtext.Text = item.Result;
-              UpdateResultKeyResult(keyresult._id, checkin._id, decimal.Parse(item.Achievment.Replace("%", "")), 0, viewtext);
+              var viewtext = new ViewText() { Text = "" };
+              if (item.Type == EnumTypeKeyResult.Quantity)
+              {
+                UpdateResultKeyResult(keyresult._id, checkin._id, 0, decimal.Parse(item.Result), viewtext);
+              }
+              else
+              {
+                viewtext.Text = item.Result;
+                UpdateResultKeyResult(keyresult._id, checkin._id, decimal.Parse(item.Achievment.Replace("%", "")), 0, viewtext);
+              }
             }
           }
         }
