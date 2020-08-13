@@ -11,5 +11,6 @@ namespace Manager.Views.BusinessList
     public string Image { get; set; }
     public string Comments { get; set; }
     public bool Read { get; set; }
+    public DateTime? Date { get; set; }
   }
 }
