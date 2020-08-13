@@ -1530,7 +1530,12 @@ namespace Manager.Services.Specific
           if(model.Sense == EnumSense.BiggerBetter)
             model.Achievement = (model.QuantityResult * 100) / ((model.QuantityGoal == 0) ? 1 : model.QuantityGoal);
           else
-            model.Achievement = (model.QuantityGoal * 100) / ((model.QuantityResult == 0) ? 1 : model.QuantityResult);
+          {
+            if (model.QuantityResult == model.QuantityGoal)
+              model.Achievement = 100;
+            else
+              model.Achievement = (model.QuantityGoal * 100) / ((model.QuantityResult == 0) ? 1 : model.QuantityResult);
+          }
         }
           
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
