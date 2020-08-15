@@ -1566,10 +1566,12 @@ namespace Manager.Services.Specific
             Included = DateTime.Now,
             Subject = model.Subject
           };
-          MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+          //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+          MailLog mailObj = null;
           if (personManager != null)
           {
             sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+            mailObj = sendMail;
             string token = SendMailApi(path, personManager, sendMail._id);
           }
           else
