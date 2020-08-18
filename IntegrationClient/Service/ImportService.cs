@@ -12,6 +12,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IntegrationClient.Service
@@ -43,7 +44,7 @@ namespace IntegrationClient.Service
         service = serviceConfiguration;
         Message = string.Empty;
         Status = EnumStatusService.Ok;
-        pathLogs = string.Format("{0}{1}_{2}/integration", AppDomain.CurrentDomain.BaseDirectory, Person.NameAccount.Replace("/","_").Replace(".","_").Replace("|","_"), Person.IdAccount);
+        pathLogs = string.Format("{0}{1}_{2}/integration", AppDomain.CurrentDomain.BaseDirectory, Person.NameAccount.Replace("/", "_").Replace(".", "_").Replace("|", "_"), Person.IdAccount);
         if (!Directory.Exists(pathLogs))
         {
           _ = Directory.CreateDirectory(pathLogs);
@@ -238,7 +239,8 @@ namespace IntegrationClient.Service
             DatabaseV2();
             break;
           case EnumIntegrationMode.FileCsv:
-            throw new Exception("Modo CSV não implementado no processo de sistema.");
+            FileCsvV2();
+            break;
           case EnumIntegrationMode.FileExcel:
             ExcelV2();
             break;
@@ -268,7 +270,7 @@ namespace IntegrationClient.Service
     private void CleanEmploee()
     {
       try
-      { 
+      {
         // Unimed Nordeste Rs
         if (Person.IdAccount.Equals("5b91299a17858f95ffdb79f6"))
         {
@@ -294,7 +296,7 @@ namespace IntegrationClient.Service
             work = ColaboradoresV2.FindIndex(p => p.NomeCargo.ToUpper().Equals(occupation.ToUpper()));
             while (work != -1)
             {
-              FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!",occupation),
+              FileClass.SaveLog(LogFileName.Replace(".log", "_clean.log"), string.Format("{0};{1};{2};{3};{4};{5};{6}", string.Format("{0} removido!", occupation),
                 ColaboradoresV2[work].Colaborador.Cpf,
                 ColaboradoresV2[work].Colaborador.Empresa, ColaboradoresV2[work].Colaborador.NomeEmpresa,
                 ColaboradoresV2[work].Colaborador.Estabelecimento, ColaboradoresV2[work].Colaborador.NomeEstabelecimento,
@@ -543,14 +545,14 @@ namespace IntegrationClient.Service
         {
           colaboradores = new List<ViewIntegrationMetadadosV1>();
           colaboradores = apiMetadados.GetEmployee(service.Param.ApiToken, offset, limit);
-          ProgressMessage = string.Format("Carregando colaboradores 1/3 - {0}...",offset);
+          ProgressMessage = string.Format("Carregando colaboradores 1/3 - {0}...", offset);
           OnRefreshProgressBar(EventArgs.Empty);
           // Carregar Lista de Colaboradores
           foreach (ViewIntegrationMetadadosV1 colaborador in colaboradores)
           {
             ColaboradoresV2.Add(new ColaboradorV2Completo(colaborador, service.Param.CultureDate, Person.IdAccount));
             gestor = null;
-            if (ColaboradoresV2[ColaboradoresV2.Count-1].Gestor != null)
+            if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
             {
               gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
             }
@@ -667,7 +669,7 @@ namespace IntegrationClient.Service
         OnRefreshProgressBar(EventArgs.Empty);
 
         #region Reformatação da planilha AEL
-        if (Person.IdAccount.Equals("5d6ebda43501a40001d97db7")) 
+        if (Person.IdAccount.Equals("5d6ebda43501a40001d97db7"))
         {
           _ = excelPln.Range["A1"].Select();
           _ = excelApp.Selection.End[Excel.XlDirection.xlDown].Select();
@@ -694,7 +696,7 @@ namespace IntegrationClient.Service
           _ = excelApp.Selection.PasteSpecial(Excel.XlPasteType.xlPasteValues, Excel.Constants.xlNone, false, false);
           // Buscar nome do estabelecimento do gestor
           _ = excelPln.Range["AR2"].Select();
-          excelPln.Range["AR2"].FormulaR1C1 = @"=IF(ISERROR(VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE)),"""",VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE))"; 
+          excelPln.Range["AR2"].FormulaR1C1 = @"=IF(ISERROR(VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE)),"""",VLOOKUP(RC[-5],C[-41]:C[-9],33,FALSE))";
           _ = excelApp.ActiveCell.AutoFill(excelPln.Range[string.Format("AR2:AR{0}", finalRow)]);
           _ = excelPln.Range[string.Format("AR2:AR{0}", finalRow)].Select();
           _ = excelApp.Selection.Copy();
@@ -752,10 +754,10 @@ namespace IntegrationClient.Service
           // Retirar os e-mails que não são fallgatter
           for (int row = 2; row < finalRow; row++)
           {
-            if (!string.IsNullOrEmpty(excelPln.Range[string.Format("H{0}",row)].Value))
+            if (!string.IsNullOrEmpty(excelPln.Range[string.Format("H{0}", row)].Value))
             {
               string mailWork = excelPln.Range[string.Format("H{0}", row)].Value;
-              if ( !mailWork.Trim().ToLower().EndsWith("@fallgatter.com.br") )
+              if (!mailWork.Trim().ToLower().EndsWith("@fallgatter.com.br"))
               {
                 excelPln.Range[string.Format("H{0}", row)].Value = string.Empty;
               }
@@ -768,7 +770,7 @@ namespace IntegrationClient.Service
             if (!string.IsNullOrEmpty(excelPln.Range[string.Format("L{0}", row)].Value))
             {
               string mailWork = excelPln.Range[string.Format("L{0}", row)].Value;
-              if (mailWork.Trim().ToLower().Equals("atestado") || mailWork.Trim().ToLower().Equals("auxilio") 
+              if (mailWork.Trim().ToLower().Equals("atestado") || mailWork.Trim().ToLower().Equals("auxilio")
                 || mailWork.Trim().ToLower().Equals("seguro") || mailWork.Trim().ToLower().Equals("suspensão")
                 || mailWork.Trim().ToLower().Equals("licença"))
               {
@@ -864,7 +866,7 @@ namespace IntegrationClient.Service
         string collumName;
         dynamic workData;
         ColaboradorV2Base gestor;
-        for (int row = 2; row < finalRow+1; row++)
+        for (int row = 2; row < finalRow + 1; row++)
         {
           rowData = new List<string>();
           for (int collumn = 1; collumn < collumnCount; collumn++)
@@ -894,6 +896,123 @@ namespace IntegrationClient.Service
       {
         throw;
       }
+    }
+    private void FileCsvV2()
+    {
+      try
+      {
+        // Validar parâmetros
+        if (!File.Exists(service.Param.FilePathLocal))
+        {
+          throw new Exception(string.Format("Arquivo {0} não localizada.", service.Param.FilePathLocal));
+        }
+        // Ler arquivo de dados
+        char separator = ';';
+
+        #region Ajuste de separador especial
+        // Ajuste de separador para GUARIDA
+        if (Person.IdAccount.Equals("5d8117173a41da0001aee9e1"))
+        {
+          separator = '|';
+        }
+        #endregion
+
+        int rowCount = File.ReadLines(service.Param.FilePathLocal).Count();
+
+        StreamReader sr = new StreamReader(service.Param.FilePathLocal, Encoding.Default);
+        string register = sr.ReadLine();
+        List<string> fileHeaders = register.Split(separator).ToList();
+
+        ProgressBarMaximun = rowCount;
+        ProgressBarValue = 0;
+        ProgressMessage = "Carregando colaboradores 1/2...";
+        OnRefreshProgressBar(EventArgs.Empty);
+
+        ColaboradoresV2 = new List<ColaboradorV2Completo>();
+        List<string> headers = new List<string>();
+        // Carregar Lista de Colaboradores
+        List<string> columnsValidV2 = new List<string>
+        {
+          "cpf", "empresa", "nome_empresa", "estabelecimento", "nome_estabelecimento", "matricula", "nome", "email", "sexo",
+          "data_nascimento", "celular", "grau_instrucao", "nome_grau_instrucao", "apelido", "situacao", "data_admissao",
+          "data_demissao", "cargo", "nome_cargo", "data_ultima_troca_cargo", "cpf_gestor", "empresa_gestor", "nome_empresa_gestor",
+          "estabelecimento_gestor", "nome_estabelecimento_gestor", "matricula_gestor", "nome_gestor", "centro_custo", "nome_centro_custo",
+          "data_troca_centro_custo", "salario_nominal", "carga_horaria", "data_ultimo_reajuste", "motivo_ultimo_reajuste", "acao",
+          // Validação de campo sem uso
+          "ignorar"
+        };
+        string work;
+        for (int collumn = 0; collumn < fileHeaders.Count; collumn++)
+        {
+          work = DictionaryHeaderCsv(fileHeaders[collumn]);
+          if (columnsValidV2.FindIndex(p => p.Equals(work)) == -1)
+          {
+            throw new Exception(string.Format("Coluna {0} está na lista mas não será utilizada. Verifique o nome ou retire da lista!", work));
+          }
+          headers.Add(work);
+        }
+        ProgressBarValue++;
+        OnRefreshProgressBar(EventArgs.Empty);
+
+        List<string> rowData;
+        ColaboradorV2Base gestor;
+        while ((register = sr.ReadLine()) != null)
+        {
+          rowData = register.Split(separator).ToList();
+          ColaboradoresV2.Add(new ColaboradorV2Completo(rowData, headers, service.Param.CultureDate));
+          gestor = null;
+          if (ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor != null)
+          {
+            gestor = ColaboradoresV2[ColaboradoresV2.Count - 1].Gestor;
+          }
+          ProgressBarValue++;
+          OnRefreshProgressBar(EventArgs.Empty);
+        }
+        sr.Close();
+        sr.Dispose();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    private string DictionaryHeaderCsv(string word)
+    {
+      word = word.Trim().ToLower();
+      // Testar nomenclaturas especiais
+      if (word.Equals("sispro estabelecimento"))
+      {
+        word = "estabelecimento";
+      }
+      if (word.Equals("sispro centro de custo"))
+      {
+        word = "centro_custo";
+      }
+      if (word.Equals("sispro matrícula"))
+      {
+        word = "matricula";
+      }
+      if (word.Equals("sispro contrato"))
+      {
+        word = "ignorar";
+      }
+      if (word.Equals("sispro nome"))
+      {
+        word = "nome";
+      }
+      if (word.Equals("sispro situação"))
+      {
+        word = "situacao";
+      }
+      if (string.Concat(word, ",").IndexOf("telefone, identidade, carteira_profissional, retorno_ferias, motivo_afastamento") != -1)
+      {
+        word = "ignorar";
+      }
+      if (string.Concat(word, ",").IndexOf("empresa_chefe, nome_empresa_chefe, estabelecimento_chefe, nome_estabelecimento_chefe, cpf_chefe, matricula_chefe,") != -1)
+      {
+        word = word.Replace("chefe","gestor");
+      }
+      return word;
     }
     public static string GetStandardExcelColumnName(int columnNumberOneBased)
     {

@@ -65,7 +65,15 @@ namespace Manager.Views.Integration.V2
         NomeGrauInstrucao = FieldString(list, title, "nome_grau_instrucao", null);
         Apelido = FieldString(list, title, "apelido", null);
         Situacao = FieldString(list, title, "situacao", null);
-        DataAdmissao = (DateTime)FieldDate(list, title, "data_admissao", DateTime.MinValue, cultureDate);
+        if (Situacao.ToUpper().Equals("NORMAL"))
+        {
+          Situacao = "ATIVO";
+        }
+        DateTime? validDate = FieldDate(list, title, "data_admissao", DateTime.MinValue, cultureDate);
+        if (validDate != null)
+        {
+          DataAdmissao = (DateTime)validDate;
+        }
         DataDemissao = FieldDate(list, title, "data_demissao", null, cultureDate);
         Cargo = FieldString(list, title, "cargo", null);
         NomeCargo = FieldString(list, title, "nome_cargo", null);
@@ -240,7 +248,7 @@ namespace Manager.Views.Integration.V2
     {
       try
       {
-        if (field == null)
+        if (string.IsNullOrEmpty(field))
         {
           return null;
         }
