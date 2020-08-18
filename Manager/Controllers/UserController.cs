@@ -60,6 +60,20 @@ namespace Manager.Controllers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("alterpasshr/{id}")]
+    public async Task<string> AlterPassHR(string id)
+    {
+      var result = service.AlterPassHR(id);
+      return await Task.Run(() => result);
+    }
+
+    /// <summary>
     /// Listar usuários da base de dados
     /// </summary>
     /// <param name="type">Tipo do usuário que está fazendo a consulta</param>

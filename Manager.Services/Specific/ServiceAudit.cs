@@ -15,7 +15,6 @@ namespace Manager.Services.Specific
 {
   public class ServiceAudit : IServiceAudit
   {
-
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<User> serviceUser;
     private readonly ServiceGeneric<Occupation> serviceOccupation;

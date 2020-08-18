@@ -318,7 +318,8 @@ namespace Manager.Services.Specific
             NameRecommendation = p.Recommendation.Name,
             Content = p.Content,
             Comments = p.Comments,
-            Read = p.Read
+            Read = p.Read,
+            Date = p.Date
           }).ToList();
         total = serviceRecommendationPerson.CountNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
@@ -342,7 +343,8 @@ namespace Manager.Services.Specific
             NameRecommendation = p.Recommendation.Name,
             Content = p.Content,
             Comments = p.Comments,
-            Read = p.Read
+            Read = p.Read,
+            Date = p.Date
           }).ToList();
         total = serviceRecommendationPerson.CountNewVersion(p => p.Person._id == idperson && p.Person.Name.ToUpper().Contains(filter.ToUpper())).Result;
         return detail;
