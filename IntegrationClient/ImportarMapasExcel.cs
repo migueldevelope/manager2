@@ -84,7 +84,7 @@ namespace IntegrationClient
         occupationSchoolings = new List<OccupationSchoolingStatistic>();
         foreach (string file in files)
         {
-          ImportFileExcel(file, infraIntegration);
+          ImportFileExcelFallgatter(file, infraIntegration);
         }
         FinalTabExcel();
         excelApp.Quit();
@@ -294,6 +294,19 @@ namespace IntegrationClient
       item = item.Equals("INGLES TÉCNICO") ? "INGLÊS TÉCNICO" : item;
       item = item.Equals("REDE") ? "REDES" : item;
       item = item.Equals("FERRAMENTA DE GESTÃO DE PESSOAS") ? "FERRAMENTAS DE GESTÃO DE PESSOAS" : item;
+      item = item.Equals("CURSO SOLDA") ? "CURSO DE SOLDA" : item;
+      item = item.Equals("ELETRÔNICO") ? "ELETRÔNICA" : item;
+      item = item.Equals("INCIATIVA/PRÓ-ATIVIDADE") ? "INCIATIVA / PRÓ-ATIVIDADE" : item;
+      item = item.Equals("INICIATIVA / PROATIVIDADE") ? "INCIATIVA / PRÓ-ATIVIDADE" : item;
+      item = item.Equals("LEITURA E INTERPRETAÇÃO DE DESENHOS") ? "LEITURA E INTERPRETAÇÃO DE DESENHO" : item;
+      item = item.Equals("MASP / FMEA") ? "MASP, FMEA" : item;
+      item = item.Equals("MATERIAS PRIMAS DOS PRODUTOS") ? "MATÉRIAS-PRIMAS DOS PRODUTOS" : item;
+      item = item.Equals("NORMAS DE QUALIDADE") ? "NORMAS DA QUALIDADE" : item;
+      item = item.Equals("OPERAÇÃO DE EMPILHADEIRA - NR 11") ? "OPERAÇÃO DE EMPILHADEIRA" : item;
+      item = item.Equals("POLÍTICAS E PROC. ÁREA") ? "POLÍTICAS E PROCEDIMENTOS DA ÁREA" : item;
+      item = item.Equals("SISTEMA INFORMATIZADO DE GESTÃO.") ? "SISTEMA INFORMATIZADO DE GESTÃO" : item;
+      item = item.Equals("SISTEMAS INFORMATIZADOS DE GESTÃO") ? "SISTEMA INFORMATIZADOS DE GESTÃO" : item;
+      item = item.Equals("") ? "" : item;
       item = item.Equals("") ? "" : item;
       return item;
     }
@@ -333,6 +346,21 @@ namespace IntegrationClient
       item = item.Equals("MESTRADO E/OU DOUTORADO.") ? "PÓS GRADUAÇÃO COMPLETA" : item;
       item = item.Equals("ENSINO SUPERIOR COMPLETO/ DOUTORADO") ? "PÓS GRADUAÇÃO COMPLETA" : item;
       item = item.Equals("ENSINO SUPERIOR EM CURSO") ? "ENSINO SUPERIOR INCOMPLETO" : item;
+
+      item = item.Equals("SUPERIOR EM ANDAMENTO") ? "ENSINO SUPERIOR INCOMPLETO" : item;
+      item = item.Equals("SUPERIOR COMPLETO") ? "ENSINO SUPERIOR COMPLETO" : item;
+      item = item.Equals("TÉCNICO EM LOGÍSTICA COMPLETO") ? "TÉCNICO COMPLETO" : item;
+      item = item.Equals("TÉCNICO INCOMPLETO") ? "TÉCNICO INCOMPLETO" : item;
+      item = item.Equals("ENSINO SUPERIOR INCOMPLETO.") ? "ENSINO SUPERIOR INCOMPLETO" : item;
+      item = item.Equals("CURSO TÉCNICO") ? "TÉCNICO COMPLETO" : item;
+      item = item.Equals("PÓS GRADUAÇÃO") ? "PÓS GRADUAÇÃO COMPLETO" : item;
+      item = item.Equals("PÓS GRADUAÇÃO COMPLETA") ? "PÓS GRADUAÇÃO COMPLETO" : item;
+      item = item.Equals("DESEJÁVEL PÓS GRADUAÇÃO") ? "PÓS GRADUAÇÃO COMPLETO" : item;
+      item = item.Equals("") ? "" : item;
+      item = item.Equals("") ? "" : item;
+      item = item.Equals("") ? "" : item;
+
+
       return item;
     }
     private string DictionaryGroup(string item)
@@ -534,6 +562,365 @@ namespace IntegrationClient
             break;
           }
           requirement = string.Concat(requirement, work);
+          break;
+        }
+        viewOccupation.SpecificRequirements = requirement;
+        if (chkLjo.Checked)
+        {
+          string fileName = file.ToLower().Replace(".xlsx", ".log").Replace(".xls", ".log");
+          FileClass.SaveLog(fileName, Program.PersonLogin.Token, EnumTypeLineOpportunityg.Register);
+          FileClass.SaveLog(fileName, JsonConvert.SerializeObject(viewOccupation), EnumTypeLineOpportunityg.Register);
+          viewOccupation = infraIntegration.IntegrationProfile(viewOccupation);
+          FileClass.SaveLog(fileName, "Retorno", EnumTypeLineOpportunityg.Register);
+          FileClass.SaveLog(fileName, JsonConvert.SerializeObject(viewOccupation), EnumTypeLineOpportunityg.Register);
+        }
+        else
+        {
+          viewOccupation = infraIntegration.IntegrationProfile(viewOccupation);
+        }
+        OccupationStatistic occupation = new OccupationStatistic()
+        {
+          FileName = file,
+          GroupName = viewOccupation.NameGroup,
+          Name = viewOccupation.Name,
+          Description = viewOccupation.Description,
+          Status = viewOccupation.Messages.Count > 0 ? "Erro" : string.IsNullOrEmpty(viewOccupation._id) ? "Não Atualizado" : "Ok"
+        };
+        if (viewOccupation.Messages.Count > 0)
+        {
+          if (viewOccupation.Messages[0].IndexOf("competência") == -1 && viewOccupation.Messages[0].IndexOf("escolaridade") == -1)
+          {
+            occupation.Status = viewOccupation.Messages[0];
+          }
+        }
+        if (occupations.FirstOrDefault(p => p.Name == viewOccupation.Name && p.Description == viewOccupation.Description) == null)
+        {
+          occupations.Add(occupation);
+        }
+        else
+        {
+          MessageBox.Show("Achei");
+        }
+        excelPst.Close(false);
+        bool found;
+        foreach (string item in viewOccupation.Skills)
+        {
+          int index = skills.FindIndex(p => p.Name.Equals(item));
+          found = true;
+          if (index == -1)
+          {
+            skills.Add(new SkillStatistic()
+            {
+              Name = item,
+              Found = true,
+              Used = 1
+            });
+          }
+          else
+          {
+            skills[index].Used++;
+            found = skills[index].Found;
+          }
+          occupationSkills.Add(new OccupationSkillStatistic()
+          {
+            FileName = file,
+            SkillName = item,
+            Found = found
+          });
+        }
+        foreach (string item in viewOccupation.Schooling)
+        {
+          int index = schoolings.FindIndex(p => p.Name.ToUpper().Equals(item.ToUpper()));
+          if (index == -1)
+          {
+            schoolings.Add(new SchoolingStatistic()
+            {
+              Name = item,
+              Register = true,
+              Found = true,
+              Profile = true
+            });
+          }
+          occupationSchoolings.Add(new OccupationSchoolingStatistic()
+          {
+            FileName = file,
+            SchollingName = item,
+            Profile = true
+          });
+        }
+        foreach (string item in viewOccupation.Messages)
+        {
+          string[] itemAux = item.Split('@');
+          string key = string.Empty;
+          if (itemAux.Count() == 2)
+          {
+            key = itemAux[1];
+          }
+          if (key.IndexOf("competência") != -1)
+          {
+            var index = skills.FindIndex(p => p.Name.Equals(itemAux[0]));
+            if (index == -1)
+            {
+              skills.Add(new SkillStatistic()
+              {
+                Name = itemAux[0],
+                Found = false,
+                Used = 1
+              });
+            }
+            else
+            {
+              skills[index].Used++;
+            }
+            occupationSkills.Add(new OccupationSkillStatistic()
+            {
+              FileName = file,
+              SkillName = itemAux[0]
+            });
+          }
+          if (key.IndexOf("escolaridade") != -1)
+          {
+            schoolings.Add(new SchoolingStatistic()
+            {
+              Name = itemAux[0],
+              Register = false,
+              Found = false,
+              Profile = false
+            });
+            occupationSchoolings.Add(new OccupationSchoolingStatistic()
+            {
+              FileName = file,
+              SchollingName = itemAux[0],
+              Profile = false
+            });
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
+    private void ImportFileExcelFallgatter(string file, IntegrationApi infraIntegration)
+    {
+      lblFile.Text = file;
+      Refresh();
+      string cellName = "C5";
+      // Utilizado para identificar a quebra de cargo por área (exemplo Bertolini)
+      // Gerente Comercial - BSA
+      //    Nome na celula C5: Gerente Comercial,
+      //    Complemento na célula K5: - BSA, exatamente igual ao campo Description, inclusive com os espaços na frente
+      // Se não existir complemento deixar em branco ""
+      string cellNameComplement = "K5";
+      string cellGroup = "C7";
+      string cellColumnCheck = "A";
+      // Responsabilidade
+      int responsibilityCellLine = 10;
+      string responsibilityCellColumn = "A";
+      // Técnicas
+      string softSkillTextCheck = "BLOCO DE COMPETÊNCIAS TÉCNICAS";
+      string hardSkillTextCheck = "ESPECÍFICAS";
+      string hardSkillCellColumn = "B";
+      // Formação
+      string formationColumnCheck = "A";
+      string formationTextCheck = "FORMAÇÃO ESCOLAR";
+      string formationCellColumn = "D";
+      string formationCellColumnComplement = "F";
+      // Requisitos
+      string requirementTextCheck = "REQUISITOS NECESSÁRIOS (PARA CONTRATAÇÃO)";
+      string requirement;
+      // Linha de controle de leitura
+      int line = 0;
+      string work;
+      // Contabilização da importação
+      ViewIntegrationProfileOccupation viewOccupation = new ViewIntegrationProfileOccupation
+      {
+        Messages = new List<string>(),
+        Activities = new List<string>(),
+        Schooling = new List<string>(),
+        SchoolingComplement = new List<string>(),
+        Skills = new List<string>(),
+        Update = chkAtu.Checked,
+        UpdateSkill = chkCom.Checked,
+        Name = string.Empty,
+        Description = string.Empty,
+        NameGroup = string.Empty,
+        SpecificRequirements = string.Empty,
+        _id = string.Empty,
+        Area = string.Empty,
+        Process = string.Empty,
+        SubProcess = string.Empty
+      };
+      if (chkSub.Checked)
+      {
+        if (file.Replace(txtPst.Text, string.Empty).Split('\\').Count() != 4)
+        {
+          throw new Exception("Estrutura de pastas não está no formato AREA/PROCESSO/SUBPROCESSO/MAPA.XLSX");
+        }
+        viewOccupation.Area = file.Replace(txtPst.Text, string.Empty).Split('\\')[0].Replace(" = ", " | ");
+        viewOccupation.Process = file.Replace(txtPst.Text, string.Empty).Split('\\')[1].Replace(" = ", " | ");
+        viewOccupation.SubProcess = file.Replace(txtPst.Text, string.Empty).Split('\\')[2].Replace(" = ", " | ");
+      }
+      else
+      {
+        viewOccupation.Area = "Integração";
+        viewOccupation.Process = "Integração";
+        viewOccupation.SubProcess = "Integração";
+      }
+      try
+      {
+        excelPst = excelApp.Workbooks.Open(file, false);
+        try
+        {
+          excelPln = excelPst.Worksheets["Mapa Competências"];
+        }
+        catch (Exception)
+        {
+          try
+          {
+            excelPln = excelPst.Worksheets["Mapa"];
+          }
+          catch (Exception)
+          {
+            excelPln = excelPst.Worksheets[1];
+          }
+        }
+        excelPln.Activate();
+        viewOccupation.Name = excelPln.Range[cellName].Value.ToString().Trim();
+        if (!string.IsNullOrEmpty(cellNameComplement))
+        {
+          viewOccupation.Description = string.Format(" - {0}", excelPln.Range[cellNameComplement].Value ?? string.Empty);
+          if (viewOccupation.Description.Equals(" - "))
+          {
+            viewOccupation.Description = string.Empty;
+          }
+        }
+        viewOccupation.NameGroup = DictionaryGroup(excelPln.Range[cellGroup].Value.ToString());
+
+        if (!(excelPln.Range[string.Format("{0}{1}", responsibilityCellColumn, responsibilityCellLine)].Value).ToString().Trim().ToUpper().Equals("RESPONSABILIDADES / ENTREGAS (Resultados nos Processos de Atuação)".ToUpper()))
+        {
+          responsibilityCellLine = 11;
+          if (!(excelPln.Range[string.Format("{0}{1}", responsibilityCellColumn, responsibilityCellLine)].Value).ToString().Trim().ToUpper().Equals("RESPONSABILIDADES / ENTREGAS (Resultados nos Processos de Atuação)".ToUpper()))
+          {
+            throw new Exception("Não encontrei a primeira linha das entregas");
+          }
+        }
+        // Tratamento das entregas
+        line = responsibilityCellLine + 1;
+        while (true)
+        {
+          work = CellValue(cellColumnCheck, line).ToUpper().Replace("  "," ");
+          if (work.Equals("BLOCO DE COMPETÊNCIAS TÉCNICAS") || work.Equals("COMPETÊNCIAS TÉCNICAS"))
+          {
+            break;
+          }
+          work = CellValue(responsibilityCellColumn, line);
+          if (!string.IsNullOrEmpty(work))
+          {
+            viewOccupation.Activities.Add(work);
+          }
+          line++;
+        }
+        line++;
+        // Encontrar a linha inicial das competências específicas (TÉCNICAS)
+        while (true)
+        {
+          work = CellValue(cellColumnCheck, line).ToUpper();
+          if (work.Equals("ESPECÍFICAS", StringComparison.InvariantCultureIgnoreCase))
+          {
+            break;
+          }
+          line++;
+          if (line > 200)
+          {
+            throw new Exception("Não encontrei as competências específicas");
+          }
+        }
+        // Carregar as competências técnicas
+        while (true)
+        {
+          work = CellValue(cellColumnCheck, line).ToUpper().Replace("  ", " ");
+          if (work.Equals("BLOCO DE COMPETÊNCIAS COMPORTAMENTAIS") || work.Equals("COMPETÊNCIAS COMPORTAMENTAIS"))
+          {
+            break;
+          }
+          work = CellValue(hardSkillCellColumn, line);
+          if (!string.IsNullOrEmpty(work) && !work.Equals("NOME DA COMPETÊNCIA") && !work.Equals("COMPETÊNCIA"))
+          {
+            viewOccupation.Skills.Add(DictionarySkill(work));
+          }
+          line++;
+        }
+        // Encontrar a linha inicial das competências específicas (COMPORTAMENTAIS)
+        while (true)
+        {
+          work = CellValue(cellColumnCheck, line).ToUpper();
+          if (work.Equals("ESPECÍFICAS", StringComparison.InvariantCultureIgnoreCase))
+          {
+            break;
+          }
+          line++;
+          if (line > 200)
+          {
+            throw new Exception("Não encontrei as competências específicas");
+          }
+        }
+        // Carregar as competências comportamentais
+        while (true)
+        {
+          work = CellValue(formationColumnCheck, line).ToUpper();
+          if (work.Equals(formationTextCheck))
+          {
+            break;
+          }
+          work = CellValue(hardSkillCellColumn, line);
+          if (!string.IsNullOrEmpty(work) && !work.Equals("NOME DA COMPETÊNCIA") && !work.Equals("COMPETÊNCIA"))
+          {
+            viewOccupation.Skills.Add(DictionarySkill(work));
+          }
+          line++;
+        }
+        // Encontrar a formação
+        while (true)
+        {
+          work = CellValue(formationColumnCheck, line).ToUpper();
+          if (work.Equals(formationTextCheck))
+          {
+            break;
+          }
+          line++;
+        }
+        // Carregar formação
+        line++;
+        while (true)
+        {
+          work = CellValue(cellColumnCheck, line).ToUpper();
+          if (work.Equals(requirementTextCheck))
+          {
+            break;
+          }
+          work = CellValue(formationCellColumn, line);
+          if (!string.IsNullOrEmpty(work) && !work.Equals("ESCOLARIDADE"))
+          {
+            viewOccupation.Schooling.Add(DictionarySchooling(work));
+            viewOccupation.SchoolingComplement.Add(CellValue(formationCellColumnComplement, line));
+          }
+          line++;
+        }
+        // Requisitos
+        line++;
+        requirement = string.Empty;
+        while (true)
+        {
+          work = CellValue(cellColumnCheck, line);
+          if (string.IsNullOrEmpty(work))
+          {
+            break;
+          }
+          if (!requirement.Equals("REQUISITOS NECESSÁRIOS (PARA PROMOÇÃO)") && !requirement.Equals("-"))
+          {
+            requirement = string.Concat(requirement, work);
+          }
           break;
         }
         viewOccupation.SpecificRequirements = requirement;

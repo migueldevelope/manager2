@@ -46,7 +46,7 @@
       this.txtPst.Name = "txtPst";
       this.txtPst.Size = new System.Drawing.Size(674, 22);
       this.txtPst.TabIndex = 2;
-      this.txtPst.Text = "D:\\SuperImec\\Mapas2\\";
+      this.txtPst.Text = "D:\\Mapas\\Fallgatter\\";
       // 
       // lblPst
       // 
