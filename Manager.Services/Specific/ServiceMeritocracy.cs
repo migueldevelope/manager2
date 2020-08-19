@@ -1358,9 +1358,9 @@ namespace Manager.Services.Specific
           ResultEnd = meritocracy.ResultEnd,
           ResultStep = meritocracy.ResultStep,
           ResultStepScale = meritocracy.ResultStepScale,
-          PercentSalary = Math.Round(meritocracy.PercentSalary, 2),
-          SalaryDifference = Math.Round(meritocracy.SalaryDifference, 2),
-          SalaryNew = Math.Round(meritocracy.SalaryNew, 2),
+          PercentSalary = person.Salary == 0 ? 0 : Math.Round(meritocracy.PercentSalary, 2),
+          SalaryDifference = person.Salary == 0 ? 0 : Math.Round(meritocracy.SalaryDifference, 2),
+          SalaryNew = person.Salary == 0 ? 0 : Math.Round(meritocracy.SalaryNew, 2),
           Score = meritocracy.Score == null ? null : new ViewCrudMeritocracyScore()
           {
             _id = meritocracy.Score._id,
