@@ -1284,13 +1284,15 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var monitorings = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result.Select(p => p._id);
+
         List<PlanWorkNotification> listManager = new List<PlanWorkNotification>();
         // Pessoas ativas e com gestores
         List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
         foreach (Person person in persons)
         {
           List<Plan> plans = servicePlan.GetAllNewVersion(p => p.StatusPlan == EnumStatusPlan.Open
-          & p.Person._id == person._id).Result;
+          & p.Person._id == person._id).Result.Where(p => monitorings.Contains(p._idMonitoring)).ToList();
 
           foreach (Plan plan in plans)
           {
