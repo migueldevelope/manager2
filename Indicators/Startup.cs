@@ -63,7 +63,7 @@ namespace Indicators
 
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
@@ -81,13 +81,13 @@ namespace Indicators
       serviceManager.UpdateStructManager();
 
 
-      services.AddScoped(_ => serviceManager);
-      services.AddScoped(_ => serviceControlQueue);
-      services.AddScoped(_ => serviceAccount);
-      services.AddScoped(_ => serviceAuthentication);
-      services.AddScoped(_ => servicePerson);
-      services.AddScoped(_ => serviceIndicators);
-      services.AddScoped(_ => serviceParameters);
+      services.AddTransient(_ => serviceManager);
+      services.AddTransient(_ => serviceControlQueue);
+      services.AddTransient(_ => serviceAccount);
+      services.AddTransient(_ => serviceAuthentication);
+      services.AddTransient(_ => servicePerson);
+      services.AddTransient(_ => serviceIndicators);
+      services.AddTransient(_ => serviceParameters);
 
     }
 
