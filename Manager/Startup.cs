@@ -114,6 +114,7 @@ namespace Manager
       serviceOnBoarding.RegisterOnMessageHandlerAndReceiveMesssages();
       serviceBaseHelp.RegisterOnMessageHandlerAndReceiveMesssages();
 
+
       services.AddSingleton(_ => serviceElearningFluid);
       services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceFeelingDay);

@@ -4,11 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Data;
+using Manager.Services.Auth;
+using Manager.Services.Commons;
+using Manager.Services.Specific;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tools;
+using Tools.Data;
 
 namespace Indicators.Controllers
 {
@@ -167,6 +173,7 @@ namespace Indicators.Controllers
     {
       return await Task.Run(() => service.ChartOnboardingMap(persons));
     }
+
 
     /// <summary>
     /// 
@@ -424,6 +431,22 @@ namespace Indicators.Controllers
     {
       return await Task.Run(() => service.OnboardingInDayMap(managers));
     }
+
+    [Authorize]
+    [HttpPost]
+    [Route("map/onboardinginday/test")]
+    public async Task<List<ViewListPending>> OnboardingInDayMapTest([FromBody]List<_ViewList> managers)
+    {
+      Config conn = XmlConnection.ReadVariablesSystem();
+      var context = new DataContext(conn.Server, conn.DataBase);
+
+      var serviceMaturity = new ServiceMaturity(context);
+      var serviceQue = new ServiceControlQueue(conn.ServiceBusConnectionString, serviceMaturity);
+      var servicePerson = new ServicePerson(context, context, serviceQue, conn.SignalRService);
+      var serviceTest = new ServiceIndicators(context, context, conn.TokenServer, servicePerson);
+      return await Task.Run(() => serviceTest.OnboardingInDayMap(managers));
+    }
+
 
     /// <summary>
     /// 
