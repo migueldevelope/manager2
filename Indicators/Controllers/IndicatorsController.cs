@@ -27,7 +27,7 @@ namespace Indicators.Controllers
   {
     private readonly IServiceIndicators service;
     private readonly IServiceManager serviceManager;
-
+    private readonly IHttpContextAccessor _contextAccessor;
     /// <summary>
     /// 
     /// </summary>
@@ -38,6 +38,7 @@ namespace Indicators.Controllers
     //public IndicatorsController(IServiceIndicators _service, 
       IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
+      _contextAccessor = contextAccessor;
       service = _service;
       serviceManager = _serviceManager;
       service.SetUser(contextAccessor);
@@ -436,6 +437,7 @@ namespace Indicators.Controllers
     /// 
     /// </summary>
     /// <param name="managers"></param>
+    /// <param name="contextAccessor"></param>
     /// <returns></returns>
     [Authorize]
     [HttpPost]
@@ -446,9 +448,12 @@ namespace Indicators.Controllers
       var context = new DataContext(conn.Server, conn.DataBase);
 
       var serviceMaturity = new ServiceMaturity(context);
+      serviceMaturity.SetUser(_contextAccessor);
       var serviceQue = new ServiceControlQueue(conn.ServiceBusConnectionString, serviceMaturity);
       var servicePerson = new ServicePerson(context, context, serviceQue, conn.SignalRService);
+      servicePerson.SetUser(_contextAccessor);
       var serviceTest = new ServiceIndicators(context, context, conn.TokenServer, servicePerson);
+      serviceTest.SetUser(_contextAccessor);
       return await Task.Run(() => serviceTest.OnboardingInDayMap(managers));
     }
 
