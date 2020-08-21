@@ -80,6 +80,7 @@ namespace Attachment
       IServiceHRDrive serviceHRDrive = new ServiceHRDrive(_context);
       IServiceObjective serviceObjective = new ServiceObjective(_context);
 
+
       services.AddSingleton(_ => serviceObjective);
       services.AddSingleton(_ => serviceHRDrive);
       services.AddSingleton(_ => serviceSalaryScale);

@@ -63,7 +63,7 @@ namespace Indicators
 
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
@@ -80,13 +80,13 @@ namespace Indicators
       
       serviceManager.UpdateStructManager();
 
-      services.AddSingleton(_ => serviceManager);
-      services.AddSingleton(_ => serviceControlQueue);
-      services.AddSingleton(_ => serviceAccount);
-      services.AddSingleton(_ => serviceAuthentication);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceIndicators);
-      services.AddSingleton(_ => serviceParameters);
+      services.AddScoped(_ => serviceManager);
+      services.AddScoped(_ => serviceControlQueue);
+      services.AddScoped(_ => serviceAccount);
+      services.AddScoped(_ => serviceAuthentication);
+      services.AddScoped(_ => servicePerson);
+      services.AddScoped(_ => serviceIndicators);
+      services.AddScoped(_ => serviceParameters);
 
     }
 
