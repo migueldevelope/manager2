@@ -503,9 +503,9 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/onboardinglate")]
-    public async Task<List<ViewListPending>> OnboardingLateMap([FromBody]List<_ViewList> managers)
+    public List<ViewListPending> OnboardingLateMap([FromBody]List<_ViewList> managers)
     {
-      return await Task.Run(() => service.OnboardingLateMap(managers));
+      return service.OnboardingLateMap(managers);
     }
 
     /// <summary>
