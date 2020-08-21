@@ -457,6 +457,30 @@ namespace Indicators.Controllers
       return await Task.Run(() => serviceTest.OnboardingInDayMap(managers));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="managers"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost]
+    [Route("map/onboardinginlate/test")]
+    public async Task<List<ViewListPending>> OnboardingInLateMapTest([FromBody]List<_ViewList> managers)
+    {
+      Config conn = XmlConnection.ReadVariablesSystem();
+      var context = new DataContext(conn.Server, conn.DataBase);
+
+      var serviceMaturity = new ServiceMaturity(context);
+      serviceMaturity.SetUser(_contextAccessor);
+      var serviceQue = new ServiceControlQueue(conn.ServiceBusConnectionString, serviceMaturity);
+      var servicePerson = new ServicePerson(context, context, serviceQue, conn.SignalRService);
+      servicePerson.SetUser(_contextAccessor);
+      var serviceTest = new ServiceIndicators(context, context, conn.TokenServer, servicePerson);
+      serviceTest.SetUser(_contextAccessor);
+      return await Task.Run(() => serviceTest.OnboardingLateMap(managers));
+    }
+
+
 
     /// <summary>
     /// 
