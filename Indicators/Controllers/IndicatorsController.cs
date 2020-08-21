@@ -432,6 +432,11 @@ namespace Indicators.Controllers
       return await Task.Run(() => service.OnboardingInDayMap(managers));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="managers"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
     [Route("map/onboardinginday/test")]
