@@ -490,9 +490,9 @@ namespace Indicators.Controllers
     [Authorize]
     [HttpPost]
     [Route("map/onboardingtowin")]
-    public async Task<List<ViewListPending>> OnboardingToWinMap([FromBody]List<_ViewList> managers)
+    public  List<ViewListPending> OnboardingToWinMap([FromBody]List<_ViewList> managers)
     {
-      return await Task.Run(() => service.OnboardingToWinMap(managers));
+      return service.OnboardingToWinMap(managers);
     }
 
     /// <summary>
