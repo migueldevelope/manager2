@@ -35,7 +35,6 @@ namespace Indicators.Controllers
     /// <param name="_serviceManager"></param>
     /// <param name="contextAccessor"></param>
     public IndicatorsController(IServiceIndicators _service, IServiceManager _serviceManager,
-    //public IndicatorsController(IServiceIndicators _service, 
       IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
       _contextAccessor = contextAccessor;
