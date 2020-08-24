@@ -80,8 +80,8 @@ namespace Indicators
 
       serviceManager.UpdateStructManager();
 
-
-      services.AddTransient<IServiceIndicators>(_ => new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson));
+      services.AddSingleton(_ => serviceIndicators);
+      services.AddScoped<IServiceIndicators>(_ => new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson));
       
 
       services.AddScoped(_ => serviceManager);
