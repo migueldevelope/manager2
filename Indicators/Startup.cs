@@ -52,45 +52,23 @@ namespace Indicators
       DataContext _context;
       var conn = XmlConnection.ReadVariablesSystem();
       _context = new DataContext(conn.Server, conn.DataBase);
-
-
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-
-      //DataContext _contextStruct;
-      //_contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
-
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
-
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-
-
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
 
       //IServiceManager serviceManager = new ServiceManager(_contextStruct, _context, serviceControlQueue, serviceBusConnectionString);
       IServiceManager serviceManager = new ServiceManager(_context, _context, serviceControlQueue, serviceBusConnectionString);
 
       serviceManager.UpdateStructManager();
 
-      services.AddSingleton(_ => serviceIndicators);
-      services.AddScoped<IServiceIndicators>(_ => new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson));
-      
+      services.AddScoped<IServiceIndicators>(_ => new ServiceIndicators(_context, _contextLog, conn.TokenServer));
+      services.AddScoped<IServiceManager>(_ => new ServiceManager(_context, _context, serviceControlQueue, serviceBusConnectionString));
 
-      services.AddScoped(_ => serviceManager);
-      services.AddScoped(_ => serviceControlQueue);
-      services.AddScoped(_ => serviceAccount);
-      services.AddScoped(_ => serviceAuthentication);
-      services.AddScoped(_ => servicePerson);
-      //services.AddScoped(_ => serviceIndicators);
-      services.AddScoped(_ => serviceParameters);
 
     }
 

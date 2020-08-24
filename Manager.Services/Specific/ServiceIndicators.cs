@@ -44,12 +44,11 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<FluidCareers> serviceFluidCareers;
-    private readonly IServicePerson serviceIPerson;
 
     public string path;
     private HubConnection hubConnection;
 
-    public ServiceIndicators(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson)
+    public ServiceIndicators(DataContext context, DataContext contextLog, string pathToken)
       : base(context)
     {
       try
@@ -75,7 +74,6 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceArea = new ServiceGeneric<Area>(context);
         serviceFluidCareers = new ServiceGeneric<FluidCareers>(context);
-        serviceIPerson = _serviceIPerson;
 
         path = pathToken;
       }
@@ -109,7 +107,6 @@ namespace Manager.Services.Specific
       serviceArea._user = _user;
       serviceMaturity._user = _user;
       serviceCertificationPerson._user = _user;
-      serviceIPerson.SetUser(_user);
     }
 
 
