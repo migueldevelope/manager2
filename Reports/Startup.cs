@@ -61,39 +61,24 @@ namespace Reports
       DataContext _contextStruct;
       _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
 
-      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-
-
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceReports serviceReports = new ServiceReports(_context, _contextLog, conn.TokenServer, servicePerson, serviceBusConnectionString);
-      IServiceManager serviceManager = new ServiceManager(_contextStruct, _context, serviceControlQueue, serviceBusConnectionString);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceOffBoarding serviceOffBoarding = new ServiceOffBoarding(_context);
-      IServiceObjective serviceObjective = new ServiceObjective(_context);
-      IServiceElearningFluid serviceElearningFluid = new ServiceElearningFluid(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
+      IServiceReports serviceReports = new ServiceReports(_context, _contextLog, conn.TokenServer, conn.ServiceBusConnectionString, serviceControlQueue);
 
       serviceReports.RegisterOnMessageHandlerAndReceiveMesssages();
 
-      services.AddSingleton(_ => serviceElearningFluid);
-      services.AddSingleton(_ => serviceObjective);
-      services.AddSingleton(_ => serviceOffBoarding);
-      services.AddSingleton(_ => serviceOnBoarding);
-      services.AddSingleton(_ => serviceReports);
-      services.AddSingleton(_ => serviceControlQueue);
-      services.AddSingleton(_ => serviceAccount);
-      services.AddSingleton(_ => serviceAuthentication);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceIndicators);
-      services.AddSingleton(_ => serviceParameters);
+      services.AddScoped<IServiceElearningFluid>(_ => new ServiceElearningFluid(_context));
+      services.AddScoped<IServiceObjective>(_ => new ServiceObjective(_context));
+      services.AddScoped<IServiceOffBoarding>(_ => new ServiceOffBoarding(_context));
+      services.AddScoped<IServiceOnBoarding>(_ => new ServiceOnBoarding(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceReports>(_ => new ServiceReports(_context, _context, conn.TokenServer, conn.ServiceBusConnectionString, serviceControlQueue));
+      services.AddScoped<IServiceControlQueue>(_ => new ServiceControlQueue(conn.ServiceBusConnectionString, _context));
+      services.AddScoped<IServiceAccount>(_ => new ServiceAccount(_context, _context, serviceControlQueue));
+      services.AddScoped<IServiceAuthentication>(_ => new ServiceAuthentication(_context, _context, serviceControlQueue, conn.SignalRService));
+      services.AddScoped<IServicePerson>(_ => new ServicePerson(_context, _context, serviceControlQueue, conn.SignalRService));
+      services.AddScoped<IServiceIndicators>(_ => new ServiceIndicators(_context, _context, conn.TokenServer));
+      services.AddScoped<IServiceParameters>(_ => new ServiceParameters(_context));
 
     }
 
@@ -121,14 +106,14 @@ namespace Reports
         {
           OnAuthenticationFailed = context =>
           {
-          Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-          return Task.CompletedTask;
-        },
+            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+            return Task.CompletedTask;
+          },
           OnTokenValidated = context =>
           {
-          Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
-          return Task.CompletedTask;
-        }
+            Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+            return Task.CompletedTask;
+          }
         };
       });
       services.AddCors(options =>
@@ -153,11 +138,11 @@ namespace Reports
       {
         c.SwaggerDoc("v1",
             new Microsoft.OpenApi.Models.OpenApiInfo
-        {
-          Title = "Reports - Fluid",
-          Version = "v1",
-          Description = "Sistema de carreiras fluidas",
-        });
+            {
+              Title = "Reports - Fluid",
+              Version = "v1",
+              Description = "Sistema de carreiras fluidas",
+            });
         string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
         string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
         string caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");

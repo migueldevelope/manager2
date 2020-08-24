@@ -54,55 +54,15 @@ namespace ManagerMessages
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-      serviceControlQueue.StartMathMaturity();
-
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
-      IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson,conn.TokenServer);
-      IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer,servicePerson);
-      IServiceMandatoryTraining serviceMandatoryTraining = new ServiceMandatoryTraining(_context);
-      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceEvent serviceEvent = new ServiceEvent(_context, _contextLog, conn.TokenServer, conn.BlobKey);
-      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
+      //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceNotification serviceNotification = new ServiceNotification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
-      IServiceObjective serviceObjective = new ServiceObjective(_context);
 
 
-      services.AddSingleton(_ => serviceObjective);
-      services.AddSingleton(_ => serviceMaturity);
-      services.AddSingleton(_ => serviceUser);
-      services.AddSingleton(_ => serviceLogMessages);
       // Start service
+      serviceControlQueue.StartMathMaturity();
       serviceNotification.SendMessage();
-      services.AddSingleton(_ => serviceNotification);
-      services.AddSingleton(_ => serviceConfigurationNotifications);
-      services.AddSingleton(_ => serviceAccount);
-      services.AddSingleton(_ => serviceCompany);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceWorkflow);
-      services.AddSingleton(_ => serviceAutoManager);
-      services.AddSingleton(_ => serviceLog);
-      services.AddSingleton(_ => serviceInfra);
-      services.AddSingleton(_ => serviceOnBoarding);
-      services.AddSingleton(_ => serviceMonitoring);
-      services.AddSingleton(_ => servicePlan);
-      services.AddSingleton(_ => serviceIndicators);
-      services.AddSingleton(_ => serviceCheckpoint);
-      services.AddSingleton(_ => serviceParameters);
-      services.AddSingleton(_ => serviceEvent);
-      services.AddSingleton(_ => serviceMandatoryTraining);
       serviceIndicators.SendMessages(conn.SignalRService);
     }
     // This method gets called by the runtime. Use this method to add services to the container.

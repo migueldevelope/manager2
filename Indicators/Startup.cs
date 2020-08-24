@@ -55,21 +55,14 @@ namespace Indicators
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-      string serviceBusConnectionString = conn.ServiceBusConnectionString;
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
-      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-
-      //IServiceManager serviceManager = new ServiceManager(_contextStruct, _context, serviceControlQueue, serviceBusConnectionString);
-      IServiceManager serviceManager = new ServiceManager(_context, _context, serviceControlQueue, serviceBusConnectionString);
-
+      IServiceManager serviceManager = new ServiceManager(_context, _context, serviceControlQueue, conn.ServiceBusConnectionString);
       serviceManager.UpdateStructManager();
 
       services.AddScoped<IServiceIndicators>(_ => new ServiceIndicators(_context, _contextLog, conn.TokenServer));
-      services.AddScoped<IServiceManager>(_ => new ServiceManager(_context, _context, serviceControlQueue, serviceBusConnectionString));
-
-
+      services.AddScoped<IServiceManager>(_ => new ServiceManager(_context, _context, serviceControlQueue, conn.ServiceBusConnectionString));
     }
 
 

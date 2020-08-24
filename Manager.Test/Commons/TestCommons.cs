@@ -44,7 +44,7 @@ namespace Manager.Test.Commons
       {
         context = new DataContext(databaseConnection, databaseName);
         IServiceMaturity serviceMaturity = new ServiceMaturity(context);
-        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+        serviceControlQueue = new ServiceControlQueue("", context);
 
         // Limpeza do banco
         string script = @"db.getCollectionNames().forEach(function(c) { if (c.indexOf(""system."") == -1) db[c].drop(); })";
@@ -1457,8 +1457,7 @@ namespace Manager.Test.Commons
       {
         context = new DataContext(databaseConnection, databaseName);
 
-        IServiceMaturity serviceMaturity = new ServiceMaturity(context);
-        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+        serviceControlQueue = new ServiceControlQueue("", context);
 
         ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue, "");
         ViewAuthentication view = new ViewAuthentication()
@@ -1501,8 +1500,7 @@ namespace Manager.Test.Commons
       {
         context = new DataContext(databaseConnection, databaseName);
 
-        IServiceMaturity serviceMaturity = new ServiceMaturity(context);
-        serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+        serviceControlQueue = new ServiceControlQueue("", context);
 
         ServiceAuthentication service = new ServiceAuthentication(context, context, serviceControlQueue, "");
         ViewAuthentication view = new ViewAuthentication()

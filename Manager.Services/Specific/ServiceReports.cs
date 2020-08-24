@@ -4,6 +4,7 @@ using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
 using Manager.Data;
+using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
@@ -62,7 +63,7 @@ namespace Manager.Services.Specific
     private readonly IQueueClient queueClientReturn;
 
     #region construtctor
-    public ServiceReports(DataContext context, DataContext contextLog, string pathToken, IServicePerson _serviceIPerson, string serviceBusConnectionString)
+    public ServiceReports(DataContext context, DataContext contextLog, string pathToken,  string serviceBusConnectionString, IServiceControlQueue serviceControlQueue)
       : base(context)
     {
       try
@@ -93,7 +94,7 @@ namespace Manager.Services.Specific
         serviceEvent = new ServiceGeneric<Event>(context);
         serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
         serviceMyAwareness = new ServiceGeneric<MyAwareness>(context);
-        serviceIPerson = _serviceIPerson;
+        serviceIPerson = new ServicePerson(_context, _context, serviceControlQueue, pathToken);
         queueClient = new QueueClient(serviceBusConnectionString, "reports");
         queueClientReturn = new QueueClient(serviceBusConnectionString, "reportsreturn");
         path = pathToken;

@@ -37,7 +37,7 @@ namespace Manager.Services.Specific
     private readonly string path;
 
     #region Constructor
-    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, IServicePerson _servicePerson, string _path) : base(context)
+    public ServiceAutoManager(DataContext context, DataContext contextLog, IServiceControlQueue serviceControlQueue, string _path) : base(context)
     {
       try
       {
@@ -48,7 +48,7 @@ namespace Manager.Services.Specific
         serviceMailModel = new ServiceMailModel(context);
         serviceMailMessage = new ServiceGeneric<MailMessage>(contextLog);
         //servicePerson = new ServiceGeneric<Person>(context);
-        servicePerson = _servicePerson;
+        servicePerson = new ServicePerson(_context, _context, serviceControlQueue, _path);
         serviceWorkflow = new ServiceWorkflow(context, contextLog, serviceControlQueue, _path);
         path = _path;
       }
@@ -75,7 +75,7 @@ namespace Manager.Services.Specific
       serviceMailLog._user = user;
       serviceMailMessage._user = user;
       serviceMailModel.SetUser(user);
-      if(servicePerson != null)
+      if (servicePerson != null)
         servicePerson.SetUser(user);
       serviceWorkflow.SetUser(user);
     }
@@ -111,11 +111,11 @@ namespace Manager.Services.Specific
       {
         int skip = (count * (page - 1));
         List<ViewAutoManagerPerson> list = (from person in servicePerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result
-                    where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
-                    select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
+                                            where person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager
+                                            select person).ToList().Select(person => new ViewAutoManagerPerson { IdPerson = person._id, NamePerson = person.User.Name, Status = EnumStatusAutoManagerView.Open }).Skip(skip).Take(count).ToList();
 
         total = servicePerson.CountNewVersion(person => person.TypeUser != EnumTypeUser.Support && person.TypeUser != EnumTypeUser.Administrator && person.StatusUser != EnumStatusUser.Disabled && person.Manager == null && person.StatusUser != EnumStatusUser.Disabled && person._id != idManager).Result;
-   
+
         if (list.Count > 0)
           list.FirstOrDefault().total = total;
 
@@ -170,7 +170,7 @@ namespace Manager.Services.Specific
           //}
 
           person.Manager = servicePerson.UpdateManager(person, manager._id, null);
-          
+
         }
         else
         {

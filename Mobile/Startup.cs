@@ -66,79 +66,40 @@ namespace Mobile
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-      IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, serviceBusConnectionString);
-
-      IServiceAccount serviceAccount = new ServiceAccount(_context, _contextLog, serviceControlQueue);
-      IServiceCompany serviceCompany = new ServiceCompany(_context);
-      IServiceMyAwareness serviceMyAwareness = new ServiceMyAwareness(_context);
-      IServicePerson servicePerson = new ServicePerson(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceAutoManager serviceAutoManager = new ServiceAutoManager(_context, _contextLog, serviceControlQueue, servicePerson, conn.TokenServer);
-      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      IServiceWorkflow serviceWorkflow = new ServiceWorkflow(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-
-      IServiceInfra serviceInfra = new ServiceInfra(_context);
-      IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceMonitoring serviceMonitoring = new ServiceMonitoring(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer, servicePerson);
-
-      IServicePlan servicePlan = new ServicePlan(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceCheckpoint serviceCheckpoint = new ServiceCheckpoint(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-
-      IServiceConfigurationNotifications serviceConfigurationNotifications = new ServiceConfigurationNotifications(_context);
-      IServiceLogMessages serviceLogMessages = new ServiceLogMessages(_context);
-      IServiceSalaryScale serviceSalaryScale = new ServiceSalaryScale(_context);
-      IServiceDictionarySystem serviceDictionarySystem = new ServiceDictionarySystem(_context);
-      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceCertification serviceCertification = new ServiceCertification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceGoals serviceGoals = new ServiceGoals(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-      IServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService(_context);
-      IServiceRecommendation serviceRecommendation = new ServiceRecommendation(_context, _contextLog, conn.TokenServer, serviceControlQueue);
-
-      IServiceFluidCareers serviceFluidCareers = new ServiceFluidCareers(_context);
-      IServiceFeelingDay serviceFeelingDay = new ServiceFeelingDay(_context);
-      IServiceObjective serviceObjective = new ServiceObjective(_context);
-      IServiceMeritocracy serviceMeritocracy = new ServiceMeritocracy(_context, _contextLog, serviceObjective);
-
-      services.AddSingleton(_ => serviceObjective);
-      services.AddSingleton(_ => serviceFeelingDay);
-      services.AddSingleton(_ => serviceMyAwareness);
-      services.AddSingleton(_ => serviceFluidCareers);
-      services.AddSingleton(_ => serviceRecommendation);
-      services.AddSingleton(_ => serviceBaseHelp);
-      services.AddSingleton(_ => serviceMaturity);
-      services.AddSingleton(_ => serviceControlQueue);
-      services.AddSingleton(_ => serviceMeritocracy);
-      services.AddSingleton(_ => serviceTermsOfService);
-      services.AddSingleton(_ => serviceGoals);
-      services.AddSingleton(_ => serviceCertification);
-      services.AddSingleton(_ => serviceUser);
-      services.AddSingleton(_ => serviceDictionarySystem);
-      services.AddSingleton(_ => serviceSalaryScale);
-      services.AddSingleton(_ => serviceLogMessages);
-      services.AddSingleton(_ => serviceConfigurationNotifications);
-      services.AddSingleton(_ => serviceAccount);
-      services.AddSingleton(_ => serviceCompany);
-      services.AddSingleton(_ => serviceAuthentication);
-      services.AddSingleton(_ => servicePerson);
-      services.AddSingleton(_ => serviceWorkflow);
-      services.AddSingleton(_ => serviceAutoManager);
-      services.AddSingleton(_ => serviceLog);
-      services.AddSingleton(_ => serviceInfra);
-      services.AddSingleton(_ => serviceOnBoarding);
-      services.AddSingleton(_ => serviceMonitoring);
-      services.AddSingleton(_ => servicePlan);
-      services.AddSingleton(_ => serviceIndicators);
-      services.AddSingleton(_ => serviceCheckpoint);
-      services.AddSingleton(_ => serviceParameters);
+      services.AddScoped<IServiceObjective>(_ => new ServiceObjective(_context));
+      services.AddScoped<IServiceFeelingDay>(_ => new ServiceFeelingDay(_context));
+      services.AddScoped<IServiceMyAwareness>(_ => new ServiceMyAwareness(_context));
+      services.AddScoped<IServiceFluidCareers>(_ => new ServiceFluidCareers(_context));
+      services.AddScoped<IServiceRecommendation>(_ => new ServiceRecommendation(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceBaseHelp>(_ => new ServiceBaseHelp(_context, conn.ServiceBusConnectionString));
+      services.AddScoped<IServiceMaturity>(_ => new ServiceMaturity(_context));
+      services.AddScoped<IServiceControlQueue>(_ => new ServiceControlQueue(conn.ServiceBusConnectionString, _context));
+      services.AddScoped<IServiceMeritocracy>(_ => new ServiceMeritocracy(_context, _context));
+      services.AddScoped<IServiceTermsOfService>(_ => new ServiceTermsOfService(_context));
+      services.AddScoped<IServiceGoals>(_ => new ServiceGoals(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceCertification>(_ => new ServiceCertification(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceUser>(_ => new ServiceUser(_context, _context));
+      services.AddScoped<IServiceDictionarySystem>(_ => new ServiceDictionarySystem(_context));
+      services.AddScoped<IServiceSalaryScale>(_ => new ServiceSalaryScale(_context));
+      services.AddScoped<IServiceLogMessages>(_ => new ServiceLogMessages(_context));
+      services.AddScoped<IServiceConfigurationNotifications>(_ => new ServiceConfigurationNotifications(_context));
+      services.AddScoped<IServiceAccount>(_ => new ServiceAccount(_context, _context, serviceControlQueue));
+      services.AddScoped<IServiceCompany>(_ => new ServiceCompany(_context));
+      services.AddScoped<IServiceAuthentication>(_ => new ServiceAuthentication(_context, _context, serviceControlQueue, conn.SignalRService));
+      services.AddScoped<IServicePerson>(_ => new ServicePerson(_context, _context, serviceControlQueue, conn.SignalRService));
+      services.AddScoped<IServiceWorkflow>(_ => new ServiceWorkflow(_context, _context, serviceControlQueue, conn.SignalRService));
+      services.AddScoped<IServiceAutoManager>(_ => new ServiceAutoManager(_context, _context, serviceControlQueue, conn.TokenServer));
+      services.AddScoped<IServiceLog>(_ => new ServiceLog(_context, _context));
+      services.AddScoped<IServiceInfra>(_ => new ServiceInfra(_context));
+      services.AddScoped<IServiceOnBoarding>(_ => new ServiceOnBoarding(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceMonitoring>(_ => new ServiceMonitoring(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServicePlan>(_ => new ServicePlan(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceIndicators>(_ => new ServiceIndicators(_context, _context, conn.TokenServer));
+      services.AddScoped<IServiceCheckpoint>(_ => new ServiceCheckpoint(_context, _context, conn.TokenServer, serviceControlQueue));
+      services.AddScoped<IServiceParameters>(_ => new ServiceParameters(_context));
 
       //serviceIndicators.SendMessages(conn.SignalRService);
 

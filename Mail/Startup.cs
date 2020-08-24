@@ -50,18 +50,13 @@ namespace Mail
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
+      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      IServiceMailMessage serviceMailMessage = new ServiceMailMessage(_contextLog);
-      IServiceSendGrid serviceSendGrid = new ServiceSendGrid(_contextLog);
-      IServiceMailModel serviceMailModel = new ServiceMailModel(_context);
+      services.AddScoped<IServiceMaturity>(_ => new ServiceMaturity(_context));
+      services.AddScoped<IServiceMailMessage>(_ => new ServiceMailMessage(_context));
+      services.AddScoped<IServiceSendGrid>(_ => new ServiceSendGrid(_context));
+      services.AddScoped<IServiceMailModel>(_ => new ServiceMailModel(_context));
 
-      services.AddSingleton(_ => serviceMaturity);
-      services.AddSingleton(_ => serviceMailMessage);
-      services.AddSingleton(_ => serviceSendGrid);
-      services.AddSingleton(_ => serviceMailModel);
     }
     // This method gets called by the runtime. Use this method to add services to the container.
     /// <summary>

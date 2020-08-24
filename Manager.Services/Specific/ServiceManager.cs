@@ -27,7 +27,7 @@ namespace Manager.Services.Specific
     private readonly IServiceControlQueue serviceControlQueue;
     private List<DirectTeam> directteam;
 
-    public ServiceManager(DataContext contextStruct, DataContext context, IServiceControlQueue _serviceControlQueue, string serviceBusConnectionString) : base(contextStruct)
+    public ServiceManager(DataContext contextStruct, DataContext context, IServiceControlQueue _serviceControlQueue, string _serviceBusConnectionString) : base(contextStruct)
     {
       try
       {
@@ -36,7 +36,7 @@ namespace Manager.Services.Specific
         serviceListManager = new ServiceGeneric<ListManager>(contextStruct);
         serviceStructManager = new ServiceGeneric<StructManager>(contextStruct);
         serviceControlQueue = _serviceControlQueue;
-        queueClient = new QueueClient(serviceBusConnectionString, "structmanager");
+        queueClient = new QueueClient(_serviceBusConnectionString, "structmanager");
       }
       catch (Exception e)
       {

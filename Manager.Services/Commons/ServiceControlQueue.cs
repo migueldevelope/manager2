@@ -2,6 +2,7 @@
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
 using Manager.Data;
+using Manager.Services.Specific;
 using Manager.Views.BusinessCrud;
 using Manager.Views.Enumns;
 using Microsoft.Azure.ServiceBus;
@@ -19,11 +20,12 @@ namespace Manager.Services.Commons
     private readonly IServiceMaturity serviceMaturity;
     private readonly string serviceBusConnectionString;
 
-    public ServiceControlQueue(string _serviceBusConnectionString, IServiceMaturity _serviceMaturity)
+    public ServiceControlQueue(string _serviceBusConnectionString, DataContext _context)
     {
       serviceBusConnectionString = _serviceBusConnectionString;
       queueClient = new QueueClient(serviceBusConnectionString, "journey");
-      serviceMaturity = _serviceMaturity;
+      //serviceMaturity = _serviceMaturity;
+      serviceMaturity = new ServiceMaturity(_context);
     }
 
     private void Maturity_Tick(object Sender, EventArgs e)

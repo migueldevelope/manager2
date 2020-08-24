@@ -39,7 +39,7 @@ namespace Manager.Services.Specific
 
 
     #region Constructor
-    public ServiceMeritocracy(DataContext context, DataContext contextLog, IServiceObjective _serviceObjective) : base(context)
+    public ServiceMeritocracy(DataContext context, DataContext contextLog) : base(context)
     {
       try
       {
@@ -49,7 +49,7 @@ namespace Manager.Services.Specific
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSalaryScaleScore = new ServiceGeneric<SalaryScaleScore>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
-        serviceObjective = _serviceObjective;
+        serviceObjective = new ServiceObjective(_context);
         serviceMaturity = new ServiceGeneric<Maturity>(context);
         serviceLog = new ServiceLog(context, contextLog);
         serviceLogMessages = new ServiceLogMessages(context);

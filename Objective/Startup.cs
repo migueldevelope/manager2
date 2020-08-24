@@ -54,37 +54,19 @@ namespace Manager
       var conn = XmlConnection.ReadVariablesSystem();
       _context = new DataContext(conn.Server, conn.DataBase);
 
-
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-      string serviceBusConnectionString = conn.ServiceBusConnectionString;
+      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
-      new MigrationHandle(_context._db).Migrate();
-
-
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-      IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
-      IServiceControlQueue serviceControlQueue = new ServiceControlQueue(serviceBusConnectionString, serviceMaturity);
-      
-      IServiceLog serviceLog = new ServiceLog(_context, _contextLog);
-      
-      IServiceParameters serviceParameters = new ServiceParameters(_context);
-      IServiceUser serviceUser = new ServiceUser(_context, _contextLog);
-      IServiceAuthentication serviceAuthentication = new ServiceAuthentication(_context, _contextLog, serviceControlQueue, conn.SignalRService);
-      IServiceObjective serviceObjective = new ServiceObjective(_context);
-
-      
-      services.AddSingleton(_ => serviceObjective);
-      services.AddSingleton(_ => serviceMaturity);
-      services.AddSingleton(_ => serviceControlQueue);
-      services.AddSingleton(_ => serviceUser);
-      services.AddSingleton(_ => serviceAuthentication);
-      services.AddSingleton(_ => serviceLog);
-      services.AddSingleton(_ => serviceParameters);
-
-
+      services.AddScoped<IServiceObjective>(_ => new ServiceObjective(_context));
+      services.AddScoped<IServiceMaturity>(_ => new ServiceMaturity(_context));
+      services.AddScoped<IServiceControlQueue>(_ => new ServiceControlQueue(conn.ServiceBusConnectionString, _context));
+      services.AddScoped<IServiceUser>(_ => new ServiceUser(_context, _context));
+      services.AddScoped<IServiceAuthentication>(_ => new ServiceAuthentication(_context, _context, serviceControlQueue, conn.SignalRService));
+      services.AddScoped<IServiceLog>(_ => new ServiceLog(_context, _context));
+      services.AddScoped<IServiceParameters>(_ => new ServiceParameters(_context));
     }
 
 
