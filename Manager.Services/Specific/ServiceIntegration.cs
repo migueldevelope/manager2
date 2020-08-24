@@ -2459,7 +2459,8 @@ namespace Manager.Services.Specific
       try
       {
         string result = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param.Trim().ToLower());
-        result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ").Replace(" Dos ", " dos ").Replace(" E ", " e ");
+        result = result.Replace(" Da ", " da ").Replace(" De ", " de ").Replace(" Do ", " do ")
+          .Replace(" Dos ", " dos ").Replace(" E ", " e ").Replace(" Das ", " das ");
         return result;
       }
       catch (Exception)
