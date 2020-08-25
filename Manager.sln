@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reports", "Reports\Reports.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile", "Mobile\Mobile.csproj", "{C8330979-1C4B-4EBC-A46E-67ADA771FF80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objective", "Objective\Objective.csproj", "{9AC20FC3-5264-4A8E-B10C-09304E2DEAC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Objective", "Objective\Objective.csproj", "{9AC20FC3-5264-4A8E-B10C-09304E2DEAC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{2B2C0073-BA8A-4000-A142-AE8225E53D53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,10 @@ Global
 		{9AC20FC3-5264-4A8E-B10C-09304E2DEAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AC20FC3-5264-4A8E-B10C-09304E2DEAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AC20FC3-5264-4A8E-B10C-09304E2DEAC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B2C0073-BA8A-4000-A142-AE8225E53D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2C0073-BA8A-4000-A142-AE8225E53D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B2C0073-BA8A-4000-A142-AE8225E53D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B2C0073-BA8A-4000-A142-AE8225E53D53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
