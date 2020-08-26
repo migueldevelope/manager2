@@ -379,6 +379,14 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
+          // Ajuste de jornada para auxiliares de produção e operadores BERTOLINI
+          if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
+          {
+            if (person.Occupation.Name.StartsWith("Auxiliar") || person.Occupation.Name.StartsWith("Operador"))
+            {
+              person.TypeJourney = EnumTypeJourney.OutOfJourney;
+            }
+          }
           // Tipo de jornada: afastados aparecem fora de jornada
           person.TypeJourney = person.StatusUser == EnumStatusUser.Away ? EnumTypeJourney.OutOfJourney : person.TypeJourney;
           // Tipo de jornada: Ajustar o retorno do afastamento
