@@ -382,7 +382,7 @@ namespace Manager.Services.Specific
           // Ajuste de jornada para auxiliares de produção e operadores BERTOLINI
           if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
           {
-            if (person.Occupation.Name.StartsWith("Auxiliar") || person.Occupation.Name.StartsWith("Operador"))
+            if (person.Occupation.Name.StartsWith("Auxiliar de Produção") || person.Occupation.Name.StartsWith("Operador de Produção"))
             {
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
