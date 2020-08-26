@@ -63,7 +63,7 @@ namespace ManagerMessages
       // Start service
       serviceControlQueue.StartMathMaturity();
       serviceNotification.SendMessage();
-      serviceIndicators.SendMessages(conn.SignalRService);
+      //serviceIndicators.SendMessages(conn.SignalRService);
     }
     // This method gets called by the runtime. Use this method to add services to the container.
     /// <summary>
