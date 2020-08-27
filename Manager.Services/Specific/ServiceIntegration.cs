@@ -379,24 +379,28 @@ namespace Manager.Services.Specific
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
+          // Tipo de jornada: afastados aparecem fora de jornada
+          person.TypeJourney = person.StatusUser == EnumStatusUser.Away ? EnumTypeJourney.OutOfJourney : person.TypeJourney;
+          // Tipo de jornada: Ajustar o retorno do afastamento
+          if (person.TypeJourney == EnumTypeJourney.OutOfJourney && (person.StatusUser == EnumStatusUser.Enabled || person.StatusUser == EnumStatusUser.Vacation))
+          {
+            person.TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding;
+          }
           // Ajuste de jornada para auxiliares de produção e operadores BERTOLINI
           if (_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f"))
           {
-            if (person.Occupation.Name.StartsWith("Auxiliar de Produção") || person.Occupation.Name.StartsWith("Operador de Produção"))
+            if (person.Occupation.Name.StartsWith("Ajudante Produção") || person.Occupation.Name.StartsWith("Almoxarife")
+              || person.Occupation.Name.StartsWith("Auxiliar de Almoxarifado") || person.Occupation.Name.StartsWith("Auxiliar de Limpeza")
+              || person.Occupation.Name.StartsWith("Auxiliar de Logística") || person.Occupation.Name.StartsWith("Auxiliar de Manutenção Predial")
+              || person.Occupation.Name.StartsWith("Auxiliar de Produção") || person.Occupation.Name.StartsWith("Auxiliar de Serviços Gerais")
+              || person.Occupation.Name.StartsWith("Inspetor do Produto") || person.Occupation.Name.StartsWith("Motorista")
+              || person.Occupation.Name.StartsWith("Operador") || person.Occupation.Name.StartsWith("Pintor")
+              || person.Occupation.Name.StartsWith("Soldador"))
             {
               person.TypeJourney = EnumTypeJourney.OutOfJourney;
             }
           }
-          // Tipo de jornada: afastados aparecem fora de jornada
-          person.TypeJourney = person.StatusUser == EnumStatusUser.Away ? EnumTypeJourney.OutOfJourney : person.TypeJourney;
-          // Tipo de jornada: Ajustar o retorno do afastamento
-          if (!_user._idAccount.Equals("5cb8bbfb27a5e8f3ef548b1f")) // Se não for o grupo Bertolini
-          {
-            if (person.TypeJourney == EnumTypeJourney.OutOfJourney && (person.StatusUser == EnumStatusUser.Enabled || person.StatusUser == EnumStatusUser.Vacation))
-            {
-              person.TypeJourney = DateTime.Now.Subtract(payrollEmployee.AdmissionDate).Days > 90 ? EnumTypeJourney.Monitoring : EnumTypeJourney.OnBoarding;
-            }
-          }
+
           if (personManager != null)
           {
             person.Manager = personManager == null ? null : new ViewBaseFields() { _id = personManager._id, Name = personManager.User.Name, Mail = personManager.User.Mail };
