@@ -393,7 +393,7 @@ namespace Manager.Services.Specific
               || person.Occupation.Name.StartsWith("Auxiliar de Almoxarifado") || person.Occupation.Name.StartsWith("Auxiliar de Limpeza")
               || person.Occupation.Name.StartsWith("Auxiliar de Logística") || person.Occupation.Name.StartsWith("Auxiliar de Manutenção Predial")
               || person.Occupation.Name.StartsWith("Auxiliar de Produção") || person.Occupation.Name.StartsWith("Auxiliar de Serviços Gerais")
-              || person.Occupation.Name.StartsWith("Inspetor do Produto") || person.Occupation.Name.StartsWith("Motorista")
+              || person.Occupation.Name.StartsWith("Inspetor do Produto") || person.Occupation.Name.StartsWith("Motorista I")
               || person.Occupation.Name.StartsWith("Operador") || person.Occupation.Name.StartsWith("Pintor")
               || person.Occupation.Name.StartsWith("Soldador"))
             {
