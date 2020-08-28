@@ -1414,7 +1414,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        return result.OrderBy(p => p.StatusPlan).ThenBy(p => p.Deadline).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -1529,7 +1529,8 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        //return result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        return result.OrderBy(p => p.StatusPlan).ThenBy(p => p.Deadline).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
