@@ -1914,7 +1914,7 @@ namespace Manager.Services.Specific
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Monitoring, Qtd = monitorings, Total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.OnBoarding, Qtd = onboardings, Total = totalqtd });
         result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Workflow, Qtd = workflows, Total = totalqtd });
-        result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Plan, Qtd = workflows, Total = totalqtd });
+        result.Add(new ViewIndicatorsNotes() { Type = EnumTypeWork.Plan, Qtd = plans, Total = totalqtd });
 
         return result.OrderBy(p => p.Type).ToList();
       }
