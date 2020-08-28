@@ -11,5 +11,6 @@ namespace Manager.Services.WorkModel
     public List<PlanWorkPerson> LastSevenDays { get; set; }
     public List<PlanWorkPerson> FifteenDays { get; set; }
     public List<PlanWorkPerson> ThirtyDays { get; set; }
+    public List<PlanWorkPerson> Wait { get; set; }
   }
 }

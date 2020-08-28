@@ -1333,7 +1333,9 @@ namespace Manager.Services.Specific
         List<ViewGetPlan> result = new List<ViewGetPlan>();
 
         var plan = servicePlan.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
-        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Select(p => p._id).ToList();
+        var persons = servicePerson.GetAllNewVersion(p => p.Manager._id == id
+        && p.StatusUser != EnumStatusUser.Disabled
+        && p.User.Name.ToUpper().Contains(filter.ToUpper())).Result.Select(p => p._id).ToList();
         if (idperson != "")
         {
           persons = new List<string>();
