@@ -1121,7 +1121,7 @@ namespace Manager.Services.Specific
         course.Content = view.Content;
 
         course.Periodicity = view.Periodicity;
-
+        course.Name = view.Name;
         course.Deadline = view.Deadline;
         course.Wordkload = view.Wordkload;
         course.CourseESocial = view.CourseESocial;
