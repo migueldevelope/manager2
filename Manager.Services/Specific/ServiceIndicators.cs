@@ -165,8 +165,9 @@ namespace Manager.Services.Specific
         mapper += " var person = null;";
         mapper += " if (this.Manager != null)";
         mapper += " manager = this.Manager.Name;";
-        mapper += " if (this.User != null)";
-        mapper += " person = this.User.Name;";
+        mapper += " if (this.StatusUser != 1){";
+        mapper += " if (this.User != null){";
+        mapper += " person = this.User.Name; } }";
         mapper += " var getdate = new Date();";
         mapper += " var dateadm = this.User.DateAdm;";
         mapper += " if (this.TypeJourney == 3) {";
@@ -240,8 +241,9 @@ namespace Manager.Services.Specific
         mapper += " var person = null;";
         mapper += " if (this.Manager != null)";
         mapper += " manager = this.Manager.Name;";
-        mapper += " if (this.User != null)";
-        mapper += " person = this.User.Name;";
+        mapper += " if (this.StatusUser != 1){";
+        mapper += " if (this.User != null){";
+        mapper += " person = this.User.Name; } }";
         mapper += " var getdate = new Date();";
         mapper += " var dateadm = this.User.DateAdm;";
         mapper += " if (this.TypeJourney == 3) {";
@@ -311,8 +313,9 @@ namespace Manager.Services.Specific
         mapper += " var person = null;";
         mapper += " if (this.Manager != null)";
         mapper += " manager = this.Manager.Name;";
-        mapper += " if (this.User != null)";
-        mapper += " person = this.User.Name;";
+        mapper += " if (this.StatusUser != 1){";
+        mapper += " if (this.User != null){";
+        mapper += " person = this.User.Name; } }";
         mapper += " var getdate = new Date();";
         mapper += " var dateadm = this.User.DateAdm;";
         mapper += " if (this.TypeJourney == 3) {";
