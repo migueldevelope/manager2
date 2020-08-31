@@ -57,13 +57,13 @@ namespace Attachment
 
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       services.AddScoped<IServiceObjective>(_ => new ServiceObjective(_context));
       services.AddScoped<IServiceHRDrive>(_ => new ServiceHRDrive(_context));
       services.AddScoped<IServiceSalaryScale>(_ => new ServiceSalaryScale(_context));
       services.AddScoped<IServiceRecommendation>(_ => new ServiceRecommendation(_context, _context, conn.TokenServer, serviceControlQueue));
-      services.AddScoped<IServiceBaseHelp>(_ => new ServiceBaseHelp(_context, conn.TokenServer));
+      services.AddScoped<IServiceBaseHelp>(_ => new ServiceBaseHelp(_context, conn.ServiceBusConnectionString));
       services.AddScoped<IServiceMaturity>(_ => new ServiceMaturity(_context));
       services.AddScoped<IServiceCertification>(_ => new ServiceCertification(_context, _context, conn.TokenServer, serviceControlQueue));
       services.AddScoped<IServiceUser>(_ => new ServiceUser(_context, _context));

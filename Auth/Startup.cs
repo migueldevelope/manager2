@@ -56,7 +56,7 @@ namespace Auth
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
       
       services.AddScoped<IServiceUser>(_ => new ServiceUser(_context, _context));

@@ -55,7 +55,7 @@ namespace Indicators
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
 
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
       IServiceManager serviceManager = new ServiceManager(_context, _context, serviceControlQueue, conn.ServiceBusConnectionString);

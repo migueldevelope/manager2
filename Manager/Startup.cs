@@ -57,7 +57,7 @@ namespace Manager
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       new MigrationHandle(_context._db).Migrate();
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
       IServiceBaseHelp serviceBaseHelp = new ServiceBaseHelp(_context, conn.ServiceBusConnectionString);
       IServiceOnBoarding serviceOnBoarding = new ServiceOnBoarding(_context, _contextLog, conn.TokenServer, serviceControlQueue);

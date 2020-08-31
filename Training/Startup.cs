@@ -60,7 +60,7 @@ namespace Training
       DataContext _contextStruct;
       _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
 
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
       services.AddScoped<IServiceEvent>(_ => new ServiceEvent(_context, _context, conn.TokenServer, conn.BlobKey));

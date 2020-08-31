@@ -50,7 +50,7 @@ namespace Mail
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
       string serviceBusConnectionString = conn.ServiceBusConnectionString;
 
-      services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
 
       services.AddScoped<IServiceMaturity>(_ => new ServiceMaturity(_context));
       services.AddScoped<IServiceMailMessage>(_ => new ServiceMailMessage(_context));
