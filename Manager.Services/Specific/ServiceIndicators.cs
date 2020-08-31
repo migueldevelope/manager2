@@ -169,10 +169,9 @@ namespace Manager.Services.Specific
         mapper += " person = this.User.Name; }";
         mapper += " var getdate = new Date();";
         mapper += " var dateadm = this.User.DateAdm;";
-        mapper += " if (this.StatusUser != 1){";
         mapper += " if (this.TypeJourney == 3) {";
         mapper += " if (this.DateLastOccupation != null)";
-        mapper += " dateadm = this.DateLastOccupation; }}";
+        mapper += " dateadm = this.DateLastOccupation; }";
         //mapper += " if (dateadm == null)";
         //mapper += " dateadm = getdate;";
         mapper += " var datea = new Date(dateadm);";
@@ -188,12 +187,15 @@ namespace Manager.Services.Specific
 
 
         if (managers.Count > 0)
-          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount 
+          && p.StatusUser != EnumStatusUser.Disabled
+          && p.Status == EnumStatus.Enabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
             && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id)
             && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && p.StatusUser != EnumStatusUser.Disabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
             && !onboardings.Contains(p._id)
             && p.Manager != null);
@@ -245,10 +247,9 @@ namespace Manager.Services.Specific
         mapper += " person = this.User.Name; } ";
         mapper += " var getdate = new Date();";
         mapper += " var dateadm = this.User.DateAdm;";
-        mapper += " if (this.StatusUser != 1){";
         mapper += " if (this.TypeJourney == 3) {";
         mapper += " if (this.DateLastOccupation != null)";
-        mapper += " dateadm = this.DateLastOccupation; }}";
+        mapper += " dateadm = this.DateLastOccupation; }";
         //mapper += " if (dateadm == null)";
         //mapper += " dateadm = getdate;";
         mapper += " var datea = new Date(dateadm);";
@@ -264,11 +265,13 @@ namespace Manager.Services.Specific
 
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && p.StatusUser != EnumStatusUser.Disabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
             && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id)
             && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.StatusUser != EnumStatusUser.Disabled
           && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
           && !onboardings.Contains(p._id)
           && p.Manager != null);
@@ -317,10 +320,9 @@ namespace Manager.Services.Specific
         mapper += " person = this.User.Name; } ";
         mapper += " var getdate = new Date();";
         mapper += " var dateadm = this.User.DateAdm;";
-        mapper += " if (this.StatusUser != 1){";
         mapper += " if (this.TypeJourney == 3) {";
         mapper += " if (this.DateLastOccupation != null)";
-        mapper += " dateadm = this.DateLastOccupation; }}";
+        mapper += " dateadm = this.DateLastOccupation; }";
         //mapper += " if (dateadm == null)";
         //mapper += " dateadm = getdate;";
         mapper += " var datea = new Date(dateadm);";
@@ -336,11 +338,13 @@ namespace Manager.Services.Specific
 
         if (managers.Count > 0)
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+            && p.StatusUser != EnumStatusUser.Disabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
             && !onboardings.Contains(p._id) && filtermanager.Contains(p.Manager._id)
             && p.Manager != null);
         else
           filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount && p.Status == EnumStatus.Enabled
+          && p.StatusUser != EnumStatusUser.Disabled
           && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
           && !onboardings.Contains(p._id)
           && p.Manager != null);
