@@ -10,5 +10,6 @@
     public long CertificationRealized { get; set; }
     public long Recommendation { get; set; }
     public long OffBoardingRealized { get; set; }
+    public long ElearningFluid { get; set; }
   }
 }

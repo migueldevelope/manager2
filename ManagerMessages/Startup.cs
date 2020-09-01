@@ -55,7 +55,7 @@ namespace ManagerMessages
 
       IServiceMaturity serviceMaturity = new ServiceMaturity(_context);
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
-      //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+      //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceIndicators serviceIndicators = new ServiceIndicators(_context, _contextLog, conn.TokenServer);
       IServiceNotification serviceNotification = new ServiceNotification(_context, _contextLog, conn.TokenServer, serviceControlQueue);
 

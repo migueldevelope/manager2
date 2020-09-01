@@ -61,7 +61,7 @@ namespace Reports
       DataContext _contextStruct;
       _contextStruct = new DataContext(conn.ServerStruct, conn.DataBaseStruct);
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
       IServiceReports serviceReports = new ServiceReports(_context, _contextLog, conn.TokenServer, conn.ServiceBusConnectionString, serviceControlQueue);

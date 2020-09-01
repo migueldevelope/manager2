@@ -37,6 +37,7 @@ namespace Manager.Services.Specific
     private readonly ServiceMailModel serviceMailModel;
     private readonly ServiceGeneric<MailLog> serviceMail;
     private readonly ServiceGeneric<Account> serviceAccount;
+    private readonly ServiceGeneric<ElearningFluid> serviceElearningFluid;
     private readonly ServiceGeneric<Certification> serviceCertification;
     private readonly ServiceGeneric<CertificationPerson> serviceCertificationPerson;
     private readonly ServiceGeneric<Recommendation> serviceRecommendation;
@@ -74,6 +75,7 @@ namespace Manager.Services.Specific
         serviceOccupation = new ServiceGeneric<Occupation>(context);
         serviceArea = new ServiceGeneric<Area>(context);
         serviceFluidCareers = new ServiceGeneric<FluidCareers>(context);
+        serviceElearningFluid = new ServiceGeneric<ElearningFluid>(context);
 
         path = pathToken;
       }
@@ -107,6 +109,7 @@ namespace Manager.Services.Specific
       serviceArea._user = _user;
       serviceMaturity._user = _user;
       serviceCertificationPerson._user = _user;
+      serviceElearningFluid._user = _user;
     }
 
 
@@ -125,13 +128,14 @@ namespace Manager.Services.Specific
         var plans = servicePlan.GetAllNewVersion(p => p.StatusPlan != EnumStatusPlan.NoRealized).Result;
         var recommendation = serviceRecommendationPerson.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var certification = serviceCertification.GetAllNewVersion(p => p.StatusCertification == EnumStatusCertification.Approved).Result;
-
+        var elearningFluid = serviceElearningFluid.GetAllNewVersion(p => p.ElearningCertificate == true && p.ElearningVideo == true).Result;
         plans = plans.Where(p => monitorings.Select(x => x._id).Contains(p._idMonitoring)).ToList();
 
         view.OffBoardingRealized = offboardings.Count();
         view.MonitoringRealized = monitorings.Count();
         view.CertificationRealized = certification.Count();
         view.Recommendation = recommendation.Count();
+        view.ElearningFluid = elearningFluid.Count();
         view.OnBoardingWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation).Count();
         view.CheckpointWait = persons.Where(p => p.TypeJourney == EnumTypeJourney.Checkpoint).Count();
         view.Plans = plans.Count();

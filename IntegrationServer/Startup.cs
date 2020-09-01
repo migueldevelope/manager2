@@ -58,7 +58,7 @@ namespace IntegrationServer
 
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
 
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
       services.AddScoped<IServiceAuthentication>(_ => new ServiceAuthentication(_context, _context, serviceControlQueue, conn.SignalRService));
       services.AddScoped<IServiceControlQueue>(_ => new ServiceControlQueue(conn.ServiceBusConnectionString, _context));
