@@ -2,6 +2,6 @@
 {
   public class ViewTotalHourTraining
   {
-    public decimal Workload { get; set; };
+    public decimal Workload { get; set; }
   }
 }
