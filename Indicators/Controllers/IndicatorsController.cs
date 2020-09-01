@@ -64,6 +64,30 @@ namespace Indicators.Controllers
     /// <returns></returns>
     [Authorize]
     [HttpGet]
+    [Route("totalworkloadtraining")]
+    public async Task<ViewTotalHourTraining> TotalWorkloadTraining()
+    {
+      return await Task.Run(() => service.TotalWorkloadTraining());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("workloadtraining")]
+    public async Task<List<ViewHourTraining>> WorkloadTraining()
+    {
+      return await Task.Run(() => service.WorkloadTraining());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
     [Route("exportlogs")]
     public async Task<List<ViewExportLogs>> ExportLogs()
     {

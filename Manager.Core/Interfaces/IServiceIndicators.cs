@@ -80,6 +80,8 @@ namespace Manager.Core.Interfaces
     ViewDashboard GetDashboard();
     ViewAccessAccount AccessAccount();
     List<ViewExportLogs> ExportLogs();
+    List<ViewHourTraining> WorkloadTraining();
     List<ViewGetOffBoarding> GetOffBoarding(int count, int page, ref long total, string filter);
+    public ViewTotalHourTraining TotalWorkloadTraining();
   }
 }

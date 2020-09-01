@@ -45,6 +45,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<RecommendationPerson> serviceRecommendationPerson;
     private readonly ServiceGeneric<Parameter> serviceParameter;
     private readonly ServiceGeneric<FluidCareers> serviceFluidCareers;
+    private readonly ServiceGeneric<EventHistoric> serviceEventHistoric;
 
     public string path;
     private HubConnection hubConnection;
@@ -76,6 +77,7 @@ namespace Manager.Services.Specific
         serviceArea = new ServiceGeneric<Area>(context);
         serviceFluidCareers = new ServiceGeneric<FluidCareers>(context);
         serviceElearningFluid = new ServiceGeneric<ElearningFluid>(context);
+        serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
 
         path = pathToken;
       }
@@ -110,8 +112,45 @@ namespace Manager.Services.Specific
       serviceMaturity._user = _user;
       serviceCertificationPerson._user = _user;
       serviceElearningFluid._user = _user;
+      serviceEventHistoric._user = _user;
+    
     }
 
+    public ViewTotalHourTraining TotalWorkloadTraining()
+    {
+      var dateyear = DateTime.Now.AddYears(-1);
+      var eventhistoric = serviceEventHistoric.GetAllNewVersion(p => p.End >= dateyear).Result;
+
+      return new ViewTotalHourTraining { Workload = eventhistoric.Sum(p => p.Workload) };
+    }
+
+    public List<ViewHourTraining> WorkloadTraining()
+    {
+      try
+      {
+        var dateyear = DateTime.Now.AddYears(-1);
+        var eventhistoric = serviceEventHistoric.GetAllNewVersion(p => p.End >= dateyear).Result;
+        var list = new List<ViewHourTraining>();
+
+        for (var i = 0; i <= 12; i++)
+        {
+          var view = new ViewHourTraining() { Month = i };
+          var datemonthb = DateTime.Now.AddMonths(i * -1);
+          datemonthb = DateTime.Parse(datemonthb.Year + "-" + datemonthb.Month + "-01");
+          var datemonthe = DateTime.Now.AddMonths(i * -1).AddMonths(1).AddDays(-1);
+          var item = eventhistoric.Where(p => p.End >= datemonthb && p.End <= datemonthe).ToList();
+          view.Workload = item.Sum(p => p.Workload);
+
+          list.Add(view);
+        }
+
+        return list;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
 
     public ViewDashboard GetDashboard()
     {
@@ -191,7 +230,7 @@ namespace Manager.Services.Specific
 
 
         if (managers.Count > 0)
-          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount 
+          filters = Builders<Person>.Filter.Where(p => p._idAccount == _user._idAccount
           && p.StatusUser != EnumStatusUser.Disabled
           && p.Status == EnumStatus.Enabled
             && (p.TypeJourney == EnumTypeJourney.OnBoarding || p.TypeJourney == EnumTypeJourney.OnBoardingOccupation)
