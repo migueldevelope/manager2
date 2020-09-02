@@ -353,22 +353,22 @@ namespace Manager.Services.Specific
 
         List<ManagerWorkNotification> listManager = new List<ManagerWorkNotification>();
         // Checkpoint vencidos (sem data de admissão)
-        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.Checkpoint && p.User.DateAdm == null && p.Manager != null).Result;
-        foreach (Person item in persons)
-        {
-          if (serviceCheckpoint.CountNewVersion(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result == 0)
-            listManager.Add(new ManagerWorkNotification()
-            {
-              Manager = item.Manager,
-              Person = item,
-              Type = ManagerListType.Defeated
-            });
-        }
+        //List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.Checkpoint && p.User.DateAdm == null && p.Manager != null).Result;
+        //foreach (Person item in persons)
+        //{
+        //  if (serviceCheckpoint.CountNewVersion(p => p.Person._id == item._id && p.StatusCheckpoint == EnumStatusCheckpoint.End).Result == 0)
+        //    listManager.Add(new ManagerWorkNotification()
+        //    {
+        //      Manager = item.Manager,
+        //      Person = item,
+        //      Type = ManagerListType.Defeated
+        //    });
+        //}
         // Checkpoint vencidos
         DateTime nowLimit = DateTime.Now.AddDays(daysCheckpoint - 1).Date;
         DateTime nowLimitLast = DateTime.Now.AddDays(daysCheckpoint - 10).Date;
 
-        persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.Checkpoint && p.User.DateAdm <= nowLimit
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.Checkpoint && p.User.DateAdm <= nowLimit
         && p.User.DateAdm > nowLimitLast
         && p.Manager != null).Result;
 
