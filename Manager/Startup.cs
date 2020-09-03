@@ -75,7 +75,7 @@ namespace Manager
       services.AddScoped<IServiceMyAwareness>(_ => new ServiceMyAwareness(_context));
       services.AddScoped<IServiceFluidCareers>(_ => new ServiceFluidCareers(_context));
       services.AddScoped<IServiceRecommendation>(_ => new ServiceRecommendation(_context, _context, conn.TokenServer, serviceControlQueue));
-      services.AddScoped<IServiceBaseHelp>(_ => new ServiceBaseHelp(_context, conn.TokenServer));
+      services.AddScoped<IServiceBaseHelp>(_ => new ServiceBaseHelp(_context, conn.ServiceBusConnectionString));
       services.AddScoped<IServiceMaturity>(_ => new ServiceMaturity(_context));
       services.AddScoped<IServiceControlQueue>(_ => new ServiceControlQueue(conn.ServiceBusConnectionString, _context));
       services.AddScoped<IServiceMeritocracy>(_ => new ServiceMeritocracy(_context, _context));
