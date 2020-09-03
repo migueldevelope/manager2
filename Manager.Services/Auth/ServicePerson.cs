@@ -449,6 +449,12 @@ namespace Manager.Services.Auth
 
         if (modifyManager)
           manager = UpdateManager(person, view.Person.Manager._id, person.Manager?._id);
+        else
+        {
+          manager = null;
+          UpdateManagerNull(person);
+        }
+          
 
         #region Registrar os históricos da pessoa nova
         PersonHistory personHistory = null;
@@ -810,6 +816,27 @@ namespace Manager.Services.Auth
       }
     }
 
+    public void UpdateManagerNull(Person person)
+    {
+      try
+      {
+       
+        Task.Run(() => SendQueue(null, person._id, person.User?.Name));
+
+        //hubConnection = new HubConnectionBuilder()
+        //    .WithUrl(pathSignalr + "messagesHub")
+        //    .Build();
+
+        //hubConnection.StartAsync();
+        //hubConnection.InvokeAsync("GetFilterPersons", null, person._idAccount);
+
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
 
     public string Delete(string idperson)
     {
@@ -1105,9 +1132,7 @@ namespace Manager.Services.Auth
         }
 
         if (view.Manager != null)
-        {
           modifyManager = true;
-        }
 
         SalaryScalePerson salaryScale = null;
         if (view.SalaryScales != null)
@@ -1132,6 +1157,8 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
+        if (person.Manager == null)
+          person.Manager = null;
 
         #region Ajustes na manutenção da pessoa
         if (person.StatusUser == EnumStatusUser.Disabled)
@@ -1169,6 +1196,11 @@ namespace Manager.Services.Auth
         if (modifyManager)
         {
           BaseFields manager = UpdateManager(person, view.Manager._id, person.Manager?._id);
+        }
+        else
+        {
+          UpdateManagerNull(person);
+          person.Manager = null;
         }
 
         #region Registrar os históricos da pessoa nova

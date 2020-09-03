@@ -699,6 +699,32 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    private MailModel OnboardingEmployeeDeadlineDefault(string path)
+    {
+      try
+      {
+        MailModel model = new MailModel
+        {
+          Status = EnumStatus.Enabled,
+          Message = string.Concat("Olá <strong>{Person}</strong>,<br><br>",
+                                  "Seu gestor <strong>{Manager}</strong> concluiu seu embarque.<br><br>Acesse a plataforma, para aceitar o processo de embarque, e para conhecer outras funcionalidades muito legais.<br><br>",
+                                  "Para acessar a plataforma <a href='{Link}'>clique aqui</a>.<br><br>",
+                                  "#VamosSerMaisFluidos<br>"),
+          Subject = "Notificação de Embarque | Onboarding",
+          Name = "onboardingemployeedeadline",
+          Link = path
+        };
+        // Insert
+        model = serviceMailModel.InsertNewVersion(model).Result;
+        return model;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private MailModel MonitoringManagerDeadlineDefault(string path)
     {
       try
@@ -1015,6 +1041,20 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
+
+    public MailModel OnboardingEmployeeDeadline(string path)
+    {
+      try
+      {
+        MailModel model = serviceMailModel.GetNewVersion(p => p.Name == "onboardingemployeedeadline").Result;
+        return model ?? OnboardingEmployeeDeadlineDefault(path);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     private MailModel OnboardingManagerDeadlineDefault(string path)
     {
       try
