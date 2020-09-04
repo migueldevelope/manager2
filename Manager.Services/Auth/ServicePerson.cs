@@ -1157,7 +1157,7 @@ namespace Manager.Services.Auth
         person.TypeUser = view.TypeUser;
         person.User = user.GetViewCrud();
         person.SalaryScales = salaryScale;
-        if (person.Manager == null)
+        if (view.Manager == null)
           person.Manager = null;
 
         #region Ajustes na manutenção da pessoa
