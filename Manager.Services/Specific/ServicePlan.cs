@@ -157,7 +157,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
 
         if (viewPlan.StatusPlanApproved == EnumStatusPlanApproved.Approved)
@@ -2207,7 +2207,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var plan = servicePlan.GetAllNewVersion(p => p._id == idplan).Result.FirstOrDefault();
+        var plan = servicePlan.GetNewVersion(p => p._id == idplan).Result;
         var resultPlan = new ViewGetPlan()
         {
           DateInclude = plan.DateInclude,
