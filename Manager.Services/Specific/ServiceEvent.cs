@@ -290,7 +290,7 @@ namespace Manager.Services.Specific
               total += 1;
             }
 
-            if (((count * 100) / total) > events.MinimumFrequency)
+            if (((count * 100) / total) >= events.MinimumFrequency)
               participant.Approved = true;
             else
               participant.Approved = false;

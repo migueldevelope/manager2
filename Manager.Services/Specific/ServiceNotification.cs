@@ -152,7 +152,7 @@ namespace Manager.Services.Specific
             };
             serviceLog.NewLogService(log);
             //SendMessageSuccessFactory(sendTest);
-            CheckpointManagerDeadlineV2(sendTest);
+            CheckpointManagerDeadlineV2(sendTest); 
             if (parameter != null)
             {
               SendMessageAccount(sendTest);
