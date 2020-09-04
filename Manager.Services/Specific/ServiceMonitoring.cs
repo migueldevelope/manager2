@@ -1627,6 +1627,12 @@ namespace Manager.Services.Specific
         monitoring.CommentsManager = view.CommentsManager;
         monitoring.CommentWarning = view.CommentWarning;
 
+        if (person.Manager != null)
+        {
+          monitoring.Person.Manager = person.Manager.Name;
+          monitoring.Person._idManager = person.Manager._id;
+        }
+
         foreach (var row in monitoring.SkillsCompany)
         {
           var item = view.SkillsCompany.Where(p => p.Skill._id == row.Skill._id).FirstOrDefault();
