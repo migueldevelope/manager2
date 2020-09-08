@@ -2398,8 +2398,6 @@ namespace Manager.Services.Specific
       }
     }
 
-
-
     private void LogSave(string idperson, string local, string plataform)
     {
       try
