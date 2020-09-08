@@ -54,6 +54,7 @@ namespace Manager.Services.Specific
       servicePerson._user = _user;
       serviceDimension._user = _user;
       servicePendingCheckinObjective._user = _user;
+      serviceLog.SetUser(_user);
     }
     public void SetUser(BaseUser user)
     {
@@ -63,6 +64,7 @@ namespace Manager.Services.Specific
       servicePerson._user = user;
       serviceDimension._user = user;
       servicePendingCheckinObjective._user = user;
+      serviceLog.SetUser(user);
     }
     #endregion
 
@@ -1217,7 +1219,7 @@ namespace Manager.Services.Specific
             viewKeyResult._id = kr._id;
             viewKeyResult.Name = kr.Name;
             viewKeyResult.TypeKeyResult = kr.TypeKeyResult;
-            viewKeyResult.QuantityGoal = Math.Round(kr.QuantityGoal,2);
+            viewKeyResult.QuantityGoal = Math.Round(kr.QuantityGoal, 2);
             viewKeyResult.QualityGoal = kr.QualityGoal;
             viewKeyResult.BeginProgressGoal = kr.BeginProgressGoal;
             viewKeyResult.EndProgressGoal = kr.EndProgressGoal;
@@ -1226,7 +1228,7 @@ namespace Manager.Services.Specific
             viewKeyResult.Weight = kr.Weight;
             viewKeyResult.Objective = kr.Objective;
             viewKeyResult.QualityResult = kr.QualityResult;
-            viewKeyResult.QuantityResult = Math.Round(kr.QuantityResult,2);
+            viewKeyResult.QuantityResult = Math.Round(kr.QuantityResult, 2);
             viewKeyResult.TypeCheckin = kr.TypeCheckin;
             viewKeyResult.TypeBinary = kr.TypeBinary;
             //viewKeyResult.Binary = kr.Binary;
@@ -1530,20 +1532,20 @@ namespace Manager.Services.Specific
 
         if (model.TypeKeyResult == EnumTypeKeyResult.Quantity)
         {
-          if(model.Sense == EnumSense.BiggerBetter)
+          if (model.Sense == EnumSense.BiggerBetter)
             model.Achievement = (model.QuantityResult * 100) / ((model.QuantityGoal == 0) ? 1 : model.QuantityGoal);
           else
           {
             if (model.QuantityResult == 0)
             {
-              if(model.QuantityResult <= model.QuantityGoal)
+              if (model.QuantityResult <= model.QuantityGoal)
                 model.Achievement = 100;
             }
             else
               model.Achievement = (model.QuantityGoal * 100) / ((model.QuantityResult == 0) ? 1 : model.QuantityResult);
           }
         }
-          
+
         else if (model.TypeKeyResult == EnumTypeKeyResult.Progress)
         {
           var diffgoal = model.EndProgressGoal - model.BeginProgressGoal;
@@ -2358,6 +2360,7 @@ namespace Manager.Services.Specific
     {
       try
       {
+
         LogSave(_user._idPerson, "upload objective model 1", "web");
 
         var list = serviceExcel.ImportObjectiveModel1(stream);
@@ -2368,7 +2371,7 @@ namespace Manager.Services.Specific
         foreach (var item in list)
         {
           var listkeyresult = keyresults.Where(p => p.Name.Trim() == item.Name.Trim()).ToList();
-          foreach(var keyresult in listkeyresult)
+          foreach (var keyresult in listkeyresult)
           {
             if (keyresult != null)
             {
@@ -2383,7 +2386,9 @@ namespace Manager.Services.Specific
               var viewtext = new ViewText() { Text = "" };
               if (item.Type == EnumTypeKeyResult.Quantity)
               {
-                UpdateResultKeyResult(keyresult._id, checkin._id, 0, decimal.Parse(item.Result), viewtext);
+                var isNumeric = int.TryParse(item.Result, out _);
+                if (isNumeric)
+                  UpdateResultKeyResult(keyresult._id, checkin._id, 0, decimal.Parse(item.Result), viewtext);
               }
               else
               {

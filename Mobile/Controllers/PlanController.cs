@@ -2,6 +2,8 @@
 using Manager.Core.BusinessModel;
 using Manager.Core.Interfaces;
 using Manager.Core.Views;
+using Manager.Data;
+using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
 using Manager.Views.BusinessList;
 using Manager.Views.BusinessView;
@@ -9,8 +11,14 @@ using Manager.Views.Enumns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Tools;
+using Tools.Data;
 
 namespace Mobile.Controllers
 {
@@ -22,6 +30,8 @@ namespace Mobile.Controllers
   public class PlanController : DefaultController
   {
     private readonly IServicePlan service;
+    private readonly ServiceGeneric<Attachments> serviceAttachment;
+    private readonly string blobKey;
 
     #region Constructor
     /// <summary>
@@ -31,7 +41,12 @@ namespace Mobile.Controllers
     /// <param name="contextAccessor">Token de segurança</param>
     public PlanController(IServicePlan _service, IHttpContextAccessor contextAccessor) : base(contextAccessor)
     {
+      Config conn = XmlConnection.ReadVariablesSystem();
+      var context = new DataContext(conn.Server, conn.DataBase);
+      blobKey = conn.BlobKey;
+
       service = _service;
+      serviceAttachment = new ServiceGeneric<Attachments>(context);
       service.SetUser(contextAccessor);
     }
     #endregion
@@ -51,6 +66,65 @@ namespace Mobile.Controllers
     public async Task<string> RemoveStructPlan(string idmonitoring, string idplan, EnumSourcePlan sourceplan, string idstructplan)
     {
       return await Task.Run(() => service.RemoveStructPlan(idmonitoring, idplan, sourceplan, idstructplan));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idmonitoring"></param>
+    /// <param name="idplan"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("upload/{idmonitoring}/{idplan}")]
+    public async Task<ObjectResult> PostPlan(string idmonitoring, string idplan)
+    {
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
+          return BadRequest("Bad file type.");
+      }
+      List<Attachments> listAttachments = new List<Attachments>();
+      var url = "";
+      foreach (var file in HttpContext.Request.Form.Files)
+      {
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        await serviceAttachment.InsertNewVersion(attachment);
+        try
+        {
+          CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+          CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+          CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(serviceAttachment._user._idAccount);
+          if (await cloudBlobContainer.CreateIfNotExistsAsync())
+          {
+            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+              PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+          }
+          CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+          blockBlob.Properties.ContentType = file.ContentType;
+          await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+          url = blockBlob.Uri.ToString();
+        }
+        catch (Exception e)
+        {
+          attachment.Saved = false;
+          await serviceAttachment.Update(attachment, null);
+          throw e;
+        }
+
+        service.SetAttachment(idplan, idmonitoring, url, file.FileName, attachment._id);
+        listAttachments.Add(attachment);
+      }
+      return Ok(listAttachments);
     }
 
     /// <summary>
