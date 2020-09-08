@@ -538,7 +538,7 @@ namespace Manager.Services.Commons
 
       IRow headerRow = sheet.GetRow(0); //Get Header Row
 
-      for (int i = 2; i <= sheet.LastRowNum; i++) //Read Excel File
+      for (int i = 1; i <= sheet.LastRowNum; i++) //Read Excel File
       {
         IRow row = sheet.GetRow(i);
         if (row == null) continue;
