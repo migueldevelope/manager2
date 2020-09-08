@@ -833,7 +833,14 @@ namespace Manager.Services.Specific
         plan._idMonitoring = _idmonitoring;
         plan._idItem = _iditem;
         plan.Person = person.GetViewListBaseManager();
-        return servicePlan.InsertNewVersion(plan).Result;
+        var verify = servicePlan.GetNewVersion(p => p._id == plan._id).Result;
+
+        if (verify == null)
+          servicePlan.InsertNewVersion(plan);
+        else
+          servicePlan.Update(plan, null);
+
+        return plan;
       }
       catch (Exception e)
       {
