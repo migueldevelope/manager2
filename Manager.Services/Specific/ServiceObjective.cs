@@ -2358,9 +2358,12 @@ namespace Manager.Services.Specific
     {
       try
       {
+        LogSave(_user._idPerson, "upload objective model 1", "web");
+
         var list = serviceExcel.ImportObjectiveModel1(stream);
 
-        LogSave(_user._idPerson, "import objective model 1", "web");
+        LogSave(_user._idPerson, "load objective model 1", "web");
+
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
