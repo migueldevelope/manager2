@@ -1,6 +1,7 @@
 ﻿using Manager.Core.Base;
 using Manager.Core.Business;
 using Manager.Core.Interfaces;
+using Manager.Core.Views;
 using Manager.Data;
 using Manager.Services.Commons;
 using Manager.Views.BusinessCrud;
@@ -23,6 +24,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Objective> serviceObjective;
     private readonly ServiceGeneric<KeyResult> serviceKeyResult;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceLog serviceLog;
     private readonly ServiceGeneric<PendingCheckinObjective> servicePendingCheckinObjective;
     private readonly ServiceExcel serviceExcel;
 
@@ -36,6 +38,7 @@ namespace Manager.Services.Specific
         serviceKeyResult = new ServiceGeneric<KeyResult>(context);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceExcel = new ServiceExcel();
+        serviceLog = new ServiceLog(context, context);
         servicePendingCheckinObjective = new ServiceGeneric<PendingCheckinObjective>(context);
       }
       catch (Exception e)
@@ -2356,6 +2359,8 @@ namespace Manager.Services.Specific
       try
       {
         var list = serviceExcel.ImportObjectiveModel1(stream);
+
+        LogSave(_user._idPerson, "import objective model 1", "web");
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
         {
@@ -2386,6 +2391,27 @@ namespace Manager.Services.Specific
           }
         }
         return "ok";
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+
+
+    private void LogSave(string idperson, string local, string plataform)
+    {
+      try
+      {
+        var user = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "Objective " + plataform,
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
       }
       catch (Exception e)
       {
