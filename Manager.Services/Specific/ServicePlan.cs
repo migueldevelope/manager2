@@ -1423,7 +1423,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        return result.OrderBy(p => p.StatusPlan).ThenBy(p => p.Deadline).Skip(skip).Take(count).ToList();
+        return result.OrderBy(p => p.StatusPlanApproved).ThenBy(p => p.StatusPlan).ThenBy(p => p.Deadline).Skip(skip).Take(count).ToList();
       }
       catch (Exception e)
       {
@@ -1713,7 +1713,7 @@ namespace Manager.Services.Specific
 
         total = result.Count();
 
-        result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        result.Skip(skip).Take(count).OrderBy(p => p.StatusPlan).ThenBy(p => p.Deadline).ToList();
 
         result = result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
         var viewReturn = result.GroupBy(i => i.Name).Select(g => new ViewPlanShort
@@ -1777,7 +1777,7 @@ namespace Manager.Services.Specific
         result = result.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Invisible).ToList();
 
         total = result.Count();
-        result = result.Skip(skip).Take(count).OrderBy(p => p.SourcePlan).ThenBy(p => p.Deadline).ToList();
+        result = result.Skip(skip).Take(count).OrderBy(p => p.StatusPlanApproved).ThenBy(p => p.StatusPlan).ThenBy(p => p.Deadline).ToList();
         var viewReturn = result.GroupBy(i => i.Name).Select(g => new ViewPlanShort
         {
           Name = g.Key,
