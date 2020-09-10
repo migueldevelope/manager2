@@ -181,39 +181,39 @@ namespace Manager.Services.Specific
         Log logMonitoringManagerDeadline = null;
         Log logPlanManagerDeadline = null;
 
-        //OnboardingAdmission
-        if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Daily)
-        {
-          logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Day == DateTime.Now.Day).FirstOrDefault();
-        }
-        else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Weekly)
-        {
-          if (DateTime.Now.DayOfWeek == modelOnboardingAdmission.Weekly)
-            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.DayOfWeek == DateTime.Now.DayOfWeek
-            && p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
-          else
-            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
-        }
-        else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Monthly)
-        {
-          if (DateTime.Now.Day == modelOnboardingAdmission.Day)
-            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
-          else
-            logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
-        }
+        ////OnboardingAdmission
+        //if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Daily)
+        //{
+        //  logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Day == DateTime.Now.Day).FirstOrDefault();
+        //}
+        //else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Weekly)
+        //{
+        //  if (DateTime.Now.DayOfWeek == modelOnboardingAdmission.Weekly)
+        //    logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.DayOfWeek == DateTime.Now.DayOfWeek
+        //    && p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+        //  else
+        //    logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
+        //}
+        //else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Monthly)
+        //{
+        //  if (DateTime.Now.Day == modelOnboardingAdmission.Day)
+        //    logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
+        //  else
+        //    logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
+        //}
 
-        if ((logOnboardingAdmission == null) && (modelOnboardingAdmission.StatusMail == EnumStatus.Enabled))
-        {
-          Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
-          ViewLog log = new ViewLog
-          {
-            Description = "Service Notification",
-            _idPerson = null,
-            Local = "ManagerMessagesOnboardingAdmission"
-          };
-          serviceLog.NewLogService(log);
-          OnboardingAdmission(sendTest, modelOnboardingAdmission);
-        }
+        //if ((logOnboardingAdmission == null) && (modelOnboardingAdmission.StatusMail == EnumStatus.Enabled))
+        //{
+        //  Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "servicemailmessage" && p.Content == "1").Result;
+        //  ViewLog log = new ViewLog
+        //  {
+        //    Description = "Service Notification",
+        //    _idPerson = null,
+        //    Local = "ManagerMessagesOnboardingAdmission"
+        //  };
+        //  serviceLog.NewLogService(log);
+        //  OnboardingAdmission(sendTest, modelOnboardingAdmission);
+        //}
 
 
         //OnboardingManagerDeadline
