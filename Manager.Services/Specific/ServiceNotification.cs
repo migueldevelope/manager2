@@ -176,7 +176,6 @@ namespace Manager.Services.Specific
         MailModel modelMonitoringManagerDeadline = serviceMailModel.MonitoringManagerDeadline(path);
         MailModel modelMonitoringDeadline = serviceMailModel.MonitoringDeadline(path);
         MailModel modelPlanManagerDeadline = serviceMailModel.PlanManagerDeadline(path);
-        Log logOnboardingAdmission = null;
         Log logOnboardingManagerDeadline = null;
         Log logMonitoringManagerDeadline = null;
         Log logPlanManagerDeadline = null;
@@ -831,7 +830,7 @@ namespace Manager.Services.Specific
         var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineMonitoring").Result;
 
         //searsh model mail database
-        MailModel model = serviceMailModel.MonitoringManagerDeadline(path);
+        MailModel model = serviceMailModel.MonitoringDeadline(path);
         if (model.StatusMail == EnumStatus.Disabled)
           return;
 
@@ -1050,8 +1049,8 @@ private void OnboardingManagerDeadlineV2(bool sendTest, MailModel model, MailMod
           Type = ManagerListType.Defeated
         });
 
-      if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && (p.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson)).Result == 0)
-        MailMonitoringDeadlinePerson(item, sendTest, modelEmployee);
+      //if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && (p.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson)).Result == 0)
+        //MailOnboardingManagerDeadline(item, sendTest, modelEmployee);
 
     }
     // Onboarding vencidos
@@ -1303,11 +1302,6 @@ private void PlanManagerDeadline(bool sendTest, MailModel model)
     List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
     foreach (Person person in persons)
     {
-
-      if (person._id == "5c807bc45e4ccea2266f256a")
-      {
-        var x = "";
-      }
       List<Plan> plans = servicePlan.GetAllNewVersion(p => p.Person._id == person._id).Result.Where(p => monitorings.Contains(p._idMonitoring)).ToList();
 
       var plansfilter = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open).ToList();
