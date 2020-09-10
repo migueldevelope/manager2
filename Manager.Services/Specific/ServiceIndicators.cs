@@ -31,6 +31,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Checkpoint> serviceCheckpoint;
     private readonly ServiceGeneric<Workflow> serviceWorkflow;
     private readonly ServiceGeneric<Person> servicePerson;
+    private readonly ServiceGeneric<User> serviceUser;
     private readonly ServiceGeneric<Plan> servicePlan;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceLog serviceLog;
@@ -78,6 +79,7 @@ namespace Manager.Services.Specific
         serviceFluidCareers = new ServiceGeneric<FluidCareers>(context);
         serviceElearningFluid = new ServiceGeneric<ElearningFluid>(context);
         serviceEventHistoric = new ServiceGeneric<EventHistoric>(context);
+        serviceUser = new ServiceGeneric<User>(context);
 
         path = pathToken;
       }
@@ -113,7 +115,9 @@ namespace Manager.Services.Specific
       serviceCertificationPerson._user = _user;
       serviceElearningFluid._user = _user;
       serviceEventHistoric._user = _user;
-    
+      serviceUser._user = _user;
+
+
     }
 
     public ViewTotalHourTraining TotalWorkloadTraining()
@@ -1901,6 +1905,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var showsalary = serviceUser.GetNewVersion(p => p._id == _user._idUser).Result.ShowSalary;
+
         var persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled)
           .Result.Select(p => new ViewAccountEnableds()
           {
@@ -1909,6 +1915,8 @@ namespace Manager.Services.Specific
             DateLastOccupation = p.DateLastOccupation,
             Mail = p.User?.Mail,
             Manager = p.Manager?.Name,
+            Document = p.User?.Document,
+            Salary = (showsalary == true) ? p.Salary : 0,
             OccupationName = p.Occupation?.Name + (p.Occupation?.Description == null ? "" : p.Occupation?.Description),
             TypeJourney = p.TypeJourney.ToString(),
             TypeUser = p.TypeUser.ToString(),

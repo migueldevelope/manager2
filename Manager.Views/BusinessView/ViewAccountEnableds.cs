@@ -14,5 +14,7 @@ namespace Manager.Views.BusinessView
     public string OccupationName { get; set; }
     public string TypeUser { get; set; }
     public string TypeJourney { get; set; }
+    public string Document { get; set; }
+    public decimal Salary { get; set; }
   }
 }
