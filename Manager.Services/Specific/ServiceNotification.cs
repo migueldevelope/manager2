@@ -194,7 +194,7 @@ namespace Manager.Services.Specific
           else
             logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.FirstOrDefault();
         }
-        else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Weekly)
+        else if (modelOnboardingAdmission.TypeFrequence == EnumTypeFrequence.Monthly)
         {
           if (DateTime.Now.Day == modelOnboardingAdmission.Day)
             logOnboardingAdmission = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingAdmission").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
@@ -229,7 +229,7 @@ namespace Manager.Services.Specific
           else
             logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.FirstOrDefault();
         }
-        else if (modelOnboardingManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        else if (modelOnboardingManagerDeadline.TypeFrequence == EnumTypeFrequence.Monthly)
         {
           if (DateTime.Now.Day == modelOnboardingManagerDeadline.Day)
             logOnboardingManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesOnboardingManagerDeadline").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
@@ -265,7 +265,7 @@ namespace Manager.Services.Specific
           else
             logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.FirstOrDefault();
         }
-        else if (modelMonitoringManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        else if (modelMonitoringManagerDeadline.TypeFrequence == EnumTypeFrequence.Monthly)
         {
           if (DateTime.Now.Day == modelMonitoringManagerDeadline.Day)
             logMonitoringManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesMonitoringManagerDeadline").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
@@ -300,7 +300,7 @@ namespace Manager.Services.Specific
           else
             logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.FirstOrDefault();
         }
-        else if (modelPlanManagerDeadline.TypeFrequence == EnumTypeFrequence.Weekly)
+        else if (modelPlanManagerDeadline.TypeFrequence == EnumTypeFrequence.Monthly)
         {
           if (DateTime.Now.Day == modelPlanManagerDeadline.Day)
             logPlanManagerDeadline = serviceLog.GetAllNewVersion(p => p.Local == "ManagerMessagesPlanManagerDeadline").Result.Where(p => p.DataLog.Value.Month == DateTime.Now.Month).FirstOrDefault();
