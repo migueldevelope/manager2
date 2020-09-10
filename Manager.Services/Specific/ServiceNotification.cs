@@ -110,7 +110,13 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: SendMessage",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
     private void Timer1_Tick(object Sender, EventArgs e)
@@ -152,7 +158,7 @@ namespace Manager.Services.Specific
             };
             serviceLog.NewLogService(log);
             //SendMessageSuccessFactory(sendTest);
-            CheckpointManagerDeadlineV2(sendTest); 
+            CheckpointManagerDeadlineV2(sendTest);
             if (parameter != null)
             {
               SendMessageAccount(sendTest);
@@ -162,7 +168,13 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: Send",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
     private void SendMessageAccount(bool sendTest)
@@ -321,9 +333,15 @@ namespace Manager.Services.Specific
         }
 
       }
-      catch (Exception)
+      catch (Exception e)
       {
-
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: sendmessageaccount",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
 
@@ -333,9 +351,15 @@ namespace Manager.Services.Specific
       {
         BirthCompany(sendTest);
       }
-      catch (Exception)
+      catch (Exception e)
       {
-
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message,
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
 
@@ -527,9 +551,15 @@ namespace Manager.Services.Specific
           MailCheckpointManagerDeadline(listManagerNotification, sendTest);
         }
       }
-      catch (Exception)
+      catch (Exception e)
       {
-
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: checkpointdeadlinev2",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
     private void MailCheckpointManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
@@ -632,7 +662,13 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailcheckpointmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
     private void StatusCheckpoint(Person person)
@@ -651,7 +687,13 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: statuscheckpoint",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
     #endregion
@@ -752,9 +794,15 @@ namespace Manager.Services.Specific
           //  MailMonitoringDeadline(listPerson, sendTest, model);
         }
       }
-      catch (Exception)
+      catch (Exception e)
       {
-
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: monitoringmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
     private void MailMonitoringManagerDeadline(List<ManagerNotification> listManager, bool sendTest)
@@ -818,7 +866,13 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
-        throw e;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailmonitoringmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
 
@@ -837,7 +891,7 @@ namespace Manager.Services.Specific
         string body = model.Message.Replace("{Link}", model.Link).Replace("{Person}", item.User.Name)
                                     .Replace("{Manager}", item.Manager.Name).Replace("{DAYS}", parameter.Content);
 
-       
+
         MailLog sendMail = new MailLog
         {
           From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
@@ -861,998 +915,1086 @@ namespace Manager.Services.Specific
         sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
         string token = SendMailApi(path, item, sendMail._id);
 
-      
+
       }
       catch (Exception e)
       {
-        throw e;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailmonitoringemlpoyeedeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
-}
+    }
 
-private void MailMonitoringDeadline(List<Person> listPerson, bool sendTest, MailModel model)
-{
-  try
-  {
-    //{DAYS}
-    var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineMonitoring").Result;
-
-    if (model.StatusMail == EnumStatus.Disabled)
-      return;
-
-    foreach (var item in listPerson)
+    private void MailMonitoringDeadline(List<Person> listPerson, bool sendTest, MailModel model)
     {
-      string body = model.Message.Replace("{Link}", model.Link)
-                                  .Replace("{Person}", item.User.Name).Replace("{DAYS}", parameter.Content);
-
-      MailLog sendMail = new MailLog
+      try
       {
-        From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
-        To = sendTest ?
-          new List<MailLogAddress>()
-            {
+        //{DAYS}
+        var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineMonitoring").Result;
+
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        foreach (var item in listPerson)
+        {
+          string body = model.Message.Replace("{Link}", model.Link)
+                                      .Replace("{Person}", item.User.Name).Replace("{DAYS}", parameter.Content);
+
+          MailLog sendMail = new MailLog
+          {
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            To = sendTest ?
+              new List<MailLogAddress>()
+                {
                   new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-            } :
-          new List<MailLogAddress>()
-            {
+                } :
+              new List<MailLogAddress>()
+                {
                   new MailLogAddress(item.Manager.Mail, item.Manager.Name)
-            },
-        Priority = EnumPriorityMail.Low,
-        _idPerson = item._id,
-        NamePerson = item.User.Name,
-        Body = body,
-        StatusMail = EnumStatusMail.Sended,
-        Included = DateTime.Now,
-        Subject = model.Subject
-      };
-      //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
-      sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-      string token = SendMailApi(path, item, sendMail._id);
+                },
+            Priority = EnumPriorityMail.Low,
+            _idPerson = item._id,
+            NamePerson = item.User.Name,
+            Body = body,
+            StatusMail = EnumStatusMail.Sended,
+            Included = DateTime.Now,
+            Subject = model.Subject
+          };
+          //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+          sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+          string token = SendMailApi(path, item, sendMail._id);
+        }
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailmonitoringdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
     }
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
 
-private void MailMonitoringDeadlinePerson(Person item, bool sendTest, MailModel model)
-{
-  try
-  {
-    //{DAYS}
-    var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineMonitoring").Result;
-
-    if (model.StatusMail == EnumStatus.Disabled)
-      return;
-
-    string body = model.Message.Replace("{Link}", model.Link).Replace("{Manager}", item.Manager?.Name)
-                                .Replace("{Person}", item.User.Name).Replace("{DAYS}", parameter.Content);
-
-    MailLog sendMail = new MailLog
+    private void MailMonitoringDeadlinePerson(Person item, bool sendTest, MailModel model)
     {
-      From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
-      To = sendTest ?
-        new List<MailLogAddress>()
-          {
+      try
+      {
+        //{DAYS}
+        var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineMonitoring").Result;
+
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string body = model.Message.Replace("{Link}", model.Link).Replace("{Manager}", item.Manager?.Name)
+                                    .Replace("{Person}", item.User.Name).Replace("{DAYS}", parameter.Content);
+
+        MailLog sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          To = sendTest ?
+            new List<MailLogAddress>()
+              {
                   new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-          } :
-        new List<MailLogAddress>()
-          {
+              } :
+            new List<MailLogAddress>()
+              {
                   new MailLogAddress(item.User.Mail, item.User.Name)
-          },
-      Priority = EnumPriorityMail.Low,
-      _idPerson = item._id,
-      NamePerson = item.User.Name,
-      Body = body,
-      StatusMail = EnumStatusMail.Sended,
-      Included = DateTime.Now,
-      Subject = model.Subject
-    };
-    //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
-    sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-    string token = SendMailApi(path, item, sendMail._id);
+              },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = item._id,
+          NamePerson = item.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+        string token = SendMailApi(path, item, sendMail._id);
 
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-
-#endregion
-
-#region Onboarding
-private void OnboardingAdmission(bool sendTest, MailModel model)
-{
-  try
-  {
-    List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.Manager != null).Result;
-    foreach (Person item in persons)
-    {
-      ViewCrudLogMessages view = new ViewCrudLogMessages()
+      }
+      catch (Exception e)
       {
-        Subject = "Novo Colaborador",
-        Message = string.Format("{0} admitido(a)!", item.User.Name),
-        Person = item.GetViewListBase(),
-        StatusMessage = EnumStatusMessage.New
-      };
-      view = serviceLogMessages.NewNotExist(view);
-      if (view != null)
-        if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-          MailOnboardingAdmission(item, sendTest, model);
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailmonitoringdeadlineperson",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
     }
-  }
-  catch (Exception)
-  {
 
-  }
-}
-private void MailOnboardingAdmission(Person person, bool sendTest, MailModel model)
-{
-  try
-  {
-    //searsh model mail database
+    #endregion
 
-
-    string body = model.Message.Replace("{Person}", person.User.Name)
-                               .Replace("{Link}", model.Link)
-                               .Replace("{Manager}", person.Manager.Name)
-                               .Replace("{Company}", person.Company.Name)
-                               .Replace("{Occupation}", person.Occupation.Name);
-
-    MailLog sendMail = new MailLog
+    #region Onboarding
+    private void OnboardingAdmission(bool sendTest, MailModel model)
     {
-      From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
-      To = sendTest ?
-        new List<MailLogAddress>()
+      try
+      {
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          ViewCrudLogMessages view = new ViewCrudLogMessages()
           {
+            Subject = "Novo Colaborador",
+            Message = string.Format("{0} admitido(a)!", item.User.Name),
+            Person = item.GetViewListBase(),
+            StatusMessage = EnumStatusMessage.New
+          };
+          view = serviceLogMessages.NewNotExist(view);
+          if (view != null)
+            if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+              MailOnboardingAdmission(item, sendTest, model);
+        }
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: onboardingadmission",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
+    }
+    private void MailOnboardingAdmission(Person person, bool sendTest, MailModel model)
+    {
+      try
+      {
+        //searsh model mail database
+
+
+        string body = model.Message.Replace("{Person}", person.User.Name)
+                                   .Replace("{Link}", model.Link)
+                                   .Replace("{Manager}", person.Manager.Name)
+                                   .Replace("{Company}", person.Company.Name)
+                                   .Replace("{Occupation}", person.Occupation.Name);
+
+        MailLog sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+          To = sendTest ?
+            new List<MailLogAddress>()
+              {
                 new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-          } :
-        new List<MailLogAddress>()
-          {
+              } :
+            new List<MailLogAddress>()
+              {
                 new MailLogAddress(person.Manager.Mail, person.Manager.Name)
-          },
-      Priority = EnumPriorityMail.Low,
-      _idPerson = person._id,
-      NamePerson = person.User.Name,
-      Body = body,
-      StatusMail = EnumStatusMail.Sended,
-      Included = DateTime.Now,
-      Subject = model.Subject
-    };
-    sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-    string token = SendMailApi(path, person, sendMail._id);
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-
-private void OnboardingManagerDeadlineV2(bool sendTest, MailModel model, MailModel modelEmployee)
-{
-  try
-  {
-    Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
-    //int daysOnboarding = -30;
-    int daysOnboarding = int.Parse(parameter.Content) * -1;
-    List<ManagerWorkNotification> listManager = new List<ManagerWorkNotification>();
-    // Onboarding vencidos (sem data de admissão)
-    List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == null && p.Manager != null).Result;
-    foreach (Person item in persons)
-    {
-      if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-        listManager.Add(new ManagerWorkNotification()
-        {
-          Manager = item.Manager,
-          Person = item,
-          Type = ManagerListType.Defeated
-        });
-
-      //if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && (p.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson)).Result == 0)
-        //MailOnboardingManagerDeadline(item, sendTest, modelEmployee);
-
-    }
-    // Onboarding vencidos
-    DateTime nowLimit = DateTime.Now.AddDays(daysOnboarding - 1).Date;
-
-    persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm <= nowLimit && p.Manager != null).Result;
-    ////var person1 = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p._id == "5cee660a00212a7a305be6cb" && p.Manager != null).Result;
-    ////var person2 = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding 
-    ////&& p._id == "5cee660a00212a7a305be6cb" && p.Manager != null && p.User.DateAdm <= nowLimit).Result;
-    ////if(person1.User.DateAdm <= nowLimit)
-    ////{
-    ////  var a = "test";
-    ////}
-
-    foreach (Person item in persons)
-    {
-      if ((serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-        && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson).Result == 0))
-        listManager.Add(new ManagerWorkNotification()
-        {
-          Manager = item.Manager,
-          Person = item,
-          Type = ManagerListType.Defeated
-        });
-    }
-    // Onboarding vencendo hoje
-    nowLimit = DateTime.Now.AddDays(daysOnboarding).Date;
-    persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == nowLimit && p.Manager != null).Result;
-    foreach (Person item in persons)
-    {
-      if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-        listManager.Add(new ManagerWorkNotification()
-        {
-          Manager = item.Manager,
-          Person = item,
-          Type = ManagerListType.DefeatedNow
-        });
-    }
-    // Onboarding vencendo até 10 dias
-    var nowFirst = DateTime.Now.AddDays(daysOnboarding + 10).Date;
-    var nowLast = DateTime.Now.AddDays(daysOnboarding + 10).Date;
-    persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm >= nowFirst && p.User.DateAdm <= nowLast && p.Manager != null).Result;
-    foreach (Person item in persons)
-    {
-      if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-        listManager.Add(new ManagerWorkNotification()
-        {
-          Manager = item.Manager,
-          Person = item,
-          Type = ManagerListType.LastSevenDays
-        });
-    }
-    //// Onboarding vencendo até 7 dias
-    //var nowFirst = DateTime.Now.AddDays(daysOnboarding + 7).Date;
-    //var nowLast = DateTime.Now.AddDays(daysOnboarding + 1).Date;
-    //persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm >= nowFirst && p.User.DateAdm <= nowLast && p.Manager != null).Result;
-    //foreach (Person item in persons)
-    //{
-    //  if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
-    //    listManager.Add(new ManagerWorkNotification()
-    //    {
-    //      Manager = item.Manager,
-    //      Person = item,
-    //      Type = ManagerListType.LastSevenDays
-    //    });
-    //}
-    //// Onboarding vencendo em 15 dias
-    //nowLimit = DateTime.Now.AddDays(daysOnboarding + 15).Date;
-    //persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == nowLimit && p.Manager != null).Result;
-    //foreach (Person item in persons)
-    //{
-    //  listManager.Add(new ManagerWorkNotification()
-    //  {
-    //    Manager = item.Manager,
-    //    Person = item,
-    //    Type = ManagerListType.FifteenDays
-    //  });
-    //}
-    if (listManager.Count > 0)
-    {
-      // Emitir e-mails
-      List<ManagerNotification> listManagerNotification = new List<ManagerNotification>();
-      listManager = listManager.OrderBy(o => o.Type).OrderBy(o => o.Manager.Name).ToList();
-      ManagerNotification managerNotification = new ManagerNotification()
+              },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+        string token = SendMailApi(path, person, sendMail._id);
+      }
+      catch (Exception e)
       {
-        Manager = listManager[0].Manager,
-        Defeated = new List<Person>(),
-        DefeatedNow = new List<Person>(),
-        LastSevenDays = new List<Person>(),
-        FifteenDays = new List<Person>(),
-        ThirtyDays = new List<Person>(),
-      };
-      foreach (var item in listManager)
-      {
-        if (managerNotification.Manager.Name != item.Manager.Name)
+        ViewLog log = new ViewLog
         {
-          managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
-          managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.User.Name).ToList();
-          managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
-          managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
-          listManagerNotification.Add(managerNotification);
-          managerNotification = new ManagerNotification()
+          Description = e.Message + " method: mailonboardingadmission",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
+    }
+
+    private void OnboardingManagerDeadlineV2(bool sendTest, MailModel model, MailModel modelEmployee)
+    {
+      try
+      {
+        Parameter parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdmOnboarding").Result;
+        //int daysOnboarding = -30;
+        int daysOnboarding = int.Parse(parameter.Content) * -1;
+        List<ManagerWorkNotification> listManager = new List<ManagerWorkNotification>();
+        // Onboarding vencidos (sem data de admissão)
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == null && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.Defeated
+            });
+
+          //if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && (p.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressPerson)).Result == 0)
+          //MailOnboardingManagerDeadline(item, sendTest, modelEmployee);
+
+        }
+        // Onboarding vencidos
+        DateTime nowLimit = DateTime.Now.AddDays(daysOnboarding - 1).Date;
+
+        persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm <= nowLimit && p.Manager != null).Result;
+        ////var person1 = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding && p._id == "5cee660a00212a7a305be6cb" && p.Manager != null).Result;
+        ////var person2 = servicePerson.GetNewVersion(p => p.StatusUser != EnumStatusUser.Disabled && p.TypeJourney == EnumTypeJourney.OnBoarding 
+        ////&& p._id == "5cee660a00212a7a305be6cb" && p.Manager != null && p.User.DateAdm <= nowLimit).Result;
+        ////if(person1.User.DateAdm <= nowLimit)
+        ////{
+        ////  var a = "test";
+        ////}
+
+        foreach (Person item in persons)
+        {
+          if ((serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            && (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.WaitPerson).Result == 0))
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.Defeated
+            });
+        }
+        // Onboarding vencendo hoje
+        nowLimit = DateTime.Now.AddDays(daysOnboarding).Date;
+        persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == nowLimit && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.DefeatedNow
+            });
+        }
+        // Onboarding vencendo até 10 dias
+        var nowFirst = DateTime.Now.AddDays(daysOnboarding + 10).Date;
+        var nowLast = DateTime.Now.AddDays(daysOnboarding + 10).Date;
+        persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm >= nowFirst && p.User.DateAdm <= nowLast && p.Manager != null).Result;
+        foreach (Person item in persons)
+        {
+          if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+            listManager.Add(new ManagerWorkNotification()
+            {
+              Manager = item.Manager,
+              Person = item,
+              Type = ManagerListType.LastSevenDays
+            });
+        }
+        //// Onboarding vencendo até 7 dias
+        //var nowFirst = DateTime.Now.AddDays(daysOnboarding + 7).Date;
+        //var nowLast = DateTime.Now.AddDays(daysOnboarding + 1).Date;
+        //persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm >= nowFirst && p.User.DateAdm <= nowLast && p.Manager != null).Result;
+        //foreach (Person item in persons)
+        //{
+        //  if (serviceOnboarding.CountNewVersion(p => p.Person._id == item._id && p.StatusOnBoarding == EnumStatusOnBoarding.End).Result == 0)
+        //    listManager.Add(new ManagerWorkNotification()
+        //    {
+        //      Manager = item.Manager,
+        //      Person = item,
+        //      Type = ManagerListType.LastSevenDays
+        //    });
+        //}
+        //// Onboarding vencendo em 15 dias
+        //nowLimit = DateTime.Now.AddDays(daysOnboarding + 15).Date;
+        //persons = servicePerson.GetAllNewVersion(p => p.TypeJourney == EnumTypeJourney.OnBoarding && p.User.DateAdm == nowLimit && p.Manager != null).Result;
+        //foreach (Person item in persons)
+        //{
+        //  listManager.Add(new ManagerWorkNotification()
+        //  {
+        //    Manager = item.Manager,
+        //    Person = item,
+        //    Type = ManagerListType.FifteenDays
+        //  });
+        //}
+        if (listManager.Count > 0)
+        {
+          // Emitir e-mails
+          List<ManagerNotification> listManagerNotification = new List<ManagerNotification>();
+          listManager = listManager.OrderBy(o => o.Type).OrderBy(o => o.Manager.Name).ToList();
+          ManagerNotification managerNotification = new ManagerNotification()
           {
-            Manager = item.Manager,
+            Manager = listManager[0].Manager,
             Defeated = new List<Person>(),
             DefeatedNow = new List<Person>(),
             LastSevenDays = new List<Person>(),
             FifteenDays = new List<Person>(),
             ThirtyDays = new List<Person>(),
           };
-        }
-        switch (item.Type)
-        {
-          case ManagerListType.Defeated:
-            managerNotification.Defeated.Add(item.Person);
-            break;
-          case ManagerListType.DefeatedNow:
-            managerNotification.DefeatedNow.Add(item.Person);
-            break;
-          case ManagerListType.LastSevenDays:
-            managerNotification.LastSevenDays.Add(item.Person);
-            break;
-          case ManagerListType.FifteenDays:
-            managerNotification.FifteenDays.Add(item.Person);
-            break;
-          case ManagerListType.ThirtyDays:
-            break;
-          default:
-            break;
-        }
-      }
-      managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
-      managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.User.Name).ToList();
-      managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
-      managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
-      listManagerNotification.Add(managerNotification);
-      MailOnboardingManagerDeadline(listManagerNotification, sendTest, model);
-    }
-  }
-  catch (Exception)
-  {
-
-  }
-}
-
-private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest, MailModel model)
-{
-  try
-  {
-    Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
-
-    if (model.StatusMail == EnumStatus.Disabled)
-      return;
-    foreach (var item in listManager)
-    {
-      string body = model.Message.Replace("{Link}", model.Link)
-                                  .Replace("{Manager}", item.Manager.Name);
-
-      string list = string.Empty;
-      foreach (var person in item.Defeated)
-        if (person.User.DateAdm == null)
-          list = string.Concat(list, string.Format("{0} - {1}<br>", "Sem Data", person.User.Name));
-        else
-          list = string.Concat(list, string.Format("{0} - {1}<br>", ((DateTime)person.User.DateAdm).ToString("dd/MM/yyyy"), person.User.Name));
-
-      if (!string.IsNullOrEmpty(list))
-      {
-        list = string.Concat("Colaboradores que estão <strong>prazo expirado</strong>:<br>", list, "<br>");
-      }
-      body = body.Replace("{LIST1}", list);
-
-      list = string.Empty;
-      foreach (var person in item.DefeatedNow)
-        list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
-      if (!string.IsNullOrEmpty(list))
-      {
-        list = string.Concat("Colaboradores onde a jornada <strong>vence hoje</strong>:<br>", list, "<br>");
-      }
-      body = body.Replace("{LIST2}", list);
-
-      list = string.Empty;
-      foreach (var person in item.LastSevenDays)
-        list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
-      if (!string.IsNullOrEmpty(list))
-      {
-        list = string.Concat("Colaboradores onde a jornada <strong>vence em 10 dias</strong>:<br>", list, "<br>");
-      }
-      body = body.Replace("{LIST3}", list);
-
-      list = string.Empty;
-      foreach (var person in item.FifteenDays)
-        list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
-      if (!string.IsNullOrEmpty(list))
-      {
-        list = string.Concat("Colaboradores onde a jornada <strong>vence em 15 dias</strong>:<br>", list, "<br>");
-      }
-      body = body.Replace("{LIST4}", list);
-
-      MailLog sendMail = new MailLog
-      {
-        From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
-        To = sendTest ?
-          new List<MailLogAddress>()
+          foreach (var item in listManager)
           {
-                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-          } :
-          new List<MailLogAddress>()
-          {
-                new MailLogAddress(item.Manager.Mail, item.Manager.Name)
-          },
-        Priority = EnumPriorityMail.Low,
-        _idPerson = item.Manager._id,
-        NamePerson = item.Manager.Name,
-        Body = body,
-        StatusMail = EnumStatusMail.Sended,
-        Included = DateTime.Now,
-        Subject = model.Subject
-      };
-      if (personManager != null)
-      {
-        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-        string token = SendMailApi(path, personManager, sendMail._id);
-      }
-      else
-      {
-        sendMail.StatusMail = EnumStatusMail.Error;
-        sendMail.MessageError = "Manager null in onboarding manager messages.";
-        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-      }
-    }
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-#endregion
-
-#region Plan Action
-private void PlanManagerDeadline(bool sendTest, MailModel model)
-{
-  try
-  {
-    var monitoringsant = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
-    var monitorings = monitoringsant.Select(p => p._id);
-
-    List<PlanWorkNotification> listManager = new List<PlanWorkNotification>();
-    // Pessoas ativas e com gestores
-    List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
-    foreach (Person person in persons)
-    {
-      List<Plan> plans = servicePlan.GetAllNewVersion(p => p.Person._id == person._id).Result.Where(p => monitorings.Contains(p._idMonitoring)).ToList();
-
-      var plansfilter = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open).ToList();
-      foreach (Plan plan in plansfilter)
-      {
-        PlanWorkNotification work = PlanManagerDeadline(person, plan, sendTest);
-        if (work != null)
-          listManager.Add(work);
-      }
-
-      plansfilter = plans.Where(p => p.Status == EnumStatus.Enabled).ToList();
-      foreach (Plan plan in plansfilter)
-      {
-
-        if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
-        {
-          listManager.Add(new PlanWorkNotification()
-          {
-            Manager = person.Manager,
-            Person = person,
-            Plan = plan,
-            Type = ManagerListType.Wait
-          });
-        }
-      }
-
-    }
-
-    if (listManager.Count > 0)
-    {
-      // Emitir e-mails
-      List<PlanManagerNotification> listManagerNotification = new List<PlanManagerNotification>();
-      listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Manager.Name).ToList();
-      PlanManagerNotification managerNotification = new PlanManagerNotification()
-      {
-        Manager = listManager[0].Manager,
-        Defeated = new List<PlanWorkPerson>(),
-        DefeatedNow = new List<PlanWorkPerson>(),
-        LastSevenDays = new List<PlanWorkPerson>(),
-        FifteenDays = new List<PlanWorkPerson>(),
-        ThirtyDays = new List<PlanWorkPerson>(),
-        Wait = new List<PlanWorkPerson>(),
-      };
-      foreach (PlanWorkNotification item in listManager)
-      {
-        if (managerNotification.Manager.Name != item.Manager.Name)
-        {
-          managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.Person.User.Name).ToList();
-          managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.Person.User.Name).ToList();
-          managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.Person.User.Name).ToList();
-          managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.Person.User.Name).ToList();
-          managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.Person.User.Name).ToList();
+            if (managerNotification.Manager.Name != item.Manager.Name)
+            {
+              managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
+              managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.User.Name).ToList();
+              managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
+              managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
+              listManagerNotification.Add(managerNotification);
+              managerNotification = new ManagerNotification()
+              {
+                Manager = item.Manager,
+                Defeated = new List<Person>(),
+                DefeatedNow = new List<Person>(),
+                LastSevenDays = new List<Person>(),
+                FifteenDays = new List<Person>(),
+                ThirtyDays = new List<Person>(),
+              };
+            }
+            switch (item.Type)
+            {
+              case ManagerListType.Defeated:
+                managerNotification.Defeated.Add(item.Person);
+                break;
+              case ManagerListType.DefeatedNow:
+                managerNotification.DefeatedNow.Add(item.Person);
+                break;
+              case ManagerListType.LastSevenDays:
+                managerNotification.LastSevenDays.Add(item.Person);
+                break;
+              case ManagerListType.FifteenDays:
+                managerNotification.FifteenDays.Add(item.Person);
+                break;
+              case ManagerListType.ThirtyDays:
+                break;
+              default:
+                break;
+            }
+          }
+          managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.User.Name).ToList();
+          managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.User.Name).ToList();
+          managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.User.DateAdm).OrderBy(o => o.User.Name).ToList();
+          managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.User.Name).ToList();
           listManagerNotification.Add(managerNotification);
-          managerNotification = new PlanManagerNotification()
+          MailOnboardingManagerDeadline(listManagerNotification, sendTest, model);
+        }
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: onboardingmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
+    }
+
+    private void MailOnboardingManagerDeadline(List<ManagerNotification> listManager, bool sendTest, MailModel model)
+    {
+      try
+      {
+        Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+        foreach (var item in listManager)
+        {
+          string body = model.Message.Replace("{Link}", model.Link)
+                                      .Replace("{Manager}", item.Manager.Name);
+
+          string list = string.Empty;
+          foreach (var person in item.Defeated)
+            if (person.User.DateAdm == null)
+              list = string.Concat(list, string.Format("{0} - {1}<br>", "Sem Data", person.User.Name));
+            else
+              list = string.Concat(list, string.Format("{0} - {1}<br>", ((DateTime)person.User.DateAdm).ToString("dd/MM/yyyy"), person.User.Name));
+
+          if (!string.IsNullOrEmpty(list))
           {
-            Manager = item.Manager,
+            list = string.Concat("Colaboradores que estão <strong>prazo expirado</strong>:<br>", list, "<br>");
+          }
+          body = body.Replace("{LIST1}", list);
+
+          list = string.Empty;
+          foreach (var person in item.DefeatedNow)
+            list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
+          if (!string.IsNullOrEmpty(list))
+          {
+            list = string.Concat("Colaboradores onde a jornada <strong>vence hoje</strong>:<br>", list, "<br>");
+          }
+          body = body.Replace("{LIST2}", list);
+
+          list = string.Empty;
+          foreach (var person in item.LastSevenDays)
+            list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
+          if (!string.IsNullOrEmpty(list))
+          {
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em 10 dias</strong>:<br>", list, "<br>");
+          }
+          body = body.Replace("{LIST3}", list);
+
+          list = string.Empty;
+          foreach (var person in item.FifteenDays)
+            list = string.Concat(list, string.Format("{0}<br>", person.User.Name));
+          if (!string.IsNullOrEmpty(list))
+          {
+            list = string.Concat("Colaboradores onde a jornada <strong>vence em 15 dias</strong>:<br>", list, "<br>");
+          }
+          body = body.Replace("{LIST4}", list);
+
+          MailLog sendMail = new MailLog
+          {
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
+                new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
+              } :
+              new List<MailLogAddress>()
+              {
+                new MailLogAddress(item.Manager.Mail, item.Manager.Name)
+              },
+            Priority = EnumPriorityMail.Low,
+            _idPerson = item.Manager._id,
+            NamePerson = item.Manager.Name,
+            Body = body,
+            StatusMail = EnumStatusMail.Sended,
+            Included = DateTime.Now,
+            Subject = model.Subject
+          };
+          if (personManager != null)
+          {
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+            string token = SendMailApi(path, personManager, sendMail._id);
+          }
+          else
+          {
+            sendMail.StatusMail = EnumStatusMail.Error;
+            sendMail.MessageError = "Manager null in onboarding manager messages.";
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailonboardingmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
+    }
+    #endregion
+
+    #region Plan Action
+    private void PlanManagerDeadline(bool sendTest, MailModel model)
+    {
+      try
+      {
+        var monitoringsant = serviceMonitoring.GetAllNewVersion(p => p.StatusMonitoring == EnumStatusMonitoring.End).Result;
+        var monitorings = monitoringsant.Select(p => p._id);
+
+        List<PlanWorkNotification> listManager = new List<PlanWorkNotification>();
+        // Pessoas ativas e com gestores
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled).Result;
+        foreach (Person person in persons)
+        {
+          List<Plan> plans = servicePlan.GetAllNewVersion(p => p.Person._id == person._id).Result.Where(p => monitorings.Contains(p._idMonitoring)).ToList();
+
+          var plansfilter = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open).ToList();
+          foreach (Plan plan in plansfilter)
+          {
+            PlanWorkNotification work = PlanManagerDeadline(person, plan, sendTest);
+            if (work != null)
+              listManager.Add(work);
+          }
+
+          plansfilter = plans.Where(p => p.Status == EnumStatus.Enabled).ToList();
+          foreach (Plan plan in plansfilter)
+          {
+
+            if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
+            {
+              listManager.Add(new PlanWorkNotification()
+              {
+                Manager = person.Manager,
+                Person = person,
+                Plan = plan,
+                Type = ManagerListType.Wait
+              });
+            }
+          }
+
+        }
+
+        if (listManager.Count > 0)
+        {
+          // Emitir e-mails
+          List<PlanManagerNotification> listManagerNotification = new List<PlanManagerNotification>();
+          listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Manager.Name).ToList();
+          PlanManagerNotification managerNotification = new PlanManagerNotification()
+          {
+            Manager = listManager[0].Manager,
             Defeated = new List<PlanWorkPerson>(),
             DefeatedNow = new List<PlanWorkPerson>(),
             LastSevenDays = new List<PlanWorkPerson>(),
             FifteenDays = new List<PlanWorkPerson>(),
             ThirtyDays = new List<PlanWorkPerson>(),
-            Wait = new List<PlanWorkPerson>()
+            Wait = new List<PlanWorkPerson>(),
           };
-        }
-        switch (item.Type)
-        {
-          case ManagerListType.Defeated:
-            managerNotification.Defeated.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
-            break;
-          case ManagerListType.DefeatedNow:
-            managerNotification.DefeatedNow.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
-            break;
-          case ManagerListType.LastSevenDays:
-            managerNotification.LastSevenDays.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
-            break;
-          case ManagerListType.FifteenDays:
-            managerNotification.FifteenDays.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
-            break;
-          case ManagerListType.ThirtyDays:
-            managerNotification.ThirtyDays.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
-            break;
-          case ManagerListType.Wait:
-            managerNotification.Wait.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
-            break;
-          default:
-            break;
-        }
-      }
-      managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.Person.User.Name).ToList();
-      managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.Person.User.Name).ToList();
-      managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.Person.User.Name).ToList();
-      managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.Person.User.Name).ToList();
-      managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.Person.User.Name).ToList();
-      managerNotification.Wait = managerNotification.Wait.OrderBy(o => o.Person.User.Name).ToList();
-      listManagerNotification.Add(managerNotification);
-      MailPlanManagerDeadline(listManagerNotification, sendTest, model);
-      // Enviar para o colaborador
-      List<PlanNotification> listNotification = new List<PlanNotification>();
-      listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Manager.Name).ToList();
-      var notification = new PlanNotification()
-      {
-        Person = listManager[0].Person,
-        Defeated = new List<Plan>(),
-        DefeatedNow = new List<Plan>(),
-        LastSevenDays = new List<Plan>(),
-        FifteenDays = new List<Plan>(),
-        ThirtyDays = new List<Plan>(),
-        Wait = new List<Plan>()
-      };
-      foreach (PlanWorkNotification item in listManager)
-      {
-        if (managerNotification.Manager.Name != item.Manager.Name)
-        {
-          notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
-          notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
-          notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
-          notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
-          notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
-          notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
-          listNotification.Add(notification);
-          notification = new PlanNotification()
+          foreach (PlanWorkNotification item in listManager)
           {
-            Person = listManager[0].Person,
-            Defeated = new List<Plan>(),
-            DefeatedNow = new List<Plan>(),
-            LastSevenDays = new List<Plan>(),
-            FifteenDays = new List<Plan>(),
-            ThirtyDays = new List<Plan>(),
-            Wait = new List<Plan>()
-          };
+            if (managerNotification.Manager.Name != item.Manager.Name)
+            {
+              managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.Person.User.Name).ToList();
+              managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.Person.User.Name).ToList();
+              managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.Person.User.Name).ToList();
+              managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.Person.User.Name).ToList();
+              managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.Person.User.Name).ToList();
+              listManagerNotification.Add(managerNotification);
+              managerNotification = new PlanManagerNotification()
+              {
+                Manager = item.Manager,
+                Defeated = new List<PlanWorkPerson>(),
+                DefeatedNow = new List<PlanWorkPerson>(),
+                LastSevenDays = new List<PlanWorkPerson>(),
+                FifteenDays = new List<PlanWorkPerson>(),
+                ThirtyDays = new List<PlanWorkPerson>(),
+                Wait = new List<PlanWorkPerson>()
+              };
+            }
+            switch (item.Type)
+            {
+              case ManagerListType.Defeated:
+                managerNotification.Defeated.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
+                break;
+              case ManagerListType.DefeatedNow:
+                managerNotification.DefeatedNow.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
+                break;
+              case ManagerListType.LastSevenDays:
+                managerNotification.LastSevenDays.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
+                break;
+              case ManagerListType.FifteenDays:
+                managerNotification.FifteenDays.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
+                break;
+              case ManagerListType.ThirtyDays:
+                managerNotification.ThirtyDays.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
+                break;
+              case ManagerListType.Wait:
+                managerNotification.Wait.Add(new PlanWorkPerson() { Person = item.Person, Plan = item.Plan });
+                break;
+              default:
+                break;
+            }
+          }
+          managerNotification.Defeated = managerNotification.Defeated.OrderBy(o => o.Person.User.Name).ToList();
+          managerNotification.DefeatedNow = managerNotification.DefeatedNow.OrderBy(o => o.Person.User.Name).ToList();
+          managerNotification.LastSevenDays = managerNotification.LastSevenDays.OrderBy(o => o.Person.User.Name).ToList();
+          managerNotification.FifteenDays = managerNotification.FifteenDays.OrderBy(o => o.Person.User.Name).ToList();
+          managerNotification.ThirtyDays = managerNotification.ThirtyDays.OrderBy(o => o.Person.User.Name).ToList();
+          managerNotification.Wait = managerNotification.Wait.OrderBy(o => o.Person.User.Name).ToList();
+          listManagerNotification.Add(managerNotification);
+          MailPlanManagerDeadline(listManagerNotification, sendTest, model);
+
+          // Enviar para o colaborador
+          //List<PlanNotification> listNotification = new List<PlanNotification>();
+          //listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Manager.Name).ToList();
+          //var notification = new PlanNotification()
+          //{
+          //  Person = listManager[0].Person,
+          //  Defeated = new List<Plan>(),
+          //  DefeatedNow = new List<Plan>(),
+          //  LastSevenDays = new List<Plan>(),
+          //  FifteenDays = new List<Plan>(),
+          //  ThirtyDays = new List<Plan>(),
+          //  Wait = new List<Plan>()
+          //};
+          //var index = 0;
+          //foreach (PlanWorkNotification item in listManager)
+          //{
+
+          //  if (index > 0)
+          //  {
+          //    if (notification.Person.User.Name != item.Person.User.Name)
+          //    {
+          //      MailPlanDeadline(listNotification, sendTest);
+          //      listNotification = new List<PlanNotification>();
+          //    }
+          //  }
+
+
+          //  index += 1;
+          //  notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
+          //  notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
+          //  notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
+          //  notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
+          //  notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
+          //  notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
+          //  listNotification.Add(notification);
+          //  notification = new PlanNotification()
+          //  {
+          //    Person = listManager[0].Person,
+          //    Defeated = new List<Plan>(),
+          //    DefeatedNow = new List<Plan>(),
+          //    LastSevenDays = new List<Plan>(),
+          //    FifteenDays = new List<Plan>(),
+          //    ThirtyDays = new List<Plan>(),
+          //    Wait = new List<Plan>()
+          //  };
+
+          //  switch (item.Type)
+          //  {
+          //    case ManagerListType.Defeated:
+          //      notification.Defeated.Add(item.Plan);
+          //      break;
+          //    case ManagerListType.DefeatedNow:
+          //      notification.DefeatedNow.Add(item.Plan);
+          //      break;
+          //    case ManagerListType.LastSevenDays:
+          //      notification.LastSevenDays.Add(item.Plan);
+          //      break;
+          //    case ManagerListType.FifteenDays:
+          //      notification.FifteenDays.Add(item.Plan);
+          //      break;
+          //    case ManagerListType.ThirtyDays:
+          //      notification.ThirtyDays.Add(item.Plan);
+          //      break;
+          //    case ManagerListType.Wait:
+          //      notification.Wait.Add(item.Plan);
+          //      break;
+          //    default:
+          //      break;
+          //  }
+
+          //  notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
+          //  notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
+          //  notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
+          //  notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
+          //  notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
+          //  notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
+          //  listNotification.Add(notification);
+          //}
+
         }
-        switch (item.Type)
-        {
-          case ManagerListType.Defeated:
-            notification.Defeated.Add(item.Plan);
-            break;
-          case ManagerListType.DefeatedNow:
-            notification.DefeatedNow.Add(item.Plan);
-            break;
-          case ManagerListType.LastSevenDays:
-            notification.LastSevenDays.Add(item.Plan);
-            break;
-          case ManagerListType.FifteenDays:
-            notification.FifteenDays.Add(item.Plan);
-            break;
-          case ManagerListType.ThirtyDays:
-            notification.ThirtyDays.Add(item.Plan);
-            break;
-          case ManagerListType.Wait:
-            notification.Wait.Add(item.Plan);
-            break;
-          default:
-            break;
-        }
+
+
+
       }
-      notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
-      notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
-      notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
-      notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
-      notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
-      notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
-      listNotification.Add(notification);
-      MailPlanDeadline(listNotification, sendTest);
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: planmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
     }
-  }
-  catch (Exception)
-  {
-
-  }
-}
-private PlanWorkNotification PlanManagerDeadline(Person person, Plan plan, bool sendTest)
-{
-  PlanWorkNotification result = new PlanWorkNotification()
-  {
-    Manager = person.Manager,
-    Person = person,
-    Plan = plan,
-  };
-
-  var deadline = (DateTime)DateTime.Parse(plan.Deadline.Value.ToString("dd/MM/yyyy"));
-  var now = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy"));
-  int days = (deadline - now).Days;
-
-  if (days < 0)
-  {
-    // Vencido
-    result.Type = ManagerListType.Defeated;
-  }
-  if (days == 0)
-  {
-    // Vence hoje
-    result.Type = ManagerListType.DefeatedNow;
-  }
-  //if (days <= 7 && days >= 1)
-  //{
-  //  // vence em 7 dias
-  //  result.Type = ManagerListType.LastSevenDays;
-  //}
-  if (days == 10)
-  {
-    // Vence em 10 dias
-    result.Type = ManagerListType.FifteenDays;
-  }
-  if (days == 30)
-  {
-    // Vence em 30 dias
-    result.Type = ManagerListType.ThirtyDays;
-  }
-  return result;
-}
-private void MailPlanManagerDeadline(List<PlanManagerNotification> listManager, bool sendTest, MailModel model)
-{
-  try
-  {
-    Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
-
-    //searsh model mail database
-    if (model.StatusMail == EnumStatus.Disabled)
-      return;
-
-    foreach (var item in listManager)
+    private PlanWorkNotification PlanManagerDeadline(Person person, Plan plan, bool sendTest)
     {
-      string body = model.Message.Replace("{Link}", model.Link)
-                                  .Replace("{Manager}", item.Manager.Name);
-
-      string list = string.Empty;
-      string saveName = string.Empty;
-      foreach (var personPlan in item.Defeated)
+      PlanWorkNotification result = new PlanWorkNotification()
       {
-        if ((DateTime)personPlan.Plan.Deadline < DateTime.Now)
+        Manager = person.Manager,
+        Person = person,
+        Plan = plan,
+      };
+
+      var deadline = (DateTime)DateTime.Parse(plan.Deadline.Value.ToString("dd/MM/yyyy"));
+      var now = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy"));
+      int days = (deadline - now).Days;
+
+      if (days < 0)
+      {
+        // Vencido
+        result.Type = ManagerListType.Defeated;
+      }
+      if (days == 0)
+      {
+        // Vence hoje
+        result.Type = ManagerListType.DefeatedNow;
+      }
+      //if (days <= 7 && days >= 1)
+      //{
+      //  // vence em 7 dias
+      //  result.Type = ManagerListType.LastSevenDays;
+      //}
+      if (days == 10)
+      {
+        // Vence em 10 dias
+        result.Type = ManagerListType.FifteenDays;
+      }
+      if (days == 30)
+      {
+        // Vence em 30 dias
+        result.Type = ManagerListType.ThirtyDays;
+      }
+      return result;
+    }
+    private void MailPlanManagerDeadline(List<PlanManagerNotification> listManager, bool sendTest, MailModel model)
+    {
+      try
+      {
+        Person personManager = servicePerson.GetNewVersion(p => p._id == listManager[0].Manager._id).Result;
+
+        //searsh model mail database
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        foreach (var item in listManager)
         {
-          if (saveName != personPlan.Person.User.Name)
-            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-          else
-            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-        }
-      }
+          string body = model.Message.Replace("{Link}", model.Link)
+                                      .Replace("{Manager}", item.Manager.Name);
 
-
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Colaboradores com ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST1}", list);
-
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.Wait)
-      {
-        if (saveName != personPlan.Person.User.Name)
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-        else
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-
-      }
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Colaboradores com ações de desenvolvimento <strong>faltando apenas sua validação</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST0}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.DefeatedNow)
-        if (saveName != personPlan.Person.User.Name)
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-        else
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST2}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.LastSevenDays)
-        if (saveName != personPlan.Person.User.Name)
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-        else
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 7 dias</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST3}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.FifteenDays)
-        if (saveName != personPlan.Person.User.Name)
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-        else
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 10 dias</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST4}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.ThirtyDays)
-        if (saveName != personPlan.Person.User.Name)
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-        else
-          list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST5}", list);
-
-      MailLog sendMail = new MailLog
-      {
-        From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
-        To = sendTest ?
-          new List<MailLogAddress>()
+          string list = string.Empty;
+          string saveName = string.Empty;
+          foreach (var personPlan in item.Defeated)
           {
+            if ((DateTime)personPlan.Plan.Deadline < DateTime.Now)
+            {
+              if (saveName != personPlan.Person.User.Name)
+                list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+              else
+                list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+            }
+          }
+
+
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Colaboradores com ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST1}", list);
+
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.Wait)
+          {
+            if (saveName != personPlan.Person.User.Name)
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+            else
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+
+          }
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Colaboradores com ações de desenvolvimento <strong>faltando apenas sua validação</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST0}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.DefeatedNow)
+            if (saveName != personPlan.Person.User.Name)
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+            else
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST2}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.LastSevenDays)
+            if (saveName != personPlan.Person.User.Name)
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+            else
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 7 dias</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST3}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.FifteenDays)
+            if (saveName != personPlan.Person.User.Name)
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+            else
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 10 dias</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST4}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.ThirtyDays)
+            if (saveName != personPlan.Person.User.Name)
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+            else
+              list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Colaboradores com ação de desenvolvimento que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST5}", list);
+
+          MailLog sendMail = new MailLog
+          {
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
                 new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-          } :
-          new List<MailLogAddress>()
-          {
+              } :
+              new List<MailLogAddress>()
+              {
                 new MailLogAddress(item.Manager.Mail, item.Manager.Name)
-          },
-        Priority = EnumPriorityMail.Low,
-        _idPerson = item.Manager._id,
-        NamePerson = item.Manager.Name,
-        Body = body,
-        StatusMail = EnumStatusMail.Sended,
-        Included = DateTime.Now,
-        Subject = model.Subject
-      };
-      //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
-      MailLog mailObj = null;
-      if (personManager != null)
-      {
-        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-        mailObj = sendMail;
-        string token = SendMailApi(path, personManager, sendMail._id);
+              },
+            Priority = EnumPriorityMail.Low,
+            _idPerson = item.Manager._id,
+            NamePerson = item.Manager.Name,
+            Body = body,
+            StatusMail = EnumStatusMail.Sended,
+            Included = DateTime.Now,
+            Subject = model.Subject
+          };
+          //MailLog mailObj = serviceMailLog.InsertNewVersion(sendMail).Result;
+          MailLog mailObj = null;
+          if (personManager != null)
+          {
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+            mailObj = sendMail;
+            string token = SendMailApi(path, personManager, sendMail._id);
+          }
+          else
+          {
+            sendMail.StatusMail = EnumStatusMail.Error;
+            sendMail.MessageError = "Manager null in plan action manager messages.";
+            sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+          }
+        }
       }
-      else
+      catch (Exception e)
       {
-        sendMail.StatusMail = EnumStatusMail.Error;
-        sendMail.MessageError = "Manager null in plan action manager messages.";
-        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: mailplanmanagerdeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
       }
     }
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-private void MailPlanDeadline(List<PlanNotification> listPlan, bool sendTest)
-{
-  try
-  {
-    //searsh model mail database
-    MailModel model = serviceMailModel.PlanDeadline(path);
-    if (model.StatusMail == EnumStatus.Disabled)
-      return;
-    foreach (var item in listPlan)
+    private void MailPlanDeadline(List<PlanNotification> listPlan, bool sendTest)
     {
-      string body = model.Message.Replace("{Link}", model.Link)
-                                  .Replace("{Person}", item.Person.User.Name);
-
-      string list = string.Empty;
-      string saveName = string.Empty;
-      foreach (var personPlan in item.Defeated)
-        list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST1}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.DefeatedNow)
-        list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Ação de desenvolvimento que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST2}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.LastSevenDays)
-        list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Ação de desenvolvimento que <strong>vence em 7 dias</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST3}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.FifteenDays)
-        list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Ação de desenvolvimento que <strong>vence em 10 dias</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST4}", list);
-
-      list = string.Empty;
-      saveName = string.Empty;
-      foreach (var personPlan in item.ThirtyDays)
-        list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
-
-      if (!string.IsNullOrEmpty(list))
-        list = string.Concat("Ação de desenvolvimento que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
-
-      body = body.Replace("{LIST5}", list);
-
-      MailLog sendMail = new MailLog
+      try
       {
-        From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
-        To = sendTest ?
-          new List<MailLogAddress>()
+        //searsh model mail database
+        MailModel model = serviceMailModel.PlanDeadline(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+        foreach (var item in listPlan)
+        {
+          string body = model.Message.Replace("{Link}", model.Link)
+                                      .Replace("{Person}", item.Person.User.Name);
+
+          string list = string.Empty;
+          string saveName = string.Empty;
+          foreach (var personPlan in item.Defeated)
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST1}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.DefeatedNow)
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Ação de desenvolvimento que <strong>vence hoje</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST2}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.LastSevenDays)
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Ação de desenvolvimento que <strong>vence em 7 dias</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST3}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.FifteenDays)
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Ação de desenvolvimento que <strong>vence em 10 dias</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST4}", list);
+
+          list = string.Empty;
+          saveName = string.Empty;
+          foreach (var personPlan in item.ThirtyDays)
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+
+          if (!string.IsNullOrEmpty(list))
+            list = string.Concat("Ação de desenvolvimento que <strong>vence em 30 dias</strong>:<br><table>", list, "</table><br>");
+
+          body = body.Replace("{LIST5}", list);
+
+          MailLog sendMail = new MailLog
           {
+            From = new MailLogAddress("suporte@fluidstate.com.br", "Suporte ao Cliente | Fluid"),
+            To = sendTest ?
+              new List<MailLogAddress>()
+              {
                 new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-          } :
-          new List<MailLogAddress>()
-          {
+              } :
+              new List<MailLogAddress>()
+              {
                 new MailLogAddress(item.Person.User.Mail, item.Person.User.Name)
-          },
-        Priority = EnumPriorityMail.Low,
-        _idPerson = item.Person._id,
-        NamePerson = item.Person.User.Name,
-        Body = body,
-        StatusMail = EnumStatusMail.Sended,
-        Included = DateTime.Now,
-        Subject = model.Subject
-      };
-      sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-      string token = SendMailApi(path, item.Person, sendMail._id);
-    }
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-
-private void BirthCompany(Person person, bool sendTest)
-{
-  try
-  {
-    //searsh model mail database
-    MailModel model = serviceMailModel.BirthCompany(path);
-    if (model.StatusMail == EnumStatus.Disabled)
-      return;
-
-    string body = model.Message.Replace("{Link}", model.Link)
-                                .Replace("{Person}", person.User.Name);
-
-    MailLog sendMail = new MailLog
-    {
-      From = new MailLogAddress("suporte@fluidstate.com.br", "Sucesso do Cliente | Fluid"),
-      To = sendTest ?
-        new List<MailLogAddress>()
+              },
+            Priority = EnumPriorityMail.Low,
+            _idPerson = item.Person._id,
+            NamePerson = item.Person.User.Name,
+            Body = body,
+            StatusMail = EnumStatusMail.Sended,
+            Included = DateTime.Now,
+            Subject = model.Subject
+          };
+          sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+          string token = SendMailApi(path, item.Person, sendMail._id);
+        }
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
         {
+          Description = e.Message + " method: mailplandeadline",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
+    }
+
+    private void BirthCompany(Person person, bool sendTest)
+    {
+      try
+      {
+        //searsh model mail database
+        MailModel model = serviceMailModel.BirthCompany(path);
+        if (model.StatusMail == EnumStatus.Disabled)
+          return;
+
+        string body = model.Message.Replace("{Link}", model.Link)
+                                    .Replace("{Person}", person.User.Name);
+
+        MailLog sendMail = new MailLog
+        {
+          From = new MailLogAddress("suporte@fluidstate.com.br", "Sucesso do Cliente | Fluid"),
+          To = sendTest ?
+            new List<MailLogAddress>()
+            {
                 new MailLogAddress("ricardo@resolution.com.br", "Ricardo teste mensageria")
-        } :
-        new List<MailLogAddress>()
-        {
+            } :
+            new List<MailLogAddress>()
+            {
                 new MailLogAddress(person.User.Mail, person.User.Name)
-        },
-      Priority = EnumPriorityMail.Low,
-      _idPerson = person._id,
-      NamePerson = person.User.Name,
-      Body = body,
-      StatusMail = EnumStatusMail.Sended,
-      Included = DateTime.Now,
-      Subject = model.Subject
-    };
-    sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
-    string token = SendMailApi(path, person, sendMail._id);
+            },
+          Priority = EnumPriorityMail.Low,
+          _idPerson = person._id,
+          NamePerson = person.User.Name,
+          Body = body,
+          StatusMail = EnumStatusMail.Sended,
+          Included = DateTime.Now,
+          Subject = model.Subject
+        };
+        sendMail = serviceMailLog.InsertNewVersion(sendMail).Result;
+        string token = SendMailApi(path, person, sendMail._id);
 
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-#endregion
-
-#region Sucess Factory
-private void BirthCompany(bool sendTest)
-{
-  try
-  {
-    var date = DateTime.Now;
-
-    List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
-    && p.User.DateAdm != null).Result;
-
-    foreach (Person person in persons)
-    {
-      if (person.User != null)
-        if (person.User.DateAdm != null)
-          if (person.User?.DateAdm?.Day == date.Day && person.User?.DateAdm?.Month == date.Month)
-            BirthCompany(person, sendTest);
-
-
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: birthcompany",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
     }
-  }
-  catch (Exception e)
-  {
-    var message = e;
-  }
-}
+    #endregion
 
-#endregion
-
-#region SendMail Api
-private string SendMailApi(string link, Person person, string idmail)
-{
-  try
-  {
-    string token = serviceAuthentication.AuthenticationMail(person);
-    using (HttpClient client = new HttpClient())
+    #region Sucess Factory
+    private void BirthCompany(bool sendTest)
     {
-      client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
-      client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-      HttpResponseMessage resultMail = client.PostAsync(string.Format("sendmail/{0}", idmail), null).Result;
-      return "Ok!";
+      try
+      {
+        var date = DateTime.Now;
+
+        List<Person> persons = servicePerson.GetAllNewVersion(p => p.StatusUser != EnumStatusUser.Disabled
+        && p.User.DateAdm != null).Result;
+
+        foreach (Person person in persons)
+        {
+          if (person.User != null)
+            if (person.User.DateAdm != null)
+              if (person.User?.DateAdm?.Day == date.Day && person.User?.DateAdm?.Month == date.Month)
+                BirthCompany(person, sendTest);
+
+
+        }
+      }
+      catch (Exception e)
+      {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: birthcompany",
+          _idPerson = null,
+          Local = "ManagerMessagesError"
+        };
+        serviceLog.NewLogService(log);
+      }
     }
-  }
-  catch (Exception e)
-  {
-    throw e;
-  }
-}
-#endregion
+
+    #endregion
+
+    #region SendMail Api
+    private string SendMailApi(string link, Person person, string idmail)
+    {
+      try
+      {
+        string token = serviceAuthentication.AuthenticationMail(person);
+        using (HttpClient client = new HttpClient())
+        {
+          client.BaseAddress = new Uri(link.Substring(0, link.Length - 1) + ":5201/");
+          client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
+          HttpResponseMessage resultMail = client.PostAsync(string.Format("sendmail/{0}", idmail), null).Result;
+          return "Ok!";
+        }
+      }
+      catch (Exception e)
+      {
+        return "error";
+      }
+    }
+    #endregion
 
 
 
-#region Onboarding CS
-public List<string> EmployeeWaiting(EnumActionNotification action)
-{
-  throw new Exception("Não implementado");
-}
-public List<string> ManagerWaiting(EnumActionNotification action)
-{
-  throw new Exception("Não implementado");
-}
+    #region Onboarding CS
+    public List<string> EmployeeWaiting(EnumActionNotification action)
+    {
+      throw new Exception("Não implementado");
+    }
+    public List<string> ManagerWaiting(EnumActionNotification action)
+    {
+      throw new Exception("Não implementado");
+    }
     #endregion
 
   }
