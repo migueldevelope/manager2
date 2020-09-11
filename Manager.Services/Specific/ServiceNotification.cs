@@ -1496,88 +1496,74 @@ namespace Manager.Services.Specific
           MailPlanManagerDeadline(listManagerNotification, sendTest, model);
 
           // Enviar para o colaborador
-          //List<PlanNotification> listNotification = new List<PlanNotification>();
-          //listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Manager.Name).ToList();
-          //var notification = new PlanNotification()
-          //{
-          //  Person = listManager[0].Person,
-          //  Defeated = new List<Plan>(),
-          //  DefeatedNow = new List<Plan>(),
-          //  LastSevenDays = new List<Plan>(),
-          //  FifteenDays = new List<Plan>(),
-          //  ThirtyDays = new List<Plan>(),
-          //  Wait = new List<Plan>()
-          //};
-          //var index = 0;
-          //foreach (PlanWorkNotification item in listManager)
-          //{
-
-          //  if (index > 0)
-          //  {
-          //    if (notification.Person.User.Name != item.Person.User.Name)
-          //    {
-          //      MailPlanDeadline(listNotification, sendTest);
-          //      listNotification = new List<PlanNotification>();
-          //    }
-          //  }
-
-
-          //  index += 1;
-          //  notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
-          //  notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
-          //  notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
-          //  notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
-          //  notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
-          //  notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
-          //  listNotification.Add(notification);
-          //  notification = new PlanNotification()
-          //  {
-          //    Person = listManager[0].Person,
-          //    Defeated = new List<Plan>(),
-          //    DefeatedNow = new List<Plan>(),
-          //    LastSevenDays = new List<Plan>(),
-          //    FifteenDays = new List<Plan>(),
-          //    ThirtyDays = new List<Plan>(),
-          //    Wait = new List<Plan>()
-          //  };
-
-          //  switch (item.Type)
-          //  {
-          //    case ManagerListType.Defeated:
-          //      notification.Defeated.Add(item.Plan);
-          //      break;
-          //    case ManagerListType.DefeatedNow:
-          //      notification.DefeatedNow.Add(item.Plan);
-          //      break;
-          //    case ManagerListType.LastSevenDays:
-          //      notification.LastSevenDays.Add(item.Plan);
-          //      break;
-          //    case ManagerListType.FifteenDays:
-          //      notification.FifteenDays.Add(item.Plan);
-          //      break;
-          //    case ManagerListType.ThirtyDays:
-          //      notification.ThirtyDays.Add(item.Plan);
-          //      break;
-          //    case ManagerListType.Wait:
-          //      notification.Wait.Add(item.Plan);
-          //      break;
-          //    default:
-          //      break;
-          //  }
-
-          //  notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
-          //  notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
-          //  notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
-          //  notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
-          //  notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
-          //  notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
-          //  listNotification.Add(notification);
-          //}
-
+          List<PlanNotification> listNotification = new List<PlanNotification>();
+          listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Manager.Name).ToList();
+          var notification = new PlanNotification()
+          {
+            Person = listManager[0].Person,
+            Defeated = new List<Plan>(),
+            DefeatedNow = new List<Plan>(),
+            LastSevenDays = new List<Plan>(),
+            FifteenDays = new List<Plan>(),
+            ThirtyDays = new List<Plan>(),
+            Wait = new List<Plan>()
+          };
+          foreach (PlanWorkNotification item in listManager)
+          {
+            if (notification.Person.User.Name != item.Person.User.Name)
+            {
+              MailPlanDeadline(listNotification, sendTest);
+              listNotification = new List<PlanNotification>();
+              notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
+              notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
+              notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
+              notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
+              notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
+              notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
+              listNotification.Add(notification);
+              notification = new PlanNotification()
+              {
+                Person = item.Person,
+                Defeated = new List<Plan>(),
+                DefeatedNow = new List<Plan>(),
+                LastSevenDays = new List<Plan>(),
+                FifteenDays = new List<Plan>(),
+                ThirtyDays = new List<Plan>(),
+                Wait = new List<Plan>()
+              };
+            }
+            switch (item.Type)
+            {
+              case ManagerListType.Defeated:
+                notification.Defeated.Add(item.Plan);
+                break;
+              case ManagerListType.DefeatedNow:
+                notification.DefeatedNow.Add(item.Plan);
+                break;
+              case ManagerListType.LastSevenDays:
+                notification.LastSevenDays.Add(item.Plan);
+                break;
+              case ManagerListType.FifteenDays:
+                notification.FifteenDays.Add(item.Plan);
+                break;
+              case ManagerListType.ThirtyDays:
+                notification.ThirtyDays.Add(item.Plan);
+                break;
+              case ManagerListType.Wait:
+                notification.Wait.Add(item.Plan);
+                break;
+              default:
+                break;
+            }
+            notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
+            notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
+            notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
+            notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
+            notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
+            notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
+            listNotification.Add(notification);
+          }
         }
-
-
-
       }
       catch (Exception e)
       {
