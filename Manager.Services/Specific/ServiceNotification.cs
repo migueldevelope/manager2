@@ -1399,7 +1399,6 @@ namespace Manager.Services.Specific
         foreach (Person person in persons)
         {
           List<Plan> plans = servicePlan.GetAllNewVersion(p => p.Person._id == person._id).Result.Where(p => monitorings.Contains(p._idMonitoring)).ToList();
-
           var plansfilter = plans.Where(p => p.StatusPlan == EnumStatusPlan.Open).ToList();
           foreach (Plan plan in plansfilter)
           {
@@ -1407,30 +1406,24 @@ namespace Manager.Services.Specific
             if (work != null)
               listManager.Add(work);
           }
-
-          plansfilter = plans.Where(p => p.Status == EnumStatus.Enabled).ToList();
+          plansfilter = plans.Where(p => p.StatusPlanApproved == EnumStatusPlanApproved.Wait).ToList();
           foreach (Plan plan in plansfilter)
           {
-
-            if (plan.StatusPlanApproved == EnumStatusPlanApproved.Wait)
+            listManager.Add(new PlanWorkNotification()
             {
-              listManager.Add(new PlanWorkNotification()
-              {
-                Manager = person.Manager,
-                Person = person,
-                Plan = plan,
-                Type = ManagerListType.Wait
-              });
-            }
+              Manager = person.Manager,
+              Person = person,
+              Plan = plan,
+              Type = ManagerListType.Wait
+            });
           }
-
         }
-
         if (listManager.Count > 0)
         {
           // Emitir e-mails
           List<PlanManagerNotification> listManagerNotification = new List<PlanManagerNotification>();
-          listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Manager.Name).ToList();
+          listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Manager.Name).ThenBy(o => o.Type)
+            .ThenBy(o => o.Person.User.Name).ThenBy(o => o.Plan.Deadline).ToList();
           PlanManagerNotification managerNotification = new PlanManagerNotification()
           {
             Manager = listManager[0].Manager,
@@ -1497,7 +1490,7 @@ namespace Manager.Services.Specific
 
           // Enviar para o colaborador
           List<PlanNotification> listNotification = new List<PlanNotification>();
-          listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Person.User.Name).OrderBy(o => o.Type).OrderBy(o => o.Plan.Deadline).OrderBy(o => o.Manager.Name).ToList();
+          listManager = listManager.Where(p => p.Manager != null).OrderBy(o => o.Person.User.Name).ThenBy(o => o.Type).ThenBy(o => o.Plan.Deadline).ToList();
           var notification = new PlanNotification()
           {
             Person = listManager[0].Person,
@@ -1512,15 +1505,9 @@ namespace Manager.Services.Specific
           {
             if (notification.Person.User.Name != item.Person.User.Name)
             {
+              listNotification.Add(notification);
               MailPlanDeadline(listNotification, sendTest);
               listNotification = new List<PlanNotification>();
-              notification.Defeated = notification.Defeated.OrderBy(o => o.Deadline).ToList();
-              notification.DefeatedNow = notification.DefeatedNow.OrderBy(o => o.Deadline).ToList();
-              notification.LastSevenDays = notification.LastSevenDays.OrderBy(o => o.Deadline).ToList();
-              notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
-              notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
-              notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
-              listNotification.Add(notification);
               notification = new PlanNotification()
               {
                 Person = item.Person,
@@ -1561,7 +1548,10 @@ namespace Manager.Services.Specific
             notification.FifteenDays = notification.FifteenDays.OrderBy(o => o.Deadline).ToList();
             notification.ThirtyDays = notification.ThirtyDays.OrderBy(o => o.Deadline).ToList();
             notification.Wait = notification.Wait.OrderBy(o => o.Deadline).ToList();
-            listNotification.Add(notification);
+          }
+          if (listManager.Count > 0)
+          {
+            MailPlanDeadline(listNotification, sendTest);
           }
         }
       }
