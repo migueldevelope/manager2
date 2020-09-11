@@ -35,7 +35,7 @@ namespace Manager.Services.Commons
           throw new Exception("not_sheet");
 
 
-        long count = CountLines(sheet);
+        long count = CountLinesSalaryScales(sheet);
         string[] grades = new string[count];
         int[] workloads = new int[count];
 
@@ -532,6 +532,36 @@ namespace Manager.Services.Commons
     #endregion
 
     #region private
+    private long CountLinesSalaryScales(ISheet sheet)
+    {
+      long count = 0;
+      byte blankline = 0;
+
+      IRow headerRow = sheet.GetRow(0); //Get Header Row
+
+      for (int i = 2; i <= sheet.LastRowNum; i++) //Read Excel File
+      {
+        IRow row = sheet.GetRow(i);
+        if (row == null) continue;
+        if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+        blankline = 0;
+        for (int j = 2; j < 10; j++)
+        {
+          if (row.GetCell(j) != null)
+          {
+            var value = row.GetCell(j).ToString();
+            if (value.Trim().Length == 0)
+              blankline += 1;
+          }
+        }
+        if (blankline == 8)
+          break;
+        else
+          count += 1;
+      }
+      return count;
+    }
+
     private long CountLines(ISheet sheet)
     {
       long count = 0;

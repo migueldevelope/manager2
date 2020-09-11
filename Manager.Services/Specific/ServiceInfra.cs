@@ -3463,6 +3463,7 @@ namespace Manager.Services.Specific
               _idGrade = item._idGrade,
               NameGrade = item.NameGrade,
               Workload = item.Workload,
+              StepLimit = item.StepLimit,
               _id = ObjectId.GenerateNewId().ToString()
             });
           }
