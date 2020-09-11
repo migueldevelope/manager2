@@ -1775,7 +1775,7 @@ namespace Manager.Services.Specific
           string list = string.Empty;
           string saveName = string.Empty;
           foreach (var personPlan in item.Defeated)
-            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString("dd/MM/yyyy"), personPlan.Description));
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString(), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
             list = string.Concat("Ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
