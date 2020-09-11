@@ -1629,10 +1629,10 @@ namespace Manager.Services.Specific
             {
               if (saveName != personPlan.Person.User.Name)
                 //list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-                list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToShortDateString(), personPlan.Plan.Description));
+                list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", personPlan.Person.User.Name, ((DateTime)personPlan.Plan.Deadline).ToString(), personPlan.Plan.Description));
               else
                 //list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToString("dd/MM/yyyy"), personPlan.Plan.Description));
-                list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, ((DateTime)personPlan.Plan.Deadline).ToShortDateString(), personPlan.Plan.Description));
+                list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", string.Empty, (personPlan.Plan.Deadline).ToString(), personPlan.Plan.Description));
             }
           }
 
@@ -1775,7 +1775,7 @@ namespace Manager.Services.Specific
           string list = string.Empty;
           string saveName = string.Empty;
           foreach (var personPlan in item.Defeated)
-            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", ((DateTime)personPlan.Deadline).ToString(), personPlan.Description));
+            list = string.Concat(list, string.Format("<tr><td>{0}</td><td>{1}</td></tr>", (personPlan.Deadline).ToString(), personPlan.Description));
 
           if (!string.IsNullOrEmpty(list))
             list = string.Concat("Ação de desenvolvimento <strong>vencida</strong>:<br><table>", list, "</table><br>");
