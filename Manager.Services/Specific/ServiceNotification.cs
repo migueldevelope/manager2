@@ -1575,8 +1575,8 @@ namespace Manager.Services.Specific
         Plan = plan,
       };
 
-      var deadline = (DateTime)DateTime.Parse(plan.Deadline.Value.ToString("dd/MM/yyyy"));
-      var now = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy"));
+      var deadline = plan.Deadline.Value;
+      var now = DateTime.Now;
       int days = (deadline - now).Days;
 
       if (days < 0)
