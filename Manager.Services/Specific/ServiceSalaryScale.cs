@@ -26,6 +26,7 @@ namespace Manager.Services.Specific
     private readonly ServiceGeneric<Person> servicePerson;
     private readonly ServiceGeneric<SalaryScale> serviceSalaryScale;
     private readonly ServiceGeneric<SalaryScaleLog> serviceSalaryScaleLog;
+    private readonly ServiceExcel serviceExcel;
     private readonly ServiceLog serviceLog;
 
     #region Constructor
@@ -39,6 +40,7 @@ namespace Manager.Services.Specific
         serviceSalaryScale = new ServiceGeneric<SalaryScale>(context);
         serviceSalaryScaleLog = new ServiceGeneric<SalaryScaleLog>(context);
         serviceLog = new ServiceLog(context, context);
+        serviceExcel = new ServiceExcel(context);
       }
       catch (Exception e)
       {
@@ -836,7 +838,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var serviceExcel = new ServiceExcel();
         var tuple = serviceExcel.ImportSalaryScale(stream);
         var import = tuple.Item1;
         var gradename = tuple.Item2;
@@ -895,7 +896,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var serviceExcel = new ServiceExcel();
         var tuple = serviceExcel.ImportSalaryScale(stream);
         var import = tuple.Item1;
         var gradename = tuple.Item2;
@@ -954,7 +954,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var serviceExcel = new ServiceExcel();
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         var salaryScale = serviceSalaryScaleLog.GetNewVersion(p => p._id == idsalaryscale).Result;
@@ -1102,7 +1101,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var serviceExcel = new ServiceExcel();
         var occupations = serviceOccupation.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
 
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;
@@ -1251,7 +1249,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var serviceExcel = new ServiceExcel();
 
 
         var salaryScale = serviceSalaryScale.GetNewVersion(p => p._id == idsalaryscale).Result;

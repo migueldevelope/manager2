@@ -37,7 +37,7 @@ namespace Manager.Services.Specific
         serviceObjective = new ServiceGeneric<Objective>(context);
         serviceKeyResult = new ServiceGeneric<KeyResult>(context);
         servicePerson = new ServiceGeneric<Person>(context);
-        serviceExcel = new ServiceExcel();
+        serviceExcel = new ServiceExcel(context);
         serviceLog = new ServiceLog(context, context);
         servicePendingCheckinObjective = new ServiceGeneric<PendingCheckinObjective>(context);
       }
@@ -2402,6 +2402,13 @@ namespace Manager.Services.Specific
       }
       catch (Exception e)
       {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: importobjective",
+          _idPerson = null,
+          Local = "ImportObjective"
+        };
+        serviceLog.NewLogService(log);
         throw e;
       }
     }

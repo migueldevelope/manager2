@@ -545,7 +545,7 @@ namespace Manager.Services.Commons
       {
         ViewLog log = new ViewLog
         {
-          Description = e.Message + " method: importsalaryscale",
+          Description = e.Message + " method: importobjective",
           _idPerson = null,
           Local = "ExcelError"
         };

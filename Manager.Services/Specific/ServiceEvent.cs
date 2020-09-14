@@ -40,6 +40,7 @@ namespace Manager.Services.Specific
     private readonly string Path;
     private readonly string blobkey;
     private static readonly Regex regex = new Regex(@"^\d+$");
+    private readonly ServiceExcel serviceExcel;
 
     #region Constructor
     public ServiceEvent(DataContext context, DataContext contextLog, string pathToken, string _blobkey) : base(context)
@@ -55,6 +56,8 @@ namespace Manager.Services.Specific
         serviceLog = new ServiceLog(context, contextLog);
         servicePerson = new ServiceGeneric<Person>(context);
         serviceTrainingPlan = new ServiceGeneric<TrainingPlan>(context);
+        serviceExcel = new ServiceExcel(context);
+
         Path = pathToken;
         blobkey = _blobkey;
       }
@@ -2009,7 +2012,6 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var serviceExcel = new ServiceExcel();
         var list = serviceExcel.ImportTraning(stream);
 
         foreach (var item in list)
