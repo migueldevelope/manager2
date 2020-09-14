@@ -486,21 +486,47 @@ namespace EdeskIntegration.Controllers
     /// </summary>
     /// <returns></returns>
     [HttpPost("objectivemodel1")]
-    public string PostObjectiveModel1()
+    public async Task<ObjectResult> PostObjectiveModel1()
     {
       foreach (var file in HttpContext.Request.Form.Files)
       {
         //var ext = Path.GetExtension(file.FileName).ToLower();
         //if (ext == ".exe" || ext == ".msi" || ext == ".bat" || ext == ".jar")
         if (file.FileName != "CargaCheckin.xlsx")
-          return "bad_file_type";
+          return Ok("bad_file_type");
       }
+     
+
       foreach (var file in HttpContext.Request.Form.Files)
       {
+        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobKey);
+        CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(service._user._idAccount);
+        if (await cloudBlobContainer.CreateIfNotExistsAsync())
+        {
+          await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+          {
+            PublicAccess = BlobContainerPublicAccessType.Blob
+          });
+        }
+        Attachments attachment = new Attachments()
+        {
+          Extension = Path.GetExtension(file.FileName).ToLower(),
+          LocalName = file.FileName,
+          Lenght = file.Length,
+          Status = EnumStatus.Enabled,
+          Saved = true
+        };
+        await this.service.InsertNewVersion(attachment);
+        CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(string.Format("{0}{1}", attachment._id.ToString(), attachment.Extension));
+        blockBlob.Properties.ContentType = file.ContentType;
+        await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+       var url = blockBlob.Uri.ToString();
+
         var result = serviceObjective.ImportObjectiveModel1(file.OpenReadStream());
-        return result;
+        return Ok(result);
       }
-      return "not_file";
+      return NotFound("not_file");
     }
 
 

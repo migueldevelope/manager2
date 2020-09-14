@@ -1,4 +1,7 @@
-﻿using Manager.Views.BusinessView;
+﻿using Manager.Core.Views;
+using Manager.Data;
+using Manager.Services.Specific;
+using Manager.Views.BusinessView;
 using Manager.Views.Enumns;
 using MongoDB.Bson;
 using NPOI.SS.UserModel;
@@ -13,8 +16,18 @@ namespace Manager.Services.Commons
 {
   public class ServiceExcel
   {
+    private readonly ServiceLog serviceLog;
+
+    #region constructor
+    public ServiceExcel(DataContext context)
+    {
+      serviceLog = new ServiceLog(context, context);
+    }
+
+    #endregion
 
     #region SalaryScale
+
 
     public Tuple<double[][], string[], long, int[]> ImportSalaryScale(Stream stream)
     {
@@ -78,6 +91,13 @@ namespace Manager.Services.Commons
       }
       catch (Exception e)
       {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: importsalaryscale",
+          _idPerson = null,
+          Local = "ExcelError"
+        };
+        serviceLog.NewLogService(log);
         throw e;
       }
 
@@ -523,6 +543,13 @@ namespace Manager.Services.Commons
       }
       catch (Exception e)
       {
+        ViewLog log = new ViewLog
+        {
+          Description = e.Message + " method: importsalaryscale",
+          _idPerson = null,
+          Local = "ExcelError"
+        };
+        serviceLog.NewLogService(log);
         throw e;
       }
 
