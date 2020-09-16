@@ -2361,11 +2361,11 @@ namespace Manager.Services.Specific
       try
       {
 
-        LogSave(_user._idPerson, "upload objective model 1", "web");
+        //LogSave(_user._idPerson, "upload objective model 1", "web");
 
         var list = serviceExcel.ImportObjectiveModel1(stream);
 
-        LogSave(_user._idPerson, "load objective model 1", "web");
+        //LogSave(_user._idPerson, "load objective model 1", "web");
 
         var keyresults = serviceKeyResult.GetAllNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         foreach (var item in list)
@@ -2384,7 +2384,7 @@ namespace Manager.Services.Specific
               });
 
               var viewtext = new ViewText() { Text = "" };
-              if (item.Type == EnumTypeKeyResult.Quantity)
+              if (keyresult.TypeKeyResult == EnumTypeKeyResult.Quantity)
               {
                 var isNumeric = int.TryParse(item.Result, out _);
                 if (isNumeric)

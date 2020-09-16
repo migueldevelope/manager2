@@ -532,10 +532,10 @@ namespace Manager.Services.Commons
           if (view.Goal == "") view.Goal = "0";
           if (view.Result == "") view.Result = "0";
 
-          if (row.GetCell(5).ToString() == "Qualitativo")
-            view.Type = EnumTypeKeyResult.Quality;
-          else
-            view.Type = EnumTypeKeyResult.Quantity;
+          //if (row.GetCell(5).ToString() == "Qualitativo")
+          //  view.Type = EnumTypeKeyResult.Quality;
+          //else
+          //  view.Type = EnumTypeKeyResult.Quantity;
 
           list.Add(view);
         }
