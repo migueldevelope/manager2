@@ -2383,6 +2383,7 @@ namespace Manager.Services.Specific
                 Date = item.Date
               });
 
+
               var viewtext = new ViewText() { Text = "" };
               if (keyresult.TypeKeyResult == EnumTypeKeyResult.Quantity)
               {
