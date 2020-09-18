@@ -3927,8 +3927,8 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var occupation = serviceOccupationLog.GetAllNewVersion(p => p._idOccupationPrevious == id
-        && p.Date <= date.Date).Result.FirstOrDefault();
+        var occupation = serviceOccupationLog.GetNewVersion(p => p._idOccupationPrevious == id
+        && p.Date <= date.Date).Result;
 
         if (occupation == null)
           return null;

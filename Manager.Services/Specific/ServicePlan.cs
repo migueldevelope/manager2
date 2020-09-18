@@ -2263,77 +2263,27 @@ namespace Manager.Services.Specific
           NamePerson = plan.Person.Name,
           Bomb = GetBomb((DateTime.Parse(plan.Deadline.ToString()) - DateTime.Now).Days)
         };
-        if (plan.SourcePlan == EnumSourcePlan.Activite)
+
+        resultPlan.PlanNew = servicePlan.GetAllNewVersion(p => p._idMonitoring == idmonitoring
+        && p._idItem == plan._idItem && p._id != idplan).Result.Select(p => new ViewCrudPlan()
         {
-          try
-          {
-            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Activities.Where(
-            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-            p._id != plan._id).FirstOrDefault();
-          }
-          catch (Exception)
-          {
-
-          }
-        }
-
-        if (plan.SourcePlan == EnumSourcePlan.Skill)
-        {
-          try
-          {
-            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsCompany.Where(
-           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-           p._id != plan._id).FirstOrDefault();
-          }
-          catch (Exception)
-          {
-
-          }
-        }
-
-        if (plan.SourcePlan == EnumSourcePlan.SkillGroup)
-        {
-          try
-          {
-            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsGroup.Where(
-           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-           p._id != plan._id).FirstOrDefault();
-          }
-          catch (Exception)
-          {
-
-          }
-        }
-
-        if (plan.SourcePlan == EnumSourcePlan.SkillOccupation)
-        {
-          try
-          {
-            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().SkillsOccupation.Where(
-           p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-           p._id != plan._id).FirstOrDefault();
-          }
-          catch (Exception)
-          {
-
-          }
-        }
-
-
-        if (plan.SourcePlan == EnumSourcePlan.Schooling)
-        {
-          try
-          {
-            resultPlan.PlanNew = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault().Schoolings.Where(
-            p => p._id == plan._idItem).FirstOrDefault().Plans.Where(p => p.Name == plan.Name &
-            p._id != plan._id).FirstOrDefault();
-          }
-          catch (Exception)
-          {
-
-          }
-        }
-
+          _id = p._id,
+          Name = p.Name,
+          Description = p.Description,
+          Deadline = p.Deadline,
+          Skills = p.Skills,
+          TypePlan = p.TypePlan,
+          SourcePlan = p.SourcePlan,
+          StatusPlan = p.StatusPlan,
+          StatusPlanApproved = p.StatusPlanApproved,
+          TypeAction = p.TypeAction,
+          Attachments = p.Attachments,
+          NewAction = p.NewAction,
+          TextEnd = p.TextEnd,
+          TextEndManager = p.TextEndManager,
+          Evaluation = byte.Parse(p.Evaluation.ToString())
+        })
+        .FirstOrDefault();
 
         return resultPlan;
       }
