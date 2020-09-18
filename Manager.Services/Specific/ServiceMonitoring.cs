@@ -1103,7 +1103,8 @@ namespace Manager.Services.Specific
             StatusViewPerson = p.StatusViewPerson,
             Skill = p.Skill,
             Praise = p.Praise,
-            Plans = p.Plans.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList()
+
+            Plans = p.Plans
           }).ToList(),
           SkillsGroup = monitoring.SkillsGroup?.Select(p => new ViewCrudMonitoringSkills()
           {
@@ -1122,7 +1123,7 @@ namespace Manager.Services.Specific
             StatusViewPerson = p.StatusViewPerson,
             Skill = p.Skill,
             Praise = p.Praise,
-            Plans = p.Plans.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList()
+            Plans = p.Plans
           }).ToList(),
           SkillsOccupation = monitoring.SkillsOccupation?.Select(p => new ViewCrudMonitoringSkills()
           {
@@ -1160,7 +1161,7 @@ namespace Manager.Services.Specific
             StatusViewPerson = p.StatusViewPerson,
             Praise = p.Praise,
             Schooling = p.Schooling,
-            Plans = p.Plans.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList()
+            Plans = p.Plans
           }).ToList(),
           Activities = monitoring.Activities?.Select(p => new ViewCrudMonitoringActivities()
           {
@@ -1181,7 +1182,7 @@ namespace Manager.Services.Specific
             TypeAtivitie = p.TypeAtivitie,
             Praise = p.Praise,
             Activities = p.Activities,
-            Plans = p.Plans.Where(p => p.StatusPlanApproved != EnumStatusPlanApproved.Approved).ToList(),
+            Plans = p.Plans,
           }).ToList(),
           StatusMonitoring = monitoring.StatusMonitoring
         };
