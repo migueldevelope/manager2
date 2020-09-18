@@ -1073,7 +1073,7 @@ namespace Manager.Services.Specific
       {
 
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
-        var att = servicePlan.GetNewVersion(p => p._id == idmonitoring).Result.Attachments;
+        var att = servicePlan.GetNewVersion(p => p._id == idplan).Result.Attachments;
 
         foreach (var plan in monitoring.Activities)
         {
