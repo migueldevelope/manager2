@@ -1072,7 +1072,8 @@ namespace Manager.Services.Specific
       try
       {
 
-        var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        var att = servicePlan.GetNewVersion(p => p._id == idmonitoring).Result.Attachments;
 
         foreach (var plan in monitoring.Activities)
         {
@@ -1080,12 +1081,13 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
-              if (res.Attachments == null)
+              if (att == null)
               {
-                res.Attachments = new List<ViewCrudAttachmentField>();
+                att = new List<ViewCrudAttachmentField>();
               }
-              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              att.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
 
+              res.Attachments = att;
               Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
@@ -1097,11 +1099,13 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
-              if (res.Attachments == null)
+              if (att == null)
               {
-                res.Attachments = new List<ViewCrudAttachmentField>();
+                att = new List<ViewCrudAttachmentField>();
               }
-              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              att.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+
+              res.Attachments = att;
               Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
@@ -1113,11 +1117,13 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
-              if (res.Attachments == null)
+              if (att == null)
               {
-                res.Attachments = new List<ViewCrudAttachmentField>();
+                att = new List<ViewCrudAttachmentField>();
               }
-              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              att.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+
+              res.Attachments = att;
               Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
@@ -1129,11 +1135,13 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
-              if (res.Attachments == null)
+              if (att == null)
               {
-                res.Attachments = new List<ViewCrudAttachmentField>();
+                att = new List<ViewCrudAttachmentField>();
               }
-              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              att.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+
+              res.Attachments = att;
               Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
@@ -1145,11 +1153,13 @@ namespace Manager.Services.Specific
           {
             if (res._id == idplan)
             {
-              if (res.Attachments == null)
+              if (att == null)
               {
-                res.Attachments = new List<ViewCrudAttachmentField>();
+                att = new List<ViewCrudAttachmentField>();
               }
-              res.Attachments.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+              att.Add(new ViewCrudAttachmentField { Url = url, Name = fileName, _idAttachment = attachmentid });
+
+              res.Attachments = att;
               Task.Run(() => UpdatePlan(idmonitoring, res));
             }
           }
