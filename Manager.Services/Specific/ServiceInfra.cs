@@ -3009,7 +3009,8 @@ namespace Manager.Services.Specific
               Name = s.NameSalaryScale,
               NameGrade = s.NameGrade,
               _idGrade = s._idGrade,
-              Workload = s.Workload
+              Workload = s.Workload,
+              StepLimit = s.StepLimit
             }).ToList(),
             Group = p.Group,
             Line = p.Line,

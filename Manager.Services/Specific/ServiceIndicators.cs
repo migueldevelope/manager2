@@ -1945,7 +1945,7 @@ namespace Manager.Services.Specific
         foreach (var item in persons)
         {
 
-          plans += servicePlan.GetAllNewVersion(p => p.Person._id == item._id & p.StatusPlan == EnumStatusPlan.Open).Result.Where(p => idmonitorings.Contains(p._idMonitoring)).Count();
+          plans += servicePlan.GetAllNewVersion(p => p.Person._id == item._id & p.StatusPlan == EnumStatusPlan.Open && p.StatusPlanApproved == EnumStatusPlanApproved.Approved).Result.Where(p => idmonitorings.Contains(p._idMonitoring)).Count();
 
           var countonboardings = serviceOnboarding.CountNewVersion(p => p.Person._id == item._id & (p.StatusOnBoarding == EnumStatusOnBoarding.WaitManager || p.StatusOnBoarding == EnumStatusOnBoarding.WaitManagerRevision || p.StatusOnBoarding == EnumStatusOnBoarding.InProgressManager)).Result;
           var countmonitorings = serviceMonitoring.CountNewVersion(p => p.Person._id == item._id & (p.StatusMonitoring == EnumStatusMonitoring.WaitManager || p.StatusMonitoring == EnumStatusMonitoring.InProgressManager)).Result;
