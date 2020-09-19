@@ -417,7 +417,9 @@ namespace Manager.Services.Auth
         #region Ajustes na manutenção da pessoa
         if (person.StatusUser == EnumStatusUser.Disabled)
         {
-          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+          if (person.TypeJourney != EnumTypeJourney.OffBoarding)
+            person.TypeJourney = EnumTypeJourney.OutOfJourney;
+
           var persons = servicePerson.CountNewVersion(p => p.User._id == person.User._id &&
           p.StatusUser != EnumStatusUser.Disabled).Result;
           if (persons == 0)
@@ -1163,7 +1165,9 @@ namespace Manager.Services.Auth
         #region Ajustes na manutenção da pessoa
         if (person.StatusUser == EnumStatusUser.Disabled)
         {
-          person.TypeJourney = EnumTypeJourney.OutOfJourney;
+          if(person.TypeJourney != EnumTypeJourney.OffBoarding)
+            person.TypeJourney = EnumTypeJourney.OutOfJourney;
+
           var persons = servicePerson.CountNewVersion(p => p.User._id == person.User._id &&
           p.StatusUser != EnumStatusUser.Disabled).Result;
           if (persons == 0)
