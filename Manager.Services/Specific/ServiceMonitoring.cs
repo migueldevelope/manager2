@@ -414,7 +414,7 @@ namespace Manager.Services.Specific
         }, person, idmonitoring, iditem);
 
         var i = serviceMonitoring.Update(monitoring, null);
-        return servicePlan.GetAllNewVersion(p => p._idMonitoring == monitoring._id).Result.Select(p => p.GetViewCrud()).ToList();
+        return servicePlan.GetAllNewVersion(p => p._idMonitoring == monitoring._id && p._idItem == iditem).Result.Select(p => p.GetViewCrud()).ToList();
       }
       catch (Exception e)
       {
@@ -478,7 +478,7 @@ namespace Manager.Services.Specific
         plan.Skills = view.Skills;
 
         UpdatePlan(plan);
-        return servicePlan.GetAllNewVersion(p => p._idMonitoring == idmonitoring).Result.Select(p => p.GetViewCrud()).ToList();
+        return servicePlan.GetAllNewVersion(p => p._idMonitoring == idmonitoring && p._idItem == iditem).Result.Select(p => p.GetViewCrud()).ToList();
       }
       catch (Exception e)
       {
