@@ -1059,14 +1059,13 @@ namespace Manager.Services.Specific
 
         foreach (var moni in monitorings)
         {
+          plans = servicePlan.CountNewVersion(p => p._idMonitoring == moni._id).Result;
           if (moni.SkillsCompany != null)
           {
             foreach (var item in moni.SkillsCompany)
             {
               if (item.Comments != null)
                 comments += item.Comments.Count();
-              if (item.Plans != null)
-                plans += item.Plans.Count();
               if (item.Praise != null)
                 praises += 1;
             }
@@ -1077,8 +1076,6 @@ namespace Manager.Services.Specific
             {
               if (item.Comments != null)
                 comments += item.Comments.Count();
-              if (item.Plans != null)
-                plans += item.Plans.Count();
               if (item.Praise != null)
                 praises += 1;
             }
@@ -1089,14 +1086,13 @@ namespace Manager.Services.Specific
             {
               if (item.Comments != null)
                 comments += item.Comments.Count();
-              if (item.Plans != null)
-                plans += item.Plans.Count();
               if (item.Praise != null)
                 praises += 1;
             }
           }
         }
 
+        view.Plans = plans;
         view.Comments = comments;
         view.Praises = praises;
         view.Plans = plans;
@@ -1283,6 +1279,9 @@ namespace Manager.Services.Specific
 
           foreach (var lst in list.Where(p => p._idManager == moni.Person._idManager))
           {
+            var plans = servicePlan.CountNewVersion(p => p._idMonitoring == moni._id).Result;
+            lst.Plans = plans;
+
             if (moni.SkillsCompany != null)
             {
               foreach (var item in moni.SkillsCompany)
@@ -1291,11 +1290,6 @@ namespace Manager.Services.Specific
                 {
                   lst.Comments += item.Comments.Count();
                   lst.Total += item.Comments.Count();
-                }
-                if (item.Plans != null)
-                {
-                  lst.Plans += item.Plans.Count();
-                  lst.Total += item.Plans.Count();
                 }
                 if (item.Praise != null)
                 {
@@ -1313,11 +1307,6 @@ namespace Manager.Services.Specific
                   lst.Comments += item.Comments.Count();
                   lst.Total += item.Comments.Count();
                 }
-                if (item.Plans != null)
-                {
-                  lst.Plans += item.Plans.Count();
-                  lst.Total += item.Plans.Count();
-                }
                 if (item.Praise != null)
                 {
                   lst.Praises += 1;
@@ -1334,11 +1323,6 @@ namespace Manager.Services.Specific
                   lst.Comments += item.Comments.Count();
                   lst.Total += item.Comments.Count();
                 }
-                if (item.Plans != null)
-                {
-                  lst.Plans += item.Plans.Count();
-                  lst.Total += item.Plans.Count();
-                }
                 if (item.Praise != null)
                 {
                   lst.Praises += 1;
@@ -1347,8 +1331,8 @@ namespace Manager.Services.Specific
               }
             }
           }
-
         }
+
         total = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).Count();
 
         //list = list.Where(p => (p.Plans > 0 || p.Praises > 0 || p.Comments > 0)).ToList();
@@ -1572,9 +1556,11 @@ namespace Manager.Services.Specific
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
         {
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
+
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
           }
         }
@@ -1626,11 +1612,12 @@ namespace Manager.Services.Specific
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
         {
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
           foreach (var row in item.Activities)
           {
-            foreach (var skill in row.Plans)
+            foreach (var plan in plans)
             {
-              foreach (var view in skill.Skills)
+              foreach (var view in plan.Skills)
               {
                 listResult.Add(new ViewTagsCloud() { text = view.Name });
               }
@@ -1685,28 +1672,32 @@ namespace Manager.Services.Specific
         List<ViewTagsCloudPerson> listResult = new List<ViewTagsCloudPerson>();
         foreach (var item in list)
         {
+          var plans = servicePlan.GetAllNewVersion(p => p._id == item._id).Result;
+
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = item.Activities.FirstOrDefault()?.Activities?.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
 
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
 
           }
 
           foreach (var row in item.SkillsGroup)
           {
-            if (row.Plans.Count() > 0)
+
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
 
           foreach (var row in item.SkillsOccupation)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
         }
@@ -1751,33 +1742,33 @@ namespace Manager.Services.Specific
         List<ViewTagsCloudPerson> listResult = new List<ViewTagsCloudPerson>();
         foreach (var item in list)
         {
-          foreach (var row in item.Activities)
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
+          foreach (var row in plans.Where(p => p.SourcePlan == EnumSourcePlan.Activite))
           {
-            foreach (var skill in row.Plans)
+            foreach (var view in row.Skills)
             {
-              foreach (var view in skill.Skills)
-              {
-                listResult.Add(new ViewTagsCloudPerson() { Item = row.Activities.Name, Text = view.Name, Person = item.Person?.Name });
-              }
+              listResult.Add(new ViewTagsCloudPerson() { Item = row.Name, Text = view.Name, Person = item.Person?.Name });
             }
           }
 
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+
+            if (plans.Where(p => p.SourcePlan == EnumSourcePlan.Skill && p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
 
           }
 
           foreach (var row in item.SkillsGroup)
           {
-            if (row.Plans.Count() > 0)
+
+            if (plans.Where(p => p.SourcePlan == EnumSourcePlan.SkillGroup && p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
 
           foreach (var row in item.SkillsOccupation)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p.SourcePlan == EnumSourcePlan.SkillOccupation && p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudPerson() { Item = row.Skill.Name, Text = row.Skill.Name, Person = item.Person?.Name });
           }
         }
@@ -2004,9 +1995,10 @@ namespace Manager.Services.Specific
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
         {
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
           }
         }
@@ -2053,33 +2045,33 @@ namespace Manager.Services.Specific
         var listResult = new List<ViewTagsCloudFull>();
         foreach (var item in list)
         {
-          foreach (var row in item.Activities)
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
+
+          foreach (var skill in plans.Where(p => p.SourcePlan == EnumSourcePlan.Activite))
           {
-            foreach (var skill in row.Plans)
+            foreach (var view in skill.Skills)
             {
-              foreach (var view in skill.Skills)
-              {
-                listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#c7750a" });
-              }
+              listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#c7750a" });
             }
           }
 
+
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0ac79f" });
 
           }
 
           foreach (var row in item.SkillsGroup)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
           }
 
           foreach (var row in item.SkillsOccupation)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
           }
         }
@@ -2140,33 +2132,33 @@ namespace Manager.Services.Specific
         var listResult = new List<ViewTagsCloudFull>();
         foreach (var item in list)
         {
-          foreach (var row in item.Activities)
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
+
+          foreach (var skill in plans.Where(p => p.SourcePlan == EnumSourcePlan.Activite))
           {
-            foreach (var skill in row.Plans)
+            foreach (var view in skill.Skills)
             {
-              foreach (var view in skill.Skills)
-              {
-                listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#c7750a" });
-              }
+              listResult.Add(new ViewTagsCloudFull() { text = view.Name, color = "#c7750a" });
             }
           }
 
+
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#0ac79f" });
 
           }
 
           foreach (var row in item.SkillsGroup)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
           }
 
           foreach (var row in item.SkillsOccupation)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloudFull() { text = row.Skill.Name, color = "#c7750a" });
           }
         }
@@ -2210,16 +2202,16 @@ namespace Manager.Services.Specific
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
         {
-          foreach (var row in item.Activities)
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
+
+          foreach (var skill in plans.Where(p => p.SourcePlan == EnumSourcePlan.Activite))
           {
-            foreach (var skill in row.Plans)
+            foreach (var view in skill.Skills)
             {
-              foreach (var view in skill.Skills)
-              {
-                listResult.Add(new ViewTagsCloud() { text = view.Name });
-              }
+              listResult.Add(new ViewTagsCloud() { text = view.Name });
             }
           }
+
         }
 
 
@@ -2249,14 +2241,12 @@ namespace Manager.Services.Specific
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
         {
-          foreach (var row in item.Activities)
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
+          foreach (var row in plans.Where(p => p.SourcePlan == EnumSourcePlan.Activite))
           {
-            foreach (var skill in row.Plans)
+            foreach (var view in row.Skills)
             {
-              foreach (var view in skill.Skills)
-              {
-                listResult.Add(new ViewTagsCloud() { text = view.Name });
-              }
+              listResult.Add(new ViewTagsCloud() { text = view.Name });
             }
           }
         }
@@ -2295,9 +2285,10 @@ namespace Manager.Services.Specific
         List<ViewTagsCloud> listResult = new List<ViewTagsCloud>();
         foreach (var item in list)
         {
+          var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == item._id).Result;
           foreach (var row in item.SkillsCompany)
           {
-            if (row.Plans.Count() > 0)
+            if (plans.Where(p => p._idItem == row._id).Count() > 0)
               listResult.Add(new ViewTagsCloud() { text = row.Skill.Name });
           }
         }
@@ -2404,65 +2395,65 @@ namespace Manager.Services.Specific
       }
     }
 
-    public void UpdateStatusPlanMonitoring()
-    {
-      try
-      {
-        var monitorings = serviceMonitoring.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
-        && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
-        foreach (var moni in monitorings)
-        {
-          if (moni.SkillsCompany != null)
-          {
-            foreach (var item in moni.SkillsCompany)
-            {
-              if (item.Plans != null)
-              {
-                foreach (var plan in item.Plans)
-                {
-                  var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
-                  plan.StatusPlan = status;
-                }
-              }
-            }
-          }
+    ////public void UpdateStatusPlanMonitoring()
+    ////{
+    ////  try
+    ////  {
+    ////    var monitorings = serviceMonitoring.GetAllFreeNewVersion(p => p.Status == EnumStatus.Enabled
+    ////    && p.StatusMonitoring == EnumStatusMonitoring.End).Result;
+    ////    foreach (var moni in monitorings)
+    ////    {
+    ////      if (moni.SkillsCompany != null)
+    ////      {
+    ////        foreach (var item in moni.SkillsCompany)
+    ////        {
+    ////          if (item.Plans != null)
+    ////          {
+    ////            foreach (var plan in item.Plans)
+    ////            {
+    ////              var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
+    ////              plan.StatusPlan = status;
+    ////            }
+    ////          }
+    ////        }
+    ////      }
 
-          if (moni.Schoolings != null)
-          {
-            foreach (var item in moni.Schoolings)
-            {
-              if (item.Plans != null)
-              {
-                foreach (var plan in item.Plans)
-                {
-                  var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
-                  plan.StatusPlan = status;
-                }
-              }
-            }
-          }
+    ////      if (moni.Schoolings != null)
+    ////      {
+    ////        foreach (var item in moni.Schoolings)
+    ////        {
+    ////          if (item.Plans != null)
+    ////          {
+    ////            foreach (var plan in item.Plans)
+    ////            {
+    ////              var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
+    ////              plan.StatusPlan = status;
+    ////            }
+    ////          }
+    ////        }
+    ////      }
 
-          if (moni.Activities != null)
-          {
-            foreach (var item in moni.Activities)
-            {
-              if (item.Plans != null)
-              {
-                foreach (var plan in item.Plans)
-                {
-                  var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
-                  plan.StatusPlan = status;
-                }
-              }
-            }
-          }
-        }
-      }
-      catch (Exception e)
-      {
-        throw e;
-      }
-    }
+    ////      if (moni.Activities != null)
+    ////      {
+    ////        foreach (var item in moni.Activities)
+    ////        {
+    ////          if (item.Plans != null)
+    ////          {
+    ////            foreach (var plan in item.Plans)
+    ////            {
+    ////              var status = servicePlan.GetNewVersion(p => p._id == plan._id).Result.StatusPlan;
+    ////              plan.StatusPlan = status;
+    ////            }
+    ////          }
+    ////        }
+    ////      }
+    ////    }
+    ////  }
+    ////  catch (Exception e)
+    ////  {
+    ////    throw e;
+    ////  }
+    ////}
 
     private void DoWork()
     {
@@ -2866,44 +2857,17 @@ namespace Manager.Services.Specific
           var list = monitorings.Where(p => p.Person._id == item._id);
           foreach (var view in list)
           {
-            foreach (var rows in view.Schoolings)
-            {
-              foreach (var plan in rows.Plans)
-              {
-                result.Add(new
-                {
-                  Name = item._id,
-                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
-                });
-              }
-            }
+            var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == view._id).Result;
 
-            foreach (var rows in view.SkillsCompany)
+            foreach (var plan in plans)
             {
-              foreach (var plan in rows.Plans)
+              result.Add(new
               {
-                result.Add(new
-                {
-                  Name = item._id,
-                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
-                });
-              }
+                Name = item._id,
+                Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
+              });
             }
-
-            foreach (var rows in view.Activities)
-            {
-              foreach (var plan in rows.Plans)
-              {
-                result.Add(new
-                {
-                  Name = item._id,
-                  Status = plan == null ? EnumStatusPlan.Open.ToString() : plan.StatusPlan.ToString()
-                });
-              }
-            }
-
           }
-
         }
 
         return result.GroupBy(p => p.Status).Select(x => new ViewChartPlan
@@ -3055,40 +3019,14 @@ namespace Manager.Services.Specific
           var list = monitorings.Where(p => p.Person._id == item._id);
           foreach (var view in list)
           {
-            foreach (var rows in view.Schoolings)
+            var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == view._id).Result;
+            foreach (var plan in plans)
             {
-              foreach (var plan in rows.Plans)
+              result.Add(new
               {
-                result.Add(new
-                {
-                  Name = item._id,
-                  Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
-                });
-              }
-            }
-
-            foreach (var rows in view.SkillsCompany)
-            {
-              foreach (var plan in rows.Plans)
-              {
-                result.Add(new
-                {
-                  Name = item._id,
-                  Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
-                });
-              }
-            }
-
-            foreach (var rows in view.Activities)
-            {
-              foreach (var plan in rows.Plans)
-              {
-                result.Add(new
-                {
-                  Name = item._id,
-                  Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
-                });
-              }
+                Name = item._id,
+                Status = plan.StatusPlan == EnumStatusPlan.Realized ? "Realizado" : "Não Realizado"
+              });
             }
 
           }

@@ -1330,6 +1330,7 @@ namespace Manager.Services.Specific
       {
         Monitoring monitoring = serviceMonitoring.GetNewVersion(p => p._id == id).Result;
         Person person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+        List<Plan> plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == id).Result;
 
         if (monitoring == null)
           return null;
@@ -1393,9 +1394,9 @@ namespace Manager.Services.Specific
             }
           }
 
-          if (item.Plans.Count > 0)
+          if (plans.Where(p => p._idItem == item._id).Count() > 0)
           {
-            foreach (var plan in item.Plans)
+            foreach (var plan in plans.Where(p => p._idItem == item._id))
             {
               if (plan.Skills.Count > 0)
               {
@@ -1425,7 +1426,7 @@ namespace Manager.Services.Specific
                     SourcePlan = plan.SourcePlan,
                     StatusPlan = plan.StatusPlan,
                     StatusPlanApproved = plan.StatusPlanApproved,
-                    Evaluation = plan.Evaluation,
+                    Evaluation = byte.Parse(plan.Evaluation.ToString()),
                     TextEnd = plan.TextEnd,
                     TextEndManager = plan.TextEndManager,
                     SkillPlan = sk.Name,
@@ -1460,7 +1461,7 @@ namespace Manager.Services.Specific
                   SourcePlan = plan.SourcePlan,
                   StatusPlan = plan.StatusPlan,
                   StatusPlanApproved = plan.StatusPlanApproved,
-                  Evaluation = plan.Evaluation,
+                  Evaluation = byte.Parse(plan.Evaluation.ToString()),
                   TextEnd = plan.TextEnd,
                   TextEndManager = plan.TextEndManager,
                   SkillPlan = "",
@@ -1562,9 +1563,9 @@ namespace Manager.Services.Specific
           }
 
 
-          if (item.Plans.Count > 0)
+          if (plans.Where(p => p._idItem == item._id).Count() > 0)
           {
-            foreach (var plan in item.Plans)
+            foreach (var plan in plans.Where(p => p._idItem == item._id))
             {
               if (plan.Skills.Count > 0)
               {
@@ -1593,7 +1594,7 @@ namespace Manager.Services.Specific
                     SourcePlan = plan.SourcePlan,
                     StatusPlan = plan.StatusPlan,
                     StatusPlanApproved = plan.StatusPlanApproved,
-                    Evaluation = plan.Evaluation,
+                    Evaluation = byte.Parse(plan.Evaluation.ToString()),
                     TextEnd = plan.TextEnd,
                     TextEndManager = plan.TextEndManager,
                     SkillPlan = sk.Name,
@@ -1627,7 +1628,7 @@ namespace Manager.Services.Specific
                   SourcePlan = plan.SourcePlan,
                   StatusPlan = plan.StatusPlan,
                   StatusPlanApproved = plan.StatusPlanApproved,
-                  Evaluation = plan.Evaluation,
+                  Evaluation = byte.Parse(plan.Evaluation.ToString()),
                   TextEnd = plan.TextEnd,
                   TextEndManager = plan.TextEndManager,
                   SkillPlan = "",
@@ -1730,9 +1731,9 @@ namespace Manager.Services.Specific
 
           }
 
-          if (item.Plans.Count > 0)
+          if (plans.Where(p => p._idItem == item._id).Count() > 0)
           {
-            foreach (var plan in item.Plans)
+            foreach (var plan in plans.Where(p => p._idItem == item._id))
             {
               if (plan.Skills.Count > 0)
               {
@@ -1763,7 +1764,7 @@ namespace Manager.Services.Specific
                     SourcePlan = plan.SourcePlan,
                     StatusPlan = plan.StatusPlan,
                     StatusPlanApproved = plan.StatusPlanApproved,
-                    Evaluation = plan.Evaluation,
+                    Evaluation = byte.Parse(plan.Evaluation.ToString()),
                     TextEnd = plan.TextEnd,
                     TextEndManager = plan.TextEndManager,
                     SkillPlan = sk.Name,
@@ -1799,7 +1800,7 @@ namespace Manager.Services.Specific
                   SourcePlan = plan.SourcePlan,
                   StatusPlan = plan.StatusPlan,
                   StatusPlanApproved = plan.StatusPlanApproved,
-                  Evaluation = plan.Evaluation,
+                  Evaluation = byte.Parse(plan.Evaluation.ToString()),
                   TextEnd = plan.TextEnd,
                   TextEndManager = plan.TextEndManager,
                   SkillPlan = "",

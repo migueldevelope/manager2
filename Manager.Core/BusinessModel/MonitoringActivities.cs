@@ -16,7 +16,7 @@ namespace Manager.Core.BusinessModel
     public string CommentsPerson { get; set; }
     public string CommentsManager { get; set; }
     public string Praise { get; set; }
-    public List<ViewCrudPlan> Plans { get; set; }
+    //public List<ViewCrudPlan> Plans { get; set; }
     public EnumTypeAtivitie TypeAtivitie { get; set; }
     public List<ListComments> Comments { get; set; }
     public EnumStatusView StatusViewManager { get; set; }

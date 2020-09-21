@@ -1448,6 +1448,7 @@ namespace Manager.Services.Specific
         {
           foreach (var moni in monitorings)
           {
+            var plans = servicePlan.GetAllNewVersion(p => p._idMonitoring == moni._id).Result;
             foreach (var item in moni.Activities)
             {
               if (item.Activities._id == act.Activitie._id)
@@ -1463,11 +1464,10 @@ namespace Manager.Services.Specific
                   CommentsSpeech = p.CommentsSpeech,
                   TotalTime = p.TotalTime
                 }).ToList();
-                var plans = item.Plans;
                 foreach (var com in comments)
                   act.Comments.Add(com);
                 foreach (var plan in plans)
-                  act.Plans.Add(plan);
+                  act.Plans.Add(plan.GetViewCrud());
                 if ((item.Praise != string.Empty) && (item.Praise != null))
                   act.Praises.Add(item.Praise);
               }
