@@ -15,6 +15,7 @@ namespace Manager.Core.Interfaces
     void RegisterOnMessageHandlerAndReceiveMesssages();
     string ListPersons();
     string ListTraining(string idevent);
+    string ListTrainingDays(string idevent);
     string ListCertificate(string idevent, string idperson);
     string ListOpportunityLine(string idcompany, string idarea);
     string ListHistoricTraining(ViewFilterDate date, string idperson);

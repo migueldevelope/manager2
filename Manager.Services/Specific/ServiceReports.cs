@@ -63,7 +63,7 @@ namespace Manager.Services.Specific
     private readonly IQueueClient queueClientReturn;
 
     #region construtctor
-    public ServiceReports(DataContext context, DataContext contextLog, string pathToken,  string serviceBusConnectionString, IServiceControlQueue serviceControlQueue)
+    public ServiceReports(DataContext context, DataContext contextLog, string pathToken, string serviceBusConnectionString, IServiceControlQueue serviceControlQueue)
       : base(context)
     {
       try
@@ -344,7 +344,7 @@ namespace Manager.Services.Specific
         var ef = serviceElearningFluid.GetNewVersion(p => p._idUser == _user._idUser
         && p.StatusElearningFluid == EnumStatusElearningFluid.Approved).Result;
 
-        
+
 
         if (ef == null)
           return "empty";
@@ -356,7 +356,7 @@ namespace Manager.Services.Specific
         var data = new ViewCertificateElearningFluid()
         {
           Company = account.Name,
-          Person  = ef.Person.Name,
+          Person = ef.Person.Name,
           Date = ef.DateEnd,
         };
         var company = data.Company.ToUpper();
@@ -487,6 +487,86 @@ namespace Manager.Services.Specific
           Data = data,
           Name = "listsalaryscale",
           _idReport = NewReport("listsalaryscale"),
+          _idAccount = _user._idAccount
+        };
+        SendMessageAsync(view);
+        var report = new ViewCrudReport();
+
+        while (report.StatusReport == EnumStatusReport.Open)
+        {
+          var rest = serviceReport.GetNewVersion(p => p._id == view._idReport).Result;
+          report.StatusReport = rest.StatusReport;
+          report.Link = rest.Link;
+          //Thread.Sleep(1000);
+        }
+
+        return report.Link;
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
+    public string ListTrainingDays(string idevent)
+    {
+      try
+      {
+        var events = serviceEvent.GetNewVersion(p => p._id == idevent).Result;
+
+        List<ViewListTraining> data = new List<ViewListTraining>();
+        List<string> dates = new List<string>();
+        string instructors = "";
+
+        if (events.Instructors != null)
+        {
+          foreach (var item in events.Instructors)
+          {
+            instructors += item.Name + "\n";
+          }
+        }
+
+        if (events.Days != null)
+        {
+          foreach (var item in events.Days)
+          {
+            dates.Add(item.Begin.ToString("dd/MM/yyyy") + "  " +
+              item.Begin.ToString("HH:mm") + " - " + item.End.ToString("HH:mm"));
+          }
+        }
+
+        if (events.Participants != null)
+        {
+          foreach (var date in dates)
+          {
+            foreach (var item in events.Participants)
+            {
+              var viewEvent = new ViewListTraining()
+              {
+                NameEvent = events.Name,
+                NameCourse = events.Course?.Name,
+                Workload = Math.Round(events.Workload / 60, 2),
+                Registration = item.Person?.Registration,
+                Content = events.Content,
+                DateBegin = events.Begin,
+                DateEnd = events.End,
+                NameEntity = events.Entity?.Name,
+                NameParticipant = item.Name,
+                Instructor = instructors,
+              };
+              viewEvent.Day1 = date.ToString();
+
+              data.Add(viewEvent);
+            };
+          }
+
+        }
+
+        var view = new ViewReport()
+        {
+          Data = data,
+          Name = "listtrainingdays",
+          _idReport = NewReport("listtrainingdays"),
           _idAccount = _user._idAccount
         };
         SendMessageAsync(view);

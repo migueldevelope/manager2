@@ -102,6 +102,19 @@ namespace Reports.Controllers
     /// 
     /// </summary>
     /// <param name="idevent"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("listtrainingdays/{idevent}")]
+    public async Task<string> ListTrainingDays(string idevent)
+    {
+      return await Task.Run(() => service.ListTrainingDays(idevent));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idevent"></param>
     /// <param name="idperson"></param>
     /// <returns></returns>
     [Authorize]
