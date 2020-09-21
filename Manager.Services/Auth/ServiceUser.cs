@@ -96,7 +96,8 @@ namespace Manager.Services.Auth
       {
         var user = serviceUser.GetNewVersion(p => p._id == iduser).Result;
         user.ChangePassword = EnumChangePassword.AccessFirst;
-        user.Password = EncryptServices.GetMD5Hash("1234");
+        //user.Password = EncryptServices.GetMD5Hash("1234");
+        user.Password = EncryptServices.GetMD5Hash(user.Document);
         var i = serviceUser.Update(user, null);
 
         return "alterpass";
