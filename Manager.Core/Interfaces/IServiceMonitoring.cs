@@ -40,7 +40,7 @@ namespace Manager.Core.Interfaces
     List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments, string plataform);
     List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments);
     List<ViewCrudComment> GetListComments(string idmonitoring, string iditem);
-    List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan);
+    List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan, string plataform);
     List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan);
     string DeletePlan(string idmonitoring, string iditem, string idplan);
     List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<ViewListIdIndicators> persons);

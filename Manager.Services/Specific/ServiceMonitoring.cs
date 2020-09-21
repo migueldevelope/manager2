@@ -376,13 +376,14 @@ namespace Manager.Services.Specific
       }
     }
 
-    public List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan)
+    public List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan, string plataform)
     {
       try
       {
         var userInclude = servicePerson.GetNewVersion(p => p.User._id == _user._idUser).Result.GetViewListBase();
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Add plan | {0}", idmonitoring), plataform));
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
         {
@@ -2194,6 +2195,7 @@ namespace Manager.Services.Specific
       {
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
 
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
@@ -2214,7 +2216,6 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -2226,7 +2227,6 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -2239,7 +2239,6 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -2251,7 +2250,6 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;
@@ -2262,7 +2260,6 @@ namespace Manager.Services.Specific
           if (item._id == iditem)
           {
             item.Praise = text.Text;
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add praise | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return text.Text;

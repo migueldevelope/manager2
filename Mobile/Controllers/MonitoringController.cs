@@ -401,7 +401,7 @@ namespace Mobile.Controllers
     [Route("addplan/{idmonitoring}/{iditem}")]
     public async Task<List<ViewCrudPlan>> AddPlan([FromBody]ViewCrudPlan plan, string idmonitoring, string iditem)
     {
-      return await Task.Run(() => service.AddPlan(idmonitoring, iditem, plan));
+      return await Task.Run(() => service.AddPlan(idmonitoring, iditem, plan, "mobile"));
     }
     /// <summary>
     /// Atualiza informações do plano dentro de um item do monitoring
