@@ -97,7 +97,7 @@ namespace Manager.Controllers
         [Route("deletecomments/{idmonitoring}/{iditem}/{idcomments}")]
         public async Task<string> DeleteComments(string idmonitoring, string iditem, string idcomments)
         {
-            return await Task.Run(() => service.DeleteComments(idmonitoring, iditem, idcomments));
+            return await Task.Run(() => service.DeleteComments(idmonitoring, iditem, idcomments, "web"));
         }
         /// <summary>
         /// Alteração de comentário
@@ -366,7 +366,7 @@ namespace Manager.Controllers
         [Route("updatecomments/{idmonitoring}/{iditem}")]
         public async Task<List<ViewCrudComment>> UpdateComments([FromBody]ViewCrudComment comments, string idmonitoring, string iditem)
         {
-            return await Task.Run(() => service.UpdateComments(idmonitoring, iditem, comments));
+            return await Task.Run(() => service.UpdateComments(idmonitoring, iditem, comments, "web"));
         }
         /// <summary>
         /// Adiciona um plano
@@ -409,7 +409,7 @@ namespace Manager.Controllers
         [Route("deleteplan/{idmonitoring}/{iditem}/{idplan}")]
         public async Task<string> DeletePlan(string idmonitoring, string iditem, string idplan)
         {
-            return await Task.Run(() => service.DeletePlan(idmonitoring, iditem, idplan));
+            return await Task.Run(() => service.DeletePlan(idmonitoring, iditem, idplan, "web"));
         }
 
 

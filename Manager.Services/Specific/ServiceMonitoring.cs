@@ -260,11 +260,13 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public string DeleteComments(string idmonitoring, string iditem, string idcomments)
+    public string DeleteComments(string idmonitoring, string iditem, string idcomments, string plataform)
     {
       try
       {
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete comment | {0}", idmonitoring), plataform));
+
         foreach (var item in monitoring.Activities)
         {
           if (item._id == iditem)
@@ -779,12 +781,13 @@ namespace Manager.Services.Specific
       }
     }
 
-    public string DeletePlan(string idmonitoring, string iditem, string idplan)
+    public string DeletePlan(string idmonitoring, string iditem, string idplan, string plataform)
     {
       try
       {
         var monitoring = serviceMonitoring.GetAllNewVersion(p => p._id == idmonitoring).Result.FirstOrDefault();
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Delete plan | {0}", idmonitoring), plataform));
 
         Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação removida" + monitoring.Person.Name, person));
         var plan = servicePlan.GetNewVersion(p => p._id == idplan).Result;
@@ -1906,7 +1909,7 @@ namespace Manager.Services.Specific
           SpeechLink = report.Link
         };
 
-        UpdateComments(idmonitoring, iditem, view);
+        UpdateComments(idmonitoring, iditem, view, "mobile");
       }
       catch (Exception e)
       {
@@ -1944,6 +1947,7 @@ namespace Manager.Services.Specific
       {
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
         var person = servicePerson.GetNewVersion(p => p._id == monitoring.Person._id).Result;
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
 
 
         if (monitoring.StatusMonitoring == EnumStatusMonitoring.Show)
@@ -1987,7 +1991,6 @@ namespace Manager.Services.Specific
                 SpeechLink = comments.SpeechLink,
                 TotalTime = comments.TotalTime
               });
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
             serviceMonitoring.Update(monitoring, null).Wait();
 
             return item.Comments.Select(p => new ViewCrudComment()
@@ -2033,8 +2036,7 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null).Wait();
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
-
+            
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -2079,7 +2081,6 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null).Wait();
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -2123,7 +2124,6 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null).Wait();
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -2167,7 +2167,6 @@ namespace Manager.Services.Specific
              });
 
             serviceMonitoring.Update(monitoring, null).Wait();
-            Task.Run(() => LogSave(_user._idPerson, string.Format("Add comment | {0}", idmonitoring), plataform));
             return item.Comments.Select(p => new ViewCrudComment()
             {
               _id = p._id,
@@ -2272,11 +2271,12 @@ namespace Manager.Services.Specific
         throw e;
       }
     }
-    public List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments)
+    public List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments, string plataform)
     {
       try
       {
         var monitoring = serviceMonitoring.GetNewVersion(p => p._id == idmonitoring).Result;
+        Task.Run(() => LogSave(_user._idPerson, string.Format("Update comment | {0}", idmonitoring), plataform));
 
         foreach (var item in monitoring.Activities)
         {

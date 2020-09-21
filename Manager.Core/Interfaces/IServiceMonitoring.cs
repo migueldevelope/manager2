@@ -21,7 +21,7 @@ namespace Manager.Core.Interfaces
     string RemoveLastMonitoring(string idperson);
     bool ValidComments(string id);
     string UpdateCommentsView(string idmonitoring, string iditem, EnumUserComment userComment);
-    string DeleteComments(string idmonitoring, string iditem, string idcomments);
+    string DeleteComments(string idmonitoring, string iditem, string idcomments, string plataform);
     string RemoveMonitoringActivities(string idmonitoring, string idactivitie);
 
 
@@ -38,11 +38,11 @@ namespace Manager.Core.Interfaces
     string UpdateMonitoringActivities(string idmonitoring, ViewCrudMonitoringActivities view);
     string AddMonitoringActivities(string idmonitoring, ViewCrudActivities view);
     List<ViewCrudComment> AddComments(string idmonitoring, string iditem, ViewCrudComment comments, string plataform);
-    List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments);
+    List<ViewCrudComment> UpdateComments(string idmonitoring, string iditem, ViewCrudComment comments, string plataform);
     List<ViewCrudComment> GetListComments(string idmonitoring, string iditem);
     List<ViewCrudPlan> AddPlan(string idmonitoring, string iditem, ViewCrudPlan plan, string plataform);
     List<ViewCrudPlan> UpdatePlan(string idmonitoring, string iditem, ViewCrudPlan plan);
-    string DeletePlan(string idmonitoring, string iditem, string idplan);
+    string DeletePlan(string idmonitoring, string iditem, string idplan, string plataform);
     List<ViewExportStatusMonitoringGeral> ExportStatusMonitoring(List<ViewListIdIndicators> persons);
     List<ViewExportStatusMonitoring> ExportStatusMonitoring(string idperson);
 
