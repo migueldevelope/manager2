@@ -400,6 +400,7 @@ namespace Manager.Services.Specific
             monitoring.StatusMonitoring = EnumStatusMonitoring.InProgressManager;
           }
         }
+        
         Task.Run(() => serviceLogMessages.NewLogMessage("Plano", " Ação de desenvolvimento acordada para o colaborador " + person.User.Name, person));
         var newPlan = AddPlan(new Plan()
         {
@@ -412,6 +413,7 @@ namespace Manager.Services.Specific
           TypePlan = plan.TypePlan
         }, person, idmonitoring, iditem);
 
+        var i = serviceMonitoring.Update(monitoring, null);
         return servicePlan.GetAllNewVersion(p => p._idMonitoring == monitoring._id).Result.Select(p => p.GetViewCrud()).ToList();
       }
       catch (Exception e)
