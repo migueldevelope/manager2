@@ -802,7 +802,9 @@ namespace Manager.Services.Specific
           NameLevel7 = meritocracyNameLevel.NameLevel7,
           NameLevel8 = meritocracyNameLevel.NameLevel8,
           NameLevel9 = meritocracyNameLevel.NameLevel9,
-          NameLevel10 = meritocracyNameLevel.NameLevel10
+          NameLevel10 = meritocracyNameLevel.NameLevel10,
+          _idAccount = meritocracyname._idAccount,
+          Status = EnumStatus.Enabled
         };
 
         if (meritocracyname == null)
