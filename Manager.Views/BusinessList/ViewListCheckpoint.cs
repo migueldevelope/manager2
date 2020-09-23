@@ -1,4 +1,5 @@
 ﻿using Manager.Views.Enumns;
+using System;
 
 namespace Manager.Views.BusinessList
 {
@@ -9,5 +10,7 @@ namespace Manager.Views.BusinessList
     public EnumStatusCheckpoint StatusCheckpoint { get; set; }
     public EnumCheckpoint TypeCheckpoint { get; set; }
     public string Photo { get; set; }
+    public DateTime? Deadline { get; set; }
+    public DateTime? DateAdm { get; set; }
   }
 }

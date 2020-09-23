@@ -99,6 +99,8 @@ namespace Manager.Services.Specific
     {
       try
       {
+        var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result.Content;
+        
         List<ViewListCheckpoint> list = servicePerson.GetAllNewVersion(p => p.Manager._id == idmanager && p.Occupation != null &&
                                         p.StatusUser != EnumStatusUser.Disabled &&
                                         p.TypeJourney == EnumTypeJourney.Checkpoint &&
@@ -111,14 +113,27 @@ namespace Manager.Services.Specific
                                           OccupationName = p.Occupation.Name,
                                           StatusCheckpoint = EnumStatusCheckpoint.Open,
                                           TypeCheckpoint = EnumCheckpoint.None,
-                                          Photo = p.User?.PhotoUrl
+                                          Photo = p.User?.PhotoUrl,
+                                          DateAdm = p.User?.DateAdm
                                         }).ToList();
         List<ViewListCheckpoint> detail = new List<ViewListCheckpoint>();
         if (serviceCheckpoint.Exists("Checkpoint"))
         {
+          var date = DateTime.Now;
+          
           Checkpoint checkpoint;
           foreach (var item in list)
           {
+            try
+            {
+              if (item.DateAdm != null)
+                date = item.DateAdm.Value.AddDays(int.Parse(parameter));
+            }
+            catch (Exception)
+            {
+
+            }
+
             checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
             if (checkpoint != null)
             {
@@ -126,6 +141,7 @@ namespace Manager.Services.Specific
               item.StatusCheckpoint = checkpoint.StatusCheckpoint;
               item.TypeCheckpoint = checkpoint.TypeCheckpoint;
               item.OccupationName = checkpoint.Occupation?.Name;
+              item.Deadline = date;
             }
             else
               checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._idPerson && x.StatusCheckpoint == EnumStatusCheckpoint.End).Result;

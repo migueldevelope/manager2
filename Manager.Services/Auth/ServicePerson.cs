@@ -1435,13 +1435,27 @@ namespace Manager.Services.Auth
           else if (item.TypeJourney == EnumTypeJourney.Checkpoint)
           {
             var checkpoint = serviceCheckpoint.GetNewVersion(x => x.Person._id == item._id && x.StatusCheckpoint != EnumStatusCheckpoint.End).Result;
+            var parameter = serviceParameter.GetNewVersion(p => p.Key == "DeadlineAdm").Result.Content;
+            var date = DateTime.Now;
+            try
+            {
+              if (item.User.DateAdm != null)
+                date = item.User.DateAdm.Value.AddDays(int.Parse(parameter));
+            }
+            catch (Exception)
+            {
+
+            }
+
             var viewCheckpoint = new ViewListCheckpoint()
             {
               Name = item.User?.Name,
               OccupationName = item.Occupation?.Name,
               _idPerson = item._id,
               StatusCheckpoint = EnumStatusCheckpoint.Open,
-              Photo = item.User?.PhotoUrl
+              Photo = item.User?.PhotoUrl,
+              Deadline = date,
+              DateAdm = item.User?.DateAdm
             };
             if (checkpoint != null)
             {
