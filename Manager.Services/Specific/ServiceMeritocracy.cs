@@ -842,20 +842,38 @@ namespace Manager.Services.Specific
             NameLevel10 = "Plutão"
           }).Result;
         else
-          result = new ViewCrudMeritocracyNameLevel()
-          {
-            NameLevel1 = meritocracyname.NameLevel1,
-            NameLevel2 = meritocracyname.NameLevel2,
-            NameLevel3 = meritocracyname.NameLevel3,
-            NameLevel4 = meritocracyname.NameLevel4,
-            NameLevel5 = meritocracyname.NameLevel5,
-            NameLevel6 = meritocracyname.NameLevel6,
-            NameLevel7 = meritocracyname.NameLevel7,
-            NameLevel8 = meritocracyname.NameLevel8,
-            NameLevel9 = meritocracyname.NameLevel9,
-            NameLevel10 = meritocracyname.NameLevel10,
-            _id = meritocracyname._id
-          };
+        {
+          if (meritocracyname.NameLevel1 == null)
+            result = new ViewCrudMeritocracyNameLevel()
+            {
+              NameLevel1 = "Sol",
+              NameLevel2 = "Mercúrio",
+              NameLevel3 = "Vênus",
+              NameLevel4 = "Terra",
+              NameLevel5 = "Marte",
+              NameLevel6 = "Júpiter",
+              NameLevel7 = "Saturno",
+              NameLevel8 = "Urano",
+              NameLevel9 = "Netuno",
+              NameLevel10 = "Plutão"
+            };
+          else
+            result = new ViewCrudMeritocracyNameLevel()
+            {
+              NameLevel1 = meritocracyname.NameLevel1,
+              NameLevel2 = meritocracyname.NameLevel2,
+              NameLevel3 = meritocracyname.NameLevel3,
+              NameLevel4 = meritocracyname.NameLevel4,
+              NameLevel5 = meritocracyname.NameLevel5,
+              NameLevel6 = meritocracyname.NameLevel6,
+              NameLevel7 = meritocracyname.NameLevel7,
+              NameLevel8 = meritocracyname.NameLevel8,
+              NameLevel9 = meritocracyname.NameLevel9,
+              NameLevel10 = meritocracyname.NameLevel10,
+              _id = meritocracyname._id
+            };
+        }
+
 
 
         return result;
