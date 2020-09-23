@@ -789,7 +789,7 @@ namespace Manager.Services.Specific
     {
       try
       {
-        var meritocracyname = serviceMeritocracyNameLevel.GetFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var meritocracyname = serviceMeritocracyNameLevel.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         var names = new MeritocracyNameLevel()
         {
           _id = meritocracyname._id,
@@ -826,7 +826,7 @@ namespace Manager.Services.Specific
       {
         var result = new ViewCrudMeritocracyNameLevel();
 
-        var meritocracyname = serviceMeritocracyNameLevel.GetFreeNewVersion(p => p.Status == EnumStatus.Enabled).Result;
+        var meritocracyname = serviceMeritocracyNameLevel.GetNewVersion(p => p.Status == EnumStatus.Enabled).Result;
         if (meritocracyname == null)
           meritocracyname = serviceMeritocracyNameLevel.InsertNewVersion(new MeritocracyNameLevel()
           {
