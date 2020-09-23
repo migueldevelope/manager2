@@ -8,10 +8,13 @@ using Manager.Data.Infrastructure;
 using Manager.Services.Auth;
 using Manager.Services.Commons;
 using Manager.Services.Specific;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,10 +58,10 @@ namespace Auth
       _context = new DataContext(conn.Server, conn.DataBase);
       DataContext _contextLog;
       _contextLog = new DataContext(conn.ServerLog, conn.DataBaseLog);
-      
+
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       IServiceControlQueue serviceControlQueue = new ServiceControlQueue(conn.ServiceBusConnectionString, _context);
-      
+
       services.AddScoped<IServiceUser>(_ => new ServiceUser(_context, _context));
       services.AddScoped<IServiceAuthentication>(_ => new ServiceAuthentication(_context, _context, serviceControlQueue, conn.SignalRService));
       services.AddScoped<IServicePerson>(_ => new ServicePerson(_context, _context, serviceControlQueue, conn.SignalRService));
@@ -100,6 +103,34 @@ namespace Auth
           }
         };
       });
+
+      services.AddAuthentication(sharedOptions =>
+      {
+        sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+      })
+     .AddWsFederation(options =>
+     {
+       options.Wtrealm = Configuration["wsfed:realm"];
+       options.MetadataAddress = Configuration["wsfed:metadata"];
+     })
+     .AddCookie();
+
+
+      services.AddAuthentication()
+          .AddWsFederation(options =>
+          {
+            // MetadataAddress represents the Active Directory instance used to authenticate users.
+            options.MetadataAddress = "https://<ADFS FQDN or AAD tenant>/FederationMetadata/2007-06/FederationMetadata.xml";
+
+            // Wtrealm is the app's identifier in the Active Directory instance.
+            // For ADFS, use the relying party's identifier, its WS-Federation Passive protocol URL:
+            options.Wtrealm = "https://localhost:44307/";
+
+            // For AAD, use the Application ID URI from the app registration's Overview blade:
+            options.Wtrealm = "api://bbd35166-7c13-49f3-8041-9551f2847b69";
+          });
+
 
       services.AddCors(options =>
       {
@@ -160,6 +191,9 @@ namespace Auth
     /// <param name="env">Ambiente de hospedagem</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+      app.UseHttpsRedirection();
+      app.UseStaticFiles();
+
       app.UseRouting();
       app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("x-total-count"));
       app.UseAuthentication();
