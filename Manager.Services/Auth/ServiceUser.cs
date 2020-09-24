@@ -70,6 +70,7 @@ namespace Manager.Services.Auth
       servicePerson._user = _user;
       servicePlan._user = _user;
       serviceUser._user = _user;
+      serviceLog.SetUser(_user);
     }
     public void SetUser(BaseUser user)
     {
@@ -85,6 +86,7 @@ namespace Manager.Services.Auth
       servicePerson._user = user;
       servicePlan._user = user;
       serviceUser._user = user;
+      serviceLog.SetUser(_user);
     }
     #endregion
 
