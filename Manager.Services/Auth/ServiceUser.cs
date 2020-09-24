@@ -23,7 +23,7 @@ namespace Manager.Services.Auth
     private ServiceGeneric<Attachments> serviceAttachment;
     private ServiceGeneric<Checkpoint> serviceCheckpoint;
     private ServiceGeneric<Company> serviceCompany;
-    private ServiceGeneric<Log> serviceLog;
+    private ServiceLog serviceLog;
     private ServiceSendGrid serviceMail;
     private ServiceGeneric<Monitoring> serviceMonitoring;
     private ServiceGeneric<Occupation> serviceOccupation;
@@ -41,7 +41,7 @@ namespace Manager.Services.Auth
         serviceAttachment = new ServiceGeneric<Attachments>(context);
         serviceCompany = new ServiceGeneric<Company>(context);
         serviceCheckpoint = new ServiceGeneric<Checkpoint>(context);
-        serviceLog = new ServiceGeneric<Log>(contextLog);
+        serviceLog = new ServiceLog(context, contextLog);
         serviceMail = new ServiceSendGrid(contextLog);
         serviceMonitoring = new ServiceGeneric<Monitoring>(context);
         serviceOccupation = new ServiceGeneric<Occupation>(context);
@@ -98,6 +98,7 @@ namespace Manager.Services.Auth
         user.ChangePassword = EnumChangePassword.AccessFirst;
         //user.Password = EncryptServices.GetMD5Hash("1234");
         user.Password = EncryptServices.GetMD5Hash(user.Document);
+        Task.Run(() => LogSave(_user._idPerson, "alterpassrh :" + user._id));
         var i = serviceUser.Update(user, null);
 
         return "alterpass";
@@ -417,6 +418,29 @@ namespace Manager.Services.Auth
         Registration = p.Registration
       }).ToList();
     }
+    #endregion
+
+    #region private
+
+    private void LogSave(string idperson, string local)
+    {
+      try
+      {
+        var user = servicePerson.GetAllNewVersion(p => p._id == idperson).Result.FirstOrDefault();
+        var log = new ViewLog()
+        {
+          Description = "User ",
+          Local = local,
+          _idPerson = user._id
+        };
+        serviceLog.NewLog(log);
+      }
+      catch (Exception e)
+      {
+        throw e;
+      }
+    }
+
     #endregion
 
   }
